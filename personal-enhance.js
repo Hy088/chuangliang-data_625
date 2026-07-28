@@ -28,6 +28,7 @@
   var dates = [];      // 升序日期
   var currentDate = null;
   var sortKey = "消耗";
+  var monthSortKey = "消耗";
   var ready = false;
 
   /* ---------- 工具 ---------- */
@@ -137,6 +138,110 @@
     var cnt = el("meRankCount"); if (cnt) cnt.textContent = "共 " + rows.length + " 个素材（按" + (RANK_METRICS.filter(function (m){return m.key===sortKey;})[0].label) + "排序）";
   }
 
+  /* ---------- 渲染：本月汇总（整合进个人数据，不单独分文件） ---------- */
+  function monthCard(name, val, unit) {
+    return '<div class="kpi"><div class="l">' + esc(name) + "</div>" +
+      '<div class="v">' + val + (unit ? (' <small>' + esc(unit) + "</small>") : "") + "</div>" +
+      '<div class="note" style="margin:2px 0 0;color:#9aa4b2">本月累计</div></div>';
+  }
+  function renderMonthCards(totalCost, totalConv, avgCTR, distinctMat, days) {
+    var box = el("meMonthCards");
+    if (!box) return;
+    box.innerHTML =
+      monthCard("本月总消耗", fmtNum(totalCost), "元") +
+      monthCard("本月总转化数", fmtNum(totalConv), "个") +
+      monthCard("平均CTR", avgCTR.toFixed(2), "%") +
+      monthCard("去重素材数", fmtNum(distinctMat), "个") +
+      monthCard("覆盖天数", days, "天");
+  }
+  function renderMonthChart() {
+    var box = el("meMonthChart");
+    if (!box) return;
+    var hs = histData.slice().sort(function (a, b) { return a["日期"] < b["日期"] ? -1 : 1; });
+    var max = 0;
+    hs.forEach(function (h) { max = Math.max(max, num(h["消耗"])); });
+    max = max || 1;
+    box.innerHTML = hs.map(function (h) {
+      var v = num(h["消耗"]);
+      var hgt = Math.max(2, Math.round(v / max * 100));
+      var d = h["日期"].slice(5);
+      return "<div title='" + esc(h["日期"]) + ": " + fmtNum(v) + "元' style='flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0'>" +
+        "<div style='width:100%;background:#4a7bff;border-radius:2px 2px 0 0;height:" + hgt + "%'></div>" +
+        "<div style='font-size:9px;color:#9aa4b2;margin-top:2px;transform:rotate(-45deg);transform-origin:center;white-space:nowrap'>" + d + "</div></div>";
+    }).join("");
+  }
+  function renderMonthMatTop() {
+    var box = el("meMonthMatTop");
+    if (!box) return;
+    var map = {};
+    matData.forEach(function (m) {
+      var id = m["素材ID"] || m["素材名"] || "(未知)";
+      if (!map[id]) map[id] = { id: id, name: m["素材名"] || id, "消耗": 0, "展示数": 0, "点击数": 0, "转化数": 0, days: {} };
+      var o = map[id];
+      o["消耗"] += num(m["消耗"]); o["展示数"] += num(m["展示数"]);
+      o["点击数"] += num(m["点击数"]); o["转化数"] += num(m["转化数"]);
+      if (m["日期"]) o.days[m["日期"]] = 1;
+    });
+    var rows = Object.keys(map).map(function (k) {
+      var o = map[k]; o["活跃天数"] = Object.keys(o.days).length;
+      o["CTR"] = o["展示数"] > 0 ? o["点击数"] / o["展示数"] * 100 : 0; return o;
+    });
+    rows.sort(function (a, b) { return b[monthSortKey] - a[monthSortKey]; });
+    rows = rows.slice(0, 50);
+    if (!rows.length) {
+      box.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#999">暂无素材明细数据</div>';
+      return;
+    }
+    var max = rows[0][monthSortKey] || 1;
+    var metrics = [
+      { k: "消耗", label: "消耗" }, { k: "展示数", label: "展示数" },
+      { k: "点击数", label: "点击数" }, { k: "转化数", label: "转化数" },
+      { k: "CTR", label: "CTR" }, { k: "活跃天数", label: "活跃天" }
+    ];
+    var thead = "<tr><th>#</th><th class='l'>素材名</th>" + metrics.map(function (m) {
+      return "<th data-key='" + m.k + "' class='" + (m.k === monthSortKey ? "on" : "") + "'>" + m.label + (m.k === monthSortKey ? " ↓" : "") + "</th>";
+    }).join("") + "</tr>";
+    var tbody = rows.map(function (o, idx) {
+      var v = o[monthSortKey];
+      var w = Math.max(2, Math.round(v / max * 100));
+      var name = o["name"];
+      var disp = name.length > 34 ? name.slice(0, 34) + "…" : name;
+      var cells = metrics.map(function (met) {
+        var val = o[met.k];
+        var txt = (met.k === "CTR") ? Number(val).toFixed(2) + "%" : fmtNum(val);
+        var bar = (met.k === monthSortKey)
+          ? "<div style='margin-top:3px;height:4px;background:#e8edf3;border-radius:3px;overflow:hidden'><i style='display:block;height:100%;width:" + w + "%;background:#4a7bff'></i></div>"
+          : "";
+        return "<td>" + txt + bar + "</td>";
+      }).join("");
+      return "<tr><td class='rk'>" + (idx + 1) + "</td><td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + cells + "</tr>";
+    }).join("");
+    box.innerHTML = "<table class='me-rank-tbl'><thead>" + thead + "</thead><tbody>" + tbody + "</tbody></table>";
+    Array.prototype.forEach.call(box.querySelectorAll("th[data-key]"), function (th) {
+      th.style.cursor = "pointer";
+      th.onclick = function () { monthSortKey = th.getAttribute("data-key"); renderMonthMatTop(); };
+    });
+  }
+  function renderMonth() {
+    var body = el("meMonthBody");
+    if (!body) return;
+    var totalCost = 0, totalConv = 0;
+    var totShow = 0, totClick = 0, matSet = {};
+    matData.forEach(function (m) {
+      totShow += num(m["展示数"]); totClick += num(m["点击数"]);
+      if (m["素材ID"]) matSet[m["素材ID"]] = 1;
+    });
+    histData.forEach(function (h) { totalCost += num(h["消耗"]); totalConv += num(h["转化数"]); });
+    var avgCTR = totShow > 0 ? totClick / totShow * 100 : 0;
+    var distinctMat = Object.keys(matSet).length;
+    var days = histData.length;
+    var rangeTxt = dates.length ? (dates[0] + " ~ " + dates[dates.length - 1]) : "-";
+    var rg = el("meMonthRange"); if (rg) rg.textContent = "（" + rangeTxt + "）";
+    renderMonthCards(totalCost, totalConv, avgCTR, distinctMat, days);
+    renderMonthChart();
+    renderMonthMatTop();
+  }
+
   function renderPersonal() {
     renderCards();
     renderRank();
@@ -174,6 +279,7 @@
       ready = true;
       buildDateSelect();
       renderPersonal();
+      renderMonth();
       if (cb) cb(null);
     }).catch(function (e) {
       var box = el("meRankBody");
@@ -228,6 +334,33 @@
       "<div id='meRankBody' style='max-height:460px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>";
     if (cards && cards.parentNode) cards.parentNode.insertBefore(panel, cards.nextSibling);
 
+    // 本月汇总面板（整合进个人数据，不单独分文件）
+    var monthPanel = document.createElement("div");
+    monthPanel.id = "meMonth";
+    monthPanel.style.cssText = "margin-top:20px;border:1px solid #e6ebf2;border-radius:12px;background:#fff;overflow:hidden";
+    monthPanel.innerHTML =
+      "<div id='meMonthToggle' style='display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;background:#f6f8fb'>" +
+        "<h3 style='margin:0;font-size:16px;color:#223'>📊 本月汇总 <span id='meMonthRange' style='font-size:12px;color:#8a94a6;font-weight:400'></span></h3>" +
+        "<span style='color:#8a94a6;font-size:12px' id='meMonthArrow'>▾ 收起</span>" +
+      "</div>" +
+      "<div id='meMonthBody' style='padding:14px 16px'>" +
+        "<div id='meMonthCards' style='display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px'></div>" +
+        "<div style='font-weight:600;margin:0 0 6px;color:#334'>每日消耗走势</div>" +
+        "<div id='meMonthChart' style='display:flex;align-items:flex-end;gap:3px;height:130px;padding:0 2px 18px;border-bottom:1px solid #eef2f7;margin-bottom:16px'></div>" +
+        "<div style='font-weight:600;margin:0 0 6px;color:#334'>素材消耗 Top 50（本月累计，点击表头排序）</div>" +
+        "<div id='meMonthMatTop' style='max-height:440px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>" +
+      "</div>";
+    if (panel && panel.parentNode) panel.parentNode.insertBefore(monthPanel, panel.nextSibling);
+
+    // 本月汇总折叠
+    var toggle = el("meMonthToggle");
+    if (toggle) toggle.onclick = function () {
+      var b = el("meMonthBody");
+      var collapsed = b.style.display === "none";
+      b.style.display = collapsed ? "block" : "none";
+      var ar = el("meMonthArrow"); if (ar) ar.textContent = collapsed ? "▾ 收起" : "▸ 展开";
+    };
+
     // 事件
     var sel = el("meDate");
     if (sel) sel.onchange = function () { currentDate = sel.value; renderPersonal(); };
@@ -240,7 +373,7 @@
     // renderMe 不再触碰个人模块 DOM（改为由本脚本渲染）
     window.renderMe = function () {};
     // meApplyRows 触发本脚本渲染（忽略原 rows，改用历史/明细数据）
-    window.meApplyRows = function () { if (ready) renderPersonal(); };
+    window.meApplyRows = function () { if (ready) { renderPersonal(); renderMonth(); } };
   }
 
   /* ---------- 初始化 ---------- */
