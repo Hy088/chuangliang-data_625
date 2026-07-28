@@ -4,8 +4,9 @@
  */
 (function () {
   "use strict";
-  var HIST_URL = "https://cdn.jsdelivr.net/gh/Hy088/chuangliang-data_625@main/me-history.csv";
-  var MAT_URL  = "https://cdn.jsdelivr.net/gh/Hy088/chuangliang-data_625@main/me-materials.csv";
+  // 数据同源托管在 GitHub Pages（与看板同域，避免 jsDelivr 旧缓存导致历史月份丢失）
+  var HIST_URL = "https://hy088.github.io/chuangliang-data_625/me-history.csv";
+  var MAT_URL  = "https://hy088.github.io/chuangliang-data_625/me-materials.csv";
 
   // KPI 卡片定义（含目标，与 config.daily.json 一致）
   var CARDS = [
@@ -371,8 +372,8 @@
   /* ---------- 数据加载 ---------- */
   function loadData(cb) {
     Promise.all([
-      fetch(HIST_URL, { cache: "no-store" }).then(function (r) { return r.text(); }),
-      fetch(MAT_URL, { cache: "no-store" }).then(function (r) { return r.text(); })
+      fetch(HIST_URL + "?_=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.text(); }),
+      fetch(MAT_URL + "?_=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.text(); })
     ]).then(function (res) {
       histData = csvToObjects(res[0]);
       matData = csvToObjects(res[1]);
