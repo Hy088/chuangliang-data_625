@@ -1489,13 +1489,10 @@ function renderMeSummary(){
 function renderMeCards(){
   const el=$('#meCards'); if(!el) return;
   const keys=meOrderedKeys();
-  el.innerHTML = keys.map(k=>{ const m=ME.metrics[k]; const hasT=m.target!=null && m.target>0;
-    const ratio= hasT? Math.min(1, m.value/m.target):null; const pct= hasT? Math.round(ratio*100):0;
-    const color= !hasT?'var(--gray)': ratio>=1?'var(--green)': ratio>=0.6?'var(--yellow)':'var(--red)';
-    const bar= hasT? `<div class="me-prog"><i style="width:${Math.min(100,pct)}%;background:${color}"></i></div>`:'';
-    return `<div class="kpi"><div class="l">${esc(k)}${m.manual?' <span class="pill p-gray" style="font-size:10px">手动</span>':''}</div>`+
+  el.innerHTML = keys.map(k=>{ const m=ME.metrics[k];
+    return `<div class="kpi" data-k="${esc(k)}"><div class="l">${esc(k)}${m.manual?' <span class="pill p-gray" style="font-size:10px">手动</span>':''}</div>`+
       `<div class="v">${fmtMeVal(m.value)}${m.unit?(' <small>'+esc(m.unit)+'</small>'):''}</div>`+
-      `<div class="note" style="margin:2px 0 0">目标 ${hasT? fmtMeVal(m.target):'—'}</div>${bar}</div>`;
+      `<div class="me-yoy" style="margin-top:5px;font-size:12px">—</div></div>`;
   }).join('') || '<div class="empty">暂无指标，点击「⚙ 数据源设置」配置或「载入示例数据」。</div>';
 }
 function renderMeTable(){
@@ -1558,18 +1555,34 @@ async function renderMeChannels(){
     dayRows.forEach(r=>{ const c=fnum(r[iCost]); sum[classifyMeMat((r[iName]||'').trim())]+=c; });
     const total=sum.广义新+sum.低活+sum.标点;
 
-    // ---- 2. 较昨日同时段（me-history.csv 昨日全天 × 当前时刻占比）----
-    let yCost=0, yDate='';
+    // ---- 2. 较昨日同时段（me-history.csv 昨日值 → 每个 KPI 卡片）----
+    const HIST_MAP={
+      '今日消耗(元)':'消耗',
+      '今日在投素材数':'素材数',
+      '今日转化数':'转化数',
+      '点击率(CTR)':'CTR'
+    };
+    const RATE_KEYS=['点击率(CTR)'];
+    let yDate='';
+    const yMap={}; // key -> {value, same, growth}
     try{
       const hText=await fetchMeText('me-history.csv'); const h=parseCSV(hText);
-      const hiC=h.cols.indexOf('消耗'), hiD=h.cols.indexOf('日期');
-      if(h.rows.length){ const last=h.rows[h.rows.length-1]; yCost=fnum(last[hiC]); yDate=(last[hiD]||'').trim(); }
-    }catch(e){ /* 历史缺失不阻断 */ }
+      const hiD=h.cols.indexOf('日期');
+      if(h.rows.length){ yDate=(h.rows[h.rows.length-1][hiD]||'').trim(); }
+      meOrderedKeys().forEach(k=>{
+        const col=HIST_MAP[k]; if(!col) return;
+        const ci=h.cols.indexOf(col); if(ci<0) return;
+        const last=h.rows[h.rows.length-1]; if(!last) return;
+        const yVal=fnum(last[ci]);
+        const m=ME.metrics[k]; const todayVal=(m&&m.value)||0;
+        const now=new Date(); const frac=(now.getHours()*3600+now.getMinutes()*60+now.getSeconds())/86400;
+        const ySame=RATE_KEYS.includes(k)? yVal : yVal*frac;
+        const growth=ySame>0?((todayVal-ySame)/ySame*100):0;
+        yMap[k]={yVal, ySame, growth};
+      });
+    }catch(e){ console.warn('[meChannels] history failed', e); }
     const costKey=meOrderedKeys().find(k=>k.includes('消耗')&&k.includes('今日'))||meOrderedKeys().find(k=>k.includes('消耗'));
-    const todayCost=costKey?(ME.metrics[costKey].value||0):0;
-    const now=new Date(); const frac=(now.getHours()*3600+now.getMinutes()*60+now.getSeconds())/86400;
-    const ySame=yCost*frac;
-    const growth=ySame>0?((todayCost-ySame)/ySame*100):0;
+    const costYoY=yMap[costKey];
 
     // ---- 3. 渲染三类 bars ----
     const box=$('#meChannelBars');
@@ -1585,22 +1598,27 @@ async function renderMeChannels(){
     }
     const diff=$('#meChannelDiff');
     if(diff){
-      const gTxt=(growth>=0?'▲ +':'▼ ')+growth.toFixed(1)+'%';
-      const gCol=growth>=0?'var(--green)':'var(--red)';
-      diff.innerHTML=`数据日期：<b>${latest||'—'}</b> ｜ 总消耗 <b>¥${fmtInt(Math.round(total))}</b> ｜ 较昨日同时段 `+
-        `<b style="color:${gCol}">${gTxt}</b> <span class="note">（今日累计 ¥${fmtInt(Math.round(todayCost))} vs 昨日同时段 ¥${fmtInt(Math.round(ySame))}）</span>`;
-    }
-    // ---- 4. 在「今日消耗」卡上挂较昨日同时段徽标 ----
-    if(costKey){
-      const card=[...document.querySelectorAll('#meCards .kpi')].find(c=>(c.querySelector('.l')||{}).textContent===costKey);
-      if(card){
-        let badge=card.querySelector('.me-yoy');
-        const gTxt=(growth>=0?'▲ +':'▼ ')+growth.toFixed(1)+'%';
-        const gCol=growth>=0?'var(--green)':'var(--red)';
-        if(!badge){ badge=document.createElement('div'); badge.className='me-yoy'; badge.style.cssText='margin-top:5px;font-size:12px'; card.appendChild(badge); }
-        badge.innerHTML=`较昨日同时段 <b style="color:${gCol}">${gTxt}</b>`;
+      let diffHtml=`数据日期：<b>${latest||'—'}</b> ｜ 总消耗 <b>¥${fmtInt(Math.round(total))}</b>`;
+      if(costYoY){
+        const gTxt=(costYoY.growth>=0?'▲ +':'▼ ')+costYoY.growth.toFixed(1)+'%';
+        const gCol=costYoY.growth>=0?'var(--green)':'var(--red)';
+        diffHtml+=` ｜ 较昨日同时段 <b style="color:${gCol}">${gTxt}</b>`;
       }
+      diff.innerHTML=diffHtml;
     }
+    // ---- 4. 给每个 KPI 卡片挂较昨日同时段徽标 ----
+    document.querySelectorAll('#meCards .kpi').forEach(card=>{
+      const k=(card.querySelector('.l')||{}).textContent||'';
+      const badge=card.querySelector('.me-yoy'); if(!badge) return;
+      const y=yMap[k];
+      if(y){
+        const gTxt=(y.growth>=0?'▲ +':'▼ ')+y.growth.toFixed(1)+'%';
+        const gCol=y.growth>=0?'var(--green)':'var(--red)';
+        badge.innerHTML=`较昨日同时段 <b style="color:${gCol}">${gTxt}</b>`;
+      }else{
+        badge.textContent='—';
+      }
+    });
   }catch(e){
     const diff=$('#meChannelDiff'); if(diff) diff.textContent='渠道构成加载失败：'+e.message;
     console.warn('[meChannels]', e);
