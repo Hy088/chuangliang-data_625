@@ -40,6 +40,7 @@
   var monthSortKey = "消耗";
   var daySortKey = "日期";
   var daySortDir = 1;  // 1 升序 / -1 降序
+  var timeFilterMode = "day";  // month / week / day
   var ready = false;
 
   /* ---------- 双月绩效 KPI 进度：状态与工具 ---------- */
@@ -260,36 +261,99 @@
     });
   }
 
-  /* ---------- 渲染：本月每日明细（按天分别统计） ---------- */
-  function renderDayTable() {
-    var box = el("meDayTable");
-    if (!box) return;
-    var hs = histData.slice().sort(function (a, b) {
-      if (daySortKey === "日期") return a["日期"] < b["日期"] ? -daySortDir : (a["日期"] > b["日期"] ? daySortDir : 0);
-      return (num(a[daySortKey]) - num(b[daySortKey])) * daySortDir;
+  /* ---------- 时间筛选：月 / 周 / 日 汇总 ---------- */
+  function parseDate(d) { var p = d.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function isoWeekKey(d) {
+    var dt = parseDate(d);
+    var thu = new Date(dt);
+    thu.setDate(dt.getDate() + 3 - ((dt.getDay() + 6) % 7));
+    var year = thu.getFullYear();
+    var w1 = new Date(year, 0, 4);
+    w1.setDate(w1.getDate() - ((w1.getDay() + 6) % 7));
+    var weekNo = Math.floor((thu - w1) / 604800000) + 1;
+    return year + "-W" + ("0" + weekNo).slice(-2);
+  }
+  function isoWeekRange(key) {
+    var m = key.match(/(\d+)-W(\d+)/); if (!m) return key;
+    var year = +m[1], week = +m[2];
+    var jan4 = new Date(year, 0, 4);
+    var day1 = new Date(jan4);
+    day1.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7));
+    var start = new Date(day1); start.setDate(day1.getDate() + (week - 1) * 7);
+    var end = new Date(start); end.setDate(start.getDate() + 6);
+    return start.toISOString().slice(0, 10) + " ~ " + end.toISOString().slice(0, 10);
+  }
+  function aggTimeRows(mode) {
+    var groups = {};
+    histData.forEach(function (h) {
+      var d = h["日期"];
+      var key, label, sortKey;
+      if (mode === "month") {
+        key = d.slice(0, 7);
+        label = key;
+        sortKey = key;
+      } else if (mode === "week") {
+        key = isoWeekKey(d);
+        label = key;
+        sortKey = key;
+      } else {
+        key = d;
+        label = d;
+        sortKey = d;
+      }
+      if (!groups[key]) groups[key] = { key: key, label: label, sortKey: sortKey, cost: 0, mat: 0, conv: 0, ctrSum: 0, days: 0, maxCost: 0 };
+      var g = groups[key];
+      g.cost += num(h["消耗"]);
+      g.mat += num(h["素材数"]);
+      g.conv += num(h["转化数"]);
+      g.ctrSum += num(h["CTR"]);
+      g.days += 1;
     });
-    if (!hs.length) { box.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#999">暂无每日数据</div>'; return; }
-    var max = 1;
-    hs.forEach(function (h) { max = Math.max(max, num(h["消耗"])); });
-    var thead = "<tr>" + DAY_COLS.map(function (c) {
-      var on = c.k === daySortKey;
+    return Object.keys(groups).map(function (k) { return groups[k]; });
+  }
+  function renderTimeTable() {
+    var box = el("meTimeTable");
+    if (!box) return;
+    var mode = timeFilterMode;
+    var rows = aggTimeRows(mode);
+    // 表头
+    var cols = [];
+    if (mode === "month") cols = [{ k: "label", l: "月份" }, { k: "天数", l: "天数" }, { k: "cost", l: "消耗", bar: true }, { k: "mat", l: "素材数" }, { k: "conv", l: "转化数" }, { k: "ctr", l: "CTR" }];
+    else if (mode === "week") cols = [{ k: "label", l: "周次" }, { k: "range", l: "区间" }, { k: "天数", l: "天数" }, { k: "cost", l: "消耗", bar: true }, { k: "mat", l: "素材数" }, { k: "conv", l: "转化数" }, { k: "ctr", l: "CTR" }];
+    else cols = [{ k: "label", l: "日期" }, { k: "cost", l: "消耗", bar: true }, { k: "mat", l: "素材数" }, { k: "conv", l: "转化数" }, { k: "ctr", l: "CTR" }];
+    // 排序
+    rows.sort(function (a, b) {
+      if (daySortKey === "label" || daySortKey === "日期" || daySortKey === "月份" || daySortKey === "周次") {
+        return a.sortKey < b.sortKey ? -daySortDir : (a.sortKey > b.sortKey ? daySortDir : 0);
+      }
+      var ak = (daySortKey === "cost") ? a.cost : (daySortKey === "mat") ? a.mat : (daySortKey === "conv") ? a.conv : (daySortKey === "ctr") ? (a.ctrSum / a.days) : (daySortKey === "天数") ? a.days : a.cost;
+      var bk = (daySortKey === "cost") ? b.cost : (daySortKey === "mat") ? b.mat : (daySortKey === "conv") ? b.conv : (daySortKey === "ctr") ? (b.ctrSum / b.days) : (daySortKey === "天数") ? b.days : b.cost;
+      return (ak - bk) * daySortDir;
+    });
+    if (!rows.length) { box.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#999">暂无数据</div>'; return; }
+    var maxCost = 1; rows.forEach(function (r) { maxCost = Math.max(maxCost, r.cost); });
+    var thead = "<tr>" + cols.map(function (c) {
+      var on = (daySortKey === c.k) || (daySortKey === "日期" && c.k === "label") || (daySortKey === "月份" && c.k === "label") || (daySortKey === "周次" && c.k === "label");
       var arrow = on ? (daySortDir > 0 ? " ↓" : " ↑") : "";
-      return "<th data-key='" + c.k + "' class='" + (c.k === "日期" ? "l " : "") + (on ? "on" : "") + "'>" + c.l + arrow + "</th>";
+      return "<th data-key='" + c.k + "' class='" + (c.k === "label" || c.k === "range" ? "l " : "") + (on ? "on" : "") + "'>" + c.l + arrow + "</th>";
     }).join("") + "</tr>";
-    var tbody = hs.map(function (h) {
-      var cells = DAY_COLS.map(function (c) {
-        if (c.k === "日期") return "<td class='l'>" + esc(h["日期"]) + "</td>";
-        var v = num(h[c.k]);
-        if (c.bar) {
-          var w = Math.max(2, Math.round(v / max * 100));
-          var txt = (c.k === "CTR") ? v.toFixed(2) + "%" : fmtNum(v);
+    var tbody = rows.map(function (r) {
+      var cells = cols.map(function (c) {
+        if (c.k === "label") {
+          var txt = (mode === "week") ? ("第 " + r.label.slice(-2) + " 周") : r.label;
+          return "<td class='l'>" + esc(txt) + "</td>";
+        }
+        if (c.k === "range") return "<td class='l'>" + esc(isoWeekRange(r.key)) + "</td>";
+        if (c.k === "cost") {
+          var w = Math.max(2, Math.round(r.cost / maxCost * 100));
           return "<td><div style='display:flex;align-items:center;gap:8px;justify-content:flex-end'>" +
-            "<span>" + txt + "</span>" +
+            "<span>" + fmtNum(r.cost) + "</span>" +
             "<span style='flex:1;max-width:120px;height:6px;background:#eef2f7;border-radius:3px;overflow:hidden'><i style='display:block;height:100%;width:" + w + "%;background:#4a7bff'></i></span>" +
             "</div></td>";
         }
-        var txt2 = (c.k === "CTR") ? v.toFixed(2) + "%" : fmtNum(v);
-        return "<td>" + txt2 + "</td>";
+        if (c.k === "ctr") return "<td>" + (r.ctrSum / r.days).toFixed(2) + "%</td>";
+        if (c.k === "天数") return "<td>" + r.days + "</td>";
+        return "<td>" + fmtNum(r[c.k]) + "</td>";
       }).join("");
       return "<tr>" + cells + "</tr>";
     }).join("");
@@ -299,9 +363,28 @@
       th.onclick = function () {
         var k = th.getAttribute("data-key");
         if (daySortKey === k) daySortDir = -daySortDir;
-        else { daySortKey = k; daySortDir = (k === "日期") ? 1 : -1; }
-        renderDayTable();
+        else { daySortKey = k; daySortDir = (k === "label" || k === "range") ? 1 : -1; }
+        renderTimeTable();
       };
+    });
+  }
+  function setTimeMode(mode) {
+    timeFilterMode = mode;
+    daySortKey = (mode === "month") ? "label" : (mode === "week") ? "label" : "日期";
+    daySortDir = 1;
+    renderTimeTabs();
+    renderTimeTable();
+  }
+  function renderTimeTabs() {
+    var tabs = el("meTimeTabs");
+    if (!tabs) return;
+    ["month", "week", "day"].forEach(function (m) {
+      var btn = tabs.querySelector("[data-mode='" + m + "']");
+      if (!btn) return;
+      var active = timeFilterMode === m;
+      btn.style.background = active ? "#2b6cff" : "#fff";
+      btn.style.color = active ? "#fff" : "#334";
+      btn.style.borderColor = active ? "#2b6cff" : "#cdd6e3";
     });
   }
 
@@ -476,7 +559,8 @@
     renderMonthCards(totalCost, totalConv, avgCTR, distinctMat, days);
     renderMonthChart();
     renderMonthMatTop();
-    renderDayTable();   // 本月每日明细
+    renderTimeTabs();   // 月/周/日 筛选标签
+    renderTimeTable();  // 时间筛选明细
     renderWeek();       // 周统计
   }
 
@@ -588,8 +672,15 @@
         "<div id='meMonthChart' style='display:flex;align-items:flex-end;gap:3px;height:130px;padding:0 2px 18px;border-bottom:1px solid #eef2f7;margin-bottom:16px'></div>" +
         "<div style='font-weight:600;margin:0 0 6px;color:#334'>素材消耗 Top 50（本月累计，点击表头排序）</div>" +
         "<div id='meMonthMatTop' style='max-height:440px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff;margin-bottom:18px'></div>" +
-        "<div style='font-weight:600;margin:0 0 6px;color:#334'>📅 本月每日明细（点击表头排序）</div>" +
-        "<div id='meDayTable' style='max-height:420px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>" +
+        "<div style='display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:0 0 8px'>" +
+          "<div style='font-weight:600;color:#334'>📅 时间筛选明细（点击表头排序）</div>" +
+          "<div id='meTimeTabs' style='display:flex;gap:6px'>" +
+            "<button data-mode='month' style='padding:5px 12px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#334;font-size:13px;cursor:pointer'>月筛选</button>" +
+            "<button data-mode='week' style='padding:5px 12px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#334;font-size:13px;cursor:pointer'>周筛选</button>" +
+            "<button data-mode='day' style='padding:5px 12px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#334;font-size:13px;cursor:pointer'>日筛选</button>" +
+          "</div>" +
+        "</div>" +
+        "<div id='meTimeTable' style='max-height:420px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>" +
       "</div>";
     if (panel && panel.parentNode) panel.parentNode.insertBefore(monthPanel, panel.nextSibling);
 
@@ -633,6 +724,14 @@
     // 事件
     var sel = el("meDate");
     if (sel) sel.onchange = function () { currentDate = sel.value; renderPersonal(); };
+
+    // 月/周/日 筛选标签事件
+    var tabs = el("meTimeTabs");
+    if (tabs) {
+      Array.prototype.forEach.call(tabs.querySelectorAll("button[data-mode]"), function (btn) {
+        btn.onclick = function () { setTimeMode(btn.getAttribute("data-mode")); };
+      });
+    }
 
     // 双月绩效 KPI 进度（首次渲染，数据到达后 loadData 会再刷新实际值）
     renderKpi();
