@@ -202,8 +202,24 @@ input[type=text]{min-width:210px}
 .btn.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(99,102,241,.32)}
 .btn.sm{padding:6px 12px;font-size:12px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:1100px){.grid3{grid-template-columns:1fr}}
 @media(max-width:900px){.grid2{grid-template-columns:1fr}}
 .chart-box{position:relative;height:340px}
+
+/* 标签筛选卡片 */
+.tag-filter-card{display:flex;flex-direction:column}
+.tag-filter-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:8px 10px;background:#f8f9ff;border:1px solid var(--line);border-radius:10px}
+.tag-filter-tip{font-size:12px;color:var(--muted);margin-left:auto}
+.tag-cloud{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;max-height:230px;overflow:auto;padding:4px}
+.tag-chip{padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer;font-size:12px;color:var(--muted);font-weight:600;transition:.15s;user-select:none}
+.tag-chip:hover{border-color:var(--brand);color:var(--brand)}
+.tag-chip.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(99,102,241,.28)}
+
+/* 品类方向三列 */
+.catdir-trio{align-items:stretch}
+.catdir-trio .card{display:flex;flex-direction:column}
+.catdir-trio .chart-box{flex:1;min-height:260px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
 th:first-child,td:first-child,th.l,td.l{text-align:left}
@@ -438,7 +454,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 <nav>
   <button data-tab="proj" class="active">项目看板</button>
   <button data-tab="periods">周期对比</button>
-  <button data-tab="dimcat">维度·品类</button>
+  <button data-tab="catdir">品类方向</button>
   <button data-tab="mat">素材·爆款</button>
   <button data-tab="vparse">🎬 视频解析</button>
   <button data-tab="me">个人数据</button>
@@ -498,15 +514,20 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
           <div id="ovTypeStats" class="type-stats"></div>
         </div>
       </div>
-      <div class="card">
-        <h2>转化漏斗 <span class="tag">展示 → 点击 → 转化</span></h2>
-        <div id="pj-funnel"></div>
-        <div class="note">点击率 = 点击/展示；转化率 = 转化/点击。条宽按各阶段占展示的比例（对数）示意。</div>
+      <div class="card tag-filter-card">
+        <h2>标签筛选 <span class="tag">多选 · 联动品类 / SKU / 素材排行</span></h2>
+        <div class="tag-filter-toolbar">
+          <span class="ov-filter-label">包含</span>
+          <span class="seg" id="tagModeSeg">
+            <span class="seg-btn on" data-mode="any">任一</span>
+            <span class="seg-btn" data-mode="all">所有</span>
+          </span>
+          <span class="tag-filter-tip" id="tagFilterTip">未选择标签</span>
+        </div>
+        <div class="tag-cloud" id="tagCloud">
+          <div class="empty" style="padding:20px 10px">导入数据后自动加载标签</div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <h2><b id="pj-title">低活</b> 项目指标 <span class="tag">当前选中项目</span></h2>
-      <div class="kpis" id="pj-kpis"></div>
     </div>
     <div class="grid2">
       <div class="card">
@@ -555,59 +576,11 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     </div>
   </div>
 
-  <!-- ========== 维度分析 · 品类方向 ========== -->
-  <div class="section" id="dimcat">
-    <div class="grp-head">
-      <h1 class="grp-title">维度分析 · 品类方向</h1>
-      <p class="grp-sub">从多维度拆解表现，并给出逐品类方向建议</p>
-    </div>
-    <div class="subnav">
-      <button data-sub="dim" class="on">维度分析</button>
-      <button data-sub="catdir">品类方向建议</button>
-    </div>
-  <!-- ========== 维度分析 ========== -->
-  <div class="subpanel on" id="dim">
-    <div class="card">
-      <div class="filters">
-        <span style="color:var(--muted)">项目：</span>
-        <span class="chip" data-proj="广义新">广义新</span>
-        <span class="chip" data-proj="低活">低活</span>
-        <span class="chip" data-proj="标点">标点</span>
-        <span class="chip" id="dimAll" style="margin-left:6px">全选</span>
-      </div>
-      <div class="dim-tabs">
-        <button data-dim="cat" class="on">按品类</button>
-        <button data-dim="chan">按投放端</button>
-        <button data-dim="opt">按优化师</button>
-        <button data-dim="edit">按剪辑</button>
-        <button data-dim="tag">按标签</button>
-      </div>
-      <div id="dimTagSummary" class="dim-tag-summary" style="display:none"></div>
-      <div id="dimTagFilter" class="dim-tag-filter" style="display:none">
-        <span class="ftip">筛选标签：</span>
-        <input type="text" id="dimTagInput" placeholder="输入标签名，如 aigc / 原创 / 首发…">
-        <button class="btn sm" id="dimTagAigc">AIGC</button>
-        <button class="btn sm" id="dimTagOriginal">原创</button>
-        <button class="btn sm" id="dimTagFirst">首发</button>
-        <button class="btn sm" id="dimTagClear">清除</button>
-        <span id="dimTagTip" class="dim-tag-tip"></span>
-      </div>
-      <div class="grid2">
-        <div class="chart-box"><canvas id="chDim"></canvas></div>
-        <div class="tbl-scroll" style="max-height:420px">
-          <table id="dimTable"><thead></thead><tbody></tbody></table>
-        </div>
-      </div>
-      <div class="note">点击表头排序。该视图用于定位“高转化低成本的品类/投放端/优化师/剪辑/标签”，作为素材方向调整依据；「按标签」可看各素材标签的消耗及其占比，覆盖素材数指被打上该标签的素材人次（单素材可含多个标签）。</div>
-    </div>
-  </div>
-
-
   <!-- ========== 品类方向建议 ========== -->
-  <div class="subpanel" id="catdir">
-    <div class="card">
-      <h2>品类表现 Top10 <span class="tag">消耗 / 转化率</span></h2>
-      <div class="chart-box" style="height:360px"><canvas id="chPjCat"></canvas></div>
+  <div class="section" id="catdir">
+    <div class="grp-head">
+      <h1 class="grp-title">品类方向建议</h1>
+      <p class="grp-sub">从多维度拆解表现，并给出逐品类方向建议</p>
     </div>
     <div class="card">
       <div class="filters">
@@ -624,6 +597,29 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       </div>
       <div class="kpis" id="catdir-kpis"></div>
     </div>
+    <div class="grid3 catdir-trio">
+      <div class="card">
+        <h2>品类表现 Top10 <span class="tag">消耗 / 转化率</span></h2>
+        <div class="chart-box" style="height:360px"><canvas id="chPjCat"></canvas></div>
+      </div>
+      <div class="card" id="lowActCard">
+        <h2>低活渠道 · 活动类型分布 <span class="tag">素材命名第5段=活动类型</span></h2>
+        <div class="chart-box" id="lowActBox" style="height:360px"><canvas id="chLowAct"></canvas></div>
+        <div class="note" id="lowActNote"></div>
+      </div>
+      <div class="card" id="skuCard">
+        <h2>三渠道跑量 SKU 统计 <span class="tag">消耗≥¥1万</span>
+          <span class="seg" id="skuSeg" style="margin-left:10px">
+            <span class="seg-btn on" data-ch="低活">低活</span>
+            <span class="seg-btn" data-ch="标点">标点</n            <span class="seg-btn" data-ch="广义新">广义新</span>
+            <span class="seg-btn" data-ch="all">全部</span>
+          </span>
+        </h2>
+        <div class="kpis" id="skuKpis"></div>
+        <div class="chart-box" id="skuBox" style="height:340px"><canvas id="chSku"></canvas></div>
+        <div class="note" id="skuNote">SKU 取自素材命名中最长数字段（8~16 位商品 ID）；跑量 SKU = 单 SKU 累计消耗 ≥ ¥10,000。可切换渠道查看。</div>
+      </div>
+    </div>
     <div class="card">
       <h2>各品类核心指标 <span class="tag">消耗 / 点击 / 转化 多维对比</span></h2>
       <div class="chart-box" style="height:380px"><canvas id="chCatDir"></canvas></div>
@@ -639,26 +635,6 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       <h2>📌 品类方向建议卡 <span class="tag">逐品类诊断 + 行动建议</span></h2>
       <div class="cat-grid" id="catdirCards"></div>
     </div>
-    <div class="card" id="lowActCard">
-      <h2>低活渠道 · 活动类型分布 <span class="tag">素材命名第5段=活动类型</span></h2>
-      <div class="chart-box" id="lowActBox" style="height:360px"><canvas id="chLowAct"></canvas></div>
-      <div class="note" id="lowActNote"></div>
-    </div>
-    <div class="card" id="skuCard">
-      <h2>三渠道跑量 SKU 统计 <span class="tag">消耗≥¥1万</span>
-        <span class="seg" id="skuSeg" style="margin-left:10px">
-          <span class="seg-btn on" data-ch="低活">低活</span>
-          <span class="seg-btn" data-ch="标点">标点</span>
-          <span class="seg-btn" data-ch="广义新">广义新</span>
-          <span class="seg-btn" data-ch="all">全部</span>
-        </span>
-      </h2>
-      <div class="kpis" id="skuKpis"></div>
-      <div class="chart-box" id="skuBox" style="height:340px"><canvas id="chSku"></canvas></div>
-      <div class="note" id="skuNote">SKU 取自素材命名中最长数字段（8~16 位商品 ID）；跑量 SKU = 单 SKU 累计消耗 ≥ ¥10,000。可切换渠道查看。</div>
-    </div>
-  </div>
-
   </div>
 
   <!-- ========== 素材排行 · 爆款标准 ========== -->
@@ -1085,6 +1061,7 @@ const state = {
   pjProj: '低活', pjSort: 'cost',
   dim: 'cat',
   dimTagFilter: '',
+  tagFilter: {tags:new Set(), mode:'any'},
   rankProj: new Set(['广义新','低活','标点']),
   rankSort: {key:'cost', dir:-1},
   rankType: 'all',
@@ -1095,6 +1072,46 @@ const state = {
   catdirSort: 'cost', catdirSortDir: -1,
   skuCh: '低活',
 };
+
+// ---------- 标签筛选（多选 + 任一/所有） ----------
+function getMatTags(row, iTags){
+  if(iTags==null) iTags = DATA.materials ? DATA.materials.cols.indexOf('tags') : -1;
+  return String(iTags>=0 ? (row[iTags]||'') : '').split(/[,，]/).map(t=>t.trim()).filter(Boolean);
+}
+function matPassesTagFilter(row, iTags){
+  const tf = state.tagFilter;
+  if(!tf || !tf.tags || tf.tags.size===0) return true;
+  const tags = getMatTags(row, iTags);
+  if(tf.mode==='all') return [...tf.tags].every(t=>tags.includes(t));
+  return [...tf.tags].some(t=>tags.includes(t));
+}
+function getFilteredRows(){
+  if(!DATA.materials || !DATA.materials.rows) return [];
+  return DATA.materials.rows.filter(r=>matPassesTagFilter(r));
+}
+function allTags(){
+  const iTags = DATA.materials ? DATA.materials.cols.indexOf('tags') : -1;
+  const s=new Set();
+  (DATA.materials.rows||[]).forEach(r=>{ getMatTags(r,iTags).forEach(t=>s.add(t)); });
+  return [...s].sort((a,b)=>a.localeCompare(b,'zh'));
+}
+function renderTagFilter(){
+  const cloud=$('#tagCloud'), tip=$('#tagFilterTip');
+  if(!cloud) return;
+  const tags=allTags();
+  if(!tags.length){ cloud.innerHTML='<div class="empty" style="padding:20px 10px">导入数据后自动加载标签</div>'; if(tip) tip.textContent='未选择标签'; return; }
+  const selected=state.tagFilter.tags;
+  cloud.innerHTML = tags.map(t=>`<span class="tag-chip ${selected.has(t)?'on':''}" data-tag="${esc(t)}">${esc(t)}</span>`).join('');
+  $$('.tag-chip').forEach(c=>{
+    c.onclick=()=>{
+      const t=c.dataset.tag;
+      if(selected.has(t)) selected.delete(t); else selected.add(t);
+      renderTagFilter();
+      renderAll();
+    };
+  });
+  if(tip) tip.textContent = selected.size ? `已选 ${selected.size} 个标签 · ${state.tagFilter.mode==='all'?'所有':'任一'}` : '未选择标签';
+}
 
 // ---------- 本地存储（优化闭环） ----------
 const LS_KEY = 'matopt_loop_v1';
@@ -1272,47 +1289,16 @@ function renderTypeOverview(){
 function renderProject(){
   renderProjSummary();
   renderOvPeriods();
+  renderTagFilter();
   const empty = !(DATA && DATA.materials && DATA.materials.rows && DATA.materials.rows.length);
   if(empty){
     $('#ov-period-filter').textContent = '未导入数据';
-    $('#pj-title').textContent = state.pjProj || '—';
-    $('#pj-kpis').innerHTML = '<div class="empty" style="grid-column:1/-1;text-align:left;padding:16px 10px"><b>暂无项目数据</b><br><span style="color:var(--muted)">导入素材报表后即可查看各项目消耗、转化、漏斗及素材排行。</span></div>';
-    $('#pj-funnel').innerHTML = '<div class="empty" style="text-align:left;padding:30px 10px"><b>暂无转化漏斗数据</b><br><span style="color:var(--muted)">需要导入展示/点击/转化数据。</span></div>';
     $('#pjMatTable').querySelector('thead').innerHTML = '';
     $('#pjMatTable').querySelector('tbody').innerHTML = '<tr><td class="empty" colspan="8">请导入素材报表</td></tr>';
     $('#ov-insights').innerHTML = '<div class="insight"><b>提示：</b>项目看板的数据来自「导入新周期」功能。个人数据请在顶部导航切换到「个人数据」标签查看。</div>';
     return;
   }
-  const pj = state.pjProj;
-  const p = DATA.projects.find(x=>x.proj===pj) || DATA.projects[0];
   $('#ov-period-filter').textContent = `周期 ${DATA.meta.period}`;
-  $('#pj-title').textContent = pj;
-  // KPI
-  const matN = DATA.materials.rows.filter(r=>r[4]===pj).length;
-  const kpis = [
-    ['消耗', fmtMoney(p.cost)],
-    ['素材数', fmtInt(matN)+' 条'],
-    ['展示', fmtInt(p.imp)],
-    ['点击', fmtInt(p.clk)],
-    ['转化', fmtInt(p.cv)],
-    ['转化成本', fmtCpa(p.cpa)],
-    ['转化率', fmtPct(p.cvr)],
-    ['点击率', fmtPct(p.ctr)],
-  ];
-  $('#pj-kpis').innerHTML = kpis.map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
-  // 漏斗（对数比例示意宽度，最小可见宽度保证可读）
-  const w = v => (p.imp>0 ? Math.max(30, (Math.log10(Math.max(v,1))/Math.log10(Math.max(p.imp,10)))*100) : 30);
-  $('#pj-funnel').innerHTML = `
-    <div class="funnel">
-      <div class="fn-row"><span class="fn-label">展示</span>
-        <div class="fn-bar-wrap"><div class="fn-bar" style="width:${w(p.imp)}%;background:#2f6bff">${fmtInt(p.imp)}</div></div></div>
-      <div class="fn-rate">↓ 点击率 <b>${fmtPct(p.ctr)}</b></div>
-      <div class="fn-row"><span class="fn-label">点击</span>
-        <div class="fn-bar-wrap"><div class="fn-bar" style="width:${w(p.clk)}%;background:#1f8a70">${fmtInt(p.clk)}</div></div></div>
-      <div class="fn-rate">↓ 转化率 <b>${fmtPct(p.cvr)}</b></div>
-      <div class="fn-row"><span class="fn-label">转化</span>
-        <div class="fn-bar-wrap"><div class="fn-bar" style="width:${w(p.cv)}%;background:#1faa59">${fmtInt(p.cv)}</div></div></div>
-    </div>`;
   renderPjMaterials();
 }
 function renderPjMaterials(){
@@ -1320,7 +1306,7 @@ function renderPjMaterials(){
   const sortKey = state.pjSort || 'cost';
   const C = DATA.materials.cols;
   const iCost=C.indexOf('cost'),iClk=C.indexOf('clk'),iCv=C.indexOf('cv'),iCpa=C.indexOf('cpa'),iCvr=C.indexOf('cvr');
-  let rows = DATA.materials.rows.filter(r=>r[4]===pj);
+  let rows = getFilteredRows().filter(r=>r[4]===pj);
   const asc = sortKey==='cpa';
   const ki = {cost:iCost,cv:iCv,cpa:iCpa,cvr:iCvr}[sortKey];
   if(sortKey==='cpa') rows = rows.filter(r=>r[iCpa]>0);
@@ -1413,7 +1399,7 @@ const RCOLS = [['name','素材名'],['proj','项目'],['opt','优化师'],['edit
 function buildRankRows(){
   const hitOnly = !!state.rankHitOnly;
   const iMt = DATA.materials.cols.indexOf('mtype');
-  let rows = DATA.materials.rows.filter(r=>state.rankProj.has(r[4]));
+  let rows = getFilteredRows().filter(r=>state.rankProj.has(r[4]));
   const q = $('#rankSearch').value.trim().toLowerCase();
   if(q){
     rows = rows.filter(r=>(r[1]+' '+r[0]+' '+r[2]+' '+r[3]+' '+r[5]).toLowerCase().includes(q));
@@ -1484,8 +1470,7 @@ function setSub(group, sub){
   const g = $('#'+group);
   g.querySelectorAll('.subnav button').forEach(b=>b.classList.toggle('on', b.dataset.sub===sub));
   g.querySelectorAll('.subpanel').forEach(p=>p.classList.toggle('on', p.id===sub));
-  if(sub==='dim') renderDim();
-  else if(sub==='catdir') renderCatDir();
+  if(sub==='catdir') renderCatDir();
   else if(sub==='rank') buildRankRows();
   else if(sub==='hitcfg') renderHitCfg();
 }
@@ -1786,24 +1771,23 @@ function bindNav(){
     $('#'+b.dataset.tab).classList.add('active');
     if(b.dataset.tab==='proj'){ renderProject(); }
     else if(b.dataset.tab==='periods'){ renderPeriods(); }
-    else if(b.dataset.tab==='dimcat'){ setSub('dimcat','dim'); }
+    else if(b.dataset.tab==='catdir'){ renderCatDir(); }
     else if(b.dataset.tab==='mat'){ buildRankRows(); renderHitCfg(); }
     else if(b.dataset.tab==='vparse'){ renderVParse(); }
     else if(b.dataset.tab==='me'){ renderMe(); }
   });
   $$('.subnav button[data-sub]').forEach(b=>b.onclick=()=>{ setSub(b.closest('.section').id, b.dataset.sub); });
 }
-function bindChips(container, set){
+function bindChips(container, set, cb){
   $$(container+' .chip[data-proj]').forEach(c=>{
     c.classList.toggle('on', set.has(c.dataset.proj));
     c.onclick=()=>{ const p=c.dataset.proj;
       if(set.has(p)) set.delete(p); else set.add(p);
       if(set.size===0) set.add(p); // 至少保留一个
       $$(container+' .chip[data-proj]').forEach(x=>x.classList.toggle('on', set.has(x.dataset.proj)));
-      if(container==='#dim') renderDim(); else buildRankRows();
+      if(cb) cb();
     };
   });
-  $(container+' #dimAll,#rankAll'.replace(/#\w+/g,m=>m)).onclick = ()=>{};
 }
 function bindAll(){
   bindNav();
@@ -1821,24 +1805,16 @@ function bindAll(){
       renderPjMaterials(); };
   });
   // 总览 chip 无
-  // 维度 chips
-  $$('#dim .chip[data-proj]').forEach(c=>{ c.classList.add('on');
-    c.onclick=()=>{ const p=c.dataset.proj; if(state.projects.has(p))state.projects.delete(p); else state.projects.add(p);
-      if(state.projects.size===0)state.projects.add(p);
-      $$('#dim .chip[data-proj]').forEach(x=>x.classList.toggle('on',state.projects.has(x.dataset.proj)));
-      renderDim(); renderOverview(); };
+
+  // 标签筛选：任一 / 所有 模式切换
+  $$('#tagModeSeg .seg-btn').forEach(b=>{
+    b.onclick=()=>{
+      state.tagFilter.mode = b.dataset.mode;
+      $$('#tagModeSeg .seg-btn').forEach(x=>x.classList.toggle('on', x===b));
+      renderTagFilter();
+      renderAll();
+    };
   });
-  $('#dimAll').onclick=()=>{ state.projects=new Set(['广义新','低活','标点']); $$('#dim .chip[data-proj]').forEach(x=>x.classList.add('on')); renderDim(); renderOverview(); };
-  $$('.dim-tabs button').forEach(b=>b.onclick=()=>{ $$('.dim-tabs button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); state.dim=b.dataset.dim; state.dimTagFilter=''; const di=$('#dimTagInput'); if(di)di.value=''; renderDim(); });
-  $('#dimTable').querySelector('thead').addEventListener('click',e=>{ if(e.target.dataset.k){ const k=e.target.dataset.k; state.dimSort={key:k,dir:state.dimSort&&state.dimSort.key===k?(0-state.dimSort.dir):-1}; renderDim(); }});
-  state.dimSort={key:'cost',dir:-1};
-  const dimTagInput=$('#dimTagInput');
-  const tagBtns=['dimTagAigc','dimTagOriginal','dimTagFirst'];
-  const clearTagHl=()=>{ tagBtns.forEach(x=>{const b=$('#'+x); if(b)b.classList.remove('on');}); };
-  if(dimTagInput) dimTagInput.oninput=()=>{ state.dimTagFilter=dimTagInput.value; clearTagHl(); renderDim(); };
-  const tagBtn=(id,val)=>{ const el=$('#'+id); if(el) el.onclick=()=>{ state.dimTagFilter=val; if(dimTagInput)dimTagInput.value=val; clearTagHl(); el.classList.add('on'); renderDim(); }; };
-  tagBtn('dimTagAigc','aigc'); tagBtn('dimTagOriginal','原创'); tagBtn('dimTagFirst','首发');
-  const clearBtn=$('#dimTagClear'); if(clearBtn) clearBtn.onclick=()=>{ state.dimTagFilter=''; if(dimTagInput)dimTagInput.value=''; clearTagHl(); renderDim(); };
 
   // 排行 chips
   $$('#rank .chip[data-proj]').forEach(c=>{ c.classList.add('on');
@@ -1938,7 +1914,7 @@ function aggregateByCat(projSet){
   const C=DATA.materials.cols;
   const iProj=C.indexOf('proj'),iCat=C.indexOf('cat'),iCost=C.indexOf('cost'),iImp=C.indexOf('imp'),iClk=C.indexOf('clk'),iCv=C.indexOf('cv'),iMt=C.indexOf('mtype');
   const map={};
-  (DATA.materials.rows||[]).forEach(r=>{
+  getFilteredRows().forEach(r=>{
     if(projSet && !projSet.has(r[iProj])) return;
     const cat=(r[iCat]||'未分类');
     if(!map[cat]) map[cat]={cat,n:0,cost:0,imp:0,clk:0,cv:0,hitN:0,videoN:0,costTop:0,topName:''};
@@ -2048,7 +2024,7 @@ function renderLowAct(){
   const C=DATA.materials.cols;
   const iProj=C.indexOf('proj'), iName=C.indexOf('name'), iCost=C.indexOf('cost'), iCv=C.indexOf('cv');
   const actCost={}; let lowTotal=0;
-  DATA.materials.rows.forEach(r=>{
+  getFilteredRows().forEach(r=>{
     if(r[iProj]!=='低活') return;
     const cost=r[iCost]||0, cv=r[iCv]||0; lowTotal+=cost;
     const parts=String(r[iName]||'').split('-').map(s=>s.trim()).filter(Boolean);
@@ -2079,7 +2055,7 @@ function renderSkuStats(){
   const C=DATA.materials.cols;
   const iProj=C.indexOf('proj'), iName=C.indexOf('name'), iCost=C.indexOf('cost'), iCv=C.indexOf('cv');
   const skuCost={}; const chTot={}; CH.forEach(p=>chTot[p]=0); let allTot=0;
-  DATA.materials.rows.forEach(r=>{
+  getFilteredRows().forEach(r=>{
     const p=r[iProj]; if(!CH.includes(p)) return;
     if(ch!=='all' && p!==ch) return;
     const cost=r[iCost]||0, cv=r[iCv]||0; chTot[p]+=cost; allTot+=cost;
@@ -2098,10 +2074,11 @@ function renderSkuStats(){
     ['占'+(ch==='all'?'总':'该渠道')+'消耗', baseTot>0?fmtPct(hotCost/baseTot*100):'—']
   ].map(([l,v])=>`<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div></div>`).join('');
   const topSku=hot.slice(0,10);
+  const cyl={topLeft:99,topRight:99,bottomLeft:0,bottomRight:0};
   chart('chSku',{type:'bar',
     data:{labels:topSku.map(o=>o.k),datasets:[
-      {label:'消耗(¥)',data:topSku.map(o=>Math.round(o.cost)),backgroundColor:barGrad('#6366f1','#8b5cf6'),borderRadius:6,yAxisID:'y'},
-      {label:'转化数',data:topSku.map(o=>Math.round(o.cv)),backgroundColor:'rgba(31,170,89,.75)',borderRadius:6,yAxisID:'y2'}
+      {label:'消耗(¥)',data:topSku.map(o=>Math.round(o.cost)),backgroundColor:barGrad('#6366f1','#8b5cf6'),borderRadius:cyl,yAxisID:'y',barPercentage:.7},
+      {label:'转化数',data:topSku.map(o=>Math.round(o.cv)),backgroundColor:'rgba(31,170,89,.75)',borderRadius:cyl,yAxisID:'y2',barPercentage:.7}
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},
       scales:{y:{position:'left',title:{display:true,text:'消耗(¥)'},ticks:{callback:v=>'¥'+(v/1e6).toFixed(1)+'M'}},
@@ -2491,7 +2468,6 @@ function renderAll(){
   renderProject();
   renderOverview();
   renderPeriods();
-  renderDim();
   buildHitIndex();
   buildRankRows();
   renderHitCfg();
@@ -2557,8 +2533,8 @@ function applyLayout(){ let saved=null; try{ saved=JSON.parse(localStorage.getIt
     layout[pid].forEach(cid=>{ const el=document.getElementById(cid); if(el&&el.parentNode===parent) parent.appendChild(el); }); });
   hidden.forEach(cid=>{ const el=document.getElementById(cid); if(el) el.classList.add('hide'); }); }
 function rerenderCurrent(){ const t=[...$$('nav button.active')][0]; const tab=t&&t.dataset.tab;
-  if(tab==='proj'){ renderProject(); renderCatDir(); }
-  else if(tab==='dimcat'){ renderDim(); renderCatDir(); }
+  if(tab==='proj'){ renderProject(); }
+  else if(tab==='catdir'){ renderCatDir(); }
   else if(tab==='mat'){ buildRankRows(); renderHitCfg(); }
   else if(tab==='periods'){ renderPeriods(); } }
 function syncColorInputs(v){ if(!v) return; const map={brand:'c_brand',brand2:'c_brand2',bg:'c_bg',panel:'c_panel',ink:'c_ink',line:'c_line',muted:'c_muted'};
@@ -2823,8 +2799,12 @@ function decode(name, proj){
   let placement, category;
   if(proj==='广义新'||proj==='低活'){
     placement = parts.length>4 ? parts[4] : '其他';
+    // 含「PIN专项」等 PIN 字眼的视频素材：按命名第七段归类品类
+    if(/PIN|pin|Pin/.test(name) && parts.length>6){
+      category = parts[6];
+    }
     // 广义新含「1分」字眼的素材：品类以素材名第3段（产品名）为准，跳过「新人1分钱」等活动标签段
-    if(proj==='广义新' && /1分/.test(name) && parts.length>2){
+    else if(proj==='广义新' && /1分/.test(name) && parts.length>2){
       category = parts[2];
     } else {
       category  = parts.length>5 ? parts[5] : '其他';
@@ -3111,6 +3091,6 @@ document.addEventListener('click', function(e){
 })();
 </script>
 
-<script src="personal-enhance.js?v=20260729c"></script>
+<script src="personal-enhance.js?v=20260729d"></script>
 </body>
 </html>
