@@ -42,6 +42,7 @@
   var daySortDir = 1;  // 1 升序 / -1 降序
   var timeFilterMode = "day";  // month / week / day
   var PREVIEW_KEY = null;      // 素材预览链接列名（自动探测，无则隐藏预览列）
+  var COVER_KEY = null;        // 素材封面图列名（自动探测，无则隐藏缩略图）
   var ready = false;
 
   /* ---------- 双月绩效 KPI 进度：状态与工具 ---------- */
@@ -118,13 +119,14 @@
   }
   function num(v) { var n = parseFloat(String(v).replace(/[,%]/g, "")); return isFinite(n) ? n : 0; }
   // 自动探测素材预览链接列（列名含 预览/视频/url/链接/link 其一即识别）
-  function detectPreviewKey() {
-    PREVIEW_KEY = null;
+  function detectMediaKeys() {
+    PREVIEW_KEY = null; COVER_KEY = null;
     if (!matData.length) return;
     var keys = Object.keys(matData[0]);
     for (var i = 0; i < keys.length; i++) {
       var k = keys[i].toLowerCase();
-      if (k.indexOf("预览") >= 0 || k.indexOf("视频") >= 0 || k.indexOf("url") >= 0 || k.indexOf("链接") >= 0 || k.indexOf("link") >= 0) { PREVIEW_KEY = keys[i]; break; }
+      if (k.indexOf("预览") >= 0 || k.indexOf("视频") >= 0 || k.indexOf("url") >= 0 || k.indexOf("链接") >= 0 || k.indexOf("link") >= 0) { PREVIEW_KEY = keys[i]; }
+      if (k.indexOf("封面") >= 0 || k.indexOf("cover") >= 0 || k.indexOf("缩略图") >= 0 || k.indexOf("thumb") >= 0) { COVER_KEY = keys[i]; }
     }
   }
 
@@ -162,14 +164,18 @@
     Array.prototype.forEach.call(tbodyEl.querySelectorAll(".me-prev-row"), function (r) { r.remove(); });
     Array.prototype.forEach.call(tbodyEl.querySelectorAll(".me-play"), function (b) { b.textContent = "▶"; });
     var url = (btn.getAttribute("data-url") || "").trim();
-    if (!url) { btn.textContent = "▶"; return; }
+    var cover = (btn.getAttribute("data-cover") || "").trim();
     var inner;
-    if (isDirectVideo(url)) {
+    if (url && isDirectVideo(url)) {
       inner = "<video controls autoplay style='max-width:100%;max-height:380px;background:#000;border-radius:8px' src='" + esc(url) + "'></video>";
-    } else {
+    } else if (url) {
       inner = "<div style='padding:10px 4px'>" +
         "<a href='" + esc(url) + "' target='_blank' rel='noopener' style='color:#2b6cff;font-weight:600'>↗ 在创量后台查看素材预览</a>" +
         "<span style='color:#8a94a6;font-size:12px;margin-left:8px'>（当前为预览页链接，已新窗口打开；若填的是 mp4 直链则可在此直接播放）</span></div>";
+    } else if (cover) {
+      inner = "<div style='padding:10px 4px'><img src='" + esc(cover) + "' style='max-width:100%;max-height:380px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.12)' alt='素材封面'><div style='color:#8a94a6;font-size:12px;margin-top:6px'>暂无视频直链，仅显示封面</div></div>";
+    } else {
+      btn.textContent = "▶"; return;
     }
     var td = document.createElement("td");
     td.colSpan = tr.children.length;
@@ -194,17 +200,23 @@
     }
     var max = num(rows[0][sortKey]) || 1;
     var prevOn = !!PREVIEW_KEY;
-    var thead = "<tr><th>#</th>" + (prevOn ? "<th class='me-prev-h'>预览</th>" : "") + "<th class='l'>素材名</th>" + RANK_METRICS.map(function (m) {
+    var coverOn = !!COVER_KEY;
+    var thead = "<tr><th>#</th>" + (coverOn ? "<th class='me-cover-h'>封面</th>" : "") + (prevOn ? "<th class='me-prev-h'>预览</th>" : "") + "<th class='l'>素材名</th>" + RANK_METRICS.map(function (m) {
       return "<th data-key='" + m.key + "' class='" + (m.key === sortKey ? "on" : "") + "'>" + m.label + (m.key === sortKey ? " ↓" : "") + "</th>";
     }).join("") + "</tr>";
     var prevUrls = [];
+    var coverUrls = [];
     var tbody = rows.map(function (m, idx) {
       var v = num(m[sortKey]);
       var w = Math.max(2, Math.round(v / max * 100));
       var name = m["素材名"] || m["素材ID"] || "(未命名)";
       var disp = name.length > 38 ? name.slice(0, 38) + "…" : name;
+      var coverUrl = coverOn ? (m[COVER_KEY] || "") : "";
+      var prevUrl = prevOn ? (m[PREVIEW_KEY] || "") : "";
+      var coverCell = coverOn ? "<td class='me-cover-cell'>" + (coverUrl ? "<img class='me-thumb' src='" + esc(coverUrl) + "' loading='lazy' alt=''>" : "-") + "</td>" : "";
       var prevBtn = prevOn ? "<td class='me-prev-cell'><button class='me-play' type='button' data-i='" + idx + "'>▶</button></td>" : "";
-      prevUrls.push(prevOn ? (m[PREVIEW_KEY] || "") : "");
+      prevUrls.push(prevUrl);
+      coverUrls.push(coverUrl);
       var cells = RANK_METRICS.map(function (met) {
         var val = num(m[met.key]);
         var txt = (met.key === "CTR") ? val.toFixed(2) + "%" : fmtNum(val);
@@ -213,7 +225,7 @@
           : "";
         return "<td>" + txt + bar + "</td>";
       }).join("");
-      return "<tr><td class='rk'>" + (idx + 1) + "</td>" + prevBtn + "<td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + cells + "</tr>";
+      return "<tr><td class='rk'>" + (idx + 1) + "</td>" + coverCell + prevBtn + "<td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + cells + "</tr>";
     }).join("");
     box.innerHTML = "<table class='me-rank-tbl'><thead>" + thead + "</thead><tbody>" + tbody + "</tbody></table>";
     Array.prototype.forEach.call(box.querySelectorAll("th[data-key]"), function (th) {
@@ -223,6 +235,7 @@
     Array.prototype.forEach.call(box.querySelectorAll(".me-play"), function (btn) {
       var i = +btn.getAttribute("data-i");
       btn.setAttribute("data-url", prevUrls[i] || "");
+      btn.setAttribute("data-cover", coverUrls[i] || "");
       btn.onclick = function (e) { e.stopPropagation(); expandPreview(btn); };
     });
     var cnt = el("meRankCount"); if (cnt) cnt.textContent = "共 " + rows.length + " 个素材（按" + (RANK_METRICS.filter(function (m){return m.key===sortKey;})[0].label) + "排序）";
@@ -266,12 +279,13 @@
     var map = {};
     matData.forEach(function (m) {
       var id = m["素材ID"] || m["素材名"] || "(未知)";
-      if (!map[id]) map[id] = { id: id, name: m["素材名"] || id, "消耗": 0, "展示数": 0, "点击数": 0, "转化数": 0, days: {}, "预览链接": "" };
+      if (!map[id]) map[id] = { id: id, name: m["素材名"] || id, "消耗": 0, "展示数": 0, "点击数": 0, "转化数": 0, days: {}, "预览链接": "", "封面链接": "" };
       var o = map[id];
       o["消耗"] += num(m["消耗"]); o["展示数"] += num(m["展示数"]);
       o["点击数"] += num(m["点击数"]); o["转化数"] += num(m["转化数"]);
       if (m["日期"]) o.days[m["日期"]] = 1;
       if (PREVIEW_KEY && !o["预览链接"]) o["预览链接"] = m[PREVIEW_KEY] || "";
+      if (COVER_KEY && !o["封面链接"]) o["封面链接"] = m[COVER_KEY] || "";
     });
     var rows = Object.keys(map).map(function (k) {
       var o = map[k]; o["活跃天数"] = Object.keys(o.days).length;
@@ -285,22 +299,28 @@
     }
     var max = rows[0][monthSortKey] || 1;
     var prevOn = !!PREVIEW_KEY;
+    var coverOn = !!COVER_KEY;
     var metrics = [
       { k: "消耗", label: "消耗" }, { k: "展示数", label: "展示数" },
       { k: "点击数", label: "点击数" }, { k: "转化数", label: "转化数" },
       { k: "CTR", label: "CTR" }, { k: "活跃天数", label: "活跃天" }
     ];
-    var thead = "<tr><th>#</th>" + (prevOn ? "<th class='me-prev-h'>预览</th>" : "") + "<th class='l'>素材名</th>" + metrics.map(function (m) {
+    var thead = "<tr><th>#</th>" + (coverOn ? "<th class='me-cover-h'>封面</th>" : "") + (prevOn ? "<th class='me-prev-h'>预览</th>" : "") + "<th class='l'>素材名</th>" + metrics.map(function (m) {
       return "<th data-key='" + m.k + "' class='" + (m.k === monthSortKey ? "on" : "") + "'>" + m.label + (m.k === monthSortKey ? " ↓" : "") + "</th>";
     }).join("") + "</tr>";
     var prevUrls = [];
+    var coverUrls = [];
     var tbody = rows.map(function (o, idx) {
       var v = o[monthSortKey];
       var w = Math.max(2, Math.round(v / max * 100));
       var name = o["name"];
       var disp = name.length > 34 ? name.slice(0, 34) + "…" : name;
+      var coverUrl = coverOn ? (o["封面链接"] || "") : "";
+      var prevUrl = prevOn ? (o["预览链接"] || "") : "";
+      var coverCell = coverOn ? "<td class='me-cover-cell'>" + (coverUrl ? "<img class='me-thumb' src='" + esc(coverUrl) + "' loading='lazy' alt=''>" : "-") + "</td>" : "";
       var prevBtn = prevOn ? "<td class='me-prev-cell'><button class='me-play' type='button' data-i='" + idx + "'>▶</button></td>" : "";
-      prevUrls.push(prevOn ? (o["预览链接"] || "") : "");
+      prevUrls.push(prevUrl);
+      coverUrls.push(coverUrl);
       var cells = metrics.map(function (met) {
         var val = o[met.k];
         var txt = (met.k === "CTR") ? Number(val).toFixed(2) + "%" : fmtNum(val);
@@ -309,7 +329,7 @@
           : "";
         return "<td>" + txt + bar + "</td>";
       }).join("");
-      return "<tr><td class='rk'>" + (idx + 1) + "</td>" + prevBtn + "<td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + cells + "</tr>";
+      return "<tr><td class='rk'>" + (idx + 1) + "</td>" + coverCell + prevBtn + "<td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + cells + "</tr>";
     }).join("");
     box.innerHTML = "<table class='me-rank-tbl'><thead>" + thead + "</thead><tbody>" + tbody + "</tbody></table>";
     Array.prototype.forEach.call(box.querySelectorAll("th[data-key]"), function (th) {
@@ -319,6 +339,7 @@
     Array.prototype.forEach.call(box.querySelectorAll(".me-play"), function (btn) {
       var i = +btn.getAttribute("data-i");
       btn.setAttribute("data-url", prevUrls[i] || "");
+      btn.setAttribute("data-cover", coverUrls[i] || "");
       btn.onclick = function (e) { e.stopPropagation(); expandPreview(btn); };
     });
   }
@@ -653,7 +674,7 @@
     ]).then(function (res) {
       histData = csvToObjects(res[0]);
       matData = csvToObjects(res[1]);
-      detectPreviewKey();   // 探测素材预览链接列
+      detectMediaKeys();   // 探测素材预览/封面链接列
       var ds = {};
       histData.forEach(function (h) { ds[h["日期"]] = 1; });
       matData.forEach(function (m) { if (m["日期"]) ds[m["日期"]] = 1; });
@@ -692,7 +713,11 @@
       ".me-play:hover{background:#eef4ff}" +
       ".me-prev-h{width:56px}" +
       ".me-prev-cell{width:46px;text-align:center}" +
-      ".me-prev-row td{background:#f7faff;padding:12px;text-align:left}";
+      ".me-prev-row td{background:#f7faff;padding:12px;text-align:left}" +
+      ".me-cover-h{width:64px}" +
+      ".me-cover-cell{width:56px;text-align:center;padding:4px!important}" +
+      ".me-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #e6ebf2;background:#f6f8fb;cursor:zoom-in}" +
+      ".me-thumb:hover{box-shadow:0 2px 8px rgba(43,108,255,.2)}";
     document.head.appendChild(s);
   }
 
