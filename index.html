@@ -423,6 +423,16 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 
   <!-- ========== 项目基础看板 ========== -->
   <div class="section active" id="proj">
+    <div id="proj-empty" class="card" style="display:none;border-left:4px solid var(--brand);background:linear-gradient(120deg,#eef0ff,#f3effe)">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <div style="font-size:26px">📂</div>
+        <div style="flex:1;min-width:240px">
+          <div style="font-weight:700;font-size:15px;color:var(--ink)">项目看板暂无数据</div>
+          <div style="color:var(--muted);font-size:13px;margin-top:4px">此区域需要导入「素材周期数据报表」才会显示核心指标、项目对比、素材表现等内容。点击右上角「⤓ 导入新周期」上传 CSV 报表即可。</div>
+        </div>
+        <button class="btn primary" id="openImport2">⤓ 导入新周期</button>
+      </div>
+    </div>
     <div class="card">
       <h2>核心指标 <span class="tag" id="ov-period"></span>
         <button class="cmp-toggle" id="cmpToggle">📊 环比对比</button></h2>
@@ -1048,6 +1058,16 @@ function decKey(kind, a, b){ return kind==='cat' ? `cat|${a}|${b}` : `mat|${a}|$
 
 // ========== 项目基础看板 - 全局核心指标与项目对比 ==========
 function renderProjSummary(){
+  const empty = !(DATA && DATA.materials && DATA.materials.rows && DATA.materials.rows.length);
+  const emptyBanner = $('#proj-empty');
+  if(emptyBanner) emptyBanner.style.display = empty ? 'block' : 'none';
+  if(empty){
+    $('#ov-kpis').innerHTML = '<div class="empty" style="grid-column:1/-1;text-align:left;padding:16px 10px"><b>暂无核心指标数据</b><br><span style="color:var(--muted)">请点击右上角「⤓ 导入新周期」上传素材报表 CSV。</span></div>';
+    $('#ov-period').textContent = '未导入数据';
+    ['chProjCost','chProjEff','chTypeShare'].forEach(id=>{ const el=$(`#${id}`); if(el){ const ctx=el.getContext('2d'); ctx.clearRect(0,0,el.width,el.height); } });
+    $('#ovTypeStats').innerHTML = '<div class="empty" style="text-align:left;padding:40px 10px"><b>暂无视频/图片素材类型数据</b><br><span style="color:var(--muted)">导入后会自动按消耗占比拆分视频与图片。</span></div>';
+    return;
+  }
   $('#ov-period').textContent = DATA.meta.period;
   $('#cmpToggle').classList.toggle('on', state.compare);
   const o = DATA.overall;
@@ -1084,6 +1104,12 @@ function renderProjSummary(){
 
 // ========== 总览 ==========
 function renderOverview(){
+  const empty = !(DATA && DATA.materials && DATA.materials.rows && DATA.materials.rows.length);
+  if(empty){
+    $('#hdrsub').textContent = '当前项目看板无导入数据 · 请点击右上角「⤓ 导入新周期」上传素材报表';
+    $('#ov-insights').innerHTML = '<div class="insight"><b>提示：</b>项目看板需要导入素材周期报表才会显示数据；「个人数据」标签由系统每小时自动更新，可单独查看。</div>';
+    return;
+  }
   $('#hdrsub').textContent = `周期 ${DATA.meta.period} · 项目：广义新 / 低活 / 标点 · 共 ${fmtInt(DATA.materials.rows.length)} 条素材 · 生成于 ${DATA.meta.generated}`;
 
   // 洞察
@@ -1155,6 +1181,16 @@ function renderTypeOverview(){
 // ========== 项目基础看板 ==========
 function renderProject(){
   renderProjSummary();
+  const empty = !(DATA && DATA.materials && DATA.materials.rows && DATA.materials.rows.length);
+  if(empty){
+    $('#pj-period').textContent = '未导入数据';
+    $('#pj-kpis').innerHTML = '<div class="empty" style="grid-column:1/-1;text-align:left;padding:16px 10px"><b>暂无项目数据</b><br><span style="color:var(--muted)">导入素材报表后即可查看各项目消耗、转化、漏斗及素材排行。</span></div>';
+    $('#pj-funnel').innerHTML = '<div class="empty" style="text-align:left;padding:30px 10px"><b>暂无转化漏斗数据</b><br><span style="color:var(--muted)">需要导入展示/点击/转化数据。</span></div>';
+    $('#pjMatTable').querySelector('thead').innerHTML = '';
+    $('#pjMatTable').querySelector('tbody').innerHTML = '<tr><td class="empty" colspan="8">请导入素材报表</td></tr>';
+    $('#ov-insights').innerHTML = '<div class="insight"><b>提示：</b>项目看板的数据来自「导入新周期」功能。个人数据请在顶部导航切换到「个人数据」标签查看。</div>';
+    return;
+  }
   const pj = state.pjProj;
   const p = DATA.projects.find(x=>x.proj===pj) || DATA.projects[0];
   $('#pj-period').textContent = `周期 ${DATA.meta.period}`;
@@ -2725,6 +2761,7 @@ async function doImport(){
 function bindImportUI(){
   const bind=(sel,ev,fn)=>{ const el=$(sel); if(el){ el['on'+ev]=fn; } };
   bind('#openImport','click',openImport);
+  bind('#openImport2','click',openImport);
   bind('#closeImport','click',closeImport);
   bind('#cancelImport','click',closeImport);
   bind('#importMask','click',e=>{ if(e.target.id==='importMask') closeImport(); });
@@ -2735,7 +2772,7 @@ function bindImportUI(){
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', bindImportUI); } else { bindImportUI(); }
 // 兜底：全局事件委托，即使上面的直接绑定因任何原因未执行，点击“导入新周期”也一定能打开弹窗
 document.addEventListener('click', function(e){
-  const t = e.target.closest && e.target.closest('#openImport');
+  const t = e.target.closest && (e.target.closest('#openImport') || e.target.closest('#openImport2'));
   if(t){ try{ openImport(); }catch(err){ console.error('openImport 失败', err); } }
 });
 </script>
