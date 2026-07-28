@@ -1,4 +1,4 @@
-/* 个人数据增强：素材数据排行 + 时间筛选
+/* 个人数据增强：素材数据排行 + 时间筛选 + 本月每日明细 + 周统计
  * 注入到「个人数据」模块(#me)，读取仓库内的 me-materials.csv / me-history.csv
  * 通过接管 renderMe / meApplyRows 以避免与原看板自动刷新冲突。
  */
@@ -22,6 +22,14 @@
     { key: "转化数", label: "转化数" },
     { key: "CTR",    label: "CTR" }
   ];
+  // 每日明细表列
+  var DAY_COLS = [
+    { k: "日期",   l: "日期",   bar: false },
+    { k: "消耗",   l: "消耗",   bar: true },
+    { k: "素材数", l: "素材数", bar: false },
+    { k: "转化数", l: "转化数", bar: false },
+    { k: "CTR",    l: "CTR",    bar: false }
+  ];
 
   var histData = [];   // [{日期,消耗,素材数,转化数,CTR}]
   var matData = [];    // [{日期,素材ID,素材名,消耗,展示数,点击数,转化成本,转化数,CTR}]
@@ -29,6 +37,8 @@
   var currentDate = null;
   var sortKey = "消耗";
   var monthSortKey = "消耗";
+  var daySortKey = "日期";
+  var daySortDir = 1;  // 1 升序 / -1 降序
   var ready = false;
 
   /* ---------- 工具 ---------- */
@@ -130,7 +140,6 @@
       return "<tr><td class='rk'>" + (idx + 1) + "</td><td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + cells + "</tr>";
     }).join("");
     box.innerHTML = "<table class='me-rank-tbl'><thead>" + thead + "</thead><tbody>" + tbody + "</tbody></table>";
-    // 表头点击排序
     Array.prototype.forEach.call(box.querySelectorAll("th[data-key]"), function (th) {
       th.style.cursor = "pointer";
       th.onclick = function () { sortKey = th.getAttribute("data-key"); renderRank(); };
@@ -138,7 +147,7 @@
     var cnt = el("meRankCount"); if (cnt) cnt.textContent = "共 " + rows.length + " 个素材（按" + (RANK_METRICS.filter(function (m){return m.key===sortKey;})[0].label) + "排序）";
   }
 
-  /* ---------- 渲染：本月汇总（整合进个人数据，不单独分文件） ---------- */
+  /* ---------- 渲染：本月汇总 ---------- */
   function monthCard(name, val, unit) {
     return '<div class="kpi"><div class="l">' + esc(name) + "</div>" +
       '<div class="v">' + val + (unit ? (' <small>' + esc(unit) + "</small>") : "") + "</div>" +
@@ -222,6 +231,102 @@
       th.onclick = function () { monthSortKey = th.getAttribute("data-key"); renderMonthMatTop(); };
     });
   }
+
+  /* ---------- 渲染：本月每日明细（按天分别统计） ---------- */
+  function renderDayTable() {
+    var box = el("meDayTable");
+    if (!box) return;
+    var hs = histData.slice().sort(function (a, b) {
+      if (daySortKey === "日期") return a["日期"] < b["日期"] ? -daySortDir : (a["日期"] > b["日期"] ? daySortDir : 0);
+      return (num(a[daySortKey]) - num(b[daySortKey])) * daySortDir;
+    });
+    if (!hs.length) { box.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#999">暂无每日数据</div>'; return; }
+    var max = 1;
+    hs.forEach(function (h) { max = Math.max(max, num(h["消耗"])); });
+    var thead = "<tr>" + DAY_COLS.map(function (c) {
+      var on = c.k === daySortKey;
+      var arrow = on ? (daySortDir > 0 ? " ↓" : " ↑") : "";
+      return "<th data-key='" + c.k + "' class='" + (c.k === "日期" ? "l " : "") + (on ? "on" : "") + "'>" + c.l + arrow + "</th>";
+    }).join("") + "</tr>";
+    var tbody = hs.map(function (h) {
+      var cells = DAY_COLS.map(function (c) {
+        if (c.k === "日期") return "<td class='l'>" + esc(h["日期"]) + "</td>";
+        var v = num(h[c.k]);
+        if (c.bar) {
+          var w = Math.max(2, Math.round(v / max * 100));
+          var txt = (c.k === "CTR") ? v.toFixed(2) + "%" : fmtNum(v);
+          return "<td><div style='display:flex;align-items:center;gap:8px;justify-content:flex-end'>" +
+            "<span>" + txt + "</span>" +
+            "<span style='flex:1;max-width:120px;height:6px;background:#eef2f7;border-radius:3px;overflow:hidden'><i style='display:block;height:100%;width:" + w + "%;background:#4a7bff'></i></span>" +
+            "</div></td>";
+        }
+        var txt2 = (c.k === "CTR") ? v.toFixed(2) + "%" : fmtNum(v);
+        return "<td>" + txt2 + "</td>";
+      }).join("");
+      return "<tr>" + cells + "</tr>";
+    }).join("");
+    box.innerHTML = "<table class='me-rank-tbl'><thead>" + thead + "</thead><tbody>" + tbody + "</tbody></table>";
+    Array.prototype.forEach.call(box.querySelectorAll("th[data-key]"), function (th) {
+      th.style.cursor = "pointer";
+      th.onclick = function () {
+        var k = th.getAttribute("data-key");
+        if (daySortKey === k) daySortDir = -daySortDir;
+        else { daySortKey = k; daySortDir = (k === "日期") ? 1 : -1; }
+        renderDayTable();
+      };
+    });
+  }
+
+  /* ---------- 渲染：周统计 ---------- */
+  function renderWeek() {
+    var box = el("meWeekTable");
+    if (!box) return;
+    var hs = histData.slice().sort(function (a, b) { return a["日期"] < b["日期"] ? -1 : 1; });
+    if (!hs.length) { box.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#999">暂无数据</div>'; return; }
+    var m = hs[0]["日期"].slice(5, 7);
+    var maxDay = parseInt(hs[hs.length - 1]["日期"].slice(8, 10), 10);
+    var weeks = {};
+    hs.forEach(function (h) {
+      var dom = parseInt(h["日期"].slice(8, 10), 10);
+      var idx = Math.floor((dom - 1) / 7) + 1;
+      if (!weeks[idx]) weeks[idx] = [];
+      weeks[idx].push(h);
+    });
+    var idxs = Object.keys(weeks).map(Number).sort(function (a, b) { return a - b; });
+    var rows = idxs.map(function (idx) {
+      var rs = weeks[idx];
+      var cost = 0, conv = 0, matSum = 0, ctrSum = 0;
+      rs.forEach(function (h) { cost += num(h["消耗"]); conv += num(h["转化数"]); matSum += num(h["素材数"]); ctrSum += num(h["CTR"]); });
+      var n = rs.length;
+      var startDom = (idx - 1) * 7 + 1;
+      var endDom = Math.min(idx * 7, maxDay);
+      var rng = m + "/" + ("0" + startDom).slice(-2) + "–" + ("0" + endDom).slice(-2);
+      return {
+        idx: idx, rng: rng, n: n,
+        cost: cost, avgCost: cost / n,
+        conv: conv, avgMat: matSum / n,
+        avgCTR: ctrSum / n
+      };
+    });
+    var maxCost = 1; rows.forEach(function (r) { maxCost = Math.max(maxCost, r.cost); });
+    var thead = "<tr><th class='l'>周次</th><th>区间</th><th>天数</th><th>周消耗</th><th>日均消耗</th><th>周转化数</th><th>周均在投素材数</th><th>周均CTR</th></tr>";
+    var tbody = rows.map(function (r) {
+      var w = Math.max(2, Math.round(r.cost / maxCost * 100));
+      return "<tr>" +
+        "<td class='l'>第 " + r.idx + " 周</td>" +
+        "<td>" + esc(r.rng) + "</td>" +
+        "<td>" + r.n + "</td>" +
+        "<td><div style='display:flex;align-items:center;gap:8px;justify-content:flex-end'><span>" + fmtNum(r.cost) + "</span><span style='flex:1;max-width:90px;height:6px;background:#eef2f7;border-radius:3px;overflow:hidden'><i style='display:block;height:100%;width:" + w + "%;background:#27a567'></i></span></div></td>" +
+        "<td>" + fmtNum(r.avgCost) + "</td>" +
+        "<td>" + fmtNum(r.conv) + "</td>" +
+        "<td>" + fmtNum(r.avgMat) + "</td>" +
+        "<td>" + r.avgCTR.toFixed(2) + "%</td>" +
+        "</tr>";
+    }).join("");
+    box.innerHTML = "<table class='me-rank-tbl'><thead>" + thead + "</thead><tbody>" + tbody + "</tbody></table>";
+  }
+
+  /* ---------- 渲染：本月总入口 ---------- */
   function renderMonth() {
     var body = el("meMonthBody");
     if (!body) return;
@@ -240,6 +345,8 @@
     renderMonthCards(totalCost, totalConv, avgCTR, distinctMat, days);
     renderMonthChart();
     renderMonthMatTop();
+    renderDayTable();   // 本月每日明细
+    renderWeek();       // 周统计
   }
 
   function renderPersonal() {
@@ -348,9 +455,24 @@
         "<div style='font-weight:600;margin:0 0 6px;color:#334'>每日消耗走势</div>" +
         "<div id='meMonthChart' style='display:flex;align-items:flex-end;gap:3px;height:130px;padding:0 2px 18px;border-bottom:1px solid #eef2f7;margin-bottom:16px'></div>" +
         "<div style='font-weight:600;margin:0 0 6px;color:#334'>素材消耗 Top 50（本月累计，点击表头排序）</div>" +
-        "<div id='meMonthMatTop' style='max-height:440px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>" +
+        "<div id='meMonthMatTop' style='max-height:440px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff;margin-bottom:18px'></div>" +
+        "<div style='font-weight:600;margin:0 0 6px;color:#334'>📅 本月每日明细（点击表头排序）</div>" +
+        "<div id='meDayTable' style='max-height:420px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>" +
       "</div>";
     if (panel && panel.parentNode) panel.parentNode.insertBefore(monthPanel, panel.nextSibling);
+
+    // 本周统计面板
+    var weekPanel = document.createElement("div");
+    weekPanel.id = "meWeek";
+    weekPanel.style.cssText = "margin-top:20px;border:1px solid #e6ebf2;border-radius:12px;background:#fff;overflow:hidden";
+    weekPanel.innerHTML =
+      "<div style='padding:12px 16px;background:#f6f8fb'>" +
+        "<h3 style='margin:0;font-size:16px;color:#223'>📈 周统计 <span style='font-size:12px;color:#8a94a6;font-weight:400'>（按自然周切分本月，每周 7 天）</span></h3>" +
+      "</div>" +
+      "<div style='padding:14px 16px'>" +
+        "<div id='meWeekTable' style='max-height:420px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>" +
+      "</div>";
+    if (monthPanel && monthPanel.parentNode) monthPanel.parentNode.insertBefore(weekPanel, monthPanel.nextSibling);
 
     // 本月汇总折叠
     var toggle = el("meMonthToggle");
@@ -370,9 +492,7 @@
   function hookDashboard() {
     try { if (window.meStop) window.meStop(); } catch (e) {}
     if (window.ME && window.ME.cfg) window.ME.cfg.auto = false;
-    // renderMe 不再触碰个人模块 DOM（改为由本脚本渲染）
     window.renderMe = function () {};
-    // meApplyRows 触发本脚本渲染（忽略原 rows，改用历史/明细数据）
     window.meApplyRows = function () { if (ready) { renderPersonal(); renderMonth(); } };
   }
 
@@ -381,9 +501,7 @@
     hookDashboard();
     injectUI();
     loadData();
-    // 每 5 分钟静默刷新一次（自动化每小时推送新数据）
     setInterval(function () { loadData(); }, 5 * 60 * 1000);
-    // 接管「立即刷新」按钮
     var rb = el("meRefresh");
     if (rb) rb.onclick = function () { loadData(); };
   }
