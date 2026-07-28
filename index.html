@@ -1457,7 +1457,7 @@ function meApplyRows(rows){
   ME.lastFetch=now; ME.status='ok'; ME.errMsg=''; saveME();
 }
 async function meRefresh(){
-  try{ const rows=await meFetchSource(); meApplyRows(rows); renderMe(); setMeStatus(); meCd=ME.cfg.interval||10; }
+  try{ const rows=await meFetchSource(); meApplyRows(rows); renderMe(); setMeStatus(); meCd=ME.cfg.interval||10; renderMeChannels(); }
   catch(e){ ME.status='err'; ME.errMsg=e.message; setMeStatus(); }
 }
 function meStart(){ meStop();
@@ -1525,6 +1525,87 @@ function renderMeTrend(){
   chart('meTrend', {type:'line', data:{labels, datasets:ds}, options:{responsive:true, maintainAspectRatio:false,
     plugins:{legend:{labels:{boxWidth:10,font:{size:10}}}}, scales:{y:{min:0,max:100, title:{display:true,text:'达成率%'}}}}});
 }
+
+// 个人数据：总消耗下的三类渠道拆分 + 较昨日同时段增长
+let _meMatCache={text:null, ts:0};
+async function fetchMeText(file){
+  if(file==='me-materials.csv'){
+    const now=Date.now();
+    if(_meMatCache.text && now-_meMatCache.ts<300000) return _meMatCache.text;
+    const t=await fetch('me-materials.csv?_='+now, {cache:'no-store'}).then(r=>{ if(!r.ok) throw new Error('素材明细 HTTP '+r.status); return r.text(); });
+    _meMatCache={text:t, ts:now}; return t;
+  }
+  return await fetch(file+'?_='+Date.now(), {cache:'no-store'}).then(r=>{ if(!r.ok) throw new Error(file+' HTTP '+r.status); return r.text(); });
+}
+function classifyMeMat(name){
+  if(name.startsWith('信息流')) return '标点';        // 标点：素材名以「信息流」开头
+  if(name.includes('低活')) return '低活';            // 低活：素材名含「低活」
+  return '广义新';                                    // 其余（含广义新、采销等）归广义新
+}
+async function renderMeChannels(){
+  try{
+    // ---- 1. 三类消耗拆分（me-materials.csv，取最新有数据的一天）----
+    const matText=await fetchMeText('me-materials.csv');
+    const {cols, rows}=parseCSV(matText);
+    const iDate=cols.indexOf('日期'), iName=cols.indexOf('素材名'), iCost=cols.indexOf('消耗');
+    const byDate={};
+    rows.forEach(r=>{ const d=(r[iDate]||'').trim(); if(d && d!=='--'){ (byDate[d]=byDate[d]||[]).push(r); } });
+    const dates=Object.keys(byDate).sort();
+    const today=new Date().toISOString().slice(0,10);
+    const latest=byDate[today]?today:(dates[dates.length-1]||'');
+    const dayRows=byDate[latest]||[];
+    const sum={广义新:0,低活:0,标点:0};
+    dayRows.forEach(r=>{ const c=fnum(r[iCost]); sum[classifyMeMat((r[iName]||'').trim())]+=c; });
+    const total=sum.广义新+sum.低活+sum.标点;
+
+    // ---- 2. 较昨日同时段（me-history.csv 昨日全天 × 当前时刻占比）----
+    let yCost=0, yDate='';
+    try{
+      const hText=await fetchMeText('me-history.csv'); const h=parseCSV(hText);
+      const hiC=h.cols.indexOf('消耗'), hiD=h.cols.indexOf('日期');
+      if(h.rows.length){ const last=h.rows[h.rows.length-1]; yCost=fnum(last[hiC]); yDate=(last[hiD]||'').trim(); }
+    }catch(e){ /* 历史缺失不阻断 */ }
+    const costKey=meOrderedKeys().find(k=>k.includes('消耗')&&k.includes('今日'))||meOrderedKeys().find(k=>k.includes('消耗'));
+    const todayCost=costKey?(ME.metrics[costKey].value||0):0;
+    const now=new Date(); const frac=(now.getHours()*3600+now.getMinutes()*60+now.getSeconds())/86400;
+    const ySame=yCost*frac;
+    const growth=ySame>0?((todayCost-ySame)/ySame*100):0;
+
+    // ---- 3. 渲染三类 bars ----
+    const box=$('#meChannelBars');
+    if(box){
+      const pct=v=> total>0?Math.round(v/total*100):0;
+      const items=[['广义新',sum.广义新,'var(--green)'],['低活',sum.低活,'var(--yellow)'],['标点',sum.标点,'var(--brand)']];
+      box.innerHTML=items.map(([nm,val,col])=>{ const p=pct(val);
+        return `<div class="kpi"><div class="l">${nm}</div>`+
+          `<div class="v">¥${fmtInt(Math.round(val))}</div>`+
+          `<div class="note" style="margin:2px 0 0">占比 ${p}%</div>`+
+          `<div class="me-prog"><i style="width:${p}%;background:${col}"></i></div></div>`;
+      }).join('')||'<div class="empty">暂无素材明细</div>';
+    }
+    const diff=$('#meChannelDiff');
+    if(diff){
+      const gTxt=(growth>=0?'▲ +':'▼ ')+growth.toFixed(1)+'%';
+      const gCol=growth>=0?'var(--green)':'var(--red)';
+      diff.innerHTML=`数据日期：<b>${latest||'—'}</b> ｜ 总消耗 <b>¥${fmtInt(Math.round(total))}</b> ｜ 较昨日同时段 `+
+        `<b style="color:${gCol}">${gTxt}</b> <span class="note">（今日累计 ¥${fmtInt(Math.round(todayCost))} vs 昨日同时段 ¥${fmtInt(Math.round(ySame))}）</span>`;
+    }
+    // ---- 4. 在「今日消耗」卡上挂较昨日同时段徽标 ----
+    if(costKey){
+      const card=[...document.querySelectorAll('#meCards .kpi')].find(c=>(c.querySelector('.l')||{}).textContent===costKey);
+      if(card){
+        let badge=card.querySelector('.me-yoy');
+        const gTxt=(growth>=0?'▲ +':'▼ ')+growth.toFixed(1)+'%';
+        const gCol=growth>=0?'var(--green)':'var(--red)';
+        if(!badge){ badge=document.createElement('div'); badge.className='me-yoy'; badge.style.cssText='margin-top:5px;font-size:12px'; card.appendChild(badge); }
+        badge.innerHTML=`较昨日同时段 <b style="color:${gCol}">${gTxt}</b>`;
+      }
+    }
+  }catch(e){
+    const diff=$('#meChannelDiff'); if(diff) diff.textContent='渠道构成加载失败：'+e.message;
+    console.warn('[meChannels]', e);
+  }
+}
 function bindMeTable(){
   const tb=$('#meTableBody'); if(!tb) return;
   tb.oninput=e=>{ const tr=e.target.closest('tr'); if(!tr) return; const k=tr.dataset.k; const f=e.target.dataset.f; if(!f) return;
@@ -1581,6 +1662,7 @@ function bindMe(){
   b('#meMode','change',meCfgToggle); b('#meFmt','change',meCfgToggle);
   bindMeTable(); setMeStatus();
   if(ME.cfg.mode==='demo' || (ME.cfg.mode==='url' && ME.cfg.auto)){ renderMe(); meStart(); meRefresh(); } else { renderMe(); }
+  renderMeChannels();
 }
 setInterval(()=>{ if(meTimer && ME.cfg.interval){ meCd = meCd<=0? (ME.cfg.interval||10) : meCd-1;
   const el=$('#meCountdown'); if(el) el.textContent='下次刷新 '+meCd+'s'; } else { const el=$('#meCountdown'); if(el) el.textContent=''; } }, 1000);
