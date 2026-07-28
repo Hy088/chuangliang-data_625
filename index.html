@@ -1408,8 +1408,8 @@ const ME_KEY = 'matopt_personal_v3';
 let ME = loadME();
 let meTimer = null, meCd = 0;
 function loadME(){
-  try{ const s=JSON.parse(lsGet(ME_KEY)); if(s && s.metrics){ if(!s.order) s.order=Object.keys(s.metrics); return s; } }catch(e){}
-  return { cfg:{mode:'url', url:'https://cdn.jsdelivr.net/gh/Hy088/chuangliang-data_625@main/me-data.csv', fmt:'csv', interval:30, csvMap:{name:'名称',value:'当前值',target:'目标',unit:'单位',date:'日期'},
+  try{ const s=JSON.parse(lsGet(ME_KEY)); if(s && s.metrics && s.cfg && s.cfg._v==='2'){ if(!s.order) s.order=Object.keys(s.metrics); return s; } }catch(e){}
+  return { cfg:{_v:'2', mode:'url', url:'https://cdn.jsdelivr.net/gh/Hy088/chuangliang-data_625@main/me-data.csv', fmt:'csv', interval:30, csvMap:{name:'名称',value:'当前值',target:'目标',unit:'单位',date:'日期'},
               jsonPath:'', jsonMap:{name:'name',value:'value',target:'target',unit:'unit',date:'date'}, paste:'', auto:true},
           metrics:{}, order:[], lastFetch:null, status:'idle', errMsg:'' };
 }
@@ -1417,6 +1417,9 @@ function saveME(){ lsSet(ME_KEY, JSON.stringify(ME)); }
 function meNum(x){ const v=parseFloat(String(x==null?'':x).replace(/[,%¥$]/g,'')); return isFinite(v)?v:0; }
 function meGetPath(obj, path){ if(!path) return obj; return String(path).split('.').reduce((o,k)=> (o==null?undefined:o[k]), obj); }
 function meParseSource(text, fmt, cfg){
+  const first=text.trim().slice(0,1);
+  const looksCsv = !(first==='[' || first==='{');
+  if(fmt!=='csv' && looksCsv) fmt='csv';
   if(fmt==='json'){
     const obj=JSON.parse(text);
     const arr=Array.isArray(obj)?obj:meGetPath(obj, cfg.jsonPath||'');
@@ -1661,7 +1664,11 @@ function meCfgToggle(){
 }
 function saveMeCfg(){
   const c=ME.cfg;
-  c.mode=$('#meMode').value; c.url=$('#meUrl').value.trim(); c.fmt=$('#meFmt').value;
+  c.mode=$('#meMode').value;
+  c.url=$('#meUrl').value.trim();
+  let fmt=$('#meFmt').value;
+  if(c.url && /\.csv(?:[?#]|$)/i.test(c.url)) fmt='csv';
+  c.fmt=fmt; $('#meFmt').value=fmt;
   c.interval=Math.max(5,Math.min(3600, +$('#meInterval').value||10)); c.auto=$('#meAuto').checked;
   c.csvMap={name:$('#meColName').value.trim(),value:$('#meColValue').value.trim(),target:$('#meColTarget').value.trim(),unit:$('#meColUnit').value.trim(),date:$('#meColDate').value.trim()};
   c.jsonPath=$('#meJsonPath').value.trim(); c.jsonMap={name:$('#meJsonName').value.trim(),value:$('#meJsonValue').value.trim(),target:$('#meJsonTarget').value.trim(),unit:$('#meJsonUnit').value.trim(),date:$('#meJsonDate').value.trim()};
@@ -3018,6 +3025,6 @@ document.addEventListener('click', function(e){
 })();
 </script>
 
-<script src="personal-enhance.js?v=20260728e"></script>
+<script src="personal-enhance.js?v=20260729a"></script>
 </body>
 </html>

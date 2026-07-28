@@ -1,20 +1,13 @@
-/* 个人数据增强：素材数据排行 + 时间筛选 + 本月每日明细 + 周统计
- * 注入到「个人数据」模块(#me)，读取仓库内的 me-materials.csv / me-history.csv
- * 通过接管 renderMe / meApplyRows 以避免与原看板自动刷新冲突。
+/* 个人数据增强：素材数据排行 + 时间筛选 + 本月每日明细 + 周统计 + 双月绩效
+ * 注入到「个人数据」模块(#me)，读取同目录 me-materials.csv / me-history.csv
+ * 注意：KPI 指标卡（#meCards）由主文件 index.html 负责渲染，本脚本不再覆盖。
  */
 (function () {
   "use strict";
-  // 数据同源托管在 GitHub Pages（与看板同域，避免 jsDelivr 旧缓存导致历史月份丢失）
-  var HIST_URL = "https://hy088.github.io/chuangliang-data_625/me-history.csv";
-  var MAT_URL  = "https://hy088.github.io/chuangliang-data_625/me-materials.csv";
+  // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
+  var HIST_URL = "./me-history.csv";
+  var MAT_URL  = "./me-materials.csv";
 
-  // KPI 卡片定义（含目标，与 config.daily.json 一致）
-  var CARDS = [
-    { name: "今日消耗",      key: "消耗",   target: 15000, unit: "元" },
-    { name: "今日在投素材数", key: "素材数", target: 650,   unit: "个" },
-    { name: "今日转化数",     key: "转化数", target: 500,   unit: "个" },
-    { name: "点击率(CTR)",    key: "CTR",    target: 8,     unit: "%" }
-  ];
   // 排行可排序指标
   var RANK_METRICS = [
     { key: "消耗",   label: "消耗" },
@@ -128,27 +121,6 @@
       if (k.indexOf("预览") >= 0 || k.indexOf("视频") >= 0 || k.indexOf("url") >= 0 || k.indexOf("链接") >= 0 || k.indexOf("link") >= 0) { PREVIEW_KEY = keys[i]; }
       if (k.indexOf("封面") >= 0 || k.indexOf("cover") >= 0 || k.indexOf("缩略图") >= 0 || k.indexOf("thumb") >= 0) { COVER_KEY = keys[i]; }
     }
-  }
-
-  /* ---------- 渲染：KPI 卡片 ---------- */
-  function renderCards() {
-    var cards = el("meCards");
-    if (!cards) return;
-    var hr = histData.filter(function (h) { return h["日期"] === currentDate; })[0];
-    var html = "";
-    CARDS.forEach(function (c) {
-      var val = hr ? num(hr[c.key]) : 0;
-      var tgt = c.target;
-      var ratio = tgt > 0 ? Math.min(1, val / tgt) : 0;
-      var pct = Math.round(ratio * 100);
-      var color = !tgt ? "var(--gray)" : (ratio >= 1 ? "var(--green)" : (ratio >= 0.6 ? "var(--yellow)" : "var(--red)"));
-      var valTxt = (c.key === "CTR") ? (val.toFixed(2) + "%") : fmtNum(val);
-      html += '<div class="kpi"><div class="l">' + esc(c.name) + "</div>" +
-        '<div class="v">' + valTxt + (c.unit ? ' <small>' + esc(c.unit) + "</small>" : "") + "</div>" +
-        '<div class="note" style="margin:2px 0 0">目标 ' + fmtNum(tgt) + (c.unit && c.unit !== "%" ? esc(c.unit) : "") + "</div>" +
-        '<div class="me-prog"><i style="width:' + Math.min(100, pct) + "%;background:" + color + '"></i></div></div>';
-    });
-    cards.innerHTML = html;
   }
 
   /* ---------- 素材预览：行内展开播放 ---------- */
@@ -648,7 +620,6 @@
   }
 
   function renderPersonal() {
-    renderCards();
     renderRank();
   }
 
@@ -750,7 +721,7 @@
       "<div id='meRankBody' style='max-height:460px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>";
     if (cards && cards.parentNode) cards.parentNode.insertBefore(panel, cards.nextSibling);
 
-    // 本月汇总面板（整合进个人数据，不单独分文件）
+    // 本月汇总面板
     var monthPanel = document.createElement("div");
     monthPanel.id = "meMonth";
     monthPanel.style.cssText = "margin-top:20px;border:1px solid #e6ebf2;border-radius:12px;background:#fff;overflow:hidden";
@@ -830,12 +801,11 @@
     renderKpi();
   }
 
-  /* ---------- 接管原看板渲染，避免冲突 ---------- */
+  /* ---------- 不再覆盖主文件的 KPI 渲染，仅避免旧 personal-enhance 冲突 ---------- */
   function hookDashboard() {
+    // 本脚本不再负责 #meCards 指标卡，也不再覆盖 window.renderMe / window.meApplyRows。
+    // 若历史页面存在旧版自动刷新实例，可安全忽略；主文件 index.html 的 ME 模块会自行管理。
     try { if (window.meStop) window.meStop(); } catch (e) {}
-    if (window.ME && window.ME.cfg) window.ME.cfg.auto = false;
-    window.renderMe = function () {};
-    window.meApplyRows = function () { if (ready) { renderPersonal(); renderMonth(); } };
   }
 
   /* ---------- 初始化 ---------- */
