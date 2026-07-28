@@ -239,6 +239,34 @@ tbody tr:nth-child(even){background:rgba(108,99,255,.025)}
 .dim-tag-summary .item{text-align:center}
 .dim-tag-summary .item .n{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px}
 .dim-tag-summary .item .v{font-size:22px;font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+/* 核心指标卡片 · 筛选融合 */
+.ov-core-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.ov-core-head h2{margin:0}
+.ov-core-filters{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;background:#f8f9ff;border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.ov-filter-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ov-filter-label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.ov-filter-divider{width:1px;height:18px;background:var(--line)}
+
+/* 周期对比 · 高级列式布局 */
+.per-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.per-col{background:linear-gradient(160deg,#ffffff,#f8f9ff);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow-sm);transition:transform .15s,box-shadow .15s}
+.per-col:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.per-col.current{border-color:#c4b5fd;background:linear-gradient(160deg,#ffffff,#f3f0ff)}
+.per-col-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.per-col-title{font-weight:800;font-size:14px;color:var(--ink)}
+.per-metric{display:flex;flex-direction:column;gap:3px;padding:11px 0;border-bottom:1px solid var(--line)}
+.per-metric:last-child{border-bottom:none;padding-bottom:0}
+.per-metric-label{font-size:11px;color:var(--muted);font-weight:600}
+.per-metric-val{font-size:18px;font-weight:800;color:var(--ink);line-height:1.2}
+.per-metric-yoy{font-size:11px;margin-top:2px;min-height:16px}
+
+/* 视频 / 图片 + 漏斗 并列 */
+.ov-type-funnel{align-items:stretch}
+.ov-type-funnel .card{display:flex;flex-direction:column}
+.ov-type-funnel .type-cmp{flex:1;align-items:center}
+.ov-type-funnel #pj-funnel{flex:1;display:flex;flex-direction:column;justify-content:center}
+
 .dim-tag-filter{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0 0}
 .dim-tag-filter .ftip{font-size:13px;color:var(--muted);font-weight:600}
 .dim-tag-filter input[type=text]{min-width:260px}
@@ -433,36 +461,51 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <button class="btn primary" id="openImport2">⤓ 导入新周期</button>
       </div>
     </div>
-    <div class="card">
-      <h2>核心指标 <span class="tag" id="ov-period"></span>
-        <button class="cmp-toggle" id="cmpToggle">📊 环比对比</button></h2>
+    <div class="card" id="ov-core-card">
+      <div class="ov-core-head">
+        <h2>核心指标</h2>
+        <div class="ov-core-filters">
+          <div class="ov-filter-group">
+            <span class="ov-filter-label">项目</span>
+            <span class="chip pjchip on" data-pj="广义新">广义新</span>
+            <span class="chip pjchip" data-pj="低活">低活</span>
+            <span class="chip pjchip" data-pj="标点">标点</span>
+          </div>
+          <div class="ov-filter-divider"></div>
+          <div class="ov-filter-group">
+            <span class="ov-filter-label">周期</span>
+            <span class="tag" id="ov-period-filter">未导入数据</span>
+          </div>
+          <button class="cmp-toggle" id="cmpToggle">📊 环比对比</button>
+        </div>
+      </div>
       <div class="kpis" id="ov-kpis"></div>
+    </div>
+    <div class="card">
+      <h2>周期对比 <span class="tag" id="ov-periods-tag">各周期核心指标</span></h2>
+      <div id="ov-periods-kpis"></div>
     </div>
     <div class="card" id="ov-cmp-card" style="display:none">
       <h2>📊 环比对比 <span class="tag" id="ov-cmp-period"></span></h2>
       <div class="kpis" id="ov-cmp-kpis"></div>
       <table class="cmp-tbl" id="ov-cmp-tbl"></table>
     </div>
-    <div class="card">
-      <h2>视频 / 图片 素材类型对比 <span class="tag">按消耗占比</span></h2>
-      <div class="grid2 type-cmp">
-        <div class="chart-box" style="height:230px"><canvas id="chTypeShare"></canvas></div>
-        <div id="ovTypeStats" class="type-stats"></div>
+    <div class="grid2 ov-type-funnel">
+      <div class="card">
+        <h2>视频 / 图片 素材类型对比 <span class="tag">按消耗占比</span></h2>
+        <div class="grid2 type-cmp">
+          <div class="chart-box" style="height:230px"><canvas id="chTypeShare"></canvas></div>
+          <div id="ovTypeStats" class="type-stats"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>转化漏斗 <span class="tag">展示 → 点击 → 转化</span></h2>
+        <div id="pj-funnel"></div>
+        <div class="note">点击率 = 点击/展示；转化率 = 转化/点击。条宽按各阶段占展示的比例（对数）示意。</div>
       </div>
     </div>
     <div class="card">
-      <h2>转化漏斗 <span class="tag">展示 → 点击 → 转化</span></h2>
-      <div id="pj-funnel"></div>
-      <div class="note">点击率 = 点击/展示；转化率 = 转化/点击。条宽按各阶段占展示的比例（对数）示意。</div>
-    </div>
-    <div class="card">
-      <div class="filters">
-        <span style="color:var(--muted)">项目：</span>
-        <span class="chip pjchip on" data-pj="广义新">广义新</span>
-        <span class="chip pjchip" data-pj="低活">低活</span>
-        <span class="chip pjchip" data-pj="标点">标点</span>
-        <span class="tag" id="pj-period" style="margin-left:6px"></span>
-      </div>
+      <h2><b id="pj-title">低活</b> 项目指标 <span class="tag">当前选中项目</span></h2>
       <div class="kpis" id="pj-kpis"></div>
     </div>
     <div class="grid2">
@@ -983,7 +1026,7 @@ function rebuildView(pf){
     }
   }
   DATA = nd;
-  const pjtag = $('#pj-period'); if(pjtag) pjtag.textContent = CUR_PERIOD ? ('周期：'+CUR_PERIOD) : '';
+  const pjtag = $('#ov-period-filter'); if(pjtag) pjtag.textContent = CUR_PERIOD ? ('周期：'+CUR_PERIOD) : '';
   renderAll();
 }
 // 初始化页头周期选择器
@@ -1070,12 +1113,12 @@ function renderProjSummary(){
   if(emptyBanner) emptyBanner.style.display = empty ? 'block' : 'none';
   if(empty){
     $('#ov-kpis').innerHTML = '<div class="empty" style="grid-column:1/-1;text-align:left;padding:16px 10px"><b>暂无核心指标数据</b><br><span style="color:var(--muted)">请点击右上角「⤓ 导入新周期」上传素材报表 CSV。</span></div>';
-    $('#ov-period').textContent = '未导入数据';
+    $('#ov-period-filter').textContent = '未导入数据';
     ['chProjCost','chProjEff','chTypeShare'].forEach(id=>{ const el=$(`#${id}`); if(el){ const ctx=el.getContext('2d'); ctx.clearRect(0,0,el.width,el.height); } });
     $('#ovTypeStats').innerHTML = '<div class="empty" style="text-align:left;padding:40px 10px"><b>暂无视频/图片素材类型数据</b><br><span style="color:var(--muted)">导入后会自动按消耗占比拆分视频与图片。</span></div>';
     return;
   }
-  $('#ov-period').textContent = DATA.meta.period;
+  $('#ov-period-filter').textContent = DATA.meta.period;
   $('#cmpToggle').classList.toggle('on', state.compare);
   const o = DATA.overall;
   const kpis = [
@@ -1107,6 +1150,46 @@ function renderProjSummary(){
 
   // 视频 / 图片 素材类型对比
   renderTypeOverview();
+}
+
+// ========== 核心指标下方的「周期对比」卡片 ==========
+function renderOvPeriods(){
+  const box = $('#ov-periods-kpis');
+  if(!box) return;
+  const pd = (DATA_FULL && DATA_FULL.periodData) || [];
+  if(pd.length <= 1){
+    box.innerHTML = '<div class="empty" style="padding:16px 10px;color:var(--muted)">当前只有 1 个周期，导入更多周期后即可在此查看各周期核心指标对比。</div>';
+    return;
+  }
+  const metrics = [
+    {k:'cost', l:'总消耗', fmt:fmtMoney, goodUp:false},
+    {k:'imp',  l:'总展示', fmt:fmtInt, goodUp:true},
+    {k:'clk',  l:'总点击', fmt:fmtInt, goodUp:true},
+    {k:'cv',   l:'总转化', fmt:fmtInt, goodUp:true},
+    {k:'cpa',  l:'平均转化成本', fmt:fmtCpa, goodUp:false},
+    {k:'cvr',  l:'平均转化率', fmt:fmtPct, goodUp:true},
+    {k:'ctr',  l:'平均点击率', fmt:fmtPct, goodUp:true}
+  ];
+  box.innerHTML = `<div class="per-cols">` + pd.map((p,idx)=>{
+    const o = p.overall || {};
+    const prev = idx > 0 ? pd[idx-1].overall : null;
+    const current = CUR_PERIOD ? (p.period === CUR_PERIOD) : (idx === pd.length - 1);
+    return `<div class="per-col ${current?'current':''}">` +
+      `<div class="per-col-head">` +
+        `<div class="per-col-title">${esc(p.period)}</div>` +
+        (current ? `<span class="pill p-purple">当前</span>` : `<span class="pill p-gray">第${idx+1}期</span>`) +
+      `</div>` +
+      metrics.map(m=>{
+        const v = o[m.k] || 0;
+        const yoy = prev ? cmpCell(v, prev[m.k]||0, m.goodUp, m.fmt) : '<span style="color:#9aa6b2">—</span>';
+        return `<div class="per-metric">` +
+          `<div class="per-metric-label">${m.l}</div>` +
+          `<div class="per-metric-val">${m.fmt(v)}</div>` +
+          `<div class="per-metric-yoy">环比 ${yoy}</div>` +
+        `</div>`;
+      }).join('') +
+    `</div>`;
+  }).join('') + `</div>`;
 }
 
 // ========== 总览 ==========
@@ -1188,9 +1271,11 @@ function renderTypeOverview(){
 // ========== 项目基础看板 ==========
 function renderProject(){
   renderProjSummary();
+  renderOvPeriods();
   const empty = !(DATA && DATA.materials && DATA.materials.rows && DATA.materials.rows.length);
   if(empty){
-    $('#pj-period').textContent = '未导入数据';
+    $('#ov-period-filter').textContent = '未导入数据';
+    $('#pj-title').textContent = state.pjProj || '—';
     $('#pj-kpis').innerHTML = '<div class="empty" style="grid-column:1/-1;text-align:left;padding:16px 10px"><b>暂无项目数据</b><br><span style="color:var(--muted)">导入素材报表后即可查看各项目消耗、转化、漏斗及素材排行。</span></div>';
     $('#pj-funnel').innerHTML = '<div class="empty" style="text-align:left;padding:30px 10px"><b>暂无转化漏斗数据</b><br><span style="color:var(--muted)">需要导入展示/点击/转化数据。</span></div>';
     $('#pjMatTable').querySelector('thead').innerHTML = '';
@@ -1200,7 +1285,8 @@ function renderProject(){
   }
   const pj = state.pjProj;
   const p = DATA.projects.find(x=>x.proj===pj) || DATA.projects[0];
-  $('#pj-period').textContent = `周期 ${DATA.meta.period}`;
+  $('#ov-period-filter').textContent = `周期 ${DATA.meta.period}`;
+  $('#pj-title').textContent = pj;
   // KPI
   const matN = DATA.materials.rows.filter(r=>r[4]===pj).length;
   const kpis = [
@@ -3025,6 +3111,6 @@ document.addEventListener('click', function(e){
 })();
 </script>
 
-<script src="personal-enhance.js?v=20260729a"></script>
+<script src="personal-enhance.js?v=20260729c"></script>
 </body>
 </html>
