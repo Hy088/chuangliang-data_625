@@ -2430,18 +2430,25 @@ async function loadRuntimeState(){
   try{
     const saved=await idbGet(IDB_KEY);
     if(!saved||!saved.meta||!saved.materials) return;
-    // 文件签名不匹配（或旧缓存无签名）→ 丢弃旧缓存，以文件数据为权威，避免错误缓存盖掉真实数据
-    if(!saved._fileSig || saved._fileSig!==fileSignature()){
-      console.log('[state] 本地缓存与当前文件不匹配，已忽略旧缓存，使用文件数据');
-      return;
-    }
     const p=(saved.meta.periods)||[];
     const rows=(saved.materials.rows)||[];
     if(p.length===0 && rows.length===0){ console.warn('[state] 缓存为空，忽略'); return; }
+    // 以浏览器本地缓存为优先（用户导入/修改的周期都在这里），不再因签名不一致而丢弃
     DATA_FULL=saved; DATA=DATA_FULL; CUR_PERIOD=null;
     rebuildIdMap();
     console.log('[state] restored from IndexedDB, periods=', saved.meta.periods);
   }catch(e){ console.warn('[state] restore failed', e); }
+}
+// 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
+async function loadSeedData(){
+  try{
+    const r=await fetch('period-data.json?_='+Date.now());
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const obj=await r.json();
+    DATA_FULL=obj; DATA=DATA_FULL; CUR_PERIOD=null; rebuildIdMap();
+    await saveRuntimeState();
+    console.log('[seed] 已从 period-data.json 载入, periods=', obj.meta.periods);
+  }catch(e){ console.warn('[seed] 载入失败', e); }
 }
 function ensureStateBanner(){
   let el=document.getElementById('stateBanner');
@@ -2466,6 +2473,9 @@ function updateStateBanner(){
 // ========== 初始化 ==========
 (async function initAll(){
   try{ await loadRuntimeState(); }catch(e){ console.error('loadRuntimeState 失败', e); } // 先恢复本地保存的周期数据
+  // 本地无数据时，从独立数据文件 period-data.json 载入（避免内嵌大数据导致页面打不开）
+  const hasData=(DATA_FULL.meta&&DATA_FULL.meta.periods&&DATA_FULL.meta.periods.length>0);
+  if(!hasData){ try{ await loadSeedData(); }catch(e){ console.error('loadSeedData 失败', e); } }
   try{ bindAll(); }catch(e){ console.error('bindAll 失败', e); }
   try{ bindCustom(); }catch(e){ console.error('bindCustom 失败', e); }
   try{ initPeriodSel(); }catch(e){ console.error('initPeriodSel 失败', e); }
