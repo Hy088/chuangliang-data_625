@@ -2393,14 +2393,66 @@ function bindCustom(){
 function applyLayoutReset(){ movableCards().forEach(c=>{ c.classList.remove('hide'); const b=c.querySelector(':scope > .card-bar'); if(b) b.remove(); });
   document.body.classList.remove('edit-mode'); const chk=$('#editLayoutChk'); if(chk) chk.checked=false; try{ localStorage.removeItem('matopt_edit_v1'); }catch(e){} location.reload(); }
 
+// ========== 周期数据本地持久化（刷新不丢失） ==========
+const IDB_NAME='matopt_idx', IDB_STORE='kv', IDB_KEY='projState';
+function idbOpen(){return new Promise((res,rej)=>{const r=indexedDB.open(IDB_NAME,1);r.onupgradeneeded=e=>{const db=e.target.result;if(!db.objectStoreNames.contains(IDB_STORE))db.createObjectStore(IDB_STORE);};r.onsuccess=e=>res(e.target.result);r.onerror=e=>rej(e.target.error);});}
+async function idbPut(k,v){const db=await idbOpen();return new Promise((res,rej)=>{const tx=db.transaction(IDB_STORE,'readwrite');tx.objectStore(IDB_STORE).put(v,k);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
+async function idbGet(k){const db=await idbOpen();return new Promise((res,rej)=>{const tx=db.transaction(IDB_STORE,'readonly');const rq=tx.objectStore(IDB_STORE).get(k);rq.onsuccess=()=>res(rq.result);rq.onerror=()=>rej(rq.error);});}
+async function idbDel(k){const db=await idbOpen();return new Promise((res,rej)=>{const tx=db.transaction(IDB_STORE,'readwrite');tx.objectStore(IDB_STORE).delete(k);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
+async function saveRuntimeState(){
+  try{
+    const p=(DATA_FULL.meta&&DATA_FULL.meta.periods)||[];
+    const rows=(DATA_FULL.materials&&DATA_FULL.materials.rows)||[];
+    if(p.length===0 && rows.length===0){ console.warn('[state] 跳过保存：当前为空'); return; }
+    await idbPut(IDB_KEY, JSON.parse(JSON.stringify(DATA_FULL)));
+    updateStateBanner();
+    console.log('[state] runtime saved, periods=', p);
+  }catch(e){ console.warn('[state] save failed', e); }
+}
+async function loadRuntimeState(){
+  try{
+    const saved=await idbGet(IDB_KEY);
+    if(!saved||!saved.meta||!saved.materials) return;
+    const p=(saved.meta.periods)||[];
+    const rows=(saved.materials.rows)||[];
+    if(p.length===0 && rows.length===0){ console.warn('[state] 缓存为空，忽略'); return; }
+    DATA_FULL=saved; DATA=DATA_FULL; CUR_PERIOD=null;
+    rebuildIdMap();
+    console.log('[state] restored from IndexedDB, periods=', saved.meta.periods);
+  }catch(e){ console.warn('[state] restore failed', e); }
+}
+function ensureStateBanner(){
+  let el=document.getElementById('stateBanner');
+  if(el) return el;
+  el=document.createElement('div');
+  el.id='stateBanner';
+  el.style.cssText='display:none;margin:8px 14px;padding:8px 12px;border-radius:10px;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;font-size:13px';
+  el.innerHTML='<span id="stateBannerTxt"></span> <a href="javascript:void(0)" id="clearStateLink" style="color:#b45309;text-decoration:underline;margin-left:8px">清空本地数据</a>';
+  const host=document.querySelector('header')||document.body;
+  host.appendChild(el);
+  const cl=document.getElementById('clearStateLink');
+  if(cl) cl.onclick=()=>{ if(confirm('确定清空浏览器本地保存的周期数据？清空后需重新导入。')){ idbDel(IDB_KEY).then(()=>location.reload()); } };
+  return el;
+}
+function updateStateBanner(){
+  const el=ensureStateBanner();
+  const p=(DATA_FULL.meta&&DATA_FULL.meta.periods)||[];
+  if(p.length>0){ el.style.display='block'; const t=document.getElementById('stateBannerTxt'); if(t) t.textContent='✓ 当前周期数据已保存在此浏览器本地（刷新不会丢失）。'; }
+  else { el.style.display='none'; }
+}
+
 // ========== 初始化 ==========
-try{ bindAll(); }catch(e){ console.error('bindAll 失败', e); }   // 事件绑定只跑一次
-try{ bindCustom(); }catch(e){ console.error('bindCustom 失败', e); }
-try{ initPeriodSel(); }catch(e){ console.error('initPeriodSel 失败', e); }
-try{ const t=loadTheme(); if(t) applyThemeVars(t); }catch(e){}
-try{ applyLayout(); }catch(e){}
-try{ startEditObserver(); }catch(e){}
-try{ renderAll(); }catch(e){ console.error('renderAll 失败', e); } // 渲染当前数据
+(async function initAll(){
+  try{ await loadRuntimeState(); }catch(e){ console.error('loadRuntimeState 失败', e); } // 先恢复本地保存的周期数据
+  try{ bindAll(); }catch(e){ console.error('bindAll 失败', e); }
+  try{ bindCustom(); }catch(e){ console.error('bindCustom 失败', e); }
+  try{ initPeriodSel(); }catch(e){ console.error('initPeriodSel 失败', e); }
+  try{ const t=loadTheme(); if(t) applyThemeVars(t); }catch(e){}
+  try{ applyLayout(); }catch(e){}
+  try{ startEditObserver(); }catch(e){}
+  try{ renderAll(); }catch(e){ console.error('renderAll 失败', e); } // 渲染当前数据
+  try{ updateStateBanner(); }catch(e){}
+})();
 
 // ========== 导入新周期 ==========
 let impFiles = [];   // [{proj, file}]
@@ -2749,6 +2801,7 @@ async function doImport(){
     rebuildIdMap();
     renderAll();             // 重算并刷新全部视图
     initPeriodSel();         // 周期选择器同步（新增的周期出现）
+    saveRuntimeState();      // 导入后的状态持久化到浏览器本地，刷新不丢失
     closeImport();
     const pcount = (DATA.meta.periods||[DATA.meta.period]).length;
     $('#hdrsub').textContent = `已合并 ${pcount} 个周期 · 项目：${DATA.meta.projects.join(' / ')} · 共 ${fmtInt(DATA.materials.rows.length)} 条素材` + (mergeMode?' · 累计数据':' · 本周期数据');
