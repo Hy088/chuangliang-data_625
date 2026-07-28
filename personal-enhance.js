@@ -42,6 +42,33 @@
   var daySortDir = 1;  // 1 升序 / -1 降序
   var ready = false;
 
+  /* ---------- 双月绩效 KPI 进度：状态与工具 ---------- */
+  var KPI_KEY = "meKpiStore_v1";
+  function loadKpiStore() { try { return JSON.parse(localStorage.getItem(KPI_KEY) || "{}"); } catch (e) { return {}; } }
+  function saveKpiStore(s) { try { localStorage.setItem(KPI_KEY, JSON.stringify(s)); } catch (e) {} }
+  var kpiStore = loadKpiStore();
+  function monthStr(offset) {
+    var t = new Date(); t.setDate(1); t.setMonth(t.getMonth() + offset);
+    return t.getFullYear() + "-" + ("0" + (t.getMonth() + 1)).slice(-2);
+  }
+  if (!kpiStore._months || !Array.isArray(kpiStore._months) || kpiStore._months.length < 2) {
+    kpiStore._months = [monthStr(0), monthStr(-1)];
+    saveKpiStore(kpiStore);
+  }
+  var kpiMonths = kpiStore._months;   // [月①, 月②]
+  // 取某月实际消耗（总消耗 + AIGC 消耗），AIGC 由素材名含 "aigc" 判定
+  function getMonthActual(m) {
+    var cost = 0, aigc = 0;
+    if (!m) return { cost: 0, aigc: 0 };
+    matData.forEach(function (r) {
+      if ((r["日期"] || "").slice(0, 7) === m) {
+        var c = num(r["消耗"]); cost += c;
+        if ((r["素材名"] || "").toLowerCase().indexOf("aigc") >= 0) aigc += c;
+      }
+    });
+    return { cost: cost, aigc: aigc };
+  }
+
   /* ---------- 工具 ---------- */
   function el(id) { return document.getElementById(id); }
   function fmtNum(v) {
