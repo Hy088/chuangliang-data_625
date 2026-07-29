@@ -486,13 +486,6 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <h2>核心指标</h2>
         <div class="ov-core-filters">
           <div class="ov-filter-group">
-            <span class="ov-filter-label">项目</span>
-            <span class="chip pjchip on" data-pj="广义新">广义新</span>
-            <span class="chip pjchip" data-pj="低活">低活</span>
-            <span class="chip pjchip" data-pj="标点">标点</span>
-          </div>
-          <div class="ov-filter-divider"></div>
-          <div class="ov-filter-group">
             <span class="ov-filter-label">周期</span>
             <span class="tag" id="ov-period-filter">未导入数据</span>
           </div>
@@ -1507,8 +1500,8 @@ const ME_KEY = 'matopt_personal_v3';
 let ME = loadME();
 let meTimer = null, meCd = 0;
 function loadME(){
-  try{ const s=JSON.parse(lsGet(ME_KEY)); if(s && s.metrics && s.cfg && s.cfg._v==='2'){ if(!s.order) s.order=Object.keys(s.metrics); return s; } }catch(e){}
-  return { cfg:{_v:'2', mode:'url', url:'https://raw.githubusercontent.com/Hy088/chuangliang-data_625/main/me-data.csv', fmt:'csv', interval:30, csvMap:{name:'名称',value:'当前值',target:'目标',unit:'单位',date:'日期'},
+  try{ const s=JSON.parse(lsGet(ME_KEY)); if(s && s.metrics && s.cfg && s.cfg._v==='3'){ if(!s.order) s.order=Object.keys(s.metrics); return s; } }catch(e){}
+  return { cfg:{_v:'3', mode:'url', url:'https://raw.githubusercontent.com/Hy088/chuangliang-data_625/main/me-data.csv', fmt:'csv', interval:30, csvMap:{name:'名称',value:'当前值',target:'目标',unit:'单位',date:'日期'},
               jsonPath:'', jsonMap:{name:'name',value:'value',target:'target',unit:'unit',date:'date'}, paste:'', auto:true},
           metrics:{}, order:[], lastFetch:null, status:'idle', errMsg:'' };
 }
