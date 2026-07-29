@@ -211,10 +211,14 @@ input[type=text]{min-width:210px}
 .tag-filter-card{display:flex;flex-direction:column}
 .tag-filter-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:8px 10px;background:#f8f9ff;border:1px solid var(--line);border-radius:10px}
 .tag-filter-tip{font-size:12px;color:var(--muted);margin-left:auto}
+.tag-search{min-width:150px;flex:1;padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:#fff;color:var(--ink);outline:none}
+.tag-search:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(99,102,241,.15)}
 .tag-cloud{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;max-height:230px;overflow:auto;padding:4px}
-.tag-chip{padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer;font-size:12px;color:var(--muted);font-weight:600;transition:.15s;user-select:none}
+.tag-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer;font-size:12px;color:var(--muted);font-weight:600;transition:.15s;user-select:none}
 .tag-chip:hover{border-color:var(--brand);color:var(--brand)}
 .tag-chip.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(99,102,241,.28)}
+.tag-chip .tc-cost{font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:rgba(99,102,241,.12);color:#6366f1}
+.tag-chip.on .tc-cost{background:rgba(255,255,255,.25);color:#fff}
 
 /* 品类方向三列 */
 .catdir-trio{align-items:stretch}
@@ -522,6 +526,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
             <span class="seg-btn on" data-mode="any">任一</span>
             <span class="seg-btn" data-mode="all">所有</span>
           </span>
+          <input type="text" id="tagSearch" class="tag-search" placeholder="搜索标签…">
           <span class="tag-filter-tip" id="tagFilterTip">未选择标签</span>
         </div>
         <div class="tag-cloud" id="tagCloud">
@@ -538,6 +543,10 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <h2>各项目转化成本 / 转化率</h2>
         <div class="chart-box"><canvas id="chProjEff"></canvas></div>
       </div>
+    </div>
+    <div class="card">
+      <h2>项目 × 周期 消耗 / 转化矩阵 <span class="tag">每格：消耗（下方为转化数）</span></h2>
+      <div class="tbl-scroll"><table class="cmp-tbl" id="periodMatrixTbl"></table></div>
     </div>
     <div class="card">
       <h2>素材表现 <span class="tag" id="pj-mat-tag">消耗 Top20</span></h2>
@@ -569,10 +578,6 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       <h2>各周期核心指标 <span class="tag">环比 = 较上一周期</span></h2>
       <div class="tbl-scroll"><table class="cmp-tbl" id="periodKpiTbl"></table></div>
       <div class="note">颜色说明：<span style="color:#1faa59;font-weight:700">绿 ▲</span> 表示该指标环比上升且为「好」（转化数 / 转化率 / 点击率），<span style="color:#e0533d;font-weight:700">红 ▲</span> 表示消耗 / 转化成本的上升（成本类上升为劣）。</div>
-    </div>
-    <div class="card">
-      <h2>项目 × 周期 消耗 / 转化矩阵 <span class="tag">每格：消耗（下方为转化数）</span></h2>
-      <div class="tbl-scroll"><table class="cmp-tbl" id="periodMatrixTbl"></table></div>
     </div>
   </div>
 
@@ -611,7 +616,8 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <h2>三渠道跑量 SKU 统计 <span class="tag">消耗≥¥1万</span>
           <span class="seg" id="skuSeg" style="margin-left:10px">
             <span class="seg-btn on" data-ch="低活">低活</span>
-            <span class="seg-btn" data-ch="标点">标点</n            <span class="seg-btn" data-ch="广义新">广义新</span>
+            <span class="seg-btn" data-ch="标点">标点</span>
+            <span class="seg-btn" data-ch="广义新">广义新</span>
             <span class="seg-btn" data-ch="all">全部</span>
           </span>
         </h2>
@@ -1095,13 +1101,33 @@ function allTags(){
   (DATA.materials.rows||[]).forEach(r=>{ getMatTags(r,iTags).forEach(t=>s.add(t)); });
   return [...s].sort((a,b)=>a.localeCompare(b,'zh'));
 }
+function tagStats(){
+  const iTags = DATA.materials ? DATA.materials.cols.indexOf('tags') : -1;
+  const iCost = DATA.materials ? DATA.materials.cols.indexOf('cost') : -1;
+  const map = new Map();
+  (DATA.materials.rows||[]).forEach(r=>{
+    const tags = getMatTags(r, iTags);
+    const cost = Number(r[iCost]||0);
+    tags.forEach(t=>{ map.set(t, (map.get(t)||0)+cost); });
+  });
+  return map;
+}
 function renderTagFilter(){
-  const cloud=$('#tagCloud'), tip=$('#tagFilterTip');
+  const cloud=$('#tagCloud'), tip=$('#tagFilterTip'), search=$('#tagSearch');
   if(!cloud) return;
   const tags=allTags();
   if(!tags.length){ cloud.innerHTML='<div class="empty" style="padding:20px 10px">导入数据后自动加载标签</div>'; if(tip) tip.textContent='未选择标签'; return; }
+  const stats = tagStats();
+  const q = (search ? search.value.trim() : '').toLowerCase();
   const selected=state.tagFilter.tags;
-  cloud.innerHTML = tags.map(t=>`<span class="tag-chip ${selected.has(t)?'on':''}" data-tag="${esc(t)}">${esc(t)}</span>`).join('');
+  let list = tags;
+  if(q) list = list.filter(t=>t.toLowerCase().includes(q));
+  if(!list.length){ cloud.innerHTML=`<div class="empty" style="padding:20px 10px">没有匹配「${esc(q)}」的标签</div>`; return; }
+  cloud.innerHTML = list.map(t=>{
+    const on = selected.has(t) ? 'on' : '';
+    const cost = stats.get(t)||0;
+    return `<span class="tag-chip ${on}" data-tag="${esc(t)}"><span class="tc-name">${esc(t)}</span><span class="tc-cost">${fmtMoney(cost)}</span></span>`;
+  }).join('');
   $$('.tag-chip').forEach(c=>{
     c.onclick=()=>{
       const t=c.dataset.tag;
@@ -1110,7 +1136,8 @@ function renderTagFilter(){
       renderAll();
     };
   });
-  if(tip) tip.textContent = selected.size ? `已选 ${selected.size} 个标签 · ${state.tagFilter.mode==='all'?'所有':'任一'}` : '未选择标签';
+  const selCost = [...selected].reduce((s,t)=>s+(stats.get(t)||0),0);
+  if(tip) tip.textContent = selected.size ? `已选 ${selected.size} 个标签 · ${state.tagFilter.mode==='all'?'所有':'任一'} · 合计 ${fmtMoney(selCost)}` : `共 ${tags.length} 个标签`;
 }
 
 // ---------- 本地存储（优化闭环） ----------
@@ -1289,6 +1316,7 @@ function renderTypeOverview(){
 function renderProject(){
   renderProjSummary();
   renderOvPeriods();
+  renderPeriodMatrix();
   renderTagFilter();
   const empty = !(DATA && DATA.materials && DATA.materials.rows && DATA.materials.rows.length);
   if(empty){
@@ -1480,7 +1508,7 @@ let ME = loadME();
 let meTimer = null, meCd = 0;
 function loadME(){
   try{ const s=JSON.parse(lsGet(ME_KEY)); if(s && s.metrics && s.cfg && s.cfg._v==='2'){ if(!s.order) s.order=Object.keys(s.metrics); return s; } }catch(e){}
-  return { cfg:{_v:'2', mode:'url', url:'https://cdn.jsdelivr.net/gh/Hy088/chuangliang-data_625@main/me-data.csv', fmt:'csv', interval:30, csvMap:{name:'名称',value:'当前值',target:'目标',unit:'单位',date:'日期'},
+  return { cfg:{_v:'2', mode:'url', url:'https://raw.githubusercontent.com/Hy088/chuangliang-data_625/main/me-data.csv', fmt:'csv', interval:30, csvMap:{name:'名称',value:'当前值',target:'目标',unit:'单位',date:'日期'},
               jsonPath:'', jsonMap:{name:'name',value:'value',target:'target',unit:'unit',date:'date'}, paste:'', auto:true},
           metrics:{}, order:[], lastFetch:null, status:'idle', errMsg:'' };
 }
@@ -1815,6 +1843,9 @@ function bindAll(){
       renderAll();
     };
   });
+  // 标签搜索
+  const tagSearch=$('#tagSearch');
+  if(tagSearch) tagSearch.oninput=()=>renderTagFilter();
 
   // 排行 chips
   $$('#rank .chip[data-proj]').forEach(c=>{ c.classList.add('on');
@@ -2159,7 +2190,13 @@ function renderPeriods(){
   tb+='</tbody>';
   if(kpiTbl) kpiTbl.innerHTML=tb;
 
-  // 项目 × 周期 矩阵
+  renderPeriodMatrix();
+}
+function renderPeriodMatrix(){
+  const pd = DATA.periodData || [];
+  const matrixTbl = $('#periodMatrixTbl');
+  if(!matrixTbl) return;
+  if(!pd.length){ matrixTbl.innerHTML=''; return; }
   let mt='<thead><tr><th>项目</th>';
   pd.forEach(p=>{ mt+=`<th>${p.period}<br><span style="font-weight:400;color:var(--muted)">消耗 / 转化</span></th>`; });
   mt+='<th>消耗环比<br><span style="font-weight:400;color:var(--muted)">最新 vs 上一</span></th>';
@@ -2178,7 +2215,7 @@ function renderPeriods(){
     mt+='</tr>';
   });
   mt+='</tbody>';
-  if(matrixTbl) matrixTbl.innerHTML=mt;
+  matrixTbl.innerHTML=mt;
 }
 
 // ========== 渲染入口（数据变更后重跑） ==========
@@ -2647,7 +2684,11 @@ function updateStateBanner(){
   if(!hasData){ try{ await loadSeedData(); }catch(e){ console.error('loadSeedData 失败', e); } }
   try{ bindAll(); }catch(e){ console.error('bindAll 失败', e); }
   try{ bindCustom(); }catch(e){ console.error('bindCustom 失败', e); }
+  // 默认只看最新一期（单月），而非合并全部周期
+  const _pd=(DATA_FULL.periodData||[]);
+  if(!CUR_PERIOD && _pd.length){ CUR_PERIOD = _pd[_pd.length-1].period; }
   try{ initPeriodSel(); }catch(e){ console.error('initPeriodSel 失败', e); }
+  if(CUR_PERIOD) rebuildView(CUR_PERIOD); else renderAll();
   try{ const t=loadTheme(); if(t) applyThemeVars(t); }catch(e){}
   try{ applyLayout(); }catch(e){}
   try{ startEditObserver(); }catch(e){}
@@ -3017,7 +3058,8 @@ async function doImport(){
     PREV_DATA = DATA;        // 记录合并前快照，供环比对比
     DATA = newData;          // 就地替换数据
     DATA_FULL = newData;     // 更新「全部周期」基准，便于切回全部 / 周期切换
-    CUR_PERIOD = null;       // 导入后回到全部视图
+    const _pd=(DATA_FULL.periodData||[]);
+    CUR_PERIOD = _pd.length ? _pd[_pd.length-1].period : null;  // 导入后默认看最新一期（单月）
     rebuildIdMap();
     renderAll();             // 重算并刷新全部视图
     initPeriodSel();         // 周期选择器同步（新增的周期出现）
@@ -3091,6 +3133,6 @@ document.addEventListener('click', function(e){
 })();
 </script>
 
-<script src="personal-enhance.js?v=20260729d"></script>
+<script src="personal-enhance.js?v=20260729g"></script>
 </body>
 </html>
