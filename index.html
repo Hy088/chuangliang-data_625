@@ -1650,7 +1650,7 @@ async function renderMeChannels(){
     dayRows.forEach(r=>{ const c=fnum(r[iCost]); sum[classifyMeMat((r[iName]||'').trim())]+=c; });
     const total=sum.广义新+sum.低活+sum.标点;
 
-    // ---- 2. 较昨日同时段（me-history.csv 昨日值 → 每个 KPI 卡片）----
+    // ---- 2. 较昨日同时段（me-history.csv 中【昨天】那一行的完整值 → 每个 KPI 卡片）----
     const HIST_MAP={
       '今日消耗(元)':'消耗',
       '今日在投素材数':'素材数',
@@ -1663,12 +1663,18 @@ async function renderMeChannels(){
     try{
       const hText=await fetchMeText('me-history.csv'); const h=parseCSV(hText);
       const hiD=h.cols.indexOf('日期');
-      if(h.rows.length){ yDate=(h.rows[h.rows.length-1][hiD]||'').trim(); }
+      // 取「昨天」日期（本地时区计算，避免 toISOString 在跨日边界的 UTC 偏移导致取错行）
+      const _y=new Date(); _y.setDate(_y.getDate()-1);
+      const yMD=`${_y.getFullYear()}-${String(_y.getMonth()+1).padStart(2,'0')}-${String(_y.getDate()).padStart(2,'0')}`;
+      let yRow=null;
+      h.rows.forEach(r=>{ if((r[hiD]||'').trim()===yMD) yRow=r; });
+      if(!yRow && h.rows.length) yRow=h.rows[h.rows.length-1]; // 兜底：无昨日行则用最后一行
+      if(yRow){ yDate=(yRow[hiD]||'').trim(); }
       meOrderedKeys().forEach(k=>{
         const col=HIST_MAP[k]; if(!col) return;
         const ci=h.cols.indexOf(col); if(ci<0) return;
-        const last=h.rows[h.rows.length-1]; if(!last) return;
-        const yVal=fnum(last[ci]);
+        if(!yRow) return;
+        const yVal=fnum(yRow[ci]);
         const m=ME.metrics[k]; const todayVal=(m&&m.value)||0;
         const now=new Date(); const frac=(now.getHours()*3600+now.getMinutes()*60+now.getSeconds())/86400;
         const ySame=RATE_KEYS.includes(k)? yVal : yVal*frac;
