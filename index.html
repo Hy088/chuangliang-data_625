@@ -904,7 +904,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         </div>
       </div>
       <div class="vp-actions">
-        <button class="btn sm" id="vpWhisperBtn" title="用浏览器端 Whisper 把音轨转写成文字（首次约下载40MB模型）" style="display:none">🎙 语音转写兜底</button>
+        <button class="btn sm" id="vpWhisperBtn" title="用浏览器端 Whisper 把音轨转写成文字（首次约下载100-200MB模型，强制中文，比OCR更准）" style="display:none">🎙 语音识别</button>
         <button class="btn sm primary" id="vpDeepFill" title="把识别到的字幕/语音文字填入「口播脚本」">↧ 填入口播脚本</button>
       </div>
       <div class="vp-debug" id="vpOcrDebug" style="display:none">
@@ -3465,7 +3465,7 @@ document.addEventListener('click', function(e){
         </select>
       </label>
       <div class="imp-hint" id="vpAiHint" style="min-height:18px"></div>
-      <div class="note">没 Key？「🔍 深度分析」仍可用：本地 OCR 字幕 + 音频节奏 + 人物检测，全程免费零 Key。口播文字若 OCR 识别不到，可点「🎙 语音转写兜底」用浏览器端 Whisper 转写。</div>
+      <div class="note">没 Key？「🔍 深度分析」仍可用：本地 OCR 字幕 + 音频节奏 + 人物检测，全程免费零 Key。口播文字识别不准时，建议直接点「🎙 语音识别」用浏览器端 Whisper 转写音轨（强制中文，比 OCR 更可靠）。</div>
     </div>
     <div class="modal-ft">
       <button class="btn sm" id="vpAiClear">清除Key</button>
@@ -3474,7 +3474,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260801g"></script>
-<script src="vparse-deep.js?v=20260801g"></script>
+<script src="personal-enhance.js?v=20260802a"></script>
+<script src="vparse-deep.js?v=20260802a"></script>
 </body>
 </html>

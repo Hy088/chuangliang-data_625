@@ -213,6 +213,7 @@
         raw.push({ t: frames[i].t, text: '' });
       }
     }
+    VP.deep.ocrRaw = raw; // 保留全部原始帧，供「乱码→建议语音」判断
     // 过滤垃圾结果并合并连续相似字幕
     const out = [];
     for (let i = 0; i < raw.length; i++) {
@@ -303,8 +304,20 @@
     const ocr = (VP.deep.ocr || []).filter(x => x.text);
     const whisper = VP.deep.whisper;
     const wb = document.getElementById('vpWhisperBtn');
+    // OCR 出乱码但未过滤出有效字幕：提示改用语音识别
+    const raw = (VP.deep.ocrRaw || []).filter(x => x.text && x.text.trim());
+    if (!ocr.length && raw.length && !whisper) {
+      el.innerHTML = '<div class="vp-warn" style="line-height:1.8">⚠️ 字幕 OCR 识别结果多为乱码（视频字幕字体/背景干扰大）。' +
+        '建议改用 <b>🎙 语音识别</b>（浏览器端 Whisper 直接转写音轨，对中文更可靠）：' +
+        '<br><button class="btn sm primary" id="vpOcrToWhisper" type="button" style="margin-top:8px">↪ 改用语音识别</button></div>';
+      const b = document.getElementById('vpOcrToWhisper');
+      if (b) b.onclick = () => vpRunWhisper();
+      if (wb) wb.style.display = 'inline-block';
+      const t = document.getElementById('vpOcrTag'); if (t) t.textContent = 'OCR乱码';
+      return;
+    }
     if (!ocr.length && !whisper) {
-      el.innerHTML = '<div class="muted">未在画面上识别到字幕/口播文字。可点下方「🎙 语音转写兜底」用浏览器端 Whisper 转写音轨。</div>';
+      el.innerHTML = '<div class="muted">未在画面上识别到字幕/口播文字。可点下方「🎙 语音识别」用浏览器端 Whisper 转写音轨。</div>';
       if (wb) wb.style.display = 'inline-block';
       const t = document.getElementById('vpOcrTag'); if (t) t.textContent = '未识别';
       return;
@@ -374,28 +387,34 @@
   }
 
   // ============================================================
-  // 语音转写兜底（transformers.js + Whisper-tiny，浏览器端 WASM）
+  // 语音识别（transformers.js + Whisper-base，浏览器端 WASM，强制中文）
+  // 比 tiny 对中文准确得多；HF 权重首次加载较慢（约 100-200MB），之后走缓存。
   // ============================================================
+  const WHISPER_MODEL = 'Xenova/whisper-base'; // tiny 对中文很差，base 明显更准
   async function vpRunWhisper() {
     if (!VP.url) { alert('请先选择视频'); return; }
     const btn = document.getElementById('vpWhisperBtn');
-    showCard('vpDeep'); showProg(true); setProg(5, '加载 Whisper 模型（首次约 40MB，请稍候）…');
+    showCard('vpDeep'); showProg(true); setProg(5, '加载语音识别模型（首次约 100-200MB，请耐心等待）…');
     try {
       const mod = await import(CDN.transformers);
-      const { pipeline } = mod;
-      const asr = await pipeline('automatic-speech-recognition', 'Xenova/whisper-tiny');
+      const { pipeline, env } = mod;
+      if (env && env.allowLocalModels !== undefined) env.allowLocalModels = false;
+      const asr = await pipeline('automatic-speech-recognition', WHISPER_MODEL);
       setProg(45, '解码音轨…');
       const ab = await getAudioBuffer();
       const samples = resampleTo16k(ab);
-      setProg(70, '转写中（可能需 10-30 秒）…');
-      const out = await asr(samples, { sampling_rate: 16000, chunk_length_s: 30, stride_length_s: 5 });
+      setProg(70, '识别中（可能需 10-40 秒）…');
+      const out = await asr(samples, {
+        sampling_rate: 16000, language: 'chinese', task: 'transcribe',
+        chunk_length_s: 30, stride_length_s: 5, return_timestamps: false
+      });
       const text = (out && out.text) || '';
       VP.deep.whisper = text.trim();
-      if (btn) btn.style.display = 'none';
       renderDeepOcr();
-      setProg(100, '语音转写完成'); hideProgSoon();
+      if (text.trim()) setProg(100, '语音识别完成'); else setProg(0, '未识别到语音内容');
+      hideProgSoon();
     } catch (e) {
-      setProg(0, '语音转写失败：' + e.message);
+      setProg(0, '语音识别失败：' + e.message + '（若卡在模型下载，多为 HuggingFace CDN 访问慢，可重试或用本地离线版）');
     }
   }
 
