@@ -398,7 +398,14 @@
     try {
       const mod = await import(CDN.transformers);
       const { pipeline, env } = mod;
-      if (env && env.allowLocalModels !== undefined) env.allowLocalModels = false;
+      if (env) {
+        env.allowLocalModels = false;
+        // 国内用户默认 HuggingFace 被墙，切到 hf-mirror 镜像
+        if (!env.remoteHost || env.remoteHost.indexOf('huggingface.co') >= 0) {
+          env.remoteHost = 'https://hf-mirror.com';
+          env.remotePathTemplate = '{model}/resolve/main/{file}';
+        }
+      }
       const asr = await pipeline('automatic-speech-recognition', WHISPER_MODEL);
       setProg(45, '解码音轨…');
       const ab = await getAudioBuffer();
@@ -414,7 +421,10 @@
       if (text.trim()) setProg(100, '语音识别完成'); else setProg(0, '未识别到语音内容');
       hideProgSoon();
     } catch (e) {
-      setProg(0, '语音识别失败：' + e.message + '（若卡在模型下载，多为 HuggingFace CDN 访问慢，可重试或用本地离线版）');
+      const tip = e.message && e.message.indexOf('fetch') >= 0
+        ? '（模型下载失败：已自动切到 hf-mirror.com 镜像，如果仍失败，说明当前网络无法访问 HuggingFace 镜像，建议使用下方「本地离线版」或换网络）'
+        : '（若卡在模型下载，多为 HuggingFace CDN 访问慢，已自动切到 hf-mirror.com，可重试）';
+      setProg(0, '语音识别失败：' + e.message + tip);
     }
   }
 
@@ -438,9 +448,17 @@
       const resp = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
-        body: JSON.stringify({ model, messages: [{ role: 'user', content }], temperature: 0.6, max_tokens: 1400 })
+        body: JSON.stringify({ model, messages: [{ role: 'user', content }], temperature: 0.6, max_tokens: 1024 })
       });
       if (!resp.ok) { const t = await resp.text(); throw new Error('HTTP ' + resp.status + ' ' + t.slice(0, 200)); }
+      if (resp.status === 400) {
+        const t = await resp.text();
+        // 智谱常见 400：max_tokens 超限、参数非法
+        if (t.indexOf('max_tokens') >= 0 || t.indexOf('1210') >= 0) {
+          throw new Error('max_tokens 参数非法（智谱限制 1-1024），请刷新页面使用最新脚本');
+        }
+        throw new Error('HTTP 400 ' + t.slice(0, 200));
+      }
       const j = await resp.json();
       const txt = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
       const ai = parseAi(txt);
