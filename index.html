@@ -166,6 +166,60 @@ nav button.active{color:#fff;background:var(--grad);box-shadow:0 6px 16px rgba(9
 .grp-head{margin:2px 0 4px}
 .grp-title{font-size:21px;font-weight:800;letter-spacing:.3px;color:var(--ink)}
 .grp-sub{color:var(--muted);font-size:13px;margin-top:3px}
+/* ===== 数据分类分区（dgrp） ===== */
+.dgrp{margin:0 0 8px;position:relative}
+.dgrp+.dgrp{margin-top:6px}
+.dgrp-hd{display:flex;align-items:center;gap:12px;margin:4px 0 14px;padding:11px 16px;border-radius:12px;
+  background:linear-gradient(100deg,var(--dg-tint,rgba(109,94,252,.10)),transparent 72%);
+  border-left:5px solid var(--dg,#6d5efc)}
+.dgrp-no{flex:none;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;color:#fff;background:var(--dg,#6d5efc);box-shadow:0 3px 9px rgba(0,0,0,.14)}
+.dgrp-tx{flex:1;min-width:0}
+.dgrp-t{font-size:16px;font-weight:800;color:var(--ink);letter-spacing:.2px;line-height:1.25}
+.dgrp-s{font-size:12px;color:var(--muted);margin-top:2px}
+.dgrp-cnt{flex:none;font-size:11.5px;color:var(--dg,#6d5efc);font-weight:700;background:var(--dg-tint,rgba(109,94,252,.12));
+  padding:4px 10px;border-radius:20px;white-space:nowrap}
+.dgrp-fold{flex:none;cursor:pointer;user-select:none;font-size:12px;color:var(--muted);padding:4px 9px;border-radius:8px;
+  border:1px solid var(--line);background:var(--panel);transition:.15s}
+.dgrp-fold:hover{color:var(--dg,#6d5efc);border-color:var(--dg,#6d5efc)}
+.dgrp.fold .dgrp-bd{display:none}
+.dg-v{--dg:#6d5efc;--dg-tint:rgba(109,94,252,.11)}   /* 紫 · 概览 */
+.dg-b{--dg:#2b6cff;--dg-tint:rgba(43,108,255,.11)}   /* 蓝 · 周期/周数据 */
+.dg-g{--dg:#12a06a;--dg-tint:rgba(18,160,106,.11)}   /* 绿 · 结构/素材 */
+.dg-o{--dg:#e08a08;--dg-tint:rgba(224,138,8,.13)}    /* 橙 · 明细/月度 */
+.dg-r{--dg:#e0533d;--dg-tint:rgba(224,83,61,.11)}    /* 红 · KPI 绩效 */
+.dg-c{--dg:#0e9bb0;--dg-tint:rgba(14,155,176,.11)}   /* 青 · 项目维度 */
+/* 个人数据：快速跳转条 */
+.me-jump{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 16px;padding:10px 14px;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-sm)}
+.me-jump .mj-lb{font-size:12px;color:var(--muted);font-weight:700;margin-right:2px}
+.me-jump .mj{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--ink);
+  padding:6px 13px;border-radius:20px;border:1px solid var(--line);cursor:pointer;transition:.16s;background:var(--panel)}
+.me-jump .mj:hover{border-color:var(--brand);color:var(--brand);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.me-jump .mj i{width:8px;height:8px;border-radius:50%;flex:none}
+.me-src-card{padding:16px 20px}
+.me-src-card h2{margin-bottom:8px}
+/* KPI 绩效卡（明了版） */
+.kpiw{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.kpi-mc{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
+.kpi-mc-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  padding:11px 14px;background:linear-gradient(100deg,rgba(224,83,61,.09),transparent 70%);border-bottom:1px solid var(--line)}
+.kpi-mc-tag{font-size:13px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:8px}
+.kpi-mc-bd{padding:14px}
+.kpi-big{display:flex;align-items:baseline;gap:8px;margin-bottom:2px}
+.kpi-big b{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.kpi-big span{font-size:12px;color:var(--muted)}
+.kpi-badge{font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;color:#fff}
+.kpi-gap{font-size:12px;color:var(--muted);margin-top:4px}
+.kpi-blk{padding:12px 0;border-top:1px dashed var(--line)}
+.kpi-blk:first-child{border-top:0;padding-top:2px}
+.kpi-lb{font-size:12.5px;color:var(--muted);font-weight:700;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.kpi-track{height:12px;background:rgba(125,135,155,.14);border-radius:7px;overflow:hidden;position:relative}
+.kpi-track i{display:block;height:100%;border-radius:7px;transition:width .4s ease}
+.kpi-num{font-size:12.5px;color:var(--ink);margin-top:5px;display:flex;justify-content:space-between;gap:8px}
+.kpi-in{width:112px;padding:5px 9px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:var(--panel);color:var(--ink)}
+.kpi-tot{margin-top:16px;padding:14px 16px;border-radius:14px;border:1px dashed var(--dg,#e0533d);
+  background:linear-gradient(100deg,rgba(224,83,61,.07),transparent 70%)}
 .subnav{display:flex;gap:9px;margin:14px 0 20px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px}
 .subnav button{background:var(--panel);border:1px solid var(--line);padding:9px 20px;font-size:14px;color:var(--muted);cursor:pointer;font-weight:700;border-radius:11px;transition:.18s;box-shadow:var(--shadow-sm)}
 .subnav button:hover{color:var(--brand);border-color:var(--brand);transform:translateY(-1px)}
@@ -481,96 +535,172 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <button class="btn primary" id="openImport2">⤓ 导入新周期</button>
       </div>
     </div>
-    <div class="card" id="ov-core-card">
-      <div class="ov-core-head">
-        <h2>核心指标</h2>
-        <div class="ov-core-filters">
-          <div class="ov-filter-group">
-            <span class="ov-filter-label">周期</span>
-            <span class="tag" id="ov-period-filter">未导入数据</span>
+    <!-- ① 总体概览 -->
+    <div class="dgrp dg-v" id="g-proj-core">
+      <div class="dgrp-hd">
+        <span class="dgrp-no">1</span>
+        <span class="dgrp-tx"><span class="dgrp-t">总体概览</span><span class="dgrp-s">当前周期核心指标 · 环比变化</span></span>
+        <span class="dgrp-cnt">本期汇总</span>
+      </div>
+      <div class="dgrp-bd">
+        <div class="card" id="ov-core-card">
+          <div class="ov-core-head">
+            <h2>核心指标</h2>
+            <div class="ov-core-filters">
+              <div class="ov-filter-group">
+                <span class="ov-filter-label">周期</span>
+                <span class="tag" id="ov-period-filter">未导入数据</span>
+              </div>
+              <button class="cmp-toggle" id="cmpToggle">📊 环比对比</button>
+            </div>
           </div>
-          <button class="cmp-toggle" id="cmpToggle">📊 环比对比</button>
+          <div class="kpis" id="ov-kpis"></div>
         </div>
-      </div>
-      <div class="kpis" id="ov-kpis"></div>
-    </div>
-    <div class="card">
-      <h2>周期对比 <span class="tag" id="ov-periods-tag">各周期核心指标</span></h2>
-      <div id="ov-periods-kpis"></div>
-    </div>
-    <div class="card" id="ov-cmp-card" style="display:none">
-      <h2>📊 环比对比 <span class="tag" id="ov-cmp-period"></span></h2>
-      <div class="kpis" id="ov-cmp-kpis"></div>
-      <table class="cmp-tbl" id="ov-cmp-tbl"></table>
-    </div>
-    <div class="grid2 ov-type-funnel">
-      <div class="card">
-        <h2>视频 / 图片 素材类型对比 <span class="tag">按消耗占比</span></h2>
-        <div class="grid2 type-cmp">
-          <div class="chart-box" style="height:230px"><canvas id="chTypeShare"></canvas></div>
-          <div id="ovTypeStats" class="type-stats"></div>
-        </div>
-      </div>
-      <div class="card tag-filter-card">
-        <h2>标签筛选 <span class="tag">多选 · 联动品类 / SKU / 素材排行</span></h2>
-        <div class="tag-filter-toolbar">
-          <span class="ov-filter-label">包含</span>
-          <span class="seg" id="tagModeSeg">
-            <span class="seg-btn on" data-mode="any">任一</span>
-            <span class="seg-btn" data-mode="all">所有</span>
-          </span>
-          <input type="text" id="tagSearch" class="tag-search" placeholder="搜索标签…">
-          <span class="tag-filter-tip" id="tagFilterTip">未选择标签</span>
-        </div>
-        <div class="tag-cloud" id="tagCloud">
-          <div class="empty" style="padding:20px 10px">导入数据后自动加载标签</div>
+        <div class="card" id="ov-cmp-card" style="display:none">
+          <h2>📊 环比对比 <span class="tag" id="ov-cmp-period"></span></h2>
+          <div class="kpis" id="ov-cmp-kpis"></div>
+          <table class="cmp-tbl" id="ov-cmp-tbl"></table>
         </div>
       </div>
     </div>
-    <div class="grid2">
-      <div class="card">
-        <h2>各项目消耗 / 转化对比</h2>
-        <div class="chart-box"><canvas id="chProjCost"></canvas></div>
+
+    <!-- ② 周数据（周期口径集中区） -->
+    <div class="dgrp dg-b" id="g-proj-week">
+      <div class="dgrp-hd">
+        <span class="dgrp-no">2</span>
+        <span class="dgrp-tx"><span class="dgrp-t">周数据 · 周期口径</span><span class="dgrp-s">各周期核心指标 + 项目 × 周期 矩阵，周维度数据集中查看</span></span>
+        <span class="dgrp-cnt">按周期</span>
       </div>
-      <div class="card">
-        <h2>各项目转化成本 / 转化率</h2>
-        <div class="chart-box"><canvas id="chProjEff"></canvas></div>
-      </div>
-    </div>
-    <div class="card">
-      <h2>项目 × 周期 消耗 / 转化矩阵 <span class="tag">每格：消耗（下方为转化数）</span></h2>
-      <div class="tbl-scroll"><table class="cmp-tbl" id="periodMatrixTbl"></table></div>
-    </div>
-    <div class="card">
-      <h2>素材表现 <span class="tag" id="pj-mat-tag">消耗 Top20</span></h2>
-      <div class="filters" style="margin-bottom:10px">
-        <span style="color:var(--muted)">排序：</span>
-        <button class="btn sm primary" data-pjsort="cost">消耗</button>
-        <button class="btn sm" data-pjsort="cv">转化</button>
-        <button class="btn sm" data-pjsort="cpa">转化成本最低</button>
-        <button class="btn sm" data-pjsort="cvr">转化率</button>
-      </div>
-      <div class="tbl-scroll" style="max-height:480px">
-        <table id="pjMatTable"><thead></thead><tbody></tbody></table>
+      <div class="dgrp-bd">
+        <div class="card" id="ov-periods-card">
+          <h2>各周期核心指标 <span class="tag" id="ov-periods-tag">逐期对比 · 环比</span></h2>
+          <div id="ov-periods-kpis"></div>
+        </div>
+        <div class="card" id="ov-matrix-card">
+          <h2>项目 × 周期 消耗 / 转化矩阵 <span class="tag">每格：消耗（下方为转化数）</span></h2>
+          <div class="tbl-scroll"><table class="cmp-tbl" id="periodMatrixTbl"></table></div>
+        </div>
       </div>
     </div>
-    <div class="card">
-      <h2>数据洞察与素材方向建议</h2>
-      <div id="ov-insights"></div>
+
+    <!-- ③ 素材结构 -->
+    <div class="dgrp dg-g" id="g-proj-struct">
+      <div class="dgrp-hd">
+        <span class="dgrp-no">3</span>
+        <span class="dgrp-tx"><span class="dgrp-t">素材结构分析</span><span class="dgrp-s">视频 / 图片 类型占比 · 标签分布与筛选</span></span>
+        <span class="dgrp-cnt">结构维度</span>
+      </div>
+      <div class="dgrp-bd">
+        <div class="grid2 ov-type-funnel">
+          <div class="card" id="ov-type-card">
+            <h2>视频 / 图片 素材类型对比 <span class="tag">按消耗占比</span></h2>
+            <div class="grid2 type-cmp">
+              <div class="chart-box" style="height:230px"><canvas id="chTypeShare"></canvas></div>
+              <div id="ovTypeStats" class="type-stats"></div>
+            </div>
+          </div>
+          <div class="card tag-filter-card" id="ov-tag-card">
+            <h2>标签筛选 <span class="tag">多选 · 联动品类 / SKU / 素材排行</span></h2>
+            <div class="tag-filter-toolbar">
+              <span class="ov-filter-label">包含</span>
+              <span class="seg" id="tagModeSeg">
+                <span class="seg-btn on" data-mode="any">任一</span>
+                <span class="seg-btn" data-mode="all">所有</span>
+              </span>
+              <input type="text" id="tagSearch" class="tag-search" placeholder="搜索标签…">
+              <span class="tag-filter-tip" id="tagFilterTip">未选择标签</span>
+            </div>
+            <div class="tag-cloud" id="tagCloud">
+              <div class="empty" style="padding:20px 10px">导入数据后自动加载标签</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ 项目维度 -->
+    <div class="dgrp dg-c" id="g-proj-pj">
+      <div class="dgrp-hd">
+        <span class="dgrp-no">4</span>
+        <span class="dgrp-tx"><span class="dgrp-t">项目维度对比</span><span class="dgrp-s">广义新 / 低活 / 标点 三渠道消耗、转化与效率</span></span>
+        <span class="dgrp-cnt">按项目</span>
+      </div>
+      <div class="dgrp-bd">
+        <div class="grid2">
+          <div class="card" id="ov-projcost-card">
+            <h2>各项目消耗 / 转化对比</h2>
+            <div class="chart-box"><canvas id="chProjCost"></canvas></div>
+          </div>
+          <div class="card" id="ov-projeff-card">
+            <h2>各项目转化成本 / 转化率</h2>
+            <div class="chart-box"><canvas id="chProjEff"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑤ 素材明细与洞察 -->
+    <div class="dgrp dg-o" id="g-proj-detail">
+      <div class="dgrp-hd">
+        <span class="dgrp-no">5</span>
+        <span class="dgrp-tx"><span class="dgrp-t">素材明细与洞察</span><span class="dgrp-s">单素材表现排行 · 自动生成的方向建议</span></span>
+        <span class="dgrp-cnt">明细层</span>
+      </div>
+      <div class="dgrp-bd">
+        <div class="card" id="ov-mat-card">
+          <h2>素材表现 <span class="tag" id="pj-mat-tag">消耗 Top20</span></h2>
+          <div class="filters" style="margin-bottom:10px">
+            <span style="color:var(--muted)">排序：</span>
+            <button class="btn sm primary" data-pjsort="cost">消耗</button>
+            <button class="btn sm" data-pjsort="cv">转化</button>
+            <button class="btn sm" data-pjsort="cpa">转化成本最低</button>
+            <button class="btn sm" data-pjsort="cvr">转化率</button>
+          </div>
+          <div class="tbl-scroll" style="max-height:480px">
+            <table id="pjMatTable"><thead></thead><tbody></tbody></table>
+          </div>
+        </div>
+        <div class="card" id="ov-insight-card">
+          <h2>数据洞察与素材方向建议</h2>
+          <div id="ov-insights"></div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- ========== 总览 ========== -->
   <!-- ========== 周期对比 ========== -->
   <div class="section" id="periods">
-    <div class="card">
-      <h2>周期趋势 <span class="tag">消耗 / 转化 跨周期变化</span></h2>
-      <div class="chart-box" style="height:340px"><canvas id="chPeriodTrend"></canvas></div>
+    <div class="grp-head">
+      <h1 class="grp-title">周数据中心</h1>
+      <p class="grp-sub">所有「按周 / 按周期」口径的数据集中在这里：趋势走向 → 逐期指标 → 环比明细</p>
     </div>
-    <div class="card">
-      <h2>各周期核心指标 <span class="tag">环比 = 较上一周期</span></h2>
-      <div class="tbl-scroll"><table class="cmp-tbl" id="periodKpiTbl"></table></div>
-      <div class="note">颜色说明：<span style="color:#1faa59;font-weight:700">绿 ▲</span> 表示该指标环比上升且为「好」（转化数 / 转化率 / 点击率），<span style="color:#e0533d;font-weight:700">红 ▲</span> 表示消耗 / 转化成本的上升（成本类上升为劣）。</div>
+    <div class="dgrp dg-b" id="g-per-trend">
+      <div class="dgrp-hd">
+        <span class="dgrp-no">1</span>
+        <span class="dgrp-tx"><span class="dgrp-t">周期趋势</span><span class="dgrp-s">消耗 / 转化 跨周期走势，看整体节奏</span></span>
+        <span class="dgrp-cnt">趋势层</span>
+      </div>
+      <div class="dgrp-bd">
+        <div class="card" id="per-trend-card">
+          <h2>周期趋势 <span class="tag">消耗 / 转化 跨周期变化</span></h2>
+          <div class="chart-box" style="height:340px"><canvas id="chPeriodTrend"></canvas></div>
+        </div>
+      </div>
+    </div>
+    <div class="dgrp dg-o" id="g-per-kpi">
+      <div class="dgrp-hd">
+        <span class="dgrp-no">2</span>
+        <span class="dgrp-tx"><span class="dgrp-t">逐期指标明细</span><span class="dgrp-s">每个周期的核心指标与环比涨跌</span></span>
+        <span class="dgrp-cnt">明细层</span>
+      </div>
+      <div class="dgrp-bd">
+        <div class="card" id="per-kpi-card">
+          <h2>各周期核心指标 <span class="tag">环比 = 较上一周期</span></h2>
+          <div class="tbl-scroll"><table class="cmp-tbl" id="periodKpiTbl"></table></div>
+          <div class="note">颜色说明：<span style="color:#1faa59;font-weight:700">绿 ▲</span> 表示该指标环比上升且为「好」（转化数 / 转化率 / 点击率），<span style="color:#e0533d;font-weight:700">红 ▲</span> 表示消耗 / 转化成本的上升（成本类上升为劣）。</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -580,7 +710,14 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       <h1 class="grp-title">品类方向建议</h1>
       <p class="grp-sub">从多维度拆解表现，并给出逐品类方向建议</p>
     </div>
-    <div class="card">
+    <div class="dgrp dg-v" id="g-cat-ov">
+      <div class="dgrp-hd">
+        <span class="dgrp-no">1</span>
+        <span class="dgrp-tx"><span class="dgrp-t">品类概览</span><span class="dgrp-s">选择项目与排序口径，查看品类整体表现</span></span>
+        <span class="dgrp-cnt">汇总层</span>
+      </div>
+      <div class="dgrp-bd">
+    <div class="card" id="catdir-ov-card">
       <div class="filters">
         <span style="color:var(--muted)">项目：</span>
         <span class="chip" data-proj="广义新">广义新</span>
@@ -595,6 +732,15 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       </div>
       <div class="kpis" id="catdir-kpis"></div>
     </div>
+      </div>
+    </div>
+    <div class="dgrp dg-g" id="g-cat-dist">
+      <div class="dgrp-hd">
+        <span class="dgrp-no">2</span>
+        <span class="dgrp-tx"><span class="dgrp-t">分布结构</span><span class="dgrp-s">品类 Top10 · 低活活动类型 · 三渠道跑量 SKU</span></span>
+        <span class="dgrp-cnt">结构层</span>
+      </div>
+      <div class="dgrp-bd">
     <div class="grid3 catdir-trio">
       <div class="card">
         <h2>品类表现 Top10 <span class="tag">消耗 / 转化率</span></h2>
@@ -619,20 +765,40 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <div class="note" id="skuNote">SKU 取自素材命名中最长数字段（8~16 位商品 ID）；跑量 SKU = 单 SKU 累计消耗 ≥ ¥10,000。可切换渠道查看。</div>
       </div>
     </div>
-    <div class="card">
+      </div>
+    </div>
+    <div class="dgrp dg-o" id="g-cat-detail">
+      <div class="dgrp-hd">
+        <span class="dgrp-no">3</span>
+        <span class="dgrp-tx"><span class="dgrp-t">品类指标明细</span><span class="dgrp-s">多维对比图 + 可排序明细表</span></span>
+        <span class="dgrp-cnt">明细层</span>
+      </div>
+      <div class="dgrp-bd">
+    <div class="card" id="catdir-chart-card">
       <h2>各品类核心指标 <span class="tag">消耗 / 点击 / 转化 多维对比</span></h2>
       <div class="chart-box" style="height:380px"><canvas id="chCatDir"></canvas></div>
     </div>
-    <div class="card">
+    <div class="card" id="catdir-tbl-card">
       <h2>品类指标明细 <span class="tag">点击表头排序 · 爆款数基于「爆款标准」</span></h2>
       <div class="tbl-scroll" style="max-height:460px">
         <table id="catdirTable"><thead></thead><tbody></tbody></table>
       </div>
       <div class="note">方向判定：在所选项目的全部品类中，按<b>转化率(CVR)</b>、<b>转化成本(CPA)</b>、<b>消耗占比</b>、<b>爆款素材数</b>相对中位数/分位综合判断（放量 / 维持 / 优化 / 收缩 / 观察）。爆款数随「爆款标准」实时变化。</div>
     </div>
-    <div class="card">
+      </div>
+    </div>
+    <div class="dgrp dg-r" id="g-cat-advice">
+      <div class="dgrp-hd">
+        <span class="dgrp-no">4</span>
+        <span class="dgrp-tx"><span class="dgrp-t">方向建议</span><span class="dgrp-s">逐品类诊断结论与下一步动作</span></span>
+        <span class="dgrp-cnt">决策层</span>
+      </div>
+      <div class="dgrp-bd">
+    <div class="card" id="catdir-advice-card">
       <h2>📌 品类方向建议卡 <span class="tag">逐品类诊断 + 行动建议</span></h2>
       <div class="cat-grid" id="catdirCards"></div>
+    </div>
+      </div>
     </div>
   </div>
 
@@ -750,8 +916,22 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 
 <!-- ========== 个人数据（实时更新） ========== -->
 <div class="section" id="me">
-  <div class="card">
-    <h2>个人数据 <span class="tag">实时更新 · 外部数据源自动拉取</span></h2>
+  <div class="grp-head">
+    <h1 class="grp-title">个人数据看板</h1>
+    <p class="grp-sub">按数据分类逐层展开：今日实时 → 素材数据 → 周数据 → 月度汇总 → KPI 绩效</p>
+  </div>
+
+  <div class="me-jump" id="meJump">
+    <span class="mj-lb">快速跳转</span>
+    <a class="mj" data-go="g-me-rt"><i style="background:#6d5efc"></i>今日实时</a>
+    <a class="mj" data-go="g-me-mat"><i style="background:#12a06a"></i>素材数据</a>
+    <a class="mj" data-go="g-me-week"><i style="background:#2b6cff"></i>周数据</a>
+    <a class="mj" data-go="g-me-month"><i style="background:#e08a08"></i>月度汇总</a>
+    <a class="mj" data-go="g-me-kpi"><i style="background:#e0533d"></i>KPI 绩效</a>
+  </div>
+
+  <div class="card me-src-card" id="meSrcCard">
+    <h2>数据源 <span class="tag">实时更新 · 自动拉取</span></h2>
     <div class="filters">
       <button class="btn sm" id="meCfgBtn">⚙ 数据源设置</button>
       <button class="btn sm primary" id="meRefresh">↻ 立即刷新</button>
@@ -761,35 +941,100 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="note" id="meHint">当前为<strong>示例数据</strong>演示实时刷新。点击「⚙ 数据源设置」可接入你的外部链接（CSV/JSON，需允许跨域），或切换为「粘贴数据」模式；配置后看板会按间隔自动拉取并刷新下方指标。</div>
   </div>
 
-  <div class="card" id="meSummaryCard">
-    <h2>达成率汇总</h2>
-    <div class="kpis" id="meSummary"></div>
-    <div id="meAlerts" class="note"></div>
-  </div>
-
-  <div class="card">
-    <h2>指标卡 <span class="tag">当前值 / 目标值 · 进度</span></h2>
-    <div class="kpis" id="meCards"></div>
-  </div>
-
-  <div class="card" id="meChannelCard">
-    <h2>消耗渠道构成 <span class="tag">广义新 / 低活 / 标点 · 较昨日同时段</span></h2>
-    <div class="kpis" id="meChannelBars"></div>
-    <div id="meChannelDiff" class="note"></div>
-  </div>
-
-  <div class="grid2">
-    <div class="card">
-      <h2>达成率趋势 <span class="tag">按刷新时点</span></h2>
-      <div class="chart-box"><canvas id="meTrend"></canvas></div>
-      <div class="note" id="meTrendNote"></div>
+  <!-- ① 今日实时 -->
+  <div class="dgrp dg-v" id="g-me-rt">
+    <div class="dgrp-hd">
+      <span class="dgrp-no">1</span>
+      <span class="dgrp-tx"><span class="dgrp-t">今日实时</span><span class="dgrp-s">当日核心指标 · 目标达成 · 三渠道消耗构成（较昨日同时段）</span></span>
+      <span class="dgrp-cnt">当日</span>
+      <span class="dgrp-fold" data-fold>收起</span>
     </div>
-    <div class="card">
-      <h2>指标明细 <span class="tag">可编辑</span></h2>
-      <div class="tbl-scroll"><table id="meTable"><thead><tr>
-        <th class="l">名称</th><th>当前值</th><th>目标</th><th>单位</th><th>来源</th><th>操作</th>
-      </tr></thead><tbody id="meTableBody"></tbody></table></div>
-      <button class="btn sm" id="meAddBtn" style="margin-top:10px">＋ 添加手动指标</button>
+    <div class="dgrp-bd">
+      <div class="card" id="meSummaryCard">
+        <h2>达成率汇总 <span class="tag">目标完成度总览</span></h2>
+        <div class="kpis" id="meSummary"></div>
+        <div id="meAlerts" class="note"></div>
+      </div>
+
+      <div class="card" id="meCardsCard">
+        <h2>今日核心指标 <span class="tag">当前值 / 目标值 · 进度</span></h2>
+        <div class="kpis" id="meCards"></div>
+      </div>
+
+      <div class="card" id="meChannelCard">
+        <h2>消耗渠道构成 <span class="tag">广义新 / 低活 / 标点 · 较昨日同时段</span></h2>
+        <div class="kpis" id="meChannelBars"></div>
+        <div id="meChannelDiff" class="note"></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card" id="meTrendCard">
+          <h2>达成率趋势 <span class="tag">按刷新时点</span></h2>
+          <div class="chart-box"><canvas id="meTrend"></canvas></div>
+          <div class="note" id="meTrendNote"></div>
+        </div>
+        <div class="card" id="meTableCard">
+          <h2>指标明细 <span class="tag">可编辑</span></h2>
+          <div class="tbl-scroll"><table id="meTable"><thead><tr>
+            <th class="l">名称</th><th>当前值</th><th>目标</th><th>单位</th><th>来源</th><th>操作</th>
+          </tr></thead><tbody id="meTableBody"></tbody></table></div>
+          <button class="btn sm" id="meAddBtn" style="margin-top:10px">＋ 添加手动指标</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 素材数据 -->
+  <div class="dgrp dg-g" id="g-me-mat">
+    <div class="dgrp-hd">
+      <span class="dgrp-no">2</span>
+      <span class="dgrp-tx"><span class="dgrp-t">素材数据</span><span class="dgrp-s">当日素材排行 + 本月素材消耗 Top50，定位跑量素材</span></span>
+      <span class="dgrp-cnt">素材维度</span>
+      <span class="dgrp-fold" data-fold>收起</span>
+    </div>
+    <div class="dgrp-bd">
+      <div class="card" id="meRankCard"><div id="slotMeRank"></div></div>
+      <div class="card" id="meMatTopCard"><div id="slotMeMatTop"></div></div>
+    </div>
+  </div>
+
+  <!-- ③ 周数据 -->
+  <div class="dgrp dg-b" id="g-me-week">
+    <div class="dgrp-hd">
+      <span class="dgrp-no">3</span>
+      <span class="dgrp-tx"><span class="dgrp-t">周数据</span><span class="dgrp-s">按自然周汇总 + 月/周/日 时间筛选明细，周口径数据集中在这一区</span></span>
+      <span class="dgrp-cnt">按周</span>
+      <span class="dgrp-fold" data-fold>收起</span>
+    </div>
+    <div class="dgrp-bd">
+      <div class="card" id="meWeekCard"><div id="slotMeWeek"></div></div>
+      <div class="card" id="meTimeCard"><div id="slotMeTime"></div></div>
+    </div>
+  </div>
+
+  <!-- ④ 月度汇总 -->
+  <div class="dgrp dg-o" id="g-me-month">
+    <div class="dgrp-hd">
+      <span class="dgrp-no">4</span>
+      <span class="dgrp-tx"><span class="dgrp-t">月度汇总</span><span class="dgrp-s">本月累计指标与每日消耗走势</span></span>
+      <span class="dgrp-cnt">按月</span>
+      <span class="dgrp-fold" data-fold>收起</span>
+    </div>
+    <div class="dgrp-bd">
+      <div class="card" id="meMonthCard"><div id="slotMeMonth"></div></div>
+    </div>
+  </div>
+
+  <!-- ⑤ KPI 绩效 -->
+  <div class="dgrp dg-r" id="g-me-kpi">
+    <div class="dgrp-hd">
+      <span class="dgrp-no">5</span>
+      <span class="dgrp-tx"><span class="dgrp-t">KPI 绩效</span><span class="dgrp-s">双月绩效目标达成进度 · 总消耗与 AIGC 消耗</span></span>
+      <span class="dgrp-cnt">考核</span>
+      <span class="dgrp-fold" data-fold>收起</span>
+    </div>
+    <div class="dgrp-bd">
+      <div class="card" id="meKpiCard"><div id="slotMeKpi"></div></div>
     </div>
   </div>
 </div>
@@ -1547,8 +1792,8 @@ async function meFetchSource(){
 function pushHist(m, t, v){ m.history=m.history||[]; m.history.push({t,v}); if(m.history.length>200) m.history=m.history.slice(-200); }
 function meApplyRows(rows){
   const now=new Date().toISOString();
-  rows.forEach(r=>{ const k=r.name; if(!ME.metrics[k]){ ME.metrics[k]={value:0,target:null,unit:'',manual:false,history:[]}; ME.order.push(k); }
-    const m=ME.metrics[k]; if(!m.manual){ m.value=r.value; if(r.target!=null) m.target=r.target; if(r.unit) m.unit=r.unit; } pushHist(m, now, m.value); });
+  rows.forEach(r=>{ const k=r.name; if(!ME.metrics[k]){ ME.metrics[k]={name:k, value:0,target:null,unit:'',manual:false,history:[]}; ME.order.push(k); }
+    const m=ME.metrics[k]; if(!m.name) m.name=k; if(!m.manual){ m.value=r.value; if(r.target!=null) m.target=r.target; if(r.unit) m.unit=r.unit; } pushHist(m, now, m.value); });
   ME.lastFetch=now; ME.status='ok'; ME.errMsg=''; saveME();
 }
 async function meRefresh(){
@@ -2560,7 +2805,7 @@ function startEditObserver(){
   _editObs.observe(document.body, {childList:true, subtree:true});
 }
 function saveLayout(){ const layout={}, hidden=[];
-  $$('.section, #rank, #dim, #catdir').forEach(sec=>{ const id=sec.id; if(!id) return; layout[id]=[...sec.querySelectorAll(':scope > .card')].map(c=>c.id).filter(Boolean); });
+  $$('.section, #rank, #dim, #catdir, .dgrp-bd').forEach(sec=>{ const id=sec.id; if(!id) return; layout[id]=[...sec.querySelectorAll(':scope > .card')].map(c=>c.id).filter(Boolean); });
   movableCards().forEach(c=>{ if(c.classList.contains('hide')&&c.id) hidden.push(c.id); });
   try{ localStorage.setItem(LAYOUT_KEY, JSON.stringify({layout,hidden})); }catch(e){} }
 function applyLayout(){ let saved=null; try{ saved=JSON.parse(localStorage.getItem(LAYOUT_KEY)); }catch(e){} if(!saved) return;
@@ -2689,11 +2934,37 @@ function updateStateBanner(){
   try{ initPeriodSel(); }catch(e){ console.error('initPeriodSel 失败', e); }
   if(CUR_PERIOD) rebuildView(CUR_PERIOD); else renderAll();
   try{ const t=loadTheme(); if(t) applyThemeVars(t); }catch(e){}
+  try{ bindGroups(); }catch(e){ console.error('bindGroups 失败', e); }
   try{ applyLayout(); }catch(e){}
   try{ startEditObserver(); }catch(e){}
   try{ renderAll(); }catch(e){ console.error('renderAll 失败', e); } // 渲染当前数据
   try{ updateStateBanner(); }catch(e){}
 })();
+
+// ========== 数据分区：折叠 / 快速跳转 ==========
+const GRP_FOLD_KEY='matopt_grp_fold_v1';
+function bindGroups(){
+  let folded={}; try{ folded=JSON.parse(localStorage.getItem(GRP_FOLD_KEY))||{}; }catch(e){}
+  $$('.dgrp').forEach(g=>{
+    const id=g.id; if(!id) return;
+    const bd=g.querySelector('.dgrp-bd'); if(bd && !bd.id) bd.id='bd-'+id;  // 供布局排序按分区保存
+    const btn=g.querySelector('[data-fold]');
+    if(folded[id]){ g.classList.add('fold'); if(btn) btn.textContent='展开'; }
+    if(btn) btn.onclick=()=>{
+      const on=g.classList.toggle('fold');
+      btn.textContent=on?'展开':'收起';
+      folded[id]=on?1:0;
+      try{ localStorage.setItem(GRP_FOLD_KEY, JSON.stringify(folded)); }catch(e){}
+    };
+  });
+  $$('.me-jump .mj').forEach(a=>a.onclick=()=>{
+    const t=document.getElementById(a.dataset.go); if(!t) return;
+    t.classList.remove('fold');
+    const b=t.querySelector('[data-fold]'); if(b) b.textContent='收起';
+    const y=t.getBoundingClientRect().top+window.scrollY-76;
+    window.scrollTo({top:y, behavior:'smooth'});
+  });
+}
 
 // ========== 导入新周期 ==========
 let impFiles = [];   // [{proj, file}]
@@ -3132,6 +3403,6 @@ document.addEventListener('click', function(e){
 })();
 </script>
 
-<script src="personal-enhance.js?v=20260729g"></script>
+<script src="personal-enhance.js?v=20260801a"></script>
 </body>
 </html>

@@ -493,43 +493,59 @@
   }
 
   /* ---------- 渲染：双月绩效 KPI 进度 ---------- */
-  // 单行 KPI（消耗 / AIGC 消耗）：进度条 + 实际/目标 + 百分比
-  function kpiRow(label, mi, f, actualVal, targetVal) {
+  function kpiColor(ratio, tg) { return tg > 0 ? (ratio >= 1 ? "#12a06a" : (ratio >= 0.8 ? "#1f9d55" : (ratio >= 0.6 ? "#e0a008" : "#e0533d"))) : "#94a3b8"; }
+  function kpiState(ratio, tg) { if (!(tg > 0)) return "未设目标"; if (ratio >= 1) return "已达成"; if (ratio >= 0.8) return "冲刺中"; if (ratio >= 0.6) return "进行中"; return "偏慢"; }
+  function kpiGapTxt(actual, tg) {
+    if (!(tg > 0)) return "填写目标值后自动计算达成率与缺口";
+    var gap = tg - actual;
+    return gap > 0 ? ("距达标还差 ¥" + fmtNum(gap)) : ("已超额完成 ¥" + fmtNum(-gap));
+  }
+  // 单项 KPI 区块：达成率大数字 + 状态徽章 + 进度条 + 实际/目标 + 缺口
+  function kpiRow(label, mi, f, actualVal, targetVal, targetInput) {
     var ratio = targetVal > 0 ? actualVal / targetVal : 0;
     var pct = Math.round(ratio * 100);
-    var col = targetVal > 0 ? (ratio >= 1 ? "#27a567" : (ratio >= 0.6 ? "#e0a008" : "#e0533d")) : "#cbd5e1";
-    return "<div class='me-kpi-row' style='display:flex;align-items:center;gap:10px;margin:6px 0'>" +
-      "<div style='width:72px;color:#5a6678;font-size:13px'>" + esc(label) + "</div>" +
-      "<div style='flex:1'>" +
-        "<div style='display:flex;justify-content:space-between;font-size:12px;color:#334'><span class='me-kpi-actual'>实际 ¥" + fmtNum(actualVal) + "</span><span class='me-kpi-target'>目标 ¥" + fmtNum(targetVal) + "</span></div>" +
-        "<div style='height:8px;background:#eef2f7;border-radius:4px;overflow:hidden;margin-top:3px'><i class='me-kpi-bar' data-mi='" + mi + "' data-f='" + f + "' style='display:block;height:100%;width:" + Math.min(100, pct) + "%;background:" + col + "'></i></div>" +
+    var col = kpiColor(ratio, targetVal);
+    return "<div class='kpi-blk me-kpi-row'>" +
+      "<div class='kpi-lb'><span>" + esc(label) + "</span>" + (targetInput || "") + "</div>" +
+      "<div class='kpi-big'>" +
+        "<b class='me-kpi-pct' style='color:" + col + "'>" + pct + "%</b><span>达成率</span>" +
+        "<span class='kpi-badge me-kpi-badge' style='background:" + col + "'>" + kpiState(ratio, targetVal) + "</span>" +
       "</div>" +
-      "<div class='me-kpi-pct' style='width:48px;text-align:right;font-weight:700;color:" + col + "'>" + pct + "%</div>" +
+      "<div class='kpi-track'><i class='me-kpi-bar' data-mi='" + mi + "' data-f='" + f + "' style='width:" + Math.min(100, pct) + "%;background:" + col + "'></i></div>" +
+      "<div class='kpi-num'><span class='me-kpi-actual'>实际 ¥" + fmtNum(actualVal) + "</span><span class='me-kpi-target'>目标 ¥" + fmtNum(targetVal) + "</span></div>" +
+      "<div class='kpi-gap me-kpi-gap'>" + kpiGapTxt(actualVal, targetVal) + "</div>" +
     "</div>";
+  }
+  function tgInput(i, f, v) {
+    return "<span style='font-weight:400;color:#8a94a6'>目标 <input type='number' class='me-kpi-target-input kpi-in' data-mi='" + i + "' data-f='" + f + "' value='" + v + "' placeholder='0'> 元</span>";
   }
   // 单月卡片（月① / 月②）
   function kpiMonthBlock(i, m, actual, t) {
     var tag = i === 0 ? "月①" : "月②";
-    return "<div style='border:1px solid #eef2f7;border-radius:10px;padding:12px 14px;margin-bottom:12px;background:#fcfdff'>" +
-      "<div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px'>" +
-        "<div style='display:flex;align-items:center;gap:8px'>" +
-          "<span style='font-weight:700;color:#223'>" + tag + "</span>" +
-          "<input type='month' class='me-kpi-month' data-mi='" + i + "' value='" + m + "' style='padding:5px 8px;border:1px solid #cdd6e3;border-radius:8px;font-size:13px'>" +
-        "</div>" +
-        "<div style='display:flex;align-items:center;gap:6px;font-size:12px;color:#8a94a6'>目标消耗 <input type='number' class='me-kpi-target-input' data-mi='" + i + "' data-f='cost' value='" + t.cost + "' placeholder='0' style='width:110px;padding:5px 8px;border:1px solid #cdd6e3;border-radius:8px;font-size:13px'> 元</div>" +
+    return "<div class='kpi-mc'>" +
+      "<div class='kpi-mc-hd'>" +
+        "<span class='kpi-mc-tag'>" + tag +
+          "<input type='month' class='me-kpi-month kpi-in' data-mi='" + i + "' value='" + m + "' style='width:auto'>" +
+        "</span>" +
+        "<span style='font-size:12px;color:#8a94a6'>实际值按所选月份自动汇总</span>" +
       "</div>" +
-      kpiRow("总消耗", i, "cost", actual.cost, t.cost) +
-      "<div style='display:flex;align-items:center;gap:6px;margin:8px 0 4px;font-size:12px;color:#8a94a6;justify-content:flex-end'>目标 AIGC <input type='number' class='me-kpi-target-input' data-mi='" + i + "' data-f='aigc' value='" + t.aigc + "' placeholder='0' style='width:110px;padding:5px 8px;border:1px solid #cdd6e3;border-radius:8px;font-size:13px'> 元</div>" +
-      kpiRow("AIGC消耗", i, "aigc", actual.aigc, t.aigc) +
+      "<div class='kpi-mc-bd'>" +
+        kpiRow("总消耗", i, "cost", actual.cost, t.cost, tgInput(i, "cost", t.cost)) +
+        kpiRow("AIGC 消耗", i, "aigc", actual.aigc, t.aigc, tgInput(i, "aigc", t.aigc)) +
+      "</div>" +
     "</div>";
   }
   // 双月合计（mi="t" 表示合计行）
   function kpiTotalBlock() {
     var a1 = getMonthActual(kpiMonths[0]), a2 = getMonthActual(kpiMonths[1]);
     var t1 = kpiStore[kpiMonths[0]] || { cost: 0, aigc: 0 }, t2 = kpiStore[kpiMonths[1]] || { cost: 0, aigc: 0 };
-    return "<div style='font-weight:700;color:#223;margin-bottom:6px'>▬ 双月合计（" + kpiMonths[0] + " + " + kpiMonths[1] + "）</div>" +
-      kpiRow("总消耗", "t", "cost", a1.cost + a2.cost, t1.cost + t2.cost) +
-      kpiRow("AIGC总消耗", "t", "aigc", a1.aigc + a2.aigc, t1.aigc + t2.aigc);
+    return "<div class='kpi-tot'>" +
+      "<div style='font-weight:800;color:#223;margin-bottom:8px;font-size:14px'>🏁 双月合计考核（" + kpiMonths[0] + " + " + kpiMonths[1] + "）</div>" +
+      "<div class='kpiw'>" +
+        kpiRow("双月总消耗", "t", "cost", a1.cost + a2.cost, t1.cost + t2.cost) +
+        kpiRow("双月 AIGC 消耗", "t", "aigc", a1.aigc + a2.aigc, t1.aigc + t2.aigc) +
+      "</div>" +
+    "</div>";
   }
   // 轻量刷新：仅重算进度条与实际/目标数值，不动输入框（避免打字时失焦）
   function refreshKpiProgress() {
@@ -548,13 +564,15 @@
       }
       var a = actual[f], tg = t[f];
       var ratio = tg > 0 ? a / tg : 0, pct = Math.round(ratio * 100);
-      var col = tg > 0 ? (ratio >= 1 ? "#27a567" : (ratio >= 0.6 ? "#e0a008" : "#e0533d")) : "#cbd5e1";
+      var col = kpiColor(ratio, tg);
       bar.style.width = Math.min(100, pct) + "%"; bar.style.background = col;
       var row = bar.closest(".me-kpi-row");
       if (row) {
         var act = row.querySelector(".me-kpi-actual"); if (act) act.textContent = "实际 ¥" + fmtNum(a);
         var tgt = row.querySelector(".me-kpi-target"); if (tgt) tgt.textContent = "目标 ¥" + fmtNum(tg);
         var pc = row.querySelector(".me-kpi-pct"); if (pc) { pc.textContent = pct + "%"; pc.style.color = col; }
+        var bd = row.querySelector(".me-kpi-badge"); if (bd) { bd.textContent = kpiState(ratio, tg); bd.style.background = col; }
+        var gp = row.querySelector(".me-kpi-gap"); if (gp) gp.textContent = kpiGapTxt(a, tg);
       }
     });
   }
@@ -569,6 +587,7 @@
       var t = kpiStore[m] || { cost: 0, aigc: 0 };
       html += kpiMonthBlock(i, m, actual, t);
     });
+    grid.className = "kpiw";
     grid.innerHTML = html;
     var tot = el("meKpiTotal"); if (tot) tot.innerHTML = kpiTotalBlock();
     bindKpi();
@@ -693,90 +712,100 @@
   }
 
   /* ---------- 注入 UI ---------- */
+  // 优先挂载到 index.html 预留的分区槽位（slotXXX）；槽位不存在时回退到旧的「追加到上一面板后」方式
+  function mountPanel(slotId, node, fallbackRef) {
+    var s = el(slotId);
+    if (s) { s.appendChild(node); return node; }
+    if (fallbackRef && fallbackRef.parentNode) fallbackRef.parentNode.insertBefore(node, fallbackRef.nextSibling);
+    return node;
+  }
+  function panelHd(title, tagHtml, tip) {
+    return "<h2 style='display:flex;align-items:center;gap:8px;flex-wrap:wrap'>" + title +
+      (tagHtml ? " <span class='tag'>" + tagHtml + "</span>" : "") +
+      (tip ? "<span style='margin-left:auto;color:#8a94a6;font-size:12px;font-weight:400'>" + tip + "</span>" : "") +
+      "</h2>";
+  }
+  var BOXCSS = "max-height:460px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff";
+
   function injectUI() {
     injectStyle();
     var me = el("me");
     if (!me) return;
-    // 工具栏：时间筛选
-    var h2 = me.querySelector("h2");
+    // 工具栏：时间筛选（优先挂到「数据源」卡内）
+    var srcCard = el("meSrcCard") || me;
+    var h2 = srcCard.querySelector("h2") || me.querySelector("h2");
     var bar = document.createElement("div");
     bar.className = "me-enh-toolbar";
-    bar.style.cssText = "display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 14px;padding:10px 12px;background:#f6f8fb;border:1px solid #e6ebf2;border-radius:10px;";
+    bar.style.cssText = "display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px;padding:10px 12px;background:#f6f8fb;border:1px solid #e6ebf2;border-radius:10px;";
     bar.innerHTML =
       '<span style="font-weight:600;color:#334">📅 时间筛选：</span>' +
       "<select id='meDate' style='padding:6px 10px;border:1px solid #cdd6e3;border-radius:8px;font-size:14px;min-width:160px'></select>" +
       "<span style='color:#8a94a6;font-size:12px'>切换日期查看当日 KPI 与素材情况（历史自今日起逐日累积）</span>";
     if (h2 && h2.parentNode) h2.parentNode.insertBefore(bar, h2.nextSibling);
 
-    // 排行面板
     var cards = el("meCards");
+
+    // ② 素材数据 — 当日素材排行
     var panel = document.createElement("div");
     panel.id = "meRank";
-    panel.style.cssText = "margin-top:18px;";
     panel.innerHTML =
-      "<div style='display:flex;align-items:center;justify-content:space-between;margin-bottom:8px'>" +
-        "<h3 style='margin:0;font-size:16px;color:#223'>🏆 素材数据排行 <span id='meRankCount' style='font-size:12px;color:#8a94a6;font-weight:400'></span></h3>" +
-        "<span style='color:#8a94a6;font-size:12px'>点击表头可切换排序指标</span>" +
-      "</div>" +
-      "<div id='meRankBody' style='max-height:460px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>";
-    if (cards && cards.parentNode) cards.parentNode.insertBefore(panel, cards.nextSibling);
+      panelHd("🏆 素材数据排行 <span id='meRankCount' style='font-size:12px;color:#8a94a6;font-weight:400'></span>", "", "点击表头可切换排序指标") +
+      "<div id='meRankBody' style='" + BOXCSS + "'></div>";
+    mountPanel("slotMeRank", panel, cards);
 
-    // 本月汇总面板
-    var monthPanel = document.createElement("div");
-    monthPanel.id = "meMonth";
-    monthPanel.style.cssText = "margin-top:20px;border:1px solid #e6ebf2;border-radius:12px;background:#fff;overflow:hidden";
-    monthPanel.innerHTML =
-      "<div id='meMonthToggle' style='display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;background:#f6f8fb'>" +
-        "<h3 style='margin:0;font-size:16px;color:#223'>📊 本月汇总 <span id='meMonthRange' style='font-size:12px;color:#8a94a6;font-weight:400'></span></h3>" +
-        "<span style='color:#8a94a6;font-size:12px' id='meMonthArrow'>▾ 收起</span>" +
-      "</div>" +
-      "<div id='meMonthBody' style='padding:14px 16px'>" +
-        "<div id='meMonthCards' style='display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px'></div>" +
-        "<div style='font-weight:600;margin:0 0 6px;color:#334'>每日消耗走势</div>" +
-        "<div id='meMonthChart' style='display:flex;align-items:flex-end;gap:3px;height:130px;padding:0 2px 18px;border-bottom:1px solid #eef2f7;margin-bottom:16px'></div>" +
-        "<div style='font-weight:600;margin:0 0 6px;color:#334'>素材消耗 Top 50（本月累计，点击表头排序）</div>" +
-        "<div id='meMonthMatTop' style='max-height:440px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff;margin-bottom:18px'></div>" +
-        "<div style='display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:0 0 8px'>" +
-          "<div style='font-weight:600;color:#334'>📅 时间筛选明细（点击表头排序）</div>" +
-          "<div id='meTimeTabs' style='display:flex;gap:6px'>" +
-            "<button data-mode='month' style='padding:5px 12px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#334;font-size:13px;cursor:pointer'>月筛选</button>" +
-            "<button data-mode='week' style='padding:5px 12px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#334;font-size:13px;cursor:pointer'>周筛选</button>" +
-            "<button data-mode='day' style='padding:5px 12px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#334;font-size:13px;cursor:pointer'>日筛选</button>" +
-          "</div>" +
-        "</div>" +
-        "<div id='meTimeTable' style='max-height:420px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>" +
-      "</div>";
-    if (panel && panel.parentNode) panel.parentNode.insertBefore(monthPanel, panel.nextSibling);
+    // ② 素材数据 — 本月素材消耗 Top50
+    var matTopPanel = document.createElement("div");
+    matTopPanel.id = "meMatTop";
+    matTopPanel.innerHTML =
+      panelHd("📦 本月素材消耗 Top 50", "本月累计", "点击表头排序") +
+      "<div id='meMonthMatTop' style='max-height:440px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>";
+    mountPanel("slotMeMatTop", matTopPanel, panel);
 
-    // 本周统计面板
+    // ③ 周数据 — 周统计
     var weekPanel = document.createElement("div");
     weekPanel.id = "meWeek";
-    weekPanel.style.cssText = "margin-top:20px;border:1px solid #e6ebf2;border-radius:12px;background:#fff;overflow:hidden";
     weekPanel.innerHTML =
-      "<div style='padding:12px 16px;background:#f6f8fb'>" +
-        "<h3 style='margin:0;font-size:16px;color:#223'>📈 周统计 <span style='font-size:12px;color:#8a94a6;font-weight:400'>（按自然周切分本月，每周 7 天）</span></h3>" +
-      "</div>" +
-      "<div style='padding:14px 16px'>" +
-        "<div id='meWeekTable' style='max-height:420px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>" +
-      "</div>";
-    if (monthPanel && monthPanel.parentNode) monthPanel.parentNode.insertBefore(weekPanel, monthPanel.nextSibling);
+      panelHd("📈 周统计", "按自然周切分本月 · 每周 7 天", "周消耗 / 日均 / 周转化 / 周均素材") +
+      "<div id='meWeekTable' style='max-height:420px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>";
+    mountPanel("slotMeWeek", weekPanel, matTopPanel);
 
-    // 双月绩效 KPI 进度面板
+    // ③ 周数据 — 月 / 周 / 日 时间筛选明细
+    var timePanel = document.createElement("div");
+    timePanel.id = "meTimePanel";
+    timePanel.innerHTML =
+      "<h2 style='display:flex;align-items:center;gap:10px;flex-wrap:wrap'>📅 时间筛选明细 <span class='tag'>月 / 周 / 日 三种口径</span>" +
+        "<span id='meTimeTabs' style='display:flex;gap:6px;margin-left:auto'>" +
+          "<button data-mode='month' style='padding:5px 12px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#334;font-size:13px;cursor:pointer'>月筛选</button>" +
+          "<button data-mode='week' style='padding:5px 12px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#334;font-size:13px;cursor:pointer'>周筛选</button>" +
+          "<button data-mode='day' style='padding:5px 12px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#334;font-size:13px;cursor:pointer'>日筛选</button>" +
+        "</span>" +
+      "</h2>" +
+      "<div id='meTimeTable' style='max-height:420px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>";
+    mountPanel("slotMeTime", timePanel, weekPanel);
+
+    // ④ 月度汇总
+    var monthPanel = document.createElement("div");
+    monthPanel.id = "meMonth";
+    monthPanel.innerHTML =
+      panelHd("📊 本月汇总 <span id='meMonthRange' style='font-size:12px;color:#8a94a6;font-weight:400'></span>", "本月累计指标", "") +
+      "<div id='meMonthBody'>" +
+        "<div id='meMonthCards' style='display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px'></div>" +
+        "<div style='font-weight:700;margin:0 0 8px;color:#334;font-size:13.5px'>每日消耗走势</div>" +
+        "<div id='meMonthChart' style='display:flex;align-items:flex-end;gap:3px;height:150px;padding:0 2px 18px;border-bottom:1px solid #eef2f7'></div>" +
+      "</div>";
+    mountPanel("slotMeMonth", monthPanel, timePanel);
+
+    // ⑤ KPI 绩效
     var kpiPanel = document.createElement("div");
     kpiPanel.id = "meKpi";
-    kpiPanel.style.cssText = "margin-top:20px;border:1px solid #e6ebf2;border-radius:12px;background:#fff;overflow:hidden";
     kpiPanel.innerHTML =
-      "<div style='padding:12px 16px;background:#f6f8fb'>" +
-        "<h3 style='margin:0;font-size:16px;color:#223'>🎯 双月绩效 KPI 进度 <span style='font-size:12px;color:#8a94a6;font-weight:400'>（自定义月份目标，消耗自动关联所选月份）</span></h3>" +
-        "<div style='font-size:12px;color:#8a94a6;margin-top:3px'>分别选「月① / 月②」并填写 KPI 目标，实际消耗（总消耗、AIGC 消耗）按所选月份自动从数据汇总；目标自动保存到本地，下次打开仍在。</div>" +
-      "</div>" +
-      "<div style='padding:14px 16px'>" +
-        "<div id='meKpiGrid'></div>" +
-        "<div id='meKpiTotal' style='margin-top:16px;padding-top:14px;border-top:1px dashed #e6ebf2'></div>" +
-      "</div>";
-    if (weekPanel && weekPanel.parentNode) weekPanel.parentNode.insertBefore(kpiPanel, weekPanel.nextSibling);
+      panelHd("🎯 双月绩效 KPI 进度", "自定义月份目标 · 消耗自动关联", "") +
+      "<div class='note' style='margin:0 0 14px'>分别选「月① / 月②」并填写 KPI 目标，实际消耗（总消耗、AIGC 消耗）按所选月份自动汇总；目标保存在本地，下次打开仍在。</div>" +
+      "<div id='meKpiGrid' class='kpiw'></div>" +
+      "<div id='meKpiTotal'></div>";
+    mountPanel("slotMeKpi", kpiPanel, monthPanel);
 
-    // 本月汇总折叠
+    // 本月汇总折叠（旧版兼容，新版由分区标题的「收起」控制）
     var toggle = el("meMonthToggle");
     if (toggle) toggle.onclick = function () {
       var b = el("meMonthBody");
