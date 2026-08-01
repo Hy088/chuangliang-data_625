@@ -511,7 +511,6 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 </header>
 <nav>
   <button data-tab="proj" class="active">项目看板</button>
-  <button data-tab="periods">周期对比</button>
   <button data-tab="catdir">品类方向</button>
   <button data-tab="mat">素材·爆款</button>
   <button data-tab="vparse">🎬 视频解析</button>
@@ -568,10 +567,14 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="dgrp dg-b" id="g-proj-week">
       <div class="dgrp-hd">
         <span class="dgrp-no">2</span>
-        <span class="dgrp-tx"><span class="dgrp-t">周数据 · 周期口径</span><span class="dgrp-s">各周期核心指标 + 项目 × 周期 矩阵，周维度数据集中查看</span></span>
+        <span class="dgrp-tx"><span class="dgrp-t">周数据 · 周期口径</span><span class="dgrp-s">周期趋势 + 各周期核心指标 + 项目 × 周期 矩阵，周维度数据集中查看</span></span>
         <span class="dgrp-cnt">按周期</span>
       </div>
       <div class="dgrp-bd">
+        <div class="card" id="ov-trend-card">
+          <h2>周期趋势 <span class="tag">消耗 / 转化 跨周期走势</span></h2>
+          <div class="chart-box" style="height:320px"><canvas id="chPeriodTrend"></canvas></div>
+        </div>
         <div class="card" id="ov-periods-card">
           <h2>各周期核心指标 <span class="tag" id="ov-periods-tag">逐期对比 · 环比</span></h2>
           <div id="ov-periods-kpis"></div>
@@ -663,42 +666,6 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <div class="card" id="ov-insight-card">
           <h2>数据洞察与素材方向建议</h2>
           <div id="ov-insights"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== 总览 ========== -->
-  <!-- ========== 周期对比 ========== -->
-  <div class="section" id="periods">
-    <div class="grp-head">
-      <h1 class="grp-title">周数据中心</h1>
-      <p class="grp-sub">所有「按周 / 按周期」口径的数据集中在这里：趋势走向 → 逐期指标 → 环比明细</p>
-    </div>
-    <div class="dgrp dg-b" id="g-per-trend">
-      <div class="dgrp-hd">
-        <span class="dgrp-no">1</span>
-        <span class="dgrp-tx"><span class="dgrp-t">周期趋势</span><span class="dgrp-s">消耗 / 转化 跨周期走势，看整体节奏</span></span>
-        <span class="dgrp-cnt">趋势层</span>
-      </div>
-      <div class="dgrp-bd">
-        <div class="card" id="per-trend-card">
-          <h2>周期趋势 <span class="tag">消耗 / 转化 跨周期变化</span></h2>
-          <div class="chart-box" style="height:340px"><canvas id="chPeriodTrend"></canvas></div>
-        </div>
-      </div>
-    </div>
-    <div class="dgrp dg-o" id="g-per-kpi">
-      <div class="dgrp-hd">
-        <span class="dgrp-no">2</span>
-        <span class="dgrp-tx"><span class="dgrp-t">逐期指标明细</span><span class="dgrp-s">每个周期的核心指标与环比涨跌</span></span>
-        <span class="dgrp-cnt">明细层</span>
-      </div>
-      <div class="dgrp-bd">
-        <div class="card" id="per-kpi-card">
-          <h2>各周期核心指标 <span class="tag">环比 = 较上一周期</span></h2>
-          <div class="tbl-scroll"><table class="cmp-tbl" id="periodKpiTbl"></table></div>
-          <div class="note">颜色说明：<span style="color:#1faa59;font-weight:700">绿 ▲</span> 表示该指标环比上升且为「好」（转化数 / 转化率 / 点击率），<span style="color:#e0533d;font-weight:700">红 ▲</span> 表示消耗 / 转化成本的上升（成本类上升为劣）。</div>
         </div>
       </div>
     </div>
@@ -1553,6 +1520,7 @@ function renderTypeOverview(){
 // ========== 项目基础看板 ==========
 function renderProject(){
   renderProjSummary();
+  renderPeriodTrend();
   renderOvPeriods();
   renderPeriodMatrix();
   renderTagFilter();
@@ -2042,7 +2010,6 @@ function bindNav(){
     $$('.section').forEach(s=>s.classList.remove('active'));
     $('#'+b.dataset.tab).classList.add('active');
     if(b.dataset.tab==='proj'){ renderProject(); }
-    else if(b.dataset.tab==='periods'){ renderPeriods(); }
     else if(b.dataset.tab==='catdir'){ renderCatDir(); }
     else if(b.dataset.tab==='mat'){ buildRankRows(); renderHitCfg(); }
     else if(b.dataset.tab==='vparse'){ renderVParse(); }
@@ -2395,16 +2362,15 @@ function updateHitPreview(){
   $('#hitPreview').innerHTML=`当前标准命中 <b>${h.n}</b> 条素材（占 ${(h.n/total*100).toFixed(1)}%），其累计消耗 <b>${fmtMoney(h.cost)}</b>。点击「应用标准」后，素材排行🔥爆款视频与品类方向的爆款数将同步更新。`;
 }
 
-// ========== 周期对比 ==========
-function renderPeriods(){
+// ========== 周期趋势（并入项目看板 · 周数据分组）==========
+function renderPeriodTrend(){
   const pd = DATA.periodData || [];
-  const kpiTbl = $('#periodKpiTbl'), matrixTbl = $('#periodMatrixTbl');
-  if(!pd.length){
-    if(kpiTbl) kpiTbl.innerHTML = '<tbody><tr><td style="color:#9aa6b2;padding:14px">当前只有 1 个周期，导入更多周期后即可看到「周期的环比」。点击右上角「⤓ 导入新周期」追加。</td></tr></tbody>';
-    if(matrixTbl) matrixTbl.innerHTML='';
-    return;
-  }
-  // 趋势折线：消耗 + 转化（双轴）
+  const cvs = document.getElementById('chPeriodTrend');
+  const card = document.getElementById('ov-trend-card');
+  if(!cvs) return;
+  // 只有 1 个周期时趋势无意义，隐藏整张卡
+  if(pd.length < 2){ if(card) card.style.display='none'; return; }
+  if(card) card.style.display='';
   const labels = pd.map(p=>p.period);
   chart('chPeriodTrend',{type:'line',data:{labels,datasets:[
     {label:'总消耗(¥)',data:pd.map(p=>p.overall.cost),borderColor:'#6366f1',backgroundColor:'rgba(99,102,241,.12)',fill:true,tension:.3,pointRadius:4,yAxisID:'y'},
@@ -2412,29 +2378,6 @@ function renderPeriods(){
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},
     scales:{y:{position:'left',title:{display:true,text:'消耗(¥)'},ticks:{callback:v=>'¥'+(v/1e6).toFixed(1)+'M'}},
             y2:{position:'right',title:{display:true,text:'转化数'},grid:{drawOnChartArea:false}}}}});
-
-  // 各周期核心指标表（含环比）
-  const cols=[['消耗',p=>p.overall.cost,fmtMoney,false],['展示',p=>p.overall.imp,fmtInt,true],
-    ['点击',p=>p.overall.clk,fmtInt,true],['转化',p=>p.overall.cv,fmtInt,true],
-    ['转化成本',p=>p.overall.cpa,fmtCpa,false],['转化率',p=>p.overall.cvr,fmtPct,true],
-    ['点击率',p=>p.overall.ctr,fmtPct,true]];
-  let tb='<thead><tr><th>周期</th>';
-  cols.forEach(c=>{ tb+=`<th>${c[0]}</th><th>${c[0]}环比</th>`; });
-  tb+='</tr></thead><tbody>';
-  pd.forEach((p,i)=>{
-    const prev = i>0 ? pd[i-1] : null;
-    tb+=`<tr><td><b>${p.period}</b></td>`;
-    cols.forEach(c=>{
-      const v=c[1](p), pv = prev ? c[1](prev) : null;
-      tb+=`<td>${c[2](v)}</td>`;
-      tb+=`<td>${prev ? cmpCell(v,pv,c[3],c[2]) : '<span style="color:#9aa6b2">—</span>'}</td>`;
-    });
-    tb+='</tr>';
-  });
-  tb+='</tbody>';
-  if(kpiTbl) kpiTbl.innerHTML=tb;
-
-  renderPeriodMatrix();
 }
 function renderPeriodMatrix(){
   const pd = DATA.periodData || [];
@@ -2618,7 +2561,7 @@ function renderVParseReport(){
   }
   $('#vpMatchedTag').textContent='已匹配报表';
   const rows=[['素材名',m.name],['项目',m.proj],['品类',m.cat],['投放端',m.chan],['优化师',m.opt],['剪辑',m.edit],['素材类型',m.mtype],['标签',m.tags],['消耗',vpMoney(m.cost)],['展示数',vpNum(m.imp)],['点击数',vpNum(m.clk)],['转化数',vpNum(m.cv)],['转化成本CPA',vpCpa(m.cpa)],['点击率CTR',vpPct(m.ctr)],['转化率CVR',vpPct(m.cvr)]];
-  el.innerHTML=`<table class="vp-tbl"><tbody>${rows.map(r=>`<tr><td class="vp-k">${r[0]}</td><td>${r[1]===''?'<span class="muted">—</span>':r[1]}</td></tr>`).join('')}</tbody></table><div class="note">指标为「全部周期合并」汇总；品类由素材名第6段自动解析。可在「周期对比」看分周期表现。</div>`;
+  el.innerHTML=`<table class="vp-tbl"><tbody>${rows.map(r=>`<tr><td class="vp-k">${r[0]}</td><td>${r[1]===''?'<span class="muted">—</span>':r[1]}</td></tr>`).join('')}</tbody></table><div class="note">指标为「全部周期合并」汇总；品类由素材名第6段自动解析。可在「项目看板 · 周数据」看分周期表现。</div>`;
 }
 
 const VP_TEMPLATES={
@@ -2748,7 +2691,6 @@ function renderAll(){
   $$('#rank .chip[data-proj]').forEach(x=>x.classList.toggle('on',state.rankProj.has(x.dataset.proj)));
   renderProject();
   renderOverview();
-  renderPeriods();
   buildHitIndex();
   buildRankRows();
   renderHitCfg();
@@ -2816,8 +2758,7 @@ function applyLayout(){ let saved=null; try{ saved=JSON.parse(localStorage.getIt
 function rerenderCurrent(){ const t=[...$$('nav button.active')][0]; const tab=t&&t.dataset.tab;
   if(tab==='proj'){ renderProject(); }
   else if(tab==='catdir'){ renderCatDir(); }
-  else if(tab==='mat'){ buildRankRows(); renderHitCfg(); }
-  else if(tab==='periods'){ renderPeriods(); } }
+  else if(tab==='mat'){ buildRankRows(); renderHitCfg(); } }
 function syncColorInputs(v){ if(!v) return; const map={brand:'c_brand',brand2:'c_brand2',bg:'c_bg',panel:'c_panel',ink:'c_ink',line:'c_line',muted:'c_muted'};
   Object.keys(map).forEach(k=>{ const el=document.getElementById(map[k]); if(el&&v[k]) el.value=toHex(v[k]); }); }
 function toHex(c){ if(!c) return '#000000'; c=c.trim(); if(c[0]==='#') return c; const m=c.match(/\d+/g); if(m&&m.length>=3){ return '#'+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,'0')).join(''); } return '#6d5efc'; }
