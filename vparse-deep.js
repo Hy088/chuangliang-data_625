@@ -116,6 +116,61 @@
       img.src = dataURL;
     });
   }
+  // 针对视频字幕优化：裁剪底部区域 + 放大 + 灰度二值化
+  function preprocessForOCR(dataURL) {
+    return new Promise((res, rej) => {
+      const img = new Image();
+      img.onload = () => {
+        const srcW = img.width, srcH = img.height;
+        const cropY = Math.floor(srcH * 0.55); // 取底部 45%（字幕常见位置）
+        const cropH = Math.max(24, srcH - cropY);
+        const scale = 1.8;
+        const w = Math.max(100, Math.floor(srcW * scale)), h = Math.max(60, Math.floor(cropH * scale));
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(img, 0, cropY, srcW, cropH, 0, 0, w, h);
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const d = imgData.data;
+        // Otsu 阈值自动二值化（简化版：计算均值后取 1.15 倍作为阈值）
+        let sum = 0, n = d.length / 4;
+        for (let i = 0; i < d.length; i += 4) { sum += (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]); }
+        const mean = sum / n;
+        const thr = Math.min(200, Math.max(110, mean * 1.1));
+        for (let i = 0; i < d.length; i += 4) {
+          const g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+          const v = g > thr ? 255 : 0;
+          d[i] = d[i + 1] = d[i + 2] = v;
+        }
+        ctx.putImageData(imgData, 0, 0);
+        res(c.toDataURL('image/png'));
+      };
+      img.onerror = () => rej(new Error('预处理图片失败'));
+      img.src = dataURL;
+    });
+  }
+  function hasChinese(s) { return /[\u4e00-\u9fa5]/.test(s); }
+  function cleanOcrText(s) {
+    // 保留常见字符，去掉孤立乱码符号
+    return String(s || '').replace(/[^\u4e00-\u9fa5a-zA-Z0-9\u3000-\u303F\uFF00-\uFFEF\s，。！？、：""''（）【】《》]/g, ' ')
+      .replace(/\s+/g, ' ').trim();
+  }
+  function isGarbage(s) {
+    if (!s) return true;
+    if (hasChinese(s)) return false; // 有中文字就保留
+    const letters = s.replace(/[^a-zA-Z]/g, '').length;
+    return letters < 3; // 没有中文且英文字母少于3个视为垃圾
+  }
+  function similar(a, b) {
+    // 简单相似度：共同中文字符比例
+    const ca = a.replace(/[^\u4e00-\u9fa5]/g, ''), cb = b.replace(/[^\u4e00-\u9fa5]/g, '');
+    if (!ca || !cb) return false;
+    const m = new Set(cb.split(''));
+    let hit = 0;
+    for (const ch of ca) if (m.has(ch)) hit++;
+    return hit / Math.max(ca.length, cb.length) > 0.6;
+  }
 
   // ============================================================
   // 零 Key 深度分析：OCR 字幕 + 音频节奏 + 人物/物体检测
@@ -146,12 +201,25 @@
 
   async function runOCR() {
     const frames = (VP.frames || []).filter(f => f.dataURL);
-    const out = [];
+    const raw = [];
     for (let i = 0; i < frames.length; i++) {
       setProg(4 + Math.round(38 * i / frames.length), 'OCR 字幕识别 ' + (i + 1) + '/' + frames.length + '…');
-      const { data } = await Tesseract.recognize(frames[i].dataURL, 'chi_sim+eng', {});
-      const text = (data.text || '').replace(/\s+/g, ' ').trim();
-      out.push({ t: frames[i].t, text });
+      try {
+        const processed = await withTimeout(preprocessForOCR(frames[i].dataURL), 8000, '图片预处理');
+        const { data } = await withTimeout(Tesseract.recognize(processed, 'chi_sim+eng', { logger: () => {} }), 15000, 'OCR 识别');
+        raw.push({ t: frames[i].t, text: cleanOcrText(data.text) });
+      } catch (e) {
+        console.warn('OCR 帧失败', e);
+        raw.push({ t: frames[i].t, text: '' });
+      }
+    }
+    // 过滤垃圾结果并合并连续相似字幕
+    const out = [];
+    for (let i = 0; i < raw.length; i++) {
+      const r = raw[i];
+      if (!r.text || isGarbage(r.text)) continue;
+      if (out.length && similar(out[out.length - 1].text, r.text)) continue;
+      out.push(r);
     }
     return out;
   }
