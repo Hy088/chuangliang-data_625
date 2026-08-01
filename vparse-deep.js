@@ -20,15 +20,14 @@
   };
   const AI_PROMPT = `你是一名资深短视频投放创意分析师。下面是一段广告素材的若干均匀抽帧画面（按时间先后顺序排列）。请结合画面做结构化的「爆款拆解」，并严格只输出如下 JSON（不要 markdown 代码块、不要解释）：
 {
-  "hook": "前3秒钩子类型与具体手法（一句话）",
-  "sells": ["核心卖点1","核心卖点2","核心卖点3"],
-  "scene": "主要场景与画面风格",
-  "audience": "目标人群画像",
-  "cta": "行动号召方式与出现位置",
-  "structure": "整体叙事结构（几段式、节奏快慢）",
-  "direction": ["可复制的生产方向1","可复制的生产方向2","可复制的生产方向3"],
-  "score": "0-100 爆款潜力评分 + 一句话理由"
-}`;
+  "hook": "黄金3秒钩子：开头话术原文及手法（单行短语）",
+  "pain": "核心痛点/卖点：用户痛点与产品卖点（多行文本，可分点）",
+  "logic": "转化逻辑分析：从钩子到下单的转化路径（多行文本）",
+  "audio_visual": "视听表现拆解：BGM、节奏、画面特点等（多行文本）",
+  "script": "复刻脚本：可直接改编使用的脚本大纲（多行/长文本）",
+  "score": 8
+}
+注意：score 必须是 1-10 的整数（跑量潜力评分），不要带单位或说明文字。`;
 
   // ---- 工具 ----
   function loadScript(src, timeoutMs) {
@@ -476,7 +475,7 @@
     const m = s.match(/```(?:json)?\s*([\s\S]*?)```/); if (m) s = m[1].trim();
     try {
       const o = JSON.parse(s); const r = {};
-      ['hook', 'sells', 'scene', 'audience', 'cta', 'structure', 'direction', 'score'].forEach(k => { if (o[k] !== undefined) r[k] = o[k]; });
+      ['hook', 'pain', 'logic', 'audio_visual', 'script', 'score'].forEach(k => { if (o[k] !== undefined) r[k] = o[k]; });
       if (Object.keys(r).length) return r;
     } catch (e) {}
     return { raw: txt };
@@ -488,14 +487,12 @@
     if (ai.raw) { out.innerHTML = '<div class="vp-ai-out">' + escapeHtml(ai.raw) + '</div>'; return; }
     const card = (t, v) => v ? '<div class="ai-card"><b>' + t + '：</b>' + escapeHtml(v) + '</div>' : '';
     let h = '';
-    if (ai.hook) h += card('🪝 钩子', ai.hook);
-    if (ai.sells && ai.sells.length) h += '<div class="ai-card"><b>💡 核心卖点：</b><ul>' + ai.sells.map(s => '<li>' + escapeHtml(s) + '</li>').join('') + '</ul></div>';
-    if (ai.scene) h += card('🎬 场景/风格', ai.scene);
-    if (ai.audience) h += card('🎯 人群', ai.audience);
-    if (ai.cta) h += card('📣 行动号召', ai.cta);
-    if (ai.structure) h += card('🧩 叙事结构', ai.structure);
-    if (ai.direction && ai.direction.length) h += '<div class="ai-card"><b>♻ 可复制方向：</b><ul>' + ai.direction.map(s => '<li>' + escapeHtml(s) + '</li>').join('') + '</ul></div>';
-    if (ai.score) h += card('🔥 爆款潜力', ai.score);
+    if (ai.hook) h += card('🪝 黄金3秒钩子', ai.hook);
+    if (ai.pain) h += card('💡 核心痛点/卖点', ai.pain);
+    if (ai.logic) h += card('🔁 转化逻辑分析', ai.logic);
+    if (ai.audio_visual) h += card('🎬 视听表现拆解', ai.audio_visual);
+    if (ai.script) h += card('📝 复刻脚本', ai.script);
+    if (ai.score != null) h += card('🔥 跑量潜力评分', ai.score + ' / 10');
     out.innerHTML = h || '<div class="muted">模型未返回结构化字段</div>';
   }
 
@@ -503,17 +500,11 @@
     if (!ai || ai.raw) return;
     const setV = (id, v) => { const e = document.getElementById(id); if (e) e.value = v; };
     if (ai.hook) setV('vpHook', ai.hook);
-    if (ai.sells && ai.sells.length) setV('vpSells', ai.sells.join('\n'));
-    let shots = '';
-    if (ai.structure) shots += ai.structure + '\n';
-    if (ai.scene) shots += '（场景：' + ai.scene + '）';
-    if (ai.audience) shots += '（人群：' + ai.audience + '）';
-    if (ai.cta) shots += '（CTA：' + ai.cta + '）';
-    setV('vpShots', shots.trim());
-    let dir = '';
-    if (ai.direction) dir = (Array.isArray(ai.direction) ? ai.direction.join('\n') : ai.direction);
-    if (ai.score) dir += '\n（爆款潜力：' + ai.score + '）';
-    setV('vpDir', dir.trim());
+    if (ai.pain) setV('vpSells', ai.pain);
+    if (ai.logic) setV('vpLogic', ai.logic);
+    if (ai.audio_visual) setV('vpAv', ai.audio_visual);
+    if (ai.script) setV('vpDir', ai.script);
+    if (ai.score != null) setV('vpScore', ai.score);
   }
 
   // ---- AI 设置弹窗 ----

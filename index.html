@@ -868,13 +868,15 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     </div>
 
     <div class="card" id="vpParseCard" style="display:none">
-      <h2>智能解析 <span class="tag">画面 + 报表 自动解析 · 拖入即生成，可编辑后导出</span></h2>
+      <h2>智能解析 <span class="tag">按你的拆解格式 · AI 自动填充，可编辑后导出</span></h2>
       <div class="vp-edit">
-        <label>钩子（前3秒）</label><textarea id="vpHook" rows="2" placeholder="开场如何抓人…"></textarea>
-        <label>画面分镜</label><textarea id="vpShots" rows="3" placeholder="逐镜描述…"></textarea>
-        <label>核心卖点</label><textarea id="vpSells" rows="3" placeholder="卖点提炼…"></textarea>
-        <label>口播脚本</label><textarea id="vpScript" rows="3" placeholder="口播文案…"></textarea>
-        <label>可复制方向</label><textarea id="vpDir" rows="3" placeholder="可复用的生产方向…"></textarea>
+        <label>黄金3秒钩子（单行文本）</label><input type="text" id="vpHook" class="vp-input" placeholder="AI 提取的开头话术…">
+        <label>核心痛点/卖点（多行文本）</label><textarea id="vpSells" rows="3" placeholder="AI 分析的用户痛点和产品卖点…"></textarea>
+        <label>转化逻辑分析（多行文本）</label><textarea id="vpLogic" rows="3" placeholder="AI 分析的转化路径…"></textarea>
+        <label>视听表现拆解（多行文本）</label><textarea id="vpAv" rows="3" placeholder="BGM、节奏、画面特点等…"></textarea>
+        <label>复刻脚本（多行/长文本）</label><textarea id="vpDir" rows="4" placeholder="AI 生成的改编脚本大纲…"></textarea>
+        <label>跑量潜力评分（1-10）</label><input type="number" id="vpScore" class="vp-input" min="1" max="10" step="1" placeholder="AI 打分 1-10">
+        <label class="vp-sub">口播脚本（OCR/语音识别原文 · 供复刻参考）</label><textarea id="vpScript" rows="3" placeholder="识别到的口播/语音文字…"></textarea>
       </div>
       <div class="vp-actions">
         <button class="btn sm" id="vpAuto" title="按当前画面分析与报表数据重新自动生成">🔄 重新生成解析</button>
@@ -2613,11 +2615,13 @@ const VP_TEMPLATES={
 function fillVParseTemplate(){
   const cat=VP.mat&&VP.mat.cat||'';
   const t=VP_TEMPLATES[cat]||VP_TEMPLATES['default'];
-  $('#vpHook').value=t.hook;
-  $('#vpShots').value=VP.frames.map((f,i)=>`${i+1}. ${f.t.toFixed(1)}s：${f.stats?('亮度'+f.stats.bright.toFixed(0)):'—'}`).join('\n');
-  $('#vpSells').value=t.sells;
-  $('#vpScript').value='';
-  $('#vpDir').value=t.dir;
+  const setV=(id,val)=>{const el=$('#'+id); if(el) el.value=val;};
+  setV('vpHook',t.hook);
+  setV('vpSells',t.sells);
+  setV('vpDir',t.dir);
+  const sc=$('#vpScore'); if(sc) sc.value='';
+  const av=$('#vpAv'); if(av) av.value='';
+  const lg=$('#vpLogic'); if(lg) lg.value='';
 }
 
 function vpDownload(name,content,type){ const b=new Blob([content],{type}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove(); setTimeout(()=>URL.revokeObjectURL(u),2000); }
@@ -2682,7 +2686,7 @@ function autoVParse(){
   }
 
   const setV=(id,val)=>{const el=$('#'+id); if(el) el.value=val;};
-  setV('vpHook',hook); setV('vpShots',shots); setV('vpSells',sells); setV('vpScript',script); setV('vpDir',direction);
+  setV('vpHook',hook); setV('vpSells',sells); setV('vpScript',script); setV('vpDir',direction);
 }
 
 function exportVParse(type){
@@ -2701,12 +2705,14 @@ function exportVParse(type){
       `| 优化师 | ${m.opt} |`,`| 剪辑 | ${m.edit} |`,`| 素材类型 | ${m.mtype} |`,`| 标签 | ${m.tags} |`);
   } else { L.push('> ⚠️ 未在报表匹配到该素材ID，以下仅视频侧信息。'); }
   L.push('','## 帧时间轴'); VP.frames.forEach((f,i)=>L.push(`- 帧${i+1} (${f.t.toFixed(1)}s)`));
-  L.push('','## 智能解析（可编辑）',
-    `- 钩子：${$('#vpHook').value}`,
-    `- 分镜：${$('#vpShots').value}`,
-    `- 卖点：${$('#vpSells').value}`,
-    `- 口播：${$('#vpScript').value}`,
-    `- 方向：${$('#vpDir').value}`);
+  L.push('','## 智能解析（按拆解格式·可编辑）',
+    `- 黄金3秒钩子：${$('#vpHook').value}`,
+    `- 核心痛点/卖点：${$('#vpSells').value}`,
+    `- 转化逻辑分析：${$('#vpLogic').value}`,
+    `- 视听表现拆解：${$('#vpAv').value}`,
+    `- 复刻脚本：${$('#vpDir').value}`,
+    `- 跑量潜力评分：${$('#vpScore').value || '—'}/10`,
+    `- 口播脚本（OCR/语音）：${$('#vpScript').value}`);
 
   // 深度分析（零 Key 本地）
   const dd=VP.deep||{};
@@ -2740,7 +2746,7 @@ function exportVParse(type){
       material_id:VP.sid, file:VP.fileName,
       video_meta:VP.meta, analysis:a, report:m,
       frames:VP.frames.map(f=>({t:+f.t.toFixed(2), bright:f.stats?+f.stats.bright.toFixed(1):null})),
-      parse:{hook:$('#vpHook').value, shots:$('#vpShots').value, sells:$('#vpSells').value, script:$('#vpScript').value, direction:$('#vpDir').value},
+      parse:{hook:$('#vpHook').value, pain:$('#vpSells').value, logic:$('#vpLogic').value, audioVisual:$('#vpAv').value, script:$('#vpDir').value, score:$('#vpScore').value, ocrScript:$('#vpScript').value},
       deep:{ocr:dd.ocr||[], whisper:dd.whisper||null, audio:dd.audio||null, detect:dd.detect||null},
       ai:ai||null
     }, null, 2);
@@ -3474,7 +3480,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260802c"></script>
-<script src="vparse-deep.js?v=20260802c"></script>
+<script src="personal-enhance.js?v=20260802d"></script>
+<script src="vparse-deep.js?v=20260802d"></script>
 </body>
 </html>
