@@ -31,14 +31,21 @@
 }`;
 
   // ---- 工具 ----
-  function loadScript(src) {
+  function loadScript(src, timeoutMs) {
     return new Promise((res, rej) => {
-      if (document.querySelector('script[src="' + src + '"]')) { res(); return; }
+      const existing = document.querySelector('script[src="' + src + '"]');
+      if (existing && existing.dataset.loaded === '1') { res(); return; }
       const s = document.createElement('script');
-      s.src = src; s.onload = () => res();
-      s.onerror = () => rej(new Error('CDN 加载失败: ' + src));
+      let t = null;
+      if (timeoutMs) t = setTimeout(() => { s.remove(); rej(new Error('加载超时: ' + src)); }, timeoutMs);
+      s.src = src;
+      s.onload = () => { if (t) clearTimeout(t); s.dataset.loaded = '1'; res(); };
+      s.onerror = () => { if (t) clearTimeout(t); s.remove(); rej(new Error('CDN 加载失败: ' + src)); };
       document.head.appendChild(s);
     });
+  }
+  function withTimeout(p, ms, label) {
+    return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error((label || '操作') + ' 超时')), ms))]);
   }
   function showCard(id) { const e = document.getElementById(id); if (e) e.style.display = 'block'; }
   function showProg(on) { const e = document.getElementById('vpDeepProg'); if (e) e.style.display = on ? 'block' : 'none'; }
@@ -128,14 +135,10 @@
       try { const ab = await getAudioBuffer(); VP.deep.audio = analyzeAudioBuffer(ab); renderDeepAudio(); }
       catch (e) { const a = document.getElementById('vpAudio'); if (a) a.innerHTML = '<div class="vp-warn">音频分析跳过：' + escapeHtml(e.message) + '</div>'; }
 
-      // 3) 人物 / 物体检测
-      setProg(68, '加载检测模型（COCO-SSD）…');
-      await loadScript(CDN.tf); await loadScript(CDN.coco);
-      VP.deep.detect = await runDetect(); renderDeepDetect();
+      // 3) 人物 / 物体检测（带超时/失败跳过）
+      await runDetectPhase();
 
-      setProg(100, '深度分析完成'); hideProgSoon();
       if (typeof autoVParse === 'function') autoVParse();
-      applyDeepHints();
     } catch (e) {
       setProg(0, '深度分析中断：' + e.message);
     }
@@ -154,8 +157,8 @@
   }
 
   async function runDetect() {
-    await tf.ready();
-    const model = await cocoSsd.load();
+    await withTimeout(tf.ready(), 15000, 'TensorFlow.js 初始化');
+    const model = await withTimeout(cocoSsd.load({ base: 'lite_mobilenet_v2' }), 45000, 'COCO-SSD 模型加载');
     const frames = (VP.frames || []).filter(f => f.dataURL);
     const objCount = {}; let personMax = 0, personSum = 0;
     for (let i = 0; i < frames.length; i++) {
@@ -168,6 +171,22 @@
     }
     const objects = Object.entries(objCount).filter(([k]) => k !== 'person').sort((a, b) => b[1] - a[1]).map(([k, v]) => ({ k, v }));
     return { persons: frames.length ? Math.round(personSum / frames.length) : 0, personsMax: personMax, objects };
+  }
+
+  async function runDetectPhase() {
+    setProg(68, '加载检测模型（COCO-SSD）…'); showProg(true);
+    try {
+      await loadScript(CDN.tf, 20000); await loadScript(CDN.coco, 20000);
+      VP.deep.detect = await runDetect(); renderDeepDetect();
+      applyDeepHints();
+      setProg(100, '深度分析完成'); hideProgSoon();
+    } catch (e) {
+      console.warn('人物/物体检测失败', e);
+      VP.deep.detect = null;
+      renderDeepDetectError('人物/物体检测模型加载失败或超时（常见原因：TensorFlow 模型服务器访问慢/被墙）。OCR 与音频节奏结果仍可用。');
+      applyDeepHints();
+      setProg(100, '深度分析完成（人物检测已跳过）'); hideProgSoon();
+    }
   }
 
   // ---- 渲染 ----
@@ -211,6 +230,14 @@
     } else { html += '<div class="muted" style="margin-top:6px">未检出明显物体</div>'; }
     el.innerHTML = html;
     const t = document.getElementById('vpDetectTag'); if (t) t.textContent = d.persons + ' 人';
+  }
+  function renderDeepDetectError(msg) {
+    const el = document.getElementById('vpDetect'); if (!el) return;
+    el.innerHTML = '<div class="vp-warn" style="line-height:1.7">' + escapeHtml(msg) +
+      '<br><button class="btn sm" id="vpDetectRetry" type="button" style="margin-top:8px">重试人物检测</button></div>';
+    const b = document.getElementById('vpDetectRetry');
+    if (b) b.onclick = () => { VP.deep.detect = null; runDetectPhase(); };
+    const t = document.getElementById('vpDetectTag'); if (t) t.textContent = '检测失败';
   }
 
   function applyDeepHints() {
