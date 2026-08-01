@@ -224,6 +224,46 @@
     return out;
   }
 
+  async function vpRunOcrDebug() {
+    if (!VP.video || !VP.frames || !VP.frames.length) { alert('请先选择视频并抽帧（点「重新抽帧」）'); return; }
+    showCard('vpDeep');
+    const grid = document.getElementById('vpOcrDebug');
+    const box = document.getElementById('vpOcrDebugGrid');
+    if (!grid || !box) return;
+    grid.style.display = 'block';
+    box.innerHTML = '<div class="muted">正在生成每帧预览…</div>';
+    showProg(true); setProg(2, 'OCR 调试：逐帧生成预览…');
+    const frames = (VP.frames || []).filter(f => f.dataURL);
+    const items = [];
+    try {
+      await loadScript(CDN.tesseract);
+      for (let i = 0; i < frames.length; i++) {
+        setProg(2 + Math.round(90 * i / frames.length), '调试帧 ' + (i + 1) + '/' + frames.length + '…');
+        let processed = '', rawText = '', err = '';
+        try { processed = await withTimeout(preprocessForOCR(frames[i].dataURL), 8000, '预处理'); }
+        catch (e) { err = '预处理失败'; }
+        try {
+          const { data } = await withTimeout(Tesseract.recognize(processed || frames[i].dataURL, 'chi_sim+eng', { logger: () => {} }), 15000, 'OCR');
+          rawText = (data.text || '').replace(/\s+/g, ' ').trim();
+        } catch (e) { err = (err ? err + '；' : '') + 'OCR失败'; }
+        items.push({ t: frames[i].t, orig: frames[i].dataURL, proc: processed, raw: rawText, err });
+      }
+      box.innerHTML = items.map((it, i) => {
+        const procImg = it.proc ? '<img src="' + it.proc + '">' : '<div class="muted">无</div>';
+        const txt = it.raw ? escapeHtml(it.raw) : '<span class="muted">（空）</span>';
+        return '<div class="vp-debug-cell">' +
+          '<div class="vp-db-idx">帧 ' + (i + 1) + ' · ' + fmtSec(it.t) + (it.err ? ' · <span class="vp-warn-in">' + it.err + '</span>' : '') + '</div>' +
+          '<div class="vp-db-imgs"><img src="' + it.orig + '" class="vp-db-orig"><div class="vp-db-sep">→</div>' + procImg + '</div>' +
+          '<div class="vp-db-txt">' + txt + '</div>' +
+          '</div>';
+      }).join('');
+      setProg(100, 'OCR 调试完成'); hideProgSoon();
+    } catch (e) {
+      box.innerHTML = '<div class="vp-warn">OCR 调试中断：' + escapeHtml(e.message) + '</div>';
+      setProg(0, '调试中断');
+    }
+  }
+
   async function runDetect() {
     await withTimeout(tf.ready(), 15000, 'TensorFlow.js 初始化');
     const model = await withTimeout(cocoSsd.load({ base: 'lite_mobilenet_v2' }), 45000, 'COCO-SSD 模型加载');
@@ -470,6 +510,7 @@
     b('vpAiBtn', vpRunAI);
     b('vpAiSetBtn', openAiModal);
     b('vpWhisperBtn', vpRunWhisper);
+    b('vpOcrDebugBtn', vpRunOcrDebug);
     b('vpDeepFill', vpDeepFill);
     b('vpAiClose', closeAiModal);
     b('vpAiSave', saveAiKey);
@@ -481,5 +522,5 @@
   else initVParseDeep();
 
   // 暴露到全局，便于调试 / 其它脚本调用
-  window.VPDeep = { runDeep: vpRunDeep, runAI: vpRunAI, runWhisper: vpRunWhisper, fill: vpDeepFill };
+  window.VPDeep = { runDeep: vpRunDeep, runAI: vpRunAI, runWhisper: vpRunWhisper, fill: vpDeepFill, ocrDebug: vpRunOcrDebug };
 })();
