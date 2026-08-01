@@ -846,6 +846,10 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <button class="btn sm" id="vpMatch" title="用上方ID重新匹配报表（回车亦可）">匹配报表</button>
         <label>抽帧数 <input type="number" id="vpFrames" value="8" min="2" max="30"></label>
         <button class="btn sm primary" id="vpReextract">重新抽帧</button>
+        <span class="vp-ctl-sep"></span>
+        <button class="btn sm" id="vpDeepBtn" title="浏览器本地：中文字幕OCR + 音频节奏 + 人物/物体检测（零Key、免费、不上传）">🔍 深度分析</button>
+        <button class="btn sm" id="vpAiBtn" title="填入智谱免费Key后，用 GLM-4V-Flash 做语义级拆解（完全免费、浏览器直连）">🤖 AI语义拆解</button>
+        <button class="btn sm ghost" id="vpAiSetBtn" title="设置智谱 GLM-4V-Flash 免费 Key">⚙</button>
         <span class="tag" id="vpMeta"></span>
       </div>
     </div>
@@ -876,6 +880,37 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <button class="btn sm primary" id="vpExportMd">导出 Markdown</button>
         <button class="btn sm" id="vpExportJson">导出 JSON</button>
       </div>
+    </div>
+
+    <div class="card" id="vpDeep" style="display:none">
+      <h2>🔬 深度分析 <span class="tag" id="vpDeepTag">零Key·本地浏览器运行</span></h2>
+      <div class="vp-deep-prog" id="vpDeepProg" style="display:none">
+        <div class="vp-bar"><span id="vpDeepBar"></span></div>
+        <div class="vp-prog-txt" id="vpDeepProgTxt"></div>
+      </div>
+      <div class="vp-deep-grid">
+        <div class="vp-deep-col">
+          <div class="vp-col-h">💬 字幕 / 口播文字 <span class="tag" id="vpOcrTag"></span></div>
+          <div class="vp-ocr" id="vpOcr"><div class="muted">点「🔍 深度分析」后用 Tesseract.js 识别画面中文字幕；若识别不到，会提示可切「语音转写」。</div></div>
+        </div>
+        <div class="vp-deep-col">
+          <div class="vp-col-h">🎵 音频节奏 <span class="tag" id="vpAudioTag"></span></div>
+          <div id="vpAudio"><div class="muted">分析音轨响度曲线，估算口播密度与静音段。</div></div>
+        </div>
+        <div class="vp-deep-col">
+          <div class="vp-col-h">👤 人物 / 物体 <span class="tag" id="vpDetectTag"></span></div>
+          <div id="vpDetect"><div class="muted">用 COCO-SSD 检测每帧人物与关键物体。</div></div>
+        </div>
+      </div>
+      <div class="vp-actions">
+        <button class="btn sm" id="vpWhisperBtn" title="用浏览器端 Whisper 把音轨转写成文字（首次约下载40MB模型）" style="display:none">🎙 语音转写兜底</button>
+        <button class="btn sm primary" id="vpDeepFill" title="把识别到的字幕/语音文字填入「口播脚本」">↧ 填入口播脚本</button>
+      </div>
+    </div>
+
+    <div class="card" id="vpAi" style="display:none">
+      <h2>🤖 AI 语义拆解 <span class="tag" id="vpAiTag">GLM-4V-Flash · 免费</span></h2>
+      <div class="vp-ai-out" id="vpAiOut"><div class="muted">点「🤖 AI语义拆解」后，抽关键帧送智谱 GLM-4V-Flash 免费模型，返回结构化爆款拆解。需在「⚙」中填入免费 Key。</div></div>
     </div>
   </div>
 
@@ -2666,6 +2701,32 @@ function exportVParse(type){
     `- 卖点：${$('#vpSells').value}`,
     `- 口播：${$('#vpScript').value}`,
     `- 方向：${$('#vpDir').value}`);
+
+  // 深度分析（零 Key 本地）
+  const dd=VP.deep||{};
+  L.push('','## 深度分析（浏览器本地·零Key）');
+  const ocr=(dd.ocr||[]).filter(x=>x.text);
+  if(ocr.length){ L.push('### 字幕/口播文字（OCR）'); ocr.forEach(f=>L.push(`- ${vpDur(f.t)} ${f.text}`)); }
+  if(dd.whisper){ L.push('### 语音转写（Whisper）','',''+dd.whisper); }
+  if(dd.audio){ const au=dd.audio; L.push('### 音频节奏',`- 口播占比：${Math.round(au.density*100)}% · 静音段：${au.silence} 段 · 时长：${vpDur(au.dur)}`); }
+  if(dd.detect){ const de=dd.detect; L.push('### 人物/物体',`- 平均出镜人物：${de.persons} 人（单帧最多 ${de.personsMax}）`,`- 物体：${(de.objects||[]).map(o=>o.k+'×'+o.v).join('、')||'—'}`); }
+  if(!ocr.length && !dd.whisper && !dd.audio && !dd.detect){ L.push('_未运行深度分析（点「🔍 深度分析」）_'); }
+
+  // AI 语义拆解
+  const ai=VP.ai;
+  if(ai){ L.push('','## AI 语义拆解（GLM-4V-Flash·免费）');
+    if(ai.raw){ L.push('',ai.raw); }
+    else {
+      if(ai.hook) L.push(`- 钩子：${ai.hook}`);
+      if(ai.sells&&ai.sells.length) L.push(`- 卖点：${ai.sells.join('、')}`);
+      if(ai.scene) L.push(`- 场景：${ai.scene}`);
+      if(ai.audience) L.push(`- 人群：${ai.audience}`);
+      if(ai.cta) L.push(`- 行动号召：${ai.cta}`);
+      if(ai.structure) L.push(`- 叙事结构：${ai.structure}`);
+      if(ai.direction&&ai.direction.length) L.push(`- 可复制方向：${ai.direction.join('、')}`);
+      if(ai.score) L.push(`- 爆款潜力：${ai.score}`);
+    }
+  }
   const md=L.join('\n');
   if(type==='md'){ vpDownload(`视频解析_${VP.sid||'video'}.md`, md, 'text/markdown;charset=utf-8'); }
   else {
@@ -2673,7 +2734,9 @@ function exportVParse(type){
       material_id:VP.sid, file:VP.fileName,
       video_meta:VP.meta, analysis:a, report:m,
       frames:VP.frames.map(f=>({t:+f.t.toFixed(2), bright:f.stats?+f.stats.bright.toFixed(1):null})),
-      parse:{hook:$('#vpHook').value, shots:$('#vpShots').value, sells:$('#vpSells').value, script:$('#vpScript').value, direction:$('#vpDir').value}
+      parse:{hook:$('#vpHook').value, shots:$('#vpShots').value, sells:$('#vpSells').value, script:$('#vpScript').value, direction:$('#vpDir').value},
+      deep:{ocr:dd.ocr||[], whisper:dd.whisper||null, audio:dd.audio||null, detect:dd.detect||null},
+      ai:ai||null
     }, null, 2);
     vpDownload(`视频解析_${VP.sid||'video'}.json`, json, 'application/json;charset=utf-8');
   }
@@ -3344,6 +3407,59 @@ document.addEventListener('click', function(e){
 })();
 </script>
 
+<style>
+.vp-ctl-sep{width:1px;height:22px;background:var(--line);margin:0 4px;display:inline-block;vertical-align:middle}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.btn.ghost:hover{border-color:var(--brand);color:var(--brand)}
+.vp-deep-prog{margin:6px 0 12px}
+.vp-bar{height:8px;background:var(--graybg);border-radius:6px;overflow:hidden}
+.vp-bar>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#2f6bff,#1f8a70);transition:width .25s}
+.vp-prog-txt{font-size:12px;color:var(--muted);margin-top:4px}
+.vp-deep-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+.vp-deep-col{background:var(--graybg);border:1px solid var(--line);border-radius:12px;padding:12px;min-height:120px}
+.vp-col-h{font-weight:700;margin-bottom:8px;font-size:13px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.vp-ocr{max-height:240px;overflow:auto;font-size:13px;line-height:1.6;white-space:pre-wrap;color:var(--ink)}
+.vp-ocr .vp-sub{border-left:3px solid var(--brand);padding:4px 8px;margin:6px 0;background:var(--bluebg);border-radius:6px}
+.vp-meter{height:60px;display:flex;align-items:flex-end;gap:2px;margin:6px 0}
+.vp-meter>i{display:block;flex:1;background:var(--brand);border-radius:2px 2px 0 0;min-height:2px;opacity:.85}
+.vp-ai-out{font-size:13px;line-height:1.7}
+.vp-ai-out h4{margin:14px 0 4px;font-size:14px;color:var(--brand)}
+.vp-ai-out ul{margin:4px 0;padding-left:20px}
+.vp-ai-out .ai-card{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0;background:var(--panel)}
+.vp-ai-out .ai-card b{color:var(--brand2)}
+.vp-detect-tag{display:inline-block;background:var(--bluebg);color:var(--brand);border-radius:10px;padding:2px 8px;margin:2px;font-size:12px}
+@media(max-width:820px){.vp-deep-grid{grid-template-columns:1fr}}
+</style>
+
+<!-- ========== 视频解析 · AI 设置（智谱 GLM-4V-Flash 免费 Key） ========== -->
+<div class="modal-mask" id="vpAiMask" style="display:none">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-hd">
+      <h3>🤖 AI 语义拆解设置</h3>
+      <button class="modal-x" id="vpAiClose">✕</button>
+    </div>
+    <div class="modal-bd">
+      <p class="modal-tip">用 <b>智谱 GLM-4V-Flash</b> 做视频语义级拆解：<b>完全免费、不限量</b>，手机号注册即送 2000 万 tokens。Key 仅保存在你本机浏览器（localStorage），<b>不会上传给任何人</b>，且浏览器可直连智谱（无需后端）。</p>
+      <label class="fld">智谱 API Key（以 sk- 开头）
+        <input type="text" id="vpAiKey" placeholder="sk-xxxxxxxxxxxxxxxx" style="width:100%" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="fld">模型
+        <select id="vpAiModel" style="width:100%">
+          <option value="glm-4v-flash">glm-4v-flash（免费·推荐）</option>
+          <option value="glm-4v-plus">glm-4v-plus（更强·有额度）</option>
+        </select>
+      </label>
+      <div class="imp-hint" id="vpAiHint" style="min-height:18px"></div>
+      <div class="note">没 Key？「🔍 深度分析」仍可用：本地 OCR 字幕 + 音频节奏 + 人物检测，全程免费零 Key。口播文字若 OCR 识别不到，可点「🎙 语音转写兜底」用浏览器端 Whisper 转写。</div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn sm" id="vpAiClear">清除Key</button>
+      <button class="btn primary sm" id="vpAiSave">保存</button>
+    </div>
+  </div>
+</div>
+
 <script src="personal-enhance.js?v=20260801a"></script>
+<script src="vparse-deep.js?v=20260801a"></script>
 </body>
 </html>
