@@ -531,6 +531,61 @@
     const h = document.getElementById('vpAiHint'); if (h) h.textContent = '已清除 Key';
   }
 
+  // ============================================================
+  // 信息流投放理解分析（基于录入数据 + 经验阈值自动生成）
+  // ============================================================
+  function vpGenerateInsight() {
+    const g = id => (document.getElementById(id).value || '').trim();
+    const num = id => { const v = parseFloat(g(id)); return isNaN(v) ? null : v; };
+    const cost = num('vpCost'), imp = num('vpImp'), clk = num('vpClk'), cv = num('vpCv');
+    const ctr = num('vpCtr'), cvr = num('vpCvr'), cpa = num('vpCpa'), cpm = num('vpCpm');
+    const roi = num('vpRoi'), days = num('vpDays'), score = num('vpScore');
+    const status = g('vpStatus'), name = g('vpMatName'), platform = g('vpPlatform');
+    const el = document.getElementById('vpInsight'); if (!el) return;
+    if (cost == null && imp == null && clk == null && cv == null && !status && !name) {
+      el.className = 'vp-insight muted';
+      el.innerHTML = '还没有录入数据。请在上方 ①②③ 区填写素材信息与投放数据，再点「生成理解分析」。';
+      return;
+    }
+    // 自动补算 CPM / CTR / CVR
+    let cpmv = cpm, ctrv = ctr, cvrv = cvr;
+    if (cpmv == null && cost != null && imp) cpmv = cost / imp * 1000;
+    if (ctrv == null && clk != null && imp) ctrv = clk / imp * 100;
+    if (cvrv == null && cv != null && clk) cvrv = cv / clk * 100;
+    const pill = (txt, lv) => '<span class="pill vp-pill-' + lv + '">' + txt + '</span>';
+    const diag = [];
+    if (ctrv != null) diag.push('CTR ' + ctrv.toFixed(2) + '% ' + (ctrv >= 2 ? pill('优', 'green') : ctrv >= 1 ? pill('中', 'yellow') : pill('偏低', 'red')));
+    if (cvrv != null) diag.push('CVR ' + cvrv.toFixed(2) + '% ' + (cvrv >= 3 ? pill('优', 'green') : cvrv >= 2 ? pill('中', 'yellow') : pill('偏低', 'red')));
+    if (cpmv != null) diag.push('CPM ¥' + cpmv.toFixed(1) + ' ' + (cpmv <= 40 ? pill('优', 'green') : cpmv <= 80 ? pill('中', 'yellow') : pill('偏高', 'red')));
+    if (cpa != null) diag.push('转化成本 ¥' + cpa.toFixed(1));
+    if (roi != null) diag.push('ROI ' + roi.toFixed(2) + ' ' + (roi >= 1 ? pill('回正', 'green') : pill('亏损', 'red')));
+
+    // 阶段判断
+    let stage = '未知';
+    if (status === '测试中') stage = '测试期（素材未起量，重点看完播与首轮转化信号）';
+    else if (status === '跑量中') stage = '跑量期（已验证模型，重点控成本、扩量、防衰退）';
+    else if (status === '已衰退') stage = '衰退期（素材疲劳，需换血/迭代新素材）';
+    else if (status === '已停止') stage = '停止期（已关停，作复盘沉淀）';
+    else if (days != null) stage = days <= 3 ? '测试期' : days <= 10 ? '跑量期' : '衰退/长尾期';
+
+    // 优化建议（信息流经验规则）
+    const tips = [];
+    if (ctrv != null && ctrv < 1) tips.push('CTR 偏低：前 3 秒画面/封面吸引力不够，建议强化反差、利益点前置，或换首帧缩略图。');
+    if (cvrv != null && cvrv < 2) tips.push('CVR 偏低：落地页承接或信任背书弱，建议加限时/赠品钩子、强信任元素（销量/资质）。');
+    if (cpmv != null && cpmv > 80) tips.push('CPM 偏高：竞争激烈或定向过窄，建议放宽受众、优化出价策略、提升完播率拉低单价。');
+    if (status === '已衰退' || (days != null && days > 12)) tips.push('已处衰退：单素材生命周期通常 7-14 天，建议尽快产出 2-3 条迭代版（换钩子/换场景/换口播）接力。');
+    if (score != null && score >= 8) tips.push('跑量评分高（≥8）：是优质母本，建议围绕它做系列化复刻（同钩子不同场景、同结构不同卖点）。');
+    else if (score != null && score <= 4) tips.push('跑量评分低（≤4）：建议先小预算测试或放弃，重点用「复刻脚本」做差异化改编后再测。');
+    if (!tips.length) tips.push('各项指标健康，维持当前投放节奏，持续监控衰退信号即可。');
+
+    let html = '<h4>📊 效率诊断</h4><div>' + (diag.length ? diag.join('　') : '（暂无投放数据，填入 ② 区后刷新）') + '</div>';
+    html += '<h4>🧭 生命周期阶段</h4><div>' + stage + (days != null ? '（已跑 ' + days + ' 天）' : '') + '</div>';
+    html += '<h4>💡 信息流优化建议</h4><ul>' + tips.map(t => '<li>' + t + '</li>').join('') + '</ul>';
+    if (score != null) html += '<div style="margin-top:6px">综合跑量评分：<b>' + score + ' / 10</b>' + (score >= 7 ? '（建议作为母本重点复刻）' : score >= 5 ? '（中规中矩，可优化后放量）' : '（谨慎，先测试再决定）') + '</div>';
+    el.className = 'vp-insight';
+    el.innerHTML = html;
+  }
+
   // ---- 初始化绑定 ----
   function initVParseDeep() {
     const b = (id, fn) => { const e = document.getElementById(id); if (e) e.onclick = fn; };
@@ -540,6 +595,7 @@
     b('vpWhisperBtn', vpRunWhisper);
     b('vpOcrDebugBtn', vpRunOcrDebug);
     b('vpDeepFill', vpDeepFill);
+    b('vpAnalyzeBtn', vpGenerateInsight);
     b('vpAiClose', closeAiModal);
     b('vpAiSave', saveAiKey);
     b('vpAiClear', clearAiKey);
@@ -550,5 +606,5 @@
   else initVParseDeep();
 
   // 暴露到全局，便于调试 / 其它脚本调用
-  window.VPDeep = { runDeep: vpRunDeep, runAI: vpRunAI, runWhisper: vpRunWhisper, fill: vpDeepFill, ocrDebug: vpRunOcrDebug };
+  window.VPDeep = { runDeep: vpRunDeep, runAI: vpRunAI, runWhisper: vpRunWhisper, fill: vpDeepFill, ocrDebug: vpRunOcrDebug, insight: vpGenerateInsight };
 })();
