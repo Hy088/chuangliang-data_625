@@ -2548,6 +2548,7 @@ function loadVParseVideo(file){
     VP.meta={duration:v.duration, w:v.videoWidth, h:v.videoHeight};
     const m=lookupVParseMat(VP.sid); VP.mat=m.row;
     renderVParseReport();
+    fillVParseFromReport();
     extractVParseFrames(Math.max(2,Math.min(30,+$('#vpFrames').value||8)));
   });
   v.addEventListener('error',()=>{ $('#vpMeta').textContent='视频加载失败，请确认文件可播放'; });
@@ -2560,6 +2561,7 @@ function matchVParseReport(){
   VP.sid=sid;
   VP.mat=lookupVParseMat(sid).row;
   renderVParseReport();
+  fillVParseFromReport();
   if(VP.frames&&VP.frames.length) autoVParse();
 }
 
@@ -2569,9 +2571,51 @@ function lookupVParseMat(sid){
   const row=(DATA_FULL.materials.rows||[]).find(r=>String(r[ci('id')])===String(sid));
   if(!row) return {row:null};
   const g=k=>(ci(k)>=0&&ci(k)<row.length)?row[ci(k)]:'';
-  const cost=+g('cost')||0, imp=+g('imp')||0, clk=+g('clk')||0, cv=+g('cv')||0;
+  const cost=+g('cost')||0, imp=+g('imp')||0, clk=+g('clk')||0, cv=+g('cv')||0, roi=+g('roi')||0;
   const me=_metrics({cost,imp,clk,cv,n:0});
-  return {row:{id:sid,name:g('name'),opt:g('opt'),edit:g('edit'),proj:g('proj'),cat:g('cat'),chan:g('chan'),mtype:g('mtype'),tags:g('tags'),cost,imp,clk,cv,cpa:me.cpa,cvr:me.cvr,ctr:me.ctr}};
+  return {row:{id:sid,name:g('name'),opt:g('opt'),edit:g('edit'),proj:g('proj'),cat:g('cat'),chan:g('chan'),mtype:g('mtype'),tags:g('tags'),cost,imp,clk,cv,cpa:me.cpa,cvr:me.cvr,ctr:me.ctr, roi: roi || undefined}};
+}
+
+function parsePeriodRange(p){
+  if(!p) return null;
+  const m=String(p).match(/(\d{4})-(\d{2})-(\d{2})~(\d{4})-(\d{2})-(\d{2})/);
+  if(!m) return null;
+  const start=m[1]+'-'+m[2]+'-'+m[3], end=m[4]+'-'+m[5]+'-'+m[6];
+  return {start, end, startDate:new Date(start), endDate:new Date(end)};
+}
+// 根据周期数据推算素材生命周期（创建/起量/衰退/状态）
+function computeMatLifecycle(sid){
+  const pm=DATA_FULL.periodMats;
+  const periods=(DATA_FULL.periodData||[]).map(p=>p.period).filter(Boolean);
+  if(!periods.length) return null;
+  let perCosts=[];
+  if(pm){
+    periods.forEach(p=>{
+      const rows=pm[p]||[];
+      const r=rows.find(x=>String(x[0])===String(sid));
+      if(r) perCosts.push({period:p, cost:+r[1]||0});
+    });
+  }
+  if(!perCosts.length) return null;
+  perCosts.sort((a,b)=>{ const pa=parsePeriodRange(a.period), pb=parsePeriodRange(b.period); return (pa?pa.startDate:0)-(pb?pb.startDate:0); });
+  const first=perCosts[0], last=perCosts[perCosts.length-1];
+  const prFirst=parsePeriodRange(first.period), prLast=parsePeriodRange(last.period);
+  if(!prFirst) return null;
+  const max=perCosts.reduce((m,c)=>c.cost>m.cost?c:m, perCosts[0]);
+  const prMax=parsePeriodRange(max.period);
+  const today=new Date();
+  const createDate=prFirst.start;
+  const scaleDate=prMax?prMax.start:'';
+  const days=Math.max(1, Math.round((today - prFirst.startDate)/(1000*60*60*24)));
+  let declineDate='', status='测试中';
+  if(perCosts.length>=2 && max.cost>0 && last.cost < max.cost*0.25){
+    declineDate=prLast?prLast.start:'';
+    status='已衰退';
+  }else if(max.cost>0 && last.cost >= max.cost*0.25){
+    status='跑量中';
+  }
+  if(days>21 && last.cost===0) status='已停止';
+  return {createDate, scaleDate, declineDate, days, status};
 }
 
 function seekTo(v,t){ return new Promise(res=>{ const h=()=>{v.removeEventListener('seeked',h);res();}; v.addEventListener('seeked',h); try{v.currentTime=Math.max(0,Math.min(t,(v.duration||1)-0.04));}catch(e){res();} }); }
@@ -2681,8 +2725,29 @@ function fillVParseTemplate(){
 
 function vpDownload(name,content,type){ const b=new Blob([content],{type}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove(); setTimeout(()=>URL.revokeObjectURL(u),2000); }
 
+// 把报表数据填入「投放数据区 + 生命周期区」（匹配后立即执行，不依赖抽帧/AI）
+function fillVParseFromReport(){
+  const m=VP.mat;
+  if(!m) return;
+  const setV=(id,val)=>{const el=$('#'+id); if(el&&el.value===''&&val!=null&&val!=='') el.value=val;};
+  setV('vpCost', m.cost||''); setV('vpImp', m.imp||''); setV('vpClk', m.clk||'');
+  setV('vpCv', m.cv||''); setV('vpCtr', m.ctr||''); setV('vpCvr', m.cvr||'');
+  setV('vpCpa', m.cpa||'');
+  if(m.cost&&m.imp) setV('vpCpm', (m.cost/m.imp*1000).toFixed(2));
+  if(m.roi!=null) setV('vpRoi', m.roi);
+  const life=computeMatLifecycle(VP.sid);
+  if(life){
+    setV('vpCreate', life.createDate);
+    setV('vpScale', life.scaleDate);
+    setV('vpDecline', life.declineDate||'');
+    setV('vpDays', life.days);
+    setV('vpStatus', life.status);
+  }
+}
+
 // 自动解析：依据「画面分析 + 报表指标 + 品类模板」一次性填好五个框（无需手动）
 function autoVParse(){
+  fillVParseFromReport();
   const cat=VP.mat&&VP.mat.cat||'';
   const t=VP_TEMPLATES[cat]||VP_TEMPLATES['default'];
   const a=VP.analysis||{};
@@ -2749,13 +2814,7 @@ function autoVParse(){
   const ocrTxt=(VP.deep&&VP.deep.ocr||[]).filter(x=>x.text).map(x=>x.text).join('\n');
   const spch=VP.deep&&VP.deep.whisper||'';
   setV('vpScript', spch||ocrTxt);
-  // 投放数据区（来自报表匹配）
-  if(m){
-    setV('vpCost', m.cost||''); setV('vpImp', m.imp||''); setV('vpClk', m.clk||'');
-    setV('vpCv', m.cv||''); setV('vpCtr', m.ctr||''); setV('vpCvr', m.cvr||'');
-    setV('vpCpa', m.cpa||'');
-    if(m.cost&&m.imp) setV('vpCpm', (m.cost/m.imp*1000).toFixed(2));
-  }
+  // 投放数据区 + 生命周期区已在 fillVParseFromReport() 里完成
   // AI 拆解区（画面/模板）
   setV('vpHook',hook); setV('vpSells',sells); setV('vpDir',direction);
 }
@@ -3597,7 +3656,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260802h"></script>
-<script src="vparse-deep.js?v=20260802h"></script>
+<script src="personal-enhance.js?v=20260802i"></script>
+<script src="vparse-deep.js?v=20260802i"></script>
 </body>
 </html>
