@@ -3581,6 +3581,12 @@ document.addEventListener('click', function(e){
           <option value="glm-4v-plus">glm-4v-plus（更强·有额度）</option>
         </select>
       </label>
+      <label class="fld">语音识别模型
+        <select id="vpWhisperModel" style="width:100%">
+          <option value="Xenova/whisper-base">whisper-base（约150MB·平衡）</option>
+          <option value="Xenova/whisper-small">whisper-small（约480MB·更准）</option>
+        </select>
+      </label>
       <div class="imp-hint" id="vpAiHint" style="min-height:18px"></div>
       <div class="note">没 Key？「🔍 深度分析」仍可用：本地 OCR 字幕 + 音频节奏 + 人物检测，全程免费零 Key。口播文字识别不准时，建议直接点「🎙 语音识别」用浏览器端 Whisper 转写音轨（强制中文，比 OCR 更可靠）。</div>
     </div>
@@ -3591,7 +3597,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260802f"></script>
-<script src="vparse-deep.js?v=20260802f"></script>
+<script src="personal-enhance.js?v=20260802g"></script>
+<script src="vparse-deep.js?v=20260802g"></script>
 </body>
 </html>

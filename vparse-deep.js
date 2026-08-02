@@ -11,7 +11,7 @@
     VP.deep = VP.deep || { ocr: [], audio: null, detect: null, whisper: null };
     VP.ai = VP.ai || null;
   }
-  const ZHIPU_KEY = 'vp_zhipu_key', ZHIPU_MODEL = 'vp_zhipu_model';
+  const ZHIPU_KEY = 'vp_zhipu_key', ZHIPU_MODEL = 'vp_zhipu_model', WHISPER_MODEL_KEY = 'vp_whisper_model';
   const CDN = {
     tesseract: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
     tf: 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js',
@@ -57,10 +57,38 @@
   function hideProgSoon() { clearTimeout(_hideTimer); _hideTimer = setTimeout(() => showProg(false), 2600); }
   function fmtSec(s) { return (s == null ? '0' : (+s).toFixed(1)) + 's'; }
   function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  // 语音识别后处理：繁简转换 + 电商口播常见错字纠正 + 重复词去重
+  function correctAsrText(s) {
+    if (!s) return s;
+    // 1) 常用繁体 → 简体
+    const ft = '獲點擊領請連結購買優惠運費寶貝親們時間動態權議現實體騰訊號關係絡紅綠藍黃門開來進過這說話認識讓覺處問題對錯難簡單個們為無論調節務準備復雜類級統計劃';
+    const jt = '获点击领请连接购买优惠运费宝贝亲们时间动态权议现实体腾讯号关系络红绿蓝黄门开来进过这说话认识让觉处问题对错难简单个们为无论调节务准备复杂类级统计划';
+    const ftMap = {}; for (let i = 0; i < ft.length; i++) ftMap[ft[i]] = jt[i];
+    let t = s.split('').map(c => ftMap[c] || c).join('');
+    // 2) 常见错字/同音替换（按长度降序，避免短词覆盖长词）
+    const fixes = [
+      ['鸭宝', '淘宝'], ['练接', '链接'], ['练结', '链接'], ['包油', '包邮'],
+      ['鱼散', '雨伞'], ['鱼伞', '雨伞'], ['平单', '免单'], ['欣架', '下架'],
+      ['新动', '心动'], ['点撃', '点击'], ['点擊', '点击'], ['领娶', '领取'],
+      ['福利架', '福利价'], ['夹包油', '加包邮'], ['架包油', '加包邮'],
+      ['本天', '每天'], ['权蔡', '权限'], ['权议', '权益'], ['以鸭', '以淘'],
+      ['动或', '动活'], ['具體', '具体'], ['情調', '情况']
+    ];
+    fixes.sort((a, b) => b[0].length - a[0].length);
+    for (const [bad, good] of fixes) {
+      t = t.split(bad).join(good);
+    }
+    // 3) 连续重复词去重（如"链接链接"→"链接"，最多保留2次避免误判）
+    t = t.replace(/([^\s，。！？；：,.!?;:\n\r]{2,})\1{2,}/g, '$1$1');
+    t = t.replace(/([^\s，。！？；：,.!?;:\n\r]{2,})\1(?=[\s，。！？；：,.!?;:\n\r]|$)/g, '$1');
+    return t;
+  }
   function aiKeyGet() { try { return localStorage.getItem(ZHIPU_KEY) || ''; } catch (e) { return ''; } }
   function aiKeySet(v) { try { localStorage.setItem(ZHIPU_KEY, v); } catch (e) {} }
   function aiModelGet() { try { return localStorage.getItem(ZHIPU_MODEL) || 'glm-4v-flash'; } catch (e) { return 'glm-4v-flash'; } }
   function aiModelSet(v) { try { localStorage.setItem(ZHIPU_MODEL, v); } catch (e) {} }
+  function whisperModelGet() { try { return localStorage.getItem(WHISPER_MODEL_KEY) || 'Xenova/whisper-base'; } catch (e) { return 'Xenova/whisper-base'; } }
+  function whisperModelSet(v) { try { localStorage.setItem(WHISPER_MODEL_KEY, v); } catch (e) {} }
 
   // ---- 音频解码 / 重采样 ----
   async function getAudioBuffer() {
@@ -390,7 +418,7 @@
   // 比 tiny 对中文准确得多；HF 权重首次加载较慢（约 100-200MB），之后走缓存。
   // ============================================================
   const WHISPER_MODEL = 'Xenova/whisper-base'; // tiny 对中文很差，base 明显更准
-  async function tryLoadAsr(pipeline, env, cfg) {
+  async function tryLoadAsr(pipeline, env, cfg, modelName) {
     if (env) {
       env.allowLocalModels = false;
       env.allowRemoteModels = true;
@@ -398,13 +426,15 @@
       env.remotePathTemplate = cfg.template;
     }
     // transformers.js 默认 template 使用 {revision}，modelscope 用 master 分支
-    return await pipeline('automatic-speech-recognition', WHISPER_MODEL, { revision: cfg.revision });
+    return await pipeline('automatic-speech-recognition', modelName, { revision: cfg.revision });
   }
 
   async function vpRunWhisper() {
     if (!VP.url) { alert('请先选择视频'); return; }
     const btn = document.getElementById('vpWhisperBtn');
-    showCard('vpDeep'); showProg(true); setProg(5, '加载语音识别模型（首次约 100-200MB，请耐心等待）…');
+    const modelName = whisperModelGet();
+    const sizeHint = modelName.indexOf('small') >= 0 ? '约480MB' : '约150MB';
+    showCard('vpDeep'); showProg(true); setProg(5, '加载语音识别模型 ' + modelName.replace('Xenova/', '') + '（首次 ' + sizeHint + '，请耐心等待）…');
     let asr = null, lastErr = null;
     try {
       const mod = await import(CDN.transformers);
@@ -418,7 +448,7 @@
       for (const m of mirrors) {
         try {
           setProg(5, '尝试从 ' + m.name + ' 加载模型…');
-          asr = await tryLoadAsr(pipeline, env, m);
+          asr = await tryLoadAsr(pipeline, env, m, modelName);
           lastErr = null;
           break;
         } catch (e) {
@@ -431,13 +461,15 @@
       setProg(45, '解码音轨…');
       const ab = await getAudioBuffer();
       const samples = resampleTo16k(ab);
-      setProg(70, '识别中（可能需 10-40 秒）…');
+      setProg(70, '识别中（可能需 10-60 秒）…');
       const out = await asr(samples, {
         sampling_rate: 16000, language: 'chinese', task: 'transcribe',
         chunk_length_s: 30, stride_length_s: 5, return_timestamps: false
       });
-      const text = (out && out.text) || '';
-      VP.deep.whisper = text.trim();
+      const raw = ((out && out.text) || '').trim();
+      const text = correctAsrText(raw);
+      VP.deep.whisper = text;
+      VP.deep.whisperRaw = raw; // 保留原始识别结果供对照
       renderDeepOcr();
       if (text.trim()) setProg(100, '语音识别完成'); else setProg(0, '未识别到语音内容');
       hideProgSoon();
@@ -535,6 +567,7 @@
     const mask = document.getElementById('vpAiMask'); if (!mask) return;
     const k = document.getElementById('vpAiKey'); if (k) k.value = aiKeyGet();
     const md = document.getElementById('vpAiModel'); if (md) md.value = aiModelGet();
+    const wm = document.getElementById('vpWhisperModel'); if (wm) wm.value = whisperModelGet();
     const h = document.getElementById('vpAiHint'); if (h) h.textContent = '';
     mask.style.display = 'flex';
   }
@@ -545,6 +578,7 @@
     if (!v) { const h = document.getElementById('vpAiHint'); if (h) h.textContent = '请输入 Key'; return; }
     aiKeySet(v);
     const md = document.getElementById('vpAiModel'); if (md) aiModelSet(md.value);
+    const wm = document.getElementById('vpWhisperModel'); if (wm) whisperModelSet(wm.value);
     const h = document.getElementById('vpAiHint'); if (h) h.textContent = '✅ 已保存（仅存于本机浏览器）';
     setTimeout(closeAiModal, 700);
   }
