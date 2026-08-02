@@ -18,13 +18,14 @@
     coco: 'https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js',
     transformers: 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.3'
   };
-  const AI_PROMPT = `你是一名资深短视频投放创意分析师。下面是一段广告素材的若干均匀抽帧画面（按时间先后顺序排列）。请结合画面做结构化的「爆款拆解」，并严格只输出如下 JSON（不要 markdown 代码块、不要解释）：
+  const AI_PROMPT = `你是一名资深短视频投放创意分析师。下面是一段广告素材的若干均匀抽帧画面（按时间先后顺序排列）。请结合画面做结构化的「爆款拆解」，并严格只输出如下 JSON（不要 markdown 代码块、不要解释）。
+如果提供了口播时间轴，请优先结合时间轴理解素材节奏；script 字段必须按「0.0s-3.5s：该时段台词/画面动作」的秒数格式逐段填写，便于对照原视频翻拍。
 {
   "hook": "黄金3秒钩子：开头话术原文及手法（单行短语）",
   "pain": "核心痛点/卖点：用户痛点与产品卖点（多行文本，可分点）",
   "logic": "转化逻辑分析：从钩子到下单的转化路径（多行文本）",
   "audio_visual": "视听表现拆解：BGM、节奏、画面特点等（多行文本）",
-  "script": "复刻脚本：可直接改编使用的脚本大纲（多行/长文本）",
+  "script": "复刻脚本：按秒数分段，格式示例\\n0.0s-3.0s：钩子台词/画面\\n3.0s-8.0s：痛点+产品展示\\n...",
   "score": 8
 }
 注意：score 必须是 1-10 的整数（跑量潜力评分），不要带单位或说明文字。`;
@@ -68,11 +69,11 @@
     // 2) 常见错字/同音替换（按长度降序，避免短词覆盖长词）
     const fixes = [
       ['鸭宝', '淘宝'], ['练接', '链接'], ['练结', '链接'], ['包油', '包邮'],
-      ['鱼散', '雨伞'], ['鱼伞', '雨伞'], ['平单', '免单'], ['欣架', '下架'],
+      ['鱼散', '雨伞'], ['鱼伞', '雨伞'], ['平单', '免单'], ['欣架', '下架'], ['砍架', '砍价'],
       ['新动', '心动'], ['点撃', '点击'], ['点擊', '点击'], ['领娶', '领取'],
-      ['福利架', '福利价'], ['夹包油', '加包邮'], ['架包油', '加包邮'],
+      ['福利架', '福利价'], ['夹包油', '加包邮'], ['架包油', '加包邮'], ['倒加', '点击'],
       ['本天', '每天'], ['权蔡', '权限'], ['权议', '权益'], ['以鸭', '以淘'],
-      ['动或', '动活'], ['具體', '具体'], ['情調', '情况']
+      ['动或', '活动'], ['具體', '具体'], ['情調', '情况'], ['住在左下角', '在左下角']
     ];
     fixes.sort((a, b) => b[0].length - a[0].length);
     for (const [bad, good] of fixes) {
@@ -406,7 +407,7 @@
   }
 
   function vpDeepFill() {
-    const ocr = (VP.deep.ocr || []).filter(x => x.text).map(x => fmtSec(x.t) + ' ' + x.text).join('\n');
+    const ocr = (VP.deep.ocr || []).filter(x => x.text).map(x => fmtSec(x.t) + '：' + x.text).join('\n');
     const src = ocr || VP.deep.whisper || '';
     if (!src) { alert('还没有可填入的字幕/语音文字，请先运行「🔍 深度分析」或「🎙 语音转写兜底」。'); return; }
     const el = document.getElementById('vpScript');
@@ -464,12 +465,23 @@
       setProg(70, '识别中（可能需 10-60 秒）…');
       const out = await asr(samples, {
         sampling_rate: 16000, language: 'chinese', task: 'transcribe',
-        chunk_length_s: 30, stride_length_s: 5, return_timestamps: false
+        chunk_length_s: 30, stride_length_s: 5, return_timestamps: true
       });
-      const raw = ((out && out.text) || '').trim();
-      const text = correctAsrText(raw);
+      let segs = [];
+      if (out && Array.isArray(out.segments)) {
+        segs = out.segments.map(s => ({ start: s.start, end: s.end, text: (s.text || '').trim() }));
+      } else if (out && Array.isArray(out.chunks)) {
+        segs = out.chunks.map(c => {
+          const ts = c.timestamp || [null, null];
+          return { start: ts[0], end: ts[1], text: (c.text || '').trim() };
+        });
+      }
+      segs = segs.filter(s => s.text);
+      const rawLines = segs.map(s => fmtSec(s.start) + '-' + fmtSec(s.end) + '：' + s.text).join('\n');
+      const text = correctAsrText(rawLines);
       VP.deep.whisper = text;
-      VP.deep.whisperRaw = raw; // 保留原始识别结果供对照
+      VP.deep.whisperRaw = rawLines; // 保留原始识别结果供对照
+      VP.deep.whisperSegs = segs;
       renderDeepOcr();
       if (text.trim()) setProg(100, '语音识别完成'); else setProg(0, '未识别到语音内容');
       hideProgSoon();
@@ -497,7 +509,15 @@
       if (!frames.length) { if (out) out.innerHTML = '<div class="vp-warn">请先抽帧（点「重新抽帧」）再拆解。</div>'; return; }
       const step = Math.max(1, Math.ceil(frames.length / 6));
       const pick = frames.filter((_, i) => i % step === 0).slice(0, 6);
-      const content = [{ type: 'text', text: AI_PROMPT }];
+      let promptText = AI_PROMPT;
+      const segs = VP.deep && VP.deep.whisperSegs;
+      const whisper = VP.deep && VP.deep.whisper;
+      if (segs && segs.length) {
+        promptText += '\n\n【口播时间轴】\n' + whisper;
+      } else if (whisper) {
+        promptText += '\n\n【识别口播】\n' + whisper;
+      }
+      const content = [{ type: 'text', text: promptText }];
       pick.forEach(f => content.push({ type: 'image_url', image_url: { url: f.dataURL } }));
       const resp = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
         method: 'POST',
