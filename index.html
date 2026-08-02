@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>数据看板 · 数据驱动素材生产闭环</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="./chart.umd.js"></script>
 <style>
 :root{
   --bg:#f5f7fa; --panel:#ffffff; --ink:#1f2733; --muted:#6b7785; --line:#e6eaef;
@@ -1814,7 +1814,7 @@ let ME = loadME();
 let meTimer = null, meCd = 0;
 function loadME(){
   try{ const s=JSON.parse(lsGet(ME_KEY)); if(s && s.metrics && s.cfg && s.cfg._v==='3'){ if(!s.order) s.order=Object.keys(s.metrics); return s; } }catch(e){}
-  return { cfg:{_v:'3', mode:'url', url:'https://raw.githubusercontent.com/Hy088/chuangliang-data_625/main/me-data.csv', fmt:'csv', interval:30, csvMap:{name:'名称',value:'当前值',target:'目标',unit:'单位',date:'日期'},
+  return { cfg:{_v:'3', mode:'url', url:'./me-data.csv', fmt:'csv', interval:30, csvMap:{name:'名称',value:'当前值',target:'目标',unit:'单位',date:'日期'},
               jsonPath:'', jsonMap:{name:'name',value:'value',target:'target',unit:'unit',date:'date'}, paste:'', auto:true},
           metrics:{}, order:[], lastFetch:null, status:'idle', errMsg:'' };
 }
