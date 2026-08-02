@@ -390,22 +390,44 @@
   // 比 tiny 对中文准确得多；HF 权重首次加载较慢（约 100-200MB），之后走缓存。
   // ============================================================
   const WHISPER_MODEL = 'Xenova/whisper-base'; // tiny 对中文很差，base 明显更准
+  async function tryLoadAsr(pipeline, env, cfg) {
+    if (env) {
+      env.allowLocalModels = false;
+      env.allowRemoteModels = true;
+      env.remoteHost = cfg.host;
+      env.remotePathTemplate = cfg.template;
+    }
+    // transformers.js 默认 template 使用 {revision}，modelscope 用 master 分支
+    return await pipeline('automatic-speech-recognition', WHISPER_MODEL, { revision: cfg.revision });
+  }
+
   async function vpRunWhisper() {
     if (!VP.url) { alert('请先选择视频'); return; }
     const btn = document.getElementById('vpWhisperBtn');
     showCard('vpDeep'); showProg(true); setProg(5, '加载语音识别模型（首次约 100-200MB，请耐心等待）…');
+    let asr = null, lastErr = null;
     try {
       const mod = await import(CDN.transformers);
       const { pipeline, env } = mod;
-      if (env) {
-        env.allowLocalModels = false;
-        // 国内用户默认 HuggingFace 被墙，切到 hf-mirror 镜像
-        if (!env.remoteHost || env.remoteHost.indexOf('huggingface.co') >= 0) {
-          env.remoteHost = 'https://hf-mirror.com';
-          env.remotePathTemplate = '{model}/resolve/main/{file}';
+      // 镜像顺序：ModelScope（阿里，国内最稳）→ hf-mirror（社区镜像）→ HuggingFace 官方
+      const mirrors = [
+        { name: 'ModelScope（阿里）', host: 'https://modelscope.cn', template: 'models/{model}/resolve/{revision}/', revision: 'master' },
+        { name: 'hf-mirror', host: 'https://hf-mirror.com', template: '{model}/resolve/{revision}/', revision: 'main' },
+        { name: 'HuggingFace 官方', host: 'https://huggingface.co', template: '{model}/resolve/{revision}/', revision: 'main' }
+      ];
+      for (const m of mirrors) {
+        try {
+          setProg(5, '尝试从 ' + m.name + ' 加载模型…');
+          asr = await tryLoadAsr(pipeline, env, m);
+          lastErr = null;
+          break;
+        } catch (e) {
+          lastErr = e;
+          console.warn('语音识别模型源 ' + m.name + ' 失败：', e.message || e);
+          continue;
         }
       }
-      const asr = await pipeline('automatic-speech-recognition', WHISPER_MODEL);
+      if (!asr) throw (lastErr || new Error('所有模型镜像均无法访问'));
       setProg(45, '解码音轨…');
       const ab = await getAudioBuffer();
       const samples = resampleTo16k(ab);
@@ -420,10 +442,11 @@
       if (text.trim()) setProg(100, '语音识别完成'); else setProg(0, '未识别到语音内容');
       hideProgSoon();
     } catch (e) {
-      const tip = e.message && e.message.indexOf('fetch') >= 0
-        ? '（模型下载失败：已自动切到 hf-mirror.com 镜像，如果仍失败，说明当前网络无法访问 HuggingFace 镜像，建议使用下方「本地离线版」或换网络）'
-        : '（若卡在模型下载，多为 HuggingFace CDN 访问慢，已自动切到 hf-mirror.com，可重试）';
-      setProg(0, '语音识别失败：' + e.message + tip);
+      const isFetch = (e.message || '').toLowerCase().indexOf('fetch') >= 0 || (e.message || '').toLowerCase().indexOf('network') >= 0;
+      const tip = isFetch
+        ? '（模型下载失败：已依次尝试 ModelScope/阿里、hf-mirror、HuggingFace 官方，均无法访问。建议换网络，或使用下方「本地离线版」）'
+        : '（识别过程出错，可刷新后重试）';
+      setProg(0, '语音识别失败：' + (e.message || e) + tip);
     }
   }
 
