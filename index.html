@@ -914,8 +914,10 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       </div>
 
       <div class="vp-region">
-        <div class="vp-region-h">④ AI 拆解结果区（点「🤖 AI语义拆解」自动填充）</div>
-        <div class="vp-edit">
+        <div class="vp-region-h">④ AI 拆解结果区 · 素材诊断报告（点「🤖 AI语义拆解」自动填充）</div>
+        <div id="vpParseAiReport" class="vp-parse-ai-report muted">点「🤖 AI语义拆解」，AI 会按「数据表现分析 → 视频结构判断 → 优化建议 → 跑量评分」生成诊断报告。</div>
+        <div class="vp-edit-toggle" id="vpEditToggle">✎ 显示/隐藏原始字段编辑</div>
+        <div class="vp-edit" id="vpEditFields" style="display:none">
           <div><label>黄金3秒钩子</label><input type="text" id="vpHook" class="vp-input" placeholder="AI 提取的开头话术…"></div>
           <div><label>核心痛点/卖点</label><textarea id="vpSells" rows="3" placeholder="AI 分析的用户痛点和产品卖点…"></textarea></div>
           <div><label>转化逻辑分析</label><textarea id="vpLogic" rows="3" placeholder="AI 分析的转化路径…"></textarea></div>
@@ -2527,6 +2529,12 @@ function initVParse(){
   const auto=$('#vpAuto'); if(auto) auto.onclick=autoVParse;
   const em=$('#vpExportMd'); if(em) em.onclick=()=>exportVParse('md');
   const ej=$('#vpExportJson'); if(ej) ej.onclick=()=>exportVParse('json');
+  const editToggle=$('#vpEditToggle'); const editFields=$('#vpEditFields');
+  if(editToggle&&editFields) editToggle.onclick=()=>{
+    const on=editFields.style.display==='none';
+    editFields.style.display=on?'block':'none';
+    editToggle.textContent=(on?'✎ 隐藏':'✎ 显示')+'原始字段编辑';
+  };
 }
 
 function parseMatId(name){ const m=String(name).match(/(\d{6,})/); return m?m[1]:''; }
@@ -2857,13 +2865,36 @@ function exportVParse(type){
     `- 衰退时间：${val('vpDecline')||'—'}`,
     `- 总跑量天数：${val('vpDays')||'—'} 天`,
     `- 当前状态：${val('vpStatus')||'—'}`);
-  L.push('','## ④ AI 拆解结果区',
-    `- 黄金3秒钩子：${val('vpHook')}`,
-    `- 核心痛点/卖点：${val('vpSells')}`,
-    `- 转化逻辑分析：${val('vpLogic')}`,
-    `- 视听表现拆解：${val('vpAv')}`,
-    `- 复刻脚本：${val('vpDir')}`,
-    `- 跑量评分：${val('vpScore')||'—'}/10`);
+  // ④ AI 拆解结果区 · 诊断报告
+  const ai=VP.ai;
+  if(ai && !ai.raw && (ai.data_analysis || ai.structure || ai.optimization)){
+    const da=ai.data_analysis||{}, st=ai.structure||{}, opt=ai.optimization||{};
+    L.push('','## ④ AI 拆解结果区 · 素材诊断报告');
+    L.push('### 数据表现分析');
+    if(da.ctr) L.push(`- CTR：${da.ctr.value}%（均值 ${da.ctr.avg}%）— ${da.ctr.status==='above'?'高于均值':da.ctr.status==='below'?'低于均值':'持平'}`);
+    if(da.cvr) L.push(`- CVR：${da.cvr.value}%（均值 ${da.cvr.avg}%）— ${da.cvr.status==='above'?'高于均值':da.cvr.status==='below'?'低于均值':'持平'}`);
+    if(da.conversion) L.push(`- 转化：${Number(da.conversion.value||0).toLocaleString('zh-CN')}（消耗 ¥${Number(da.conversion.cost||0).toLocaleString('zh-CN')}）`);
+    if(Array.isArray(da.diagnosis)&&da.diagnosis.length) L.push(`- 诊断：${da.diagnosis.join(' · ')}`);
+    if(da.insight) L.push(`- 洞察：${da.insight}`);
+    L.push('### 视频结构判断');
+    if(st.type) L.push(`- 结构类型：${st.type}${st.suggestion?' · '+st.suggestion:''}`);
+    if(Array.isArray(st.segments)&&st.segments.length){
+      L.push('| 时段 | 阶段 | 描述 |','| --- | --- | --- |');
+      st.segments.forEach(s=>L.push(`| ${s.range||''} | ${s.stage||''} | ${s.desc||''} |`));
+    }
+    L.push('### 优化建议');
+    if(Array.isArray(opt.priority)&&opt.priority.length){ L.push('**优先级建议：**'); opt.priority.forEach((p,i)=>L.push(`${i+1}. ${p}`)); }
+    if(Array.isArray(opt.details)&&opt.details.length){ L.push('','**精细优化建议：**'); opt.details.forEach(d=>{ L.push(`- ${d.range||''}`); if(d.issue) L.push(`  - 问题：${d.issue}`); if(d.suggestion) L.push(`  - 建议：${d.suggestion}`); }); }
+    if(ai.score!=null) L.push(`\n**跑量潜力评分：${ai.score} / 10**`);
+  } else {
+    L.push('','## ④ AI 拆解结果区',
+      `- 黄金3秒钩子：${val('vpHook')}`,
+      `- 核心痛点/卖点：${val('vpSells')}`,
+      `- 转化逻辑分析：${val('vpLogic')}`,
+      `- 视听表现拆解：${val('vpAv')}`,
+      `- 复刻脚本：${val('vpDir')}`,
+      `- 跑量评分：${val('vpScore')||'—'}/10`);
+  }
   const ins=$('#vpInsight'); if(ins && ins.textContent && !ins.classList.contains('muted')){ L.push('','## ⑤ 信息流投放理解分析', ins.textContent.trim()); }
 
   // 深度分析（零 Key 本地）
@@ -2892,6 +2923,7 @@ function exportVParse(type){
   const md=L.join('\n');
   if(type==='md'){ vpDownload(`视频解析_${VP.sid||'video'}.md`, md, 'text/markdown;charset=utf-8'); }
   else {
+    const aiData=ai||{};
     const json=JSON.stringify({
       material_id:VP.sid, file:VP.fileName,
       video_meta:VP.meta, analysis:a, report:m,
@@ -2899,9 +2931,11 @@ function exportVParse(type){
       basic:{name:$('#vpMatName').value, link:$('#vpMatLink').value, script:$('#vpScript').value, platform:$('#vpPlatform').value},
       ad:{cost:$('#vpCost').value, imp:$('#vpImp').value, cpm:$('#vpCpm').value, clk:$('#vpClk').value, ctr:$('#vpCtr').value, cv:$('#vpCv').value, cvr:$('#vpCvr').value, cpa:$('#vpCpa').value, roi:$('#vpRoi').value},
       lifecycle:{create:$('#vpCreate').value, scale:$('#vpScale').value, decline:$('#vpDecline').value, days:$('#vpDays').value, status:$('#vpStatus').value},
-      ai:{hook:$('#vpHook').value, pain:$('#vpSells').value, logic:$('#vpLogic').value, audioVisual:$('#vpAv').value, script:$('#vpDir').value, score:$('#vpScore').value},
-      deep:{ocr:dd.ocr||[], whisper:dd.whisper||null, audio:dd.audio||null, detect:dd.detect||null},
-      ai:ai||null
+      ai:Object.assign({
+        hook:$('#vpHook').value, pain:$('#vpSells').value, logic:$('#vpLogic').value,
+        audioVisual:$('#vpAv').value, script:$('#vpDir').value, score:$('#vpScore').value
+      }, aiData),
+      deep:{ocr:dd.ocr||[], whisper:dd.whisper||null, audio:dd.audio||null, detect:dd.detect||null}
     }, null, 2);
     vpDownload(`视频解析_${VP.sid||'video'}.json`, json, 'application/json;charset=utf-8');
   }
@@ -3617,6 +3651,53 @@ document.addEventListener('click', function(e){
 .vp-pill-yellow{background:#fef6e0;color:#b9770e}
 .vp-pill-green{background:#e6f7ee;color:#1f8a70}
 @media(max-width:820px){.vp-grid2{grid-template-columns:1fr}}
+/* 视频拆解档案 · 诊断报告样式 */
+.vp-parse-ai-report{line-height:1.7}
+.vp-edit-toggle{color:var(--brand);font-size:12px;cursor:pointer;margin-top:8px;display:inline-block}
+.vp-edit-toggle:hover{text-decoration:underline}
+.vp-diagnosis-report{font-size:13px}
+.vp-dg-section{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.vp-dg-section:first-child{margin-top:0;padding-top:0;border-top:none}
+.vp-dg-title{font-weight:700;font-size:14px;margin-bottom:10px;color:var(--ink)}
+.vp-dg-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.vp-dg-card{background:var(--graybg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.vp-dg-label{font-size:12px;color:var(--muted);margin-bottom:2px}
+.vp-dg-num{font-size:20px;font-weight:700;color:var(--ink)}
+.vp-dg-compare{font-size:11px;margin-top:3px}
+.vp-dg-compare.green{color:#1f8a70}
+.vp-dg-compare.red{color:#c0392b}
+.vp-dg-compare.gray{color:var(--muted)}
+.vp-dg-diagnosis{margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.vp-dg-tag{display:inline-block;border-radius:10px;padding:2px 10px;font-size:12px;font-weight:600}
+.vp-dg-tag.vp-dg-good{background:#e6f7ee;color:#1f8a70}
+.vp-dg-tag.vp-dg-bad{background:#fde8e8;color:#c0392b}
+.vp-dg-tag.vp-dg-mid{background:#fef6e0;color:#b9770e}
+.vp-dg-insight{margin-top:10px;background:var(--bluebg);border:1px dashed var(--brand);border-radius:10px;padding:10px 12px;font-size:13px}
+.vp-dg-struct-type{margin-bottom:10px}
+.vp-dg-timeline{position:relative;padding-left:18px}
+.vp-dg-timeline::before{content:'';position:absolute;left:5px;top:4px;bottom:4px;width:2px;background:var(--line)}
+.vp-dg-tl-item{position:relative;margin-bottom:12px}
+.vp-dg-tl-dot{position:absolute;left:-17px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--brand);border:2px solid var(--panel)}
+.vp-dg-tl-range{font-size:12px;color:var(--muted)}
+.vp-dg-tl-stage{font-weight:700;color:var(--ink);margin:1px 0}
+.vp-dg-tl-desc{color:var(--ink2)}
+.vp-dg-priority{margin-bottom:10px}
+.vp-dg-pri-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
+.vp-dg-pri-num{flex:0 0 20px;height:20px;border-radius:50%;background:var(--brand);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.vp-dg-details-toggle{color:var(--brand);font-size:12px;cursor:pointer;margin:8px 0}
+.vp-dg-details{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--graybg)}
+.vp-dg-detail-item{margin-bottom:12px}
+.vp-dg-detail-item:last-child{margin-bottom:0}
+.vp-dg-detail-range{font-weight:700;color:var(--brand);margin-bottom:3px}
+.vp-dg-detail-issue{color:var(--ink);margin-bottom:4px}
+.vp-dg-detail-suggest{color:var(--ink2);padding-left:10px;border-left:3px solid var(--brand2)}
+.vp-dg-score{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.vp-dg-score-num{font-size:28px;font-weight:700;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff}
+.vp-dg-score-high{background:#1f8a70}
+.vp-dg-score-mid{background:#b9770e}
+.vp-dg-score-low{background:#c0392b}
+.vp-dg-score-label{color:var(--muted);font-size:13px}
+@media(max-width:820px){.vp-dg-cards{grid-template-columns:1fr}}
 .vp-db-txt{margin-top:8px;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-all;color:var(--ink2);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px;min-height:40px}
 .vp-warn-in{color:#b07d00;font-weight:600}
 @media(max-width:820px){.vp-deep-grid{grid-template-columns:1fr}.vp-debug-grid{grid-template-columns:1fr}}
@@ -3656,7 +3737,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260802i"></script>
-<script src="vparse-deep.js?v=20260802i"></script>
+<script src="personal-enhance.js?v=20260802j"></script>
+<script src="vparse-deep.js?v=20260802j"></script>
 </body>
 </html>

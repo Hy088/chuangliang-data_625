@@ -18,17 +18,44 @@
     coco: 'https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js',
     transformers: 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.3'
   };
-  const AI_PROMPT = `你是一名资深短视频投放创意分析师。下面是一段广告素材的若干均匀抽帧画面（按时间先后顺序排列）。请结合画面做结构化的「爆款拆解」，并严格只输出如下 JSON（不要 markdown 代码块、不要解释）。
-如果提供了口播时间轴，请优先结合时间轴理解素材节奏；script 字段必须按「0.0s-3.5s：该时段台词/画面动作」的秒数格式逐段填写，便于对照原视频翻拍。
+  const AI_PROMPT = `你是一名资深短视频投放创意分析师。下面是一段广告素材的若干均匀抽帧画面（按时间先后顺序排列）。请结合画面与提供的投放数据，输出一份「素材诊断报告」风格的结构化拆解，严格只输出如下 JSON（不要 markdown 代码块、不要解释）。
+如果提供了口播时间轴，请优先结合时间轴理解素材节奏，并用于 structure.segments 和 optimization.details 的时间分段。
 {
-  "hook": "黄金3秒钩子：开头话术原文及手法（单行短语）",
-  "pain": "核心痛点/卖点：用户痛点与产品卖点（多行文本，可分点）",
-  "logic": "转化逻辑分析：从钩子到下单的转化路径（多行文本）",
-  "audio_visual": "视听表现拆解：BGM、节奏、画面特点等（多行文本）",
-  "script": "复刻脚本：按秒数分段，格式示例\\n0.0s-3.0s：钩子台词/画面\\n3.0s-8.0s：痛点+产品展示\\n...",
+  "data_analysis": {
+    "ctr": {"value": 12.55, "avg": 7.74, "status": "above"},
+    "cvr": {"value": 1.65, "avg": 2.67, "status": "below"},
+    "conversion": {"value": 38503, "cost": 545373},
+    "diagnosis": ["CTR优秀", "CVR偏低"],
+    "insight": "CTR显著高于均值，素材吸引力强；CVR低于均值，需检查承诺、价格、信任感、CTA。"
+  },
+  "structure": {
+    "type": "口播 + 产品演示直入型",
+    "suggestion": "不建议硬加夸张钩子",
+    "segments": [
+      {"range": "0-3秒", "stage": "开场/承接", "desc": "真实感强，利益点未前置"},
+      {"range": "3-22秒", "stage": "产品展示/卖点证明", "desc": "演示完整但偏长"},
+      {"range": "24-结尾", "stage": "利益点/转化引导", "desc": "福利价与CTA出现偏晚"}
+    ]
+  },
+  "optimization": {
+    "priority": [
+      "保留口播直入结构，不重做强钩子",
+      "把福利价/核心利益点提前到5-8秒",
+      "压缩8-22秒证明段，保留最强两处演示"
+    ],
+    "details": [
+      {"range": "0-3秒（开场/承接）", "issue": "人物与产品同屏，开场真实感强，但核心利益点不够前置。", "suggestion": "建议首屏字幕直接强化「一包=一年分量 / 家庭纸巾囤货」。"},
+      {"range": "3-8秒（产品展示）", "issue": "包装、规格、抽纸动作清楚，产品可信度较好。", "suggestion": "建议保留；规格字幕放大，减少左侧竖排小字干扰。"}
+    ]
+  },
   "score": 8
 }
-注意：score 必须是 1-10 的整数（跑量潜力评分），不要带单位或说明文字。`;
+字段说明：
+- data_analysis.status 只能是 "above"（高于均值/优秀）、"below"（低于均值/偏低）、"avg"（持平）。
+- diagnosis 为 1-3 个短标签，如 ["CTR优秀", "CVR偏低"]。
+- structure.type 用「XX + XX 型」概括；suggestion 给结构方向判断；segments 按时间顺序，range 用 "0-3秒" 或 "24-结尾" 格式。
+- optimization.priority 为 3-5 条最重要的结构优化建议；details 按时间段给出精细建议，每条包含 issue（问题）和 suggestion（建议）。
+- score 必须是 1-10 的整数（跑量潜力评分）。`;
 
   // ---- 工具 ----
   function loadScript(src, timeoutMs) {
@@ -510,6 +537,17 @@
       const step = Math.max(1, Math.ceil(frames.length / 6));
       const pick = frames.filter((_, i) => i % step === 0).slice(0, 6);
       let promptText = AI_PROMPT;
+      // 追加可用投放数据，帮助 AI 做真实数据表现分析
+      const m = VP.mat || {};
+      const metricsParts = [];
+      if (m.ctr != null) metricsParts.push('CTR=' + (+m.ctr).toFixed(2) + '%');
+      if (m.cvr != null) metricsParts.push('CVR=' + (+m.cvr).toFixed(2) + '%');
+      if (m.cost != null) metricsParts.push('消耗=' + (+m.cost).toFixed(2) + '元');
+      if (m.cv != null) metricsParts.push('转化=' + (+m.cv));
+      if (m.cpa != null) metricsParts.push('CPA=' + (+m.cpa).toFixed(2) + '元');
+      if (m.cpm != null) metricsParts.push('CPM=' + (+m.cpm).toFixed(2) + '元');
+      if (m.roi != null) metricsParts.push('ROI=' + (+m.roi).toFixed(2));
+      if (metricsParts.length) promptText += '\n\n【素材投放数据（来自报表）】\n' + metricsParts.join('，');
       const segs = VP.deep && VP.deep.whisperSegs;
       const whisper = VP.deep && VP.deep.whisper;
       if (segs && segs.length) {
@@ -550,6 +588,21 @@
     const m = s.match(/```(?:json)?\s*([\s\S]*?)```/); if (m) s = m[1].trim();
     try {
       const o = JSON.parse(s); const r = {};
+      // 新版诊断报告格式
+      if (o.data_analysis || o.structure || o.optimization) {
+        r.data_analysis = o.data_analysis;
+        r.structure = o.structure;
+        r.optimization = o.optimization;
+        if (o.score != null) r.score = o.score;
+        // 兼容旧字段/导出
+        r.hook = (o.structure && o.structure.segments && o.structure.segments[0] && o.structure.segments[0].desc) || '';
+        r.pain = (o.data_analysis && o.data_analysis.insight) || '';
+        r.logic = (o.optimization && Array.isArray(o.optimization.priority) && o.optimization.priority.join('\n')) || '';
+        r.audio_visual = (o.structure && o.structure.type + '；' + o.structure.suggestion) || '';
+        r.script = (o.optimization && Array.isArray(o.optimization.details) && o.optimization.details.map(d => d.range + '：' + d.suggestion).join('\n')) || '';
+        return r;
+      }
+      // 旧版 6 字段格式
       ['hook', 'pain', 'logic', 'audio_visual', 'script', 'score'].forEach(k => { if (o[k] !== undefined) r[k] = o[k]; });
       if (Object.keys(r).length) return r;
     } catch (e) {}
@@ -560,6 +613,13 @@
     const out = document.getElementById('vpAiOut'); if (!out) return;
     if (!ai) { out.innerHTML = '<div class="vp-warn">未解析到内容</div>'; return; }
     if (ai.raw) { out.innerHTML = '<div class="vp-ai-out">' + escapeHtml(ai.raw) + '</div>'; return; }
+    // 优先渲染新版诊断报告
+    if (ai.data_analysis || ai.structure || ai.optimization) {
+      out.innerHTML = renderDiagnosisReport(ai);
+      bindDiagnosisToggle();
+      return;
+    }
+    // 兼容旧版 6 字段
     const card = (t, v) => v ? '<div class="ai-card"><b>' + t + '：</b>' + escapeHtml(v) + '</div>' : '';
     let h = '';
     if (ai.hook) h += card('🪝 黄金3秒钩子', ai.hook);
@@ -571,15 +631,109 @@
     out.innerHTML = h || '<div class="muted">模型未返回结构化字段</div>';
   }
 
+  function fmtPct(n){ return (n==null?'—':(+n).toFixed(2)+'%'); }
+  function fmtMoney(n){ return (n==null?'—':'¥'+Number(n).toLocaleString('zh-CN')) }
+  function renderDiagnosisReport(ai){
+    const da=ai.data_analysis||{};
+    const st=ai.structure||{};
+    const opt=ai.optimization||{};
+    const statusClass={above:'vp-dg-good', below:'vp-dg-bad', avg:'vp-dg-mid'};
+    const statusIcon={above:'▲', below:'▼', avg:'●'};
+    const statusText={above:'高于均值', below:'低于均值', avg:'持平均值'};
+    const statusArrow={above:'green', below:'red', avg:'gray'};
+
+    // 数据表现区
+    let dataHtml='';
+    const ctr=da.ctr||{}, cvr=da.cvr||{}, conv=da.conversion||{};
+    dataHtml+='<div class="vp-dg-section">';
+    dataHtml+='<div class="vp-dg-title">📊 数据表现分析</div>';
+    dataHtml+='<div class="vp-dg-cards">';
+    dataHtml+='<div class="vp-dg-card"><div class="vp-dg-label">CTR</div><div class="vp-dg-num">'+fmtPct(ctr.value)+'</div><div class="vp-dg-compare '+statusArrow[ctr.status]+'">'+statusIcon[ctr.status]+' '+statusText[ctr.status]+'（均值'+fmtPct(ctr.avg)+'）</div></div>';
+    dataHtml+='<div class="vp-dg-card"><div class="vp-dg-label">CVR</div><div class="vp-dg-num">'+fmtPct(cvr.value)+'</div><div class="vp-dg-compare '+statusArrow[cvr.status]+'">'+statusIcon[cvr.status]+' '+statusText[cvr.status]+'（均值'+fmtPct(cvr.avg)+'）</div></div>';
+    dataHtml+='<div class="vp-dg-card"><div class="vp-dg-label">转化</div><div class="vp-dg-num">'+(conv.value==null?'—':Number(conv.value).toLocaleString('zh-CN'))+'</div><div class="vp-dg-compare gray">消耗 '+fmtMoney(conv.cost)+'</div></div>';
+    dataHtml+='</div>';
+    if(Array.isArray(da.diagnosis)&&da.diagnosis.length){
+      dataHtml+='<div class="vp-dg-diagnosis">诊断：'+da.diagnosis.map(t=>'<span class="vp-dg-tag '+statusClass[(t.indexOf('低')>=0||t.indexOf('偏')>=0)?'below':'above']+'">'+escapeHtml(t)+'</span>').join('')+'</div>';
+    }
+    if(da.insight) dataHtml+='<div class="vp-dg-insight">💡 洞察：'+escapeHtml(da.insight)+'</div>';
+    dataHtml+='</div>';
+
+    // 视频结构区
+    let structHtml='';
+    structHtml+='<div class="vp-dg-section">';
+    structHtml+='<div class="vp-dg-title">🎬 视频结构判断</div>';
+    structHtml+='<div class="vp-dg-struct-type">结构类型：<b>'+escapeHtml(st.type||'—')+'</b>'+(st.suggestion?' · '+escapeHtml(st.suggestion):'')+'</div>';
+    if(Array.isArray(st.segments)&&st.segments.length){
+      structHtml+='<div class="vp-dg-timeline">';
+      st.segments.forEach((seg,i)=>{
+        structHtml+='<div class="vp-dg-tl-item">';
+        structHtml+='<div class="vp-dg-tl-dot"></div>';
+        structHtml+='<div class="vp-dg-tl-range">'+escapeHtml(seg.range||'')+'</div>';
+        structHtml+='<div class="vp-dg-tl-stage">'+escapeHtml(seg.stage||'')+'</div>';
+        structHtml+='<div class="vp-dg-tl-desc">'+escapeHtml(seg.desc||'')+'</div>';
+        structHtml+='</div>';
+      });
+      structHtml+='</div>';
+    }
+    structHtml+='</div>';
+
+    // 优化建议区
+    let optHtml='';
+    optHtml+='<div class="vp-dg-section">';
+    optHtml+='<div class="vp-dg-title">💡 优化建议</div>';
+    if(Array.isArray(opt.priority)&&opt.priority.length){
+      optHtml+='<div class="vp-dg-priority">';
+      opt.priority.forEach((p,i)=>{ optHtml+='<div class="vp-dg-pri-item"><span class="vp-dg-pri-num">'+(i+1)+'</span><span>'+escapeHtml(p)+'</span></div>'; });
+      optHtml+='</div>';
+    }
+    if(Array.isArray(opt.details)&&opt.details.length){
+      optHtml+='<div class="vp-dg-details-toggle" id="vpDgDetailsToggle">▸ 精细优化建议（展开）</div>';
+      optHtml+='<div class="vp-dg-details" id="vpDgDetails" style="display:none">';
+      opt.details.forEach(d=>{
+        optHtml+='<div class="vp-dg-detail-item">';
+        optHtml+='<div class="vp-dg-detail-range">'+escapeHtml(d.range||'')+'</div>';
+        optHtml+='<div class="vp-dg-detail-issue">'+escapeHtml(d.issue||'')+'</div>';
+        optHtml+='<div class="vp-dg-detail-suggest">建议：'+escapeHtml(d.suggestion||'')+'</div>';
+        optHtml+='</div>';
+      });
+      optHtml+='</div>';
+    }
+    optHtml+='</div>';
+
+    // 跑量评分
+    let scoreHtml='';
+    if(ai.score!=null){
+      const lv=ai.score>=8?'vp-dg-score-high':ai.score>=5?'vp-dg-score-mid':'vp-dg-score-low';
+      scoreHtml+='<div class="vp-dg-score"><span class="vp-dg-score-num '+lv+'">'+ai.score+'</span><span class="vp-dg-score-label">跑量潜力评分 / 10</span></div>';
+    }
+
+    return '<div class="vp-diagnosis-report">'+dataHtml+structHtml+optHtml+scoreHtml+'</div>';
+  }
+  function bindDiagnosisToggle(){
+    const t=document.getElementById('vpDgDetailsToggle'); const d=document.getElementById('vpDgDetails');
+    if(!t||!d) return;
+    t.onclick=()=>{
+      const on=d.style.display==='block';
+      d.style.display=on?'none':'block';
+      t.textContent=(on?'▸ ':'▾ ')+'精细优化建议（'+(on?'展开':'收起')+'）';
+    };
+  }
+
   function applyAiToParse(ai) {
     if (!ai || ai.raw) return;
-    const setV = (id, v) => { const e = document.getElementById(id); if (e) e.value = v; };
-    if (ai.hook) setV('vpHook', ai.hook);
-    if (ai.pain) setV('vpSells', ai.pain);
-    if (ai.logic) setV('vpLogic', ai.logic);
-    if (ai.audio_visual) setV('vpAv', ai.audio_visual);
-    if (ai.script) setV('vpDir', ai.script);
+    const setV = (id, v) => { const e = document.getElementById(id); if (e && v != null) e.value = v; };
+    if (ai.hook != null) setV('vpHook', ai.hook);
+    if (ai.pain != null) setV('vpSells', ai.pain);
+    if (ai.logic != null) setV('vpLogic', ai.logic);
+    if (ai.audio_visual != null) setV('vpAv', ai.audio_visual);
+    if (ai.script != null) setV('vpDir', ai.script);
     if (ai.score != null) setV('vpScore', ai.score);
+    // 把诊断报告渲染到解析卡
+    const reportEl = document.getElementById('vpParseAiReport');
+    if (reportEl && (ai.data_analysis || ai.structure || ai.optimization)) {
+      reportEl.innerHTML = renderDiagnosisReport(ai);
+      bindDiagnosisToggle();
+    }
   }
 
   // ---- AI 设置弹窗 ----
