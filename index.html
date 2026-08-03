@@ -494,9 +494,32 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .hit-preview{margin-top:16px;padding:14px 16px;border-radius:12px;background:linear-gradient(120deg,#eef0ff,#f3effe);border-left:4px solid var(--brand);font-size:14px;line-height:1.7}
 .hit-preview b{color:var(--brand2)}
 @media(max-width:760px){.cat-card .metrics{grid-template-columns:1fr 1fr}.hit-row{grid-template-columns:1fr;gap:6px}.hit-row .en{justify-content:flex-start}}
+/* 全局加载/错误遮罩 */
+#loadOverlay{position:fixed;inset:0;background:rgba(245,247,250,.92);z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;backdrop-filter:blur(2px)}
+#loadOverlay .box{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px 34px;box-shadow:var(--shadow);max-width:560px;width:90%;text-align:center}
+#loadOverlay .spinner{width:36px;height:36px;border:3px solid #e6eaef;border-top-color:var(--brand);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loadOverlay .title{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px}
+#loadOverlay .msg{font-size:13px;color:var(--muted);line-height:1.6;word-break:break-all}
+#loadOverlay .err{color:#c0392b;background:#fde8e8;padding:10px 12px;border-radius:8px;text-align:left;font-size:12px;margin-top:10px;max-height:160px;overflow:auto}
+#loadOverlay button{margin-top:12px;padding:8px 16px;border:0;border-radius:8px;background:var(--brand);color:#fff;font-size:13px;cursor:pointer}
+#loadOverlay button.secondary{background:#eef1f4;color:var(--ink);margin-left:8px}
+#loadOverlay.hidden{display:none}
+#loadOverlay .err.hidden{display:none}
+#loadOverlay button.hidden{display:none}
 </style>
 </head>
 <body>
+<div id="loadOverlay">
+  <div class="box">
+    <div class="spinner"></div>
+    <div class="title">正在初始化数据看板</div>
+    <div class="msg" id="loadMsg">正在恢复浏览器本地缓存，请稍候...</div>
+    <div class="err hidden" id="loadErr"></div>
+    <button id="loadRetryBtn" class="hidden">重新加载</button>
+    <button id="loadClearBtn" class="hidden secondary">清空本地数据</button>
+  </div>
+</div>
 <header>
   <div class="hd-left">
     <h1>数据看板 · 数据驱动的素材生产闭环</h1>
@@ -3099,10 +3122,22 @@ async function loadSeedData(){
     if(!r.ok) throw new Error('HTTP '+r.status);
     const obj=await r.json();
     DATA_FULL=obj; DATA=DATA_FULL; CUR_PERIOD=null; rebuildIdMap();
-    await saveRuntimeState();
+    saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e)); // 后台保存，不阻塞渲染
     console.log('[seed] 已从 period-data.json 载入, periods=', obj.meta.periods);
-  }catch(e){ console.warn('[seed] 载入失败', e); }
+  }catch(e){ console.warn('[seed] 载入失败', e); throw e; }
 }
+function withTimeout(promise, ms, label){
+  return new Promise((res,rej)=>{
+    const t=setTimeout(()=>rej(new Error((label||'操作')+' 超时（'+ms+'ms）')), ms);
+    promise.then(v=>{clearTimeout(t); res(v);}).catch(e=>{clearTimeout(t); rej(e);});
+  });
+}
+function setLoadMsg(msg){ const e=document.getElementById('loadMsg'); if(e) e.textContent=msg; }
+function setLoadErr(msg){ const e=document.getElementById('loadErr'); if(e){ e.textContent=msg; e.classList.remove('hidden'); } }
+function hideLoadOverlay(){ const o=document.getElementById('loadOverlay'); if(o) o.classList.add('hidden'); }
+function showLoadBtn(id){ const b=document.getElementById(id); if(b) b.classList.remove('hidden'); }
+window.onerror=function(msg,url,line){ setLoadErr('页面脚本错误: '+msg+' (行 '+line+')'); showLoadBtn('loadRetryBtn'); };
+window.addEventListener('unhandledrejection',function(e){ setLoadErr('未处理异常: '+(e.reason&&e.reason.message?e.reason.message:String(e.reason))); showLoadBtn('loadRetryBtn'); });
 function ensureStateBanner(){
   let el=document.getElementById('stateBanner');
   if(el) return el;
@@ -3125,23 +3160,36 @@ function updateStateBanner(){
 
 // ========== 初始化 ==========
 (async function initAll(){
-  try{ await loadRuntimeState(); }catch(e){ console.error('loadRuntimeState 失败', e); } // 先恢复本地保存的周期数据
-  // 本地无数据时，从独立数据文件 period-data.json 载入（避免内嵌大数据导致页面打不开）
-  const hasData=(DATA_FULL.meta&&DATA_FULL.meta.periods&&DATA_FULL.meta.periods.length>0);
-  if(!hasData){ try{ await loadSeedData(); }catch(e){ console.error('loadSeedData 失败', e); } }
-  try{ bindAll(); }catch(e){ console.error('bindAll 失败', e); }
-  try{ bindCustom(); }catch(e){ console.error('bindCustom 失败', e); }
-  // 默认只看最新一期（单月），而非合并全部周期
-  const _pd=(DATA_FULL.periodData||[]);
-  if(!CUR_PERIOD && _pd.length){ CUR_PERIOD = _pd[_pd.length-1].period; }
-  try{ initPeriodSel(); }catch(e){ console.error('initPeriodSel 失败', e); }
-  if(CUR_PERIOD) rebuildView(CUR_PERIOD); else renderAll();
-  try{ const t=loadTheme(); if(t) applyThemeVars(t); }catch(e){}
-  try{ bindGroups(); }catch(e){ console.error('bindGroups 失败', e); }
-  try{ applyLayout(); }catch(e){}
-  try{ startEditObserver(); }catch(e){}
-  try{ renderAll(); }catch(e){ console.error('renderAll 失败', e); } // 渲染当前数据
-  try{ updateStateBanner(); }catch(e){}
+  try{
+    setLoadMsg('正在读取浏览器本地缓存（如卡住会自动跳过）...');
+    try{ await withTimeout(loadRuntimeState(), 5000, '读取本地缓存'); }
+    catch(e){ console.warn('[init] 本地缓存读取超时/失败，跳过', e); }
+
+    const hasData=(DATA_FULL.meta&&DATA_FULL.meta.periods&&DATA_FULL.meta.periods.length>0);
+    if(!hasData){
+      setLoadMsg('正在加载周期数据 period-data.json（约 23MB，首次加载需要几秒）...');
+      await withTimeout(loadSeedData(), 60000, '加载周期数据');
+    }
+
+    setLoadMsg('正在渲染看板...');
+    try{ bindAll(); }catch(e){ console.error('bindAll 失败', e); }
+    try{ bindCustom(); }catch(e){ console.error('bindCustom 失败', e); }
+    const _pd=(DATA_FULL.periodData||[]);
+    if(!CUR_PERIOD && _pd.length){ CUR_PERIOD = _pd[_pd.length-1].period; }
+    try{ initPeriodSel(); }catch(e){ console.error('initPeriodSel 失败', e); }
+    if(CUR_PERIOD) rebuildView(CUR_PERIOD); else renderAll();
+    try{ const t=loadTheme(); if(t) applyThemeVars(t); }catch(e){}
+    try{ bindGroups(); }catch(e){ console.error('bindGroups 失败', e); }
+    try{ applyLayout(); }catch(e){}
+    try{ startEditObserver(); }catch(e){}
+    try{ renderAll(); }catch(e){ console.error('renderAll 失败', e); }
+    try{ updateStateBanner(); }catch(e){}
+    setTimeout(hideLoadOverlay, 200);
+  }catch(e){
+    console.error('initAll 失败', e);
+    setLoadErr('初始化失败: '+e.message+'。可点击「清空本地数据」或「重新加载」。');
+    showLoadBtn('loadRetryBtn'); showLoadBtn('loadClearBtn');
+  }
 })();
 
 // ========== 数据分区：折叠 / 快速跳转 ==========
