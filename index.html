@@ -142,6 +142,22 @@ header{
   padding:11px 20px;border-radius:999px;transition:.18s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .import-btn:hover{background:#fff;color:#5b4bdb;box-shadow:0 8px 22px rgba(0,0,0,.18);transform:translateY(-1px)}
 .import-btn:active{transform:translateY(0)}
+.log-btn{position:relative;flex:none;display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:8px 14px;border-radius:10px;font-size:13px;font-weight:700;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.35);transition:.2s}
+.log-btn:hover{background:#fff;color:#2f6bff;box-shadow:0 8px 22px rgba(0,0,0,.18);transform:translateY(-1px)}
+.ver-badge{display:inline-flex;align-items:center;padding:4px 11px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.3);max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cl-list{display:flex;flex-direction:column;gap:14px}
+.cl-loading{color:var(--muted);font-size:13px;padding:8px 2px}
+.cl-item{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fafbff}
+.cl-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.cl-ver{font-weight:800;font-size:14px;color:var(--ink)}
+.cl-tag{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px}
+.cl-tag.t-feat{background:var(--greenbg);color:var(--green)}
+.cl-tag.t-fix{background:#fde8e8;color:#c0392b}
+.cl-tag.t-chore{background:#eef1f4;color:var(--muted)}
+.cl-date{margin-left:auto;font-size:12px;color:var(--muted)}
+.cl-sum{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.cl-details{margin:0;padding-left:18px;font-size:12.5px;color:var(--muted);line-height:1.7}
+.cl-details li{margin:2px 0}
 header::before{
   content:"";position:absolute;inset:0;pointer-events:none;opacity:.30;
   background-image:radial-gradient(rgba(255,255,255,.22) 1px, transparent 1px);
@@ -530,7 +546,9 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <label class="per-sel">周期：
       <select id="periodSel" title="切换查看的周期，所有标签页同步更新"></select>
     </label>
+    <span class="ver-badge" id="curVer" title="当前版本">—</span>
     <button class="import-btn" id="openImport" title="导入新的素材周期数据报表">⤓ 导入新周期</button>
+    <button class="log-btn" id="openChangelog" title="查看版本更新日志">📋 更新日志</button>
   </div>
 </header>
 <nav>
@@ -3236,6 +3254,7 @@ function updateStateBanner(){
 
   // 2) 先渲染（让看板立即出现，哪怕本地缓存还没合并）
   try{ bindAll(); }catch(e){ console.error('bindAll 失败', e); }
+  try{ bindChangelogUI(); }catch(e){ console.error('bindChangelogUI 失败', e); }
   try{ bindCustom(); }catch(e){ console.error('bindCustom 失败', e); }
   const _pd0=(DATA_FULL.periodData||[]);
   if(!CUR_PERIOD && _pd0.length){ CUR_PERIOD = _pd0[_pd0.length-1].period; }
@@ -3356,6 +3375,42 @@ function openImport(){
   $('#importMask').style.display='flex';
 }
 function closeImport(){ $('#importMask').style.display='none'; }
+
+// ========== 更新日志 ==========
+function openChangelog(){ $('#changelogMask').style.display='flex'; renderChangelog(); }
+function closeChangelog(){ $('#changelogMask').style.display='none'; }
+function clEscape(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+async function renderChangelog(){
+  const box=$('#changelogBody'); if(!box) return;
+  box.innerHTML='<div class="cl-loading">正在加载版本记录…</div>';
+  try{
+    const r=await fetch('changelog.json?_='+Date.now(), {cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const list=await r.json();
+    if(!Array.isArray(list)||!list.length){ box.innerHTML='<div class="cl-loading">暂无更新记录</div>'; return; }
+    const v0=document.getElementById('curVer'); if(v0) v0.textContent=list[0].ver||'';
+    const typeTxt={feature:'新功能',fix:'修复',chore:'维护'};
+    const typeCls={feature:'t-feat',fix:'t-fix',chore:'t-chore'};
+    box.innerHTML=list.map(it=>{
+      const details=(it.details||[]).map(d=>'<li>'+clEscape(d)+'</li>').join('');
+      const t=it.type||'chore';
+      return '<div class="cl-item">'+
+        '<div class="cl-head"><span class="cl-ver">'+clEscape(it.ver||'')+'</span>'+
+        '<span class="cl-tag '+ (typeCls[t]||'t-chore') +'">'+(typeTxt[t]||'维护')+'</span>'+
+        '<span class="cl-date">'+clEscape(it.date||'')+'</span></div>'+
+        '<div class="cl-sum">'+clEscape(it.summary||'')+'</div>'+
+        (details?'<ul class="cl-details">'+details+'</ul>':'')+
+      '</div>';
+    }).join('');
+  }catch(e){
+    box.innerHTML='<div class="cl-loading">更新记录加载失败：'+clEscape(e.message)+'<br>请确认 changelog.json 已部署到仓库根目录。</div>';
+  }
+}
+function bindChangelogUI(){
+  const o=document.getElementById('openChangelog'); if(o) o.onclick=openChangelog;
+  const c=document.getElementById('closeChangelog'); if(c) c.onclick=closeChangelog;
+  const m=document.getElementById('changelogMask'); if(m) m.onclick=e=>{ if(e.target.id==='changelogMask') closeChangelog(); };
+}
 
 // 从文件名自动识别日期区间填入「数据周期」（如 素材报表-不限_2026-07-12-2026-07-18_xxx.csv）
 function autoFillPeriod(){
@@ -3862,5 +3917,18 @@ document.addEventListener('click', function(e){
 
 <script src="personal-enhance.js?v=20260802j"></script>
 <script src="vparse-deep.js?v=20260802j"></script>
+<!-- ========== 更新日志 弹窗 ========== -->
+<div class="modal-mask" id="changelogMask" style="display:none">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-hd">
+      <h3>📋 版本更新日志</h3>
+      <button class="modal-x" id="closeChangelog">✕</button>
+    </div>
+    <div class="modal-bd">
+      <p class="modal-tip">记录看板每次更新的版本与改动，便于出问题时快速定位。最新版本显示在右上角徽标。</p>
+      <div id="changelogBody" class="cl-list"></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
