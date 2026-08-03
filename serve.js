@@ -49,6 +49,16 @@ const server = http.createServer((req, res) => {
   }
 });
 
+server.on('error', (e) => {
+  if (e.code === 'EADDRINUSE') {
+    console.log('Port ' + PORT + ' already in use — another instance is running. Exiting duplicate.');
+    process.exit(0);
+  } else {
+    console.error('Server error:', e);
+    process.exit(1);
+  }
+});
+
 server.listen(PORT, '0.0.0.0', () => {
   console.log('Dashboard local server running at http://localhost:' + PORT + '/');
 });
