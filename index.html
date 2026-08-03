@@ -516,6 +516,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="title">正在初始化数据看板</div>
     <div class="msg" id="loadMsg">正在恢复浏览器本地缓存，请稍候...</div>
     <div class="err hidden" id="loadErr"></div>
+    <button id="loadSkipBtn" class="secondary">跳过本地缓存</button>
     <button id="loadRetryBtn" class="hidden">重新加载</button>
     <button id="loadClearBtn" class="hidden secondary">清空本地数据</button>
   </div>
@@ -3078,10 +3079,29 @@ function applyLayoutReset(){ movableCards().forEach(c=>{ c.classList.remove('hid
 
 // ========== 周期数据本地持久化（刷新不丢失） ==========
 const IDB_NAME='matopt_idx', IDB_STORE='kv', IDB_KEY='projState';
-function idbOpen(){return new Promise((res,rej)=>{const r=indexedDB.open(IDB_NAME,1);r.onupgradeneeded=e=>{const db=e.target.result;if(!db.objectStoreNames.contains(IDB_STORE))db.createObjectStore(IDB_STORE);};r.onsuccess=e=>res(e.target.result);r.onerror=e=>rej(e.target.error);});}
-async function idbPut(k,v){const db=await idbOpen();return new Promise((res,rej)=>{const tx=db.transaction(IDB_STORE,'readwrite');tx.objectStore(IDB_STORE).put(v,k);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
-async function idbGet(k){const db=await idbOpen();return new Promise((res,rej)=>{const tx=db.transaction(IDB_STORE,'readonly');const rq=tx.objectStore(IDB_STORE).get(k);rq.onsuccess=()=>res(rq.result);rq.onerror=()=>rej(rq.error);});}
-async function idbDel(k){const db=await idbOpen();return new Promise((res,rej)=>{const tx=db.transaction(IDB_STORE,'readwrite');tx.objectStore(IDB_STORE).delete(k);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
+function idbOpen(timeoutMs=3000){
+  return new Promise((res,rej)=>{
+    let timer;
+    const done=(fn,arg)=>{ if(timer) clearTimeout(timer); fn(arg); };
+    timer=setTimeout(()=>done(rej, new Error('IndexedDB 打开超时')), timeoutMs);
+    const r=indexedDB.open(IDB_NAME,1);
+    r.onupgradeneeded=e=>{const db=e.target.result;if(!db.objectStoreNames.contains(IDB_STORE))db.createObjectStore(IDB_STORE);};
+    r.onsuccess=e=>done(res, e.target.result);
+    r.onerror=e=>done(rej, e.target.error||new Error('IndexedDB 打开失败'));
+    r.onblocked=e=>done(rej, new Error('IndexedDB 被其他页面占用(blocked)'));
+  });
+}
+async function idbPut(k,v){const db=await idbOpen();return new Promise((res,rej)=>{const tx=db.transaction(IDB_STORE,'readwrite');const rq=tx.objectStore(IDB_STORE).put(v,k);rq.onsuccess=()=>res();rq.onerror=()=>rej(rq.error);tx.onerror=()=>rej(tx.error);});}
+async function idbGet(k){const db=await idbOpen();return new Promise((res,rej)=>{const tx=db.transaction(IDB_STORE,'readonly');const rq=tx.objectStore(IDB_STORE).get(k);rq.onsuccess=()=>res(rq.result);rq.onerror=()=>rej(rq.error);tx.onerror=()=>rej(tx.error);});}
+async function idbDel(k){const db=await idbOpen();return new Promise((res,rej)=>{const tx=db.transaction(IDB_STORE,'readwrite');const rq=tx.objectStore(IDB_STORE).delete(k);rq.onsuccess=()=>res();rq.onerror=()=>rej(rq.error);tx.onerror=()=>rej(tx.error);});}
+function clearIndexedDB(){
+  return new Promise((res)=>{
+    try{
+      const req=indexedDB.deleteDatabase(IDB_NAME);
+      req.onsuccess=()=>res(true); req.onerror=()=>res(false); req.onblocked=()=>res(false);
+    }catch(e){ res(false); }
+  });
+}
 function fileSignature(){
   try{
     const m=EMBEDDED_DATA.meta||{};
@@ -3136,8 +3156,17 @@ function setLoadMsg(msg){ const e=document.getElementById('loadMsg'); if(e) e.te
 function setLoadErr(msg){ const e=document.getElementById('loadErr'); if(e){ e.textContent=msg; e.classList.remove('hidden'); } }
 function hideLoadOverlay(){ const o=document.getElementById('loadOverlay'); if(o) o.classList.add('hidden'); }
 function showLoadBtn(id){ const b=document.getElementById(id); if(b) b.classList.remove('hidden'); }
-window.onerror=function(msg,url,line){ setLoadErr('页面脚本错误: '+msg+' (行 '+line+')'); showLoadBtn('loadRetryBtn'); };
-window.addEventListener('unhandledrejection',function(e){ setLoadErr('未处理异常: '+(e.reason&&e.reason.message?e.reason.message:String(e.reason))); showLoadBtn('loadRetryBtn'); });
+function bindLoadButtons(){
+  const rb=document.getElementById('loadRetryBtn');
+  const cb=document.getElementById('loadClearBtn');
+  const sb=document.getElementById('loadSkipBtn');
+  if(rb) rb.onclick=()=>location.reload();
+  if(cb) cb.onclick=()=>{ clearIndexedDB().then(()=>location.reload()); };
+  if(sb) sb.onclick=()=>{ window.__skipIdb=true; setLoadMsg('已跳过缓存，正在加载数据文件...'); };
+}
+window.onerror=function(msg,url,line){ setLoadErr('页面脚本错误: '+msg+' (行 '+line+')'); showLoadBtn('loadRetryBtn'); showLoadBtn('loadClearBtn'); hideLoadBtn('loadSkipBtn'); };
+window.addEventListener('unhandledrejection',function(e){ setLoadErr('未处理异常: '+(e.reason&&e.reason.message?e.reason.message:String(e.reason))); showLoadBtn('loadRetryBtn'); showLoadBtn('loadClearBtn'); hideLoadBtn('loadSkipBtn'); });
+function hideLoadBtn(id){ const b=document.getElementById(id); if(b) b.classList.add('hidden'); }
 function ensureStateBanner(){
   let el=document.getElementById('stateBanner');
   if(el) return el;
@@ -3159,16 +3188,36 @@ function updateStateBanner(){
 }
 
 // ========== 初始化 ==========
+function waitForSkip(){
+  return new Promise((res)=>{
+    if(window.__skipIdb){ res('skip'); return; }
+    const t=setInterval(()=>{
+      if(window.__skipIdb){ clearInterval(t); res('skip'); }
+    }, 200);
+  });
+}
 (async function initAll(){
+  bindLoadButtons();
   try{
-    setLoadMsg('正在读取浏览器本地缓存（如卡住会自动跳过）...');
-    try{ await withTimeout(loadRuntimeState(), 5000, '读取本地缓存'); }
-    catch(e){ console.warn('[init] 本地缓存读取超时/失败，跳过', e); }
+    setLoadMsg('正在读取浏览器本地缓存（如卡住请点击下方「跳过本地缓存」）...');
+    const idbPromise=withTimeout(loadRuntimeState(), 5000, '读取本地缓存');
+    const skipPromise=waitForSkip();
+    let idbResult;
+    try{
+      idbResult=await Promise.race([idbPromise, skipPromise]);
+    }catch(e){
+      console.warn('[init] 本地缓存读取超时/失败，自动清空并跳过', e);
+      await clearIndexedDB();
+      idbResult='skip';
+    }
+    if(idbResult==='skip'){
+      setLoadMsg('已跳过本地缓存，正在加载数据文件...');
+    }
 
     const hasData=(DATA_FULL.meta&&DATA_FULL.meta.periods&&DATA_FULL.meta.periods.length>0);
-    if(!hasData){
+    if(!hasData || idbResult==='skip'){
       setLoadMsg('正在加载周期数据 period-data.json（约 23MB，首次加载需要几秒）...');
-      await withTimeout(loadSeedData(), 60000, '加载周期数据');
+      await withTimeout(loadSeedData(), 120000, '加载周期数据');
     }
 
     setLoadMsg('正在渲染看板...');
@@ -3187,7 +3236,7 @@ function updateStateBanner(){
     setTimeout(hideLoadOverlay, 200);
   }catch(e){
     console.error('initAll 失败', e);
-    setLoadErr('初始化失败: '+e.message+'。可点击「清空本地数据」或「重新加载」。');
+    setLoadErr('初始化失败: '+e.message+'。可点击「跳过本地缓存」「清空本地数据」或「重新加载」。');
     showLoadBtn('loadRetryBtn'); showLoadBtn('loadClearBtn');
   }
 })();
