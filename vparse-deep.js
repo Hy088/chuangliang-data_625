@@ -18,44 +18,33 @@
     coco: 'https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js',
     transformers: 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.3'
   };
-  const AI_PROMPT = `你是一名资深短视频投放创意分析师。下面是一段广告素材的若干均匀抽帧画面（按时间先后顺序排列）。请结合画面与提供的投放数据，输出一份「素材诊断报告」风格的结构化拆解，严格只输出如下 JSON（不要 markdown 代码块、不要解释）。
-如果提供了口播时间轴，请优先结合时间轴理解素材节奏，并用于 structure.segments 和 optimization.details 的时间分段。
+  const AI_PROMPT = `你是一名资深短视频投放创意分析师，擅长信息流广告素材拆解。下面是一段广告素材的若干均匀抽帧画面（按时间先后顺序排列），以及该素材在投放后台的真实数据。请结合画面与数据，输出一份「爆款视频拆解分析」风格的结构化结果，严格只输出如下 JSON（不要 markdown 代码块、不要任何解释文字）。
+
 {
-  "data_analysis": {
-    "ctr": {"value": 12.55, "avg": 7.74, "status": "above"},
-    "cvr": {"value": 1.65, "avg": 2.67, "status": "below"},
-    "conversion": {"value": 38503, "cost": 545373},
-    "diagnosis": ["CTR优秀", "CVR偏低"],
-    "insight": "CTR显著高于均值，素材吸引力强；CVR低于均值，需检查承诺、价格、信任感、CTA。"
+  "storyboard": [
+    {"frame": "帧1 · 0-3s", "stage": "开场/钩子", "desc": "画面描述：黑底红字『请注意』+黄字『您已获得淘宝优惠福利』+大字『16卷卷纸1分钱』"},
+    {"frame": "帧3 · 23s", "stage": "产品证明/信任状", "desc": "户外真人手持超大卷纸，左上角淘宝角标+¥0.01，字幕『本来以为是假的』制造反转"}
+  ],
+  "analysis": {
+    "hook": "开头3秒用什么钩子、为什么能抓住注意力（1-3句）",
+    "structure": "用『1. 0-3s：… 2. 3-10s：…』形式概括整条视频的分镜结构（4-6条）",
+    "selling_points": ["价格锚点：¥0.01起/1分钱16卷", "产品卖点：生态原色加柔加厚", "信任背书：真人实拍+平台角标", "稀缺门槛：仅限一年未购用户"],
+    "script_direction": "一段可直接参考的口播脚本方向（含时间节奏，3-6句）",
+    "replicable": ["钩子公式：请注意+已获得+极端低价", "视觉公式：黑底大字报→真人开箱→超大道具", "信任公式：反套路字幕把怀疑变点击", "门槛公式：仅限XX用户既解释低价又催行动"]
   },
-  "structure": {
-    "type": "口播 + 产品演示直入型",
-    "suggestion": "不建议硬加夸张钩子",
-    "segments": [
-      {"range": "0-3秒", "stage": "开场/承接", "desc": "真实感强，利益点未前置"},
-      {"range": "3-22秒", "stage": "产品展示/卖点证明", "desc": "演示完整但偏长"},
-      {"range": "24-结尾", "stage": "利益点/转化引导", "desc": "福利价与CTA出现偏晚"}
-    ]
-  },
-  "optimization": {
-    "priority": [
-      "保留口播直入结构，不重做强钩子",
-      "把福利价/核心利益点提前到5-8秒",
-      "压缩8-22秒证明段，保留最强两处演示"
-    ],
-    "details": [
-      {"range": "0-3秒（开场/承接）", "issue": "人物与产品同屏，开场真实感强，但核心利益点不够前置。", "suggestion": "建议首屏字幕直接强化「一包=一年分量 / 家庭纸巾囤货」。"},
-      {"range": "3-8秒（产品展示）", "issue": "包装、规格、抽纸动作清楚，产品可信度较好。", "suggestion": "建议保留；规格字幕放大，减少左侧竖排小字干扰。"}
-    ]
-  },
-  "score": 8
+  "next_actions": ["用同样脚本模板替换不同品类测试钩子有效性", "做A/B：黑底大字报 vs 真人出镜开场", "跟踪下一周期指标，CPA上涨及时迭代结尾CTA"]
 }
+
 字段说明：
-- data_analysis.status 只能是 "above"（高于均值/优秀）、"below"（低于均值/偏低）、"avg"（持平）。
-- diagnosis 为 1-3 个短标签，如 ["CTR优秀", "CVR偏低"]。
-- structure.type 用「XX + XX 型」概括；suggestion 给结构方向判断；segments 按时间顺序，range 用 "0-3秒" 或 "24-结尾" 格式。
-- optimization.priority 为 3-5 条最重要的结构优化建议；details 按时间段给出精细建议，每条包含 issue（问题）和 suggestion（建议）。
-- score 必须是 1-10 的整数（跑量潜力评分）。`;
+- storyboard：按时间顺序拆解画面，frame 用『帧N · 起止秒数』或『起止秒数』，stage 为阶段名，desc 为画面+字幕要点（2-6条）。
+- analysis.hook：开头 3 秒钩子拆解（为什么抓注意力）。
+- analysis.structure：整条视频的分镜结构，用编号列表概括（4-6条）。
+- analysis.selling_points：3-6 个核心卖点/痛点。
+- analysis.script_direction：可复刻的口播脚本方向（带时间节奏）。
+- analysis.replicable：可复制的创意公式（钩子/视觉/信任/门槛等）。
+- next_actions：3 条后续可执行动作。
+若提供了口播时间轴，请优先结合时间轴理解素材节奏再拆解。`;
+
 
   // ---- 工具 ----
   function loadScript(src, timeoutMs) {
@@ -583,158 +572,130 @@
   }
 
   function parseAi(txt) {
-    if (!txt) return null;
-    let s = txt.trim();
-    const m = s.match(/```(?:json)?\s*([\s\S]*?)```/); if (m) s = m[1].trim();
-    try {
-      const o = JSON.parse(s); const r = {};
-      // 新版诊断报告格式
-      if (o.data_analysis || o.structure || o.optimization) {
-        r.data_analysis = o.data_analysis;
-        r.structure = o.structure;
-        r.optimization = o.optimization;
-        if (o.score != null) r.score = o.score;
-        // 兼容旧字段/导出
-        r.hook = (o.structure && o.structure.segments && o.structure.segments[0] && o.structure.segments[0].desc) || '';
-        r.pain = (o.data_analysis && o.data_analysis.insight) || '';
-        r.logic = (o.optimization && Array.isArray(o.optimization.priority) && o.optimization.priority.join('\n')) || '';
-        r.audio_visual = (o.structure && o.structure.type + '；' + o.structure.suggestion) || '';
-        r.script = (o.optimization && Array.isArray(o.optimization.details) && o.optimization.details.map(d => d.range + '：' + d.suggestion).join('\n')) || '';
-        return r;
-      }
-      // 旧版 6 字段格式
-      ['hook', 'pain', 'logic', 'audio_visual', 'script', 'score'].forEach(k => { if (o[k] !== undefined) r[k] = o[k]; });
-      if (Object.keys(r).length) return r;
-    } catch (e) {}
-    return { raw: txt };
+  if (!txt) return null;
+  let s = txt.trim();
+  const m = s.match(/```(?:json)?\s*([\s\S]*?)```/); if (m) s = m[1].trim();
+  try {
+    const o = JSON.parse(s);
+    if (o.storyboard || (o.analysis && (o.analysis.hook || o.analysis.structure || o.analysis.script_direction))) {
+      const an = o.analysis || {};
+      return {
+        storyboard: Array.isArray(o.storyboard) ? o.storyboard : [],
+        analysis: {
+          hook: an.hook || '',
+          structure: an.structure || '',
+          selling_points: Array.isArray(an.selling_points) ? an.selling_points : (an.selling_points ? [an.selling_points] : []),
+          script_direction: an.script_direction || '',
+          replicable: Array.isArray(an.replicable) ? an.replicable : (an.replicable ? [an.replicable] : [])
+        },
+        next_actions: Array.isArray(o.next_actions) ? o.next_actions : []
+      };
+    }
+    // 兼容旧版 6 字段 / 诊断报告格式（尽量映射）
+    if (o.hook || o.pain || o.script || o.data_analysis) {
+      const da = o.data_analysis || {};
+      return {
+        storyboard: (o.structure && Array.isArray(o.structure.segments)) ? o.structure.segments.map(x => ({ frame: x.range || '', stage: x.stage || '', desc: x.desc || '' })) : [],
+        analysis: {
+          hook: o.hook || (da.insight ? da.insight : ''),
+          structure: (o.structure && o.structure.type) ? (o.structure.type + (o.structure.suggestion ? '；' + o.structure.suggestion : '')) : '',
+          selling_points: o.pain ? [o.pain] : [],
+          script_direction: o.script || '',
+          replicable: (o.optimization && Array.isArray(o.optimization.priority)) ? o.optimization.priority : []
+        },
+        next_actions: []
+      };
+    }
+  } catch (e) {}
+  return { raw: txt };
+}
+
+
+function renderAi(ai, raw) {
+  const out = document.getElementById('vpAiOut'); if (!out) return;
+  const html = (!ai) ? '<div class="vp-warn">未解析到内容</div>'
+    : (ai.raw ? '<div class="vp-ai-out">' + escapeHtml(ai.raw) + '</div>' : renderBoomReport(ai));
+  out.innerHTML = html;
+  const rep = document.getElementById('vpParseAiReport');
+  if (rep) { rep.innerHTML = html; rep.classList.remove('muted'); }
+}
+
+function fmtInt(n){ return (n == null || isNaN(n)) ? '—' : Number(n).toLocaleString('zh-CN'); }
+function renderBoomReport(ai) {
+  const m = VP.mat || {};
+  const an = ai.analysis || {};
+  let h = '<div class="vp-boom">';
+
+  h += '<div class="vp-boom-sec"><div class="vp-boom-h">一、报表数据（真实）</div>';
+  if (m && (m.cost != null || m.cv != null || m.ctr != null)) {
+    h += '<table class="vp-boom-tbl"><tbody>';
+    const row = (k, v) => '<tr><td class="vp-bt-k">' + k + '</td><td class="vp-bt-v">' + v + '</td></tr>';
+    h += row('素材ID', escapeHtml(VP.sid || '—'));
+    if (m.proj) h += row('项目', escapeHtml(m.proj));
+    if (m.cat) h += row('品类', escapeHtml(m.cat));
+    if (m.cost != null) h += row('消耗', fmtMoney(m.cost));
+    if (m.imp != null) h += row('展示数', fmtInt(m.imp));
+    if (m.clk != null) h += row('点击数', fmtInt(m.clk));
+    if (m.cv != null) h += row('转化数', fmtInt(m.cv));
+    if (m.cpa != null) h += row('CPA', fmtMoney(m.cpa));
+    if (m.ctr != null) h += row('CTR', fmtPct(m.ctr));
+    if (m.cvr != null) h += row('CVR', fmtPct(m.cvr));
+    if (m.opt) h += row('优化师', escapeHtml(m.opt));
+    if (m.edit) h += row('剪辑', escapeHtml(m.edit));
+    if (m.tags) h += row('标签', escapeHtml(m.tags));
+    h += '</tbody></table>';
+  } else {
+    h += '<div class="muted">未在报表匹配到该素材ID，以下仅视频侧分析。</div>';
   }
+  h += '</div>';
 
-  function renderAi(ai, raw) {
-    const out = document.getElementById('vpAiOut'); if (!out) return;
-    if (!ai) { out.innerHTML = '<div class="vp-warn">未解析到内容</div>'; return; }
-    if (ai.raw) { out.innerHTML = '<div class="vp-ai-out">' + escapeHtml(ai.raw) + '</div>'; return; }
-    // 优先渲染新版诊断报告
-    if (ai.data_analysis || ai.structure || ai.optimization) {
-      out.innerHTML = renderDiagnosisReport(ai);
-      bindDiagnosisToggle();
-      return;
-    }
-    // 兼容旧版 6 字段
-    const card = (t, v) => v ? '<div class="ai-card"><b>' + t + '：</b>' + escapeHtml(v) + '</div>' : '';
-    let h = '';
-    if (ai.hook) h += card('🪝 黄金3秒钩子', ai.hook);
-    if (ai.pain) h += card('💡 核心痛点/卖点', ai.pain);
-    if (ai.logic) h += card('🔁 转化逻辑分析', ai.logic);
-    if (ai.audio_visual) h += card('🎬 视听表现拆解', ai.audio_visual);
-    if (ai.script) h += card('📝 复刻脚本', ai.script);
-    if (ai.score != null) h += card('🔥 跑量潜力评分', ai.score + ' / 10');
-    out.innerHTML = h || '<div class="muted">模型未返回结构化字段</div>';
+  const sb = ai.storyboard || [];
+  h += '<div class="vp-boom-sec"><div class="vp-boom-h">二、画面分镜（AI 读帧）</div>';
+  if (sb.length) {
+    h += '<div class="vp-boom-sb">';
+    sb.forEach(function (s) {
+      h += '<div class="vp-sb-item">';
+      h += '<div class="vp-sb-frame">' + escapeHtml(s.frame || '') + '</div>';
+      h += '<div class="vp-sb-body"><div class="vp-sb-stage">' + escapeHtml(s.stage || '') + '</div><div class="vp-sb-desc">' + escapeHtml(s.desc || '') + '</div></div>';
+      h += '</div>';
+    });
+    h += '</div>';
+  } else {
+    h += '<div class="muted">AI 未返回分镜（可重新拆解或手动在下方填写）。</div>';
   }
+  h += '</div>';
 
-  function fmtPct(n){ return (n==null?'—':(+n).toFixed(2)+'%'); }
-  function fmtMoney(n){ return (n==null?'—':'¥'+Number(n).toLocaleString('zh-CN')) }
-  function renderDiagnosisReport(ai){
-    const da=ai.data_analysis||{};
-    const st=ai.structure||{};
-    const opt=ai.optimization||{};
-    const statusClass={above:'vp-dg-good', below:'vp-dg-bad', avg:'vp-dg-mid'};
-    const statusIcon={above:'▲', below:'▼', avg:'●'};
-    const statusText={above:'高于均值', below:'低于均值', avg:'持平均值'};
-    const statusArrow={above:'green', below:'red', avg:'gray'};
+  h += '<div class="vp-boom-sec"><div class="vp-boom-h">三、解析结论</div>';
+  if (an.hook) h += '<div class="vp-boom-blk"><div class="vp-boom-bh">1. Hook（开头3秒）</div><div class="vp-boom-bd">' + escapeHtml(an.hook) + '</div></div>';
+  if (an.structure) h += '<div class="vp-boom-blk"><div class="vp-boom-bh">2. 画面分镜结构</div><div class="vp-boom-bd">' + escapeHtml(an.structure).replace(/\n/g, '<br>') + '</div></div>';
+  if (an.selling_points && an.selling_points.length) h += '<div class="vp-boom-blk"><div class="vp-boom-bh">3. 核心卖点</div><div class="vp-boom-bd">' + an.selling_points.map(function (p) { return '<div class="vp-boom-li">' + escapeHtml(p) + '</div>'; }).join('') + '</div></div>';
+  if (an.script_direction) h += '<div class="vp-boom-blk"><div class="vp-boom-bh">4. 口播脚本方向</div><div class="vp-boom-bd">' + escapeHtml(an.script_direction).replace(/\n/g, '<br>') + '</div></div>';
+  if (an.replicable && an.replicable.length) h += '<div class="vp-boom-blk"><div class="vp-boom-bh">5. 可复制方向</div><div class="vp-boom-bd">' + an.replicable.map(function (p) { return '<div class="vp-boom-li">' + escapeHtml(p) + '</div>'; }).join('') + '</div></div>';
+  h += '</div>';
 
-    // 数据表现区
-    let dataHtml='';
-    const ctr=da.ctr||{}, cvr=da.cvr||{}, conv=da.conversion||{};
-    dataHtml+='<div class="vp-dg-section">';
-    dataHtml+='<div class="vp-dg-title">📊 数据表现分析</div>';
-    dataHtml+='<div class="vp-dg-cards">';
-    dataHtml+='<div class="vp-dg-card"><div class="vp-dg-label">CTR</div><div class="vp-dg-num">'+fmtPct(ctr.value)+'</div><div class="vp-dg-compare '+statusArrow[ctr.status]+'">'+statusIcon[ctr.status]+' '+statusText[ctr.status]+'（均值'+fmtPct(ctr.avg)+'）</div></div>';
-    dataHtml+='<div class="vp-dg-card"><div class="vp-dg-label">CVR</div><div class="vp-dg-num">'+fmtPct(cvr.value)+'</div><div class="vp-dg-compare '+statusArrow[cvr.status]+'">'+statusIcon[cvr.status]+' '+statusText[cvr.status]+'（均值'+fmtPct(cvr.avg)+'）</div></div>';
-    dataHtml+='<div class="vp-dg-card"><div class="vp-dg-label">转化</div><div class="vp-dg-num">'+(conv.value==null?'—':Number(conv.value).toLocaleString('zh-CN'))+'</div><div class="vp-dg-compare gray">消耗 '+fmtMoney(conv.cost)+'</div></div>';
-    dataHtml+='</div>';
-    if(Array.isArray(da.diagnosis)&&da.diagnosis.length){
-      dataHtml+='<div class="vp-dg-diagnosis">诊断：'+da.diagnosis.map(t=>'<span class="vp-dg-tag '+statusClass[(t.indexOf('低')>=0||t.indexOf('偏')>=0)?'below':'above']+'">'+escapeHtml(t)+'</span>').join('')+'</div>';
-    }
-    if(da.insight) dataHtml+='<div class="vp-dg-insight">💡 洞察：'+escapeHtml(da.insight)+'</div>';
-    dataHtml+='</div>';
+  const na = ai.next_actions || [];
+  h += '<div class="vp-boom-sec"><div class="vp-boom-h">四、后续可执行动作</div>';
+  if (na.length) h += '<ul class="vp-boom-ul">' + na.map(function (a) { return '<li>' + escapeHtml(a) + '</li>'; }).join('') + '</ul>';
+  else h += '<div class="muted">（无）</div>';
+  h += '</div>';
 
-    // 视频结构区
-    let structHtml='';
-    structHtml+='<div class="vp-dg-section">';
-    structHtml+='<div class="vp-dg-title">🎬 视频结构判断</div>';
-    structHtml+='<div class="vp-dg-struct-type">结构类型：<b>'+escapeHtml(st.type||'—')+'</b>'+(st.suggestion?' · '+escapeHtml(st.suggestion):'')+'</div>';
-    if(Array.isArray(st.segments)&&st.segments.length){
-      structHtml+='<div class="vp-dg-timeline">';
-      st.segments.forEach((seg,i)=>{
-        structHtml+='<div class="vp-dg-tl-item">';
-        structHtml+='<div class="vp-dg-tl-dot"></div>';
-        structHtml+='<div class="vp-dg-tl-range">'+escapeHtml(seg.range||'')+'</div>';
-        structHtml+='<div class="vp-dg-tl-stage">'+escapeHtml(seg.stage||'')+'</div>';
-        structHtml+='<div class="vp-dg-tl-desc">'+escapeHtml(seg.desc||'')+'</div>';
-        structHtml+='</div>';
-      });
-      structHtml+='</div>';
-    }
-    structHtml+='</div>';
+  h += '</div>';
+  return h;
+}
 
-    // 优化建议区
-    let optHtml='';
-    optHtml+='<div class="vp-dg-section">';
-    optHtml+='<div class="vp-dg-title">💡 优化建议</div>';
-    if(Array.isArray(opt.priority)&&opt.priority.length){
-      optHtml+='<div class="vp-dg-priority">';
-      opt.priority.forEach((p,i)=>{ optHtml+='<div class="vp-dg-pri-item"><span class="vp-dg-pri-num">'+(i+1)+'</span><span>'+escapeHtml(p)+'</span></div>'; });
-      optHtml+='</div>';
-    }
-    if(Array.isArray(opt.details)&&opt.details.length){
-      optHtml+='<div class="vp-dg-details-toggle" id="vpDgDetailsToggle">▸ 精细优化建议（展开）</div>';
-      optHtml+='<div class="vp-dg-details" id="vpDgDetails" style="display:none">';
-      opt.details.forEach(d=>{
-        optHtml+='<div class="vp-dg-detail-item">';
-        optHtml+='<div class="vp-dg-detail-range">'+escapeHtml(d.range||'')+'</div>';
-        optHtml+='<div class="vp-dg-detail-issue">'+escapeHtml(d.issue||'')+'</div>';
-        optHtml+='<div class="vp-dg-detail-suggest">建议：'+escapeHtml(d.suggestion||'')+'</div>';
-        optHtml+='</div>';
-      });
-      optHtml+='</div>';
-    }
-    optHtml+='</div>';
 
-    // 跑量评分
-    let scoreHtml='';
-    if(ai.score!=null){
-      const lv=ai.score>=8?'vp-dg-score-high':ai.score>=5?'vp-dg-score-mid':'vp-dg-score-low';
-      scoreHtml+='<div class="vp-dg-score"><span class="vp-dg-score-num '+lv+'">'+ai.score+'</span><span class="vp-dg-score-label">跑量潜力评分 / 10</span></div>';
-    }
+function applyAiToParse(ai) {
+  if (!ai || ai.raw) return;
+  const setV = function (id, v) { const e = document.getElementById(id); if (e && v != null && v !== '') e.value = v; };
+  const an = ai.analysis || {};
+  if (an.hook) setV('vpHook', an.hook);
+  if (an.selling_points && an.selling_points.length) setV('vpSells', an.selling_points.join('\n'));
+  if (an.structure) setV('vpLogic', an.structure);
+  if (an.script_direction) setV('vpDir', an.script_direction);
+  const rep = document.getElementById('vpParseAiReport');
+  if (rep) { rep.innerHTML = renderBoomReport(ai); rep.classList.remove('muted'); }
+}
 
-    return '<div class="vp-diagnosis-report">'+dataHtml+structHtml+optHtml+scoreHtml+'</div>';
-  }
-  function bindDiagnosisToggle(){
-    const t=document.getElementById('vpDgDetailsToggle'); const d=document.getElementById('vpDgDetails');
-    if(!t||!d) return;
-    t.onclick=()=>{
-      const on=d.style.display==='block';
-      d.style.display=on?'none':'block';
-      t.textContent=(on?'▸ ':'▾ ')+'精细优化建议（'+(on?'展开':'收起')+'）';
-    };
-  }
-
-  function applyAiToParse(ai) {
-    if (!ai || ai.raw) return;
-    const setV = (id, v) => { const e = document.getElementById(id); if (e && v != null) e.value = v; };
-    if (ai.hook != null) setV('vpHook', ai.hook);
-    if (ai.pain != null) setV('vpSells', ai.pain);
-    if (ai.logic != null) setV('vpLogic', ai.logic);
-    if (ai.audio_visual != null) setV('vpAv', ai.audio_visual);
-    if (ai.script != null) setV('vpDir', ai.script);
-    if (ai.score != null) setV('vpScore', ai.score);
-    // 把诊断报告渲染到解析卡
-    const reportEl = document.getElementById('vpParseAiReport');
-    if (reportEl && (ai.data_analysis || ai.structure || ai.optimization)) {
-      reportEl.innerHTML = renderDiagnosisReport(ai);
-      bindDiagnosisToggle();
-    }
-  }
 
   // ---- AI 设置弹窗 ----
   function openAiModal() {

@@ -523,6 +523,33 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 #loadOverlay.hidden{display:none}
 #loadOverlay .err.hidden{display:none}
 #loadOverlay button.hidden{display:none}
+
+/* 视频拆解档案 · 爆款视频拆解分析 */
+.vp-region-hero{border-color:var(--brand);background:linear-gradient(180deg,var(--bluebg),var(--panel));box-shadow:0 2px 10px rgba(47,107,255,.06)}
+.vp-hint{font-weight:400;font-size:11px;color:var(--muted)}
+.vp-collapsible{cursor:pointer;user-select:none}
+.vp-collapsible:hover{color:var(--brand)}
+.vp-boom{font-size:13px;line-height:1.75}
+.vp-boom-sec{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.vp-boom-sec:first-child{margin-top:0;padding-top:0;border-top:none}
+.vp-boom-h{font-weight:700;font-size:14px;margin-bottom:8px;color:var(--brand2)}
+.vp-boom-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.vp-boom-tbl td{border:1px solid var(--line);padding:6px 10px;vertical-align:top}
+.vp-bt-k{background:var(--graybg);color:var(--muted);white-space:nowrap;width:96px}
+.vp-bt-v{color:var(--ink);font-weight:600}
+.vp-boom-sb{display:flex;flex-direction:column;gap:8px}
+.vp-sb-item{display:flex;gap:10px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--graybg)}
+.vp-sb-frame{flex:0 0 92px;font-weight:700;color:var(--brand);font-size:12px;line-height:1.5}
+.vp-sb-body{flex:1}
+.vp-sb-stage{font-weight:600;color:var(--ink);margin-bottom:2px}
+.vp-sb-desc{color:var(--ink2)}
+.vp-boom-blk{margin-bottom:10px}
+.vp-boom-bh{font-weight:700;color:var(--ink);margin-bottom:3px}
+.vp-boom-bd{color:var(--ink2)}
+.vp-boom-li{margin:2px 0 2px 16px;list-style:none;position:relative}
+.vp-boom-li::before{content:'';position:absolute;left:-14px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--brand)}
+.vp-boom-ul{margin:4px 0 0 18px;padding:0}
+.vp-boom-ul li{margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -909,34 +936,57 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       </div>
     </div>
 
-    <div class="card" id="vpParseCard" style="display:none">
-      <h2>视频拆解档案 <span class="tag">基础信息 + 投放数据 + 生命周期 + AI拆解</span></h2>
+    <div class="card" id="vpParseCard" style="display:none">  <h2>视频拆解档案 <span class="tag">爆款视频拆解分析</span></h2>
 
+  <div class="vp-region vp-region-hero">
+    <div class="vp-region-h">④ AI 拆解结果 · 爆款视频拆解分析<span class="vp-hint">（点「🤖 AI语义拆解」自动生成）</span></div>
+    <div id="vpParseAiReport" class="vp-parse-ai-report muted">点「🤖 AI语义拆解」，AI 会按「报表数据 → 画面分镜 → Hook / 卖点 / 脚本 / 可复制方向 → 后续动作」生成爆款视频拆解分析。</div>
+    <div class="vp-edit-toggle" id="vpEditToggle">✎ 显示/隐藏可编辑字段（用于导出）</div>
+    <div class="vp-edit" id="vpEditFields" style="display:none">
+      <div><label>黄金3秒钩子</label><input type="text" id="vpHook" class="vp-input" placeholder="AI 提取的开头话术…"></div>
+      <div><label>核心痛点/卖点</label><textarea id="vpSells" rows="3" placeholder="AI 分析的用户痛点和产品卖点…"></textarea></div>
+      <div><label>转化逻辑/分镜结构</label><textarea id="vpLogic" rows="3" placeholder="AI 分析的分镜结构…"></textarea></div>
+      <div><label>视听表现拆解</label><textarea id="vpAv" rows="3" placeholder="BGM、节奏、画面特点等…"></textarea></div>
+      <div><label>复刻脚本方向</label><textarea id="vpDir" rows="4" placeholder="AI 生成的改编脚本大纲…"></textarea></div>
+      <div><label>跑量评分（1-10）</label><input type="number" id="vpScore" class="vp-input" min="1" max="10" step="1" placeholder="评分 1-10"></div>
+    </div>
+  </div>
+
+  <div class="vp-region">
+    <div class="vp-region-h">⑤ 信息流投放理解分析<span class="vp-hint">（结合录入数据自动生成）</span></div>
+    <div class="vp-actions">
+      <button class="btn sm primary" id="vpAnalyzeBtn">生成理解分析</button>
+      <button class="btn sm" id="vpAuto" title="按当前画面分析与报表数据重新自动生成">🔄 重新生成解析</button>
+    </div>
+    <div id="vpInsight" class="vp-insight muted">点「生成理解分析」，我会结合投放数据与信息流经验，给出跑量阶段判断、效率诊断与优化建议。</div>
+  </div>
+
+  <div class="vp-region">
+    <div class="vp-region-h vp-collapsible" id="vpRawToggle">▸ 录入/编辑原始字段（基础信息 · 投放数据 · 生命周期）</div>
+    <div id="vpRawFields" style="display:none">
       <div class="vp-region">
         <div class="vp-region-h">① 基础信息区</div>
         <div class="vp-edit">
           <div><label>素材名称</label><input type="text" id="vpMatName" class="vp-input" placeholder="素材名称 / ID"></div>
           <div><label>素材链接 / 视频文件</label><input type="text" id="vpMatLink" class="vp-input" placeholder="视频链接或文件名"></div>
-          <div><label>素材文案 / 逐字稿（OCR/语音识别原文，可编辑）</label><textarea id="vpScript" rows="3" placeholder="识别到的口播/语音文字，或手动粘贴…"></textarea></div>
-          <div><label>投放平台（抖音 / 快手 / 腾讯广点通 等）</label><input type="text" id="vpPlatform" class="vp-input" placeholder="如 抖音 / 腾讯"></div>
+          <div><label>素材文案 / 逐字稿</label><textarea id="vpScript" rows="3" placeholder="识别到的口播/语音文字…"></textarea></div>
+          <div><label>投放平台</label><input type="text" id="vpPlatform" class="vp-input" placeholder="如 抖音 / 腾讯"></div>
         </div>
       </div>
-
       <div class="vp-region">
         <div class="vp-region-h">② 投放数据区</div>
         <div class="vp-grid2">
           <div><label>消耗金额（元）</label><input type="number" id="vpCost" class="vp-input" step="0.01"></div>
           <div><label>展现量</label><input type="number" id="vpImp" class="vp-input"></div>
-          <div><label>CPM（千次展现费用）</label><input type="number" id="vpCpm" class="vp-input" step="0.01"></div>
+          <div><label>CPM</label><input type="number" id="vpCpm" class="vp-input" step="0.01"></div>
           <div><label>点击量</label><input type="number" id="vpClk" class="vp-input"></div>
-          <div><label>CTR（点击率 %）</label><input type="number" id="vpCtr" class="vp-input" step="0.01"></div>
+          <div><label>CTR（%）</label><input type="number" id="vpCtr" class="vp-input" step="0.01"></div>
           <div><label>转化量</label><input type="number" id="vpCv" class="vp-input"></div>
-          <div><label>CVR（转化率 %）</label><input type="number" id="vpCvr" class="vp-input" step="0.01"></div>
+          <div><label>CVR（%）</label><input type="number" id="vpCvr" class="vp-input" step="0.01"></div>
           <div><label>转化成本（元）</label><input type="number" id="vpCpa" class="vp-input" step="0.01"></div>
           <div><label>ROI</label><input type="number" id="vpRoi" class="vp-input" step="0.01"></div>
         </div>
       </div>
-
       <div class="vp-region">
         <div class="vp-region-h">③ 生命周期区</div>
         <div class="vp-grid2">
@@ -954,37 +1004,15 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
           </div>
         </div>
       </div>
-
-      <div class="vp-region">
-        <div class="vp-region-h">④ AI 拆解结果区 · 素材诊断报告（点「🤖 AI语义拆解」自动填充）</div>
-        <div id="vpParseAiReport" class="vp-parse-ai-report muted">点「🤖 AI语义拆解」，AI 会按「数据表现分析 → 视频结构判断 → 优化建议 → 跑量评分」生成诊断报告。</div>
-        <div class="vp-edit-toggle" id="vpEditToggle">✎ 显示/隐藏原始字段编辑</div>
-        <div class="vp-edit" id="vpEditFields" style="display:none">
-          <div><label>黄金3秒钩子</label><input type="text" id="vpHook" class="vp-input" placeholder="AI 提取的开头话术…"></div>
-          <div><label>核心痛点/卖点</label><textarea id="vpSells" rows="3" placeholder="AI 分析的用户痛点和产品卖点…"></textarea></div>
-          <div><label>转化逻辑分析</label><textarea id="vpLogic" rows="3" placeholder="AI 分析的转化路径…"></textarea></div>
-          <div><label>视听表现拆解</label><textarea id="vpAv" rows="3" placeholder="BGM、节奏、画面特点等…"></textarea></div>
-          <div><label>复刻脚本</label><textarea id="vpDir" rows="4" placeholder="AI 生成的改编脚本大纲…"></textarea></div>
-          <div><label>跑量评分（1-10）</label><input type="number" id="vpScore" class="vp-input" min="1" max="10" step="1" placeholder="AI 打分 1-10"></div>
-        </div>
-      </div>
-
-      <div class="vp-region">
-        <div class="vp-region-h">⑤ 信息流投放理解分析（自动生成 · 我的经验判断）</div>
-        <div class="vp-actions">
-          <button class="btn sm primary" id="vpAnalyzeBtn">生成理解分析</button>
-          <button class="btn sm" id="vpAuto" title="按当前画面分析与报表数据重新自动生成">🔄 重新生成解析</button>
-        </div>
-        <div id="vpInsight" class="vp-insight muted">点「生成理解分析」，我会结合投放数据与信息流经验，给出跑量阶段判断、效率诊断与优化建议。</div>
-      </div>
-
-      <div class="vp-actions">
-        <button class="btn sm primary" id="vpExportMd">导出 Markdown</button>
-        <button class="btn sm" id="vpExportJson">导出 JSON</button>
-      </div>
     </div>
+  </div>
 
-    <div class="card" id="vpDeep" style="display:none">
+  <div class="vp-actions">
+    <button class="btn sm primary" id="vpExportMd">导出 Markdown</button>
+    <button class="btn sm" id="vpExportJson">导出 JSON</button>
+  </div>
+  </div>
+<div class="card" id="vpDeep" style="display:none">
       <h2>🔬 深度分析 <span class="tag" id="vpDeepTag">零Key·本地浏览器运行</span></h2>
       <div class="vp-deep-prog" id="vpDeepProg" style="display:none">
         <div class="vp-bar"><span id="vpDeepBar"></span></div>
@@ -2577,6 +2605,12 @@ function initVParse(){
     editFields.style.display=on?'block':'none';
     editToggle.textContent=(on?'✎ 隐藏':'✎ 显示')+'原始字段编辑';
   };
+  const rawToggle=$('#vpRawToggle'); const rawFields=$('#vpRawFields');
+  if(rawToggle&&rawFields) rawToggle.onclick=()=>{
+    const on=rawFields.style.display==='none';
+    rawFields.style.display=on?'block':'none';
+    rawToggle.textContent=(on?'▾':'▸')+' 录入/编辑原始字段（基础信息 · 投放数据 · 生命周期）';
+  };
 }
 
 function parseMatId(name){ const m=String(name).match(/(\d{6,})/); return m?m[1]:''; }
@@ -2909,34 +2943,47 @@ function exportVParse(type){
     `- 当前状态：${val('vpStatus')||'—'}`);
   // ④ AI 拆解结果区 · 诊断报告
   const ai=VP.ai;
-  if(ai && !ai.raw && (ai.data_analysis || ai.structure || ai.optimization)){
-    const da=ai.data_analysis||{}, st=ai.structure||{}, opt=ai.optimization||{};
-    L.push('','## ④ AI 拆解结果区 · 素材诊断报告');
-    L.push('### 数据表现分析');
-    if(da.ctr) L.push(`- CTR：${da.ctr.value}%（均值 ${da.ctr.avg}%）— ${da.ctr.status==='above'?'高于均值':da.ctr.status==='below'?'低于均值':'持平'}`);
-    if(da.cvr) L.push(`- CVR：${da.cvr.value}%（均值 ${da.cvr.avg}%）— ${da.cvr.status==='above'?'高于均值':da.cvr.status==='below'?'低于均值':'持平'}`);
-    if(da.conversion) L.push(`- 转化：${Number(da.conversion.value||0).toLocaleString('zh-CN')}（消耗 ¥${Number(da.conversion.cost||0).toLocaleString('zh-CN')}）`);
-    if(Array.isArray(da.diagnosis)&&da.diagnosis.length) L.push(`- 诊断：${da.diagnosis.join(' · ')}`);
-    if(da.insight) L.push(`- 洞察：${da.insight}`);
-    L.push('### 视频结构判断');
-    if(st.type) L.push(`- 结构类型：${st.type}${st.suggestion?' · '+st.suggestion:''}`);
-    if(Array.isArray(st.segments)&&st.segments.length){
-      L.push('| 时段 | 阶段 | 描述 |','| --- | --- | --- |');
-      st.segments.forEach(s=>L.push(`| ${s.range||''} | ${s.stage||''} | ${s.desc||''} |`));
+  if(ai && !ai.raw && ((ai.storyboard && ai.storyboard.length) || (ai.analysis && (ai.analysis.hook || ai.analysis.structure)))){
+    const an=ai.analysis||{};
+    L.push('','## ④ AI 拆解结果 · 爆款视频拆解分析');
+    L.push('### 一、报表数据（真实）');
+    if(m){
+      L.push(
+        `- 素材ID：${VP.sid||'—'}`,
+        `- 项目：${m.proj||'—'}`,
+        `- 品类：${m.cat||'—'}`,
+        `- 消耗：${vpMoney(m.cost)}`,
+        `- 展示数：${vpNum(m.imp)}`,
+        `- 点击数：${vpNum(m.clk)}`,
+        `- 转化数：${vpNum(m.cv)}`,
+        `- CPA：${vpCpa(m.cpa)}`,
+        `- CTR：${vpPct(m.ctr)}`,
+        `- CVR：${vpPct(m.cvr)}`,
+        (m.opt?`- 优化师：${m.opt}`:''),
+        (m.edit?`- 剪辑：${m.edit}`:''),
+        (m.tags?`- 标签：${m.tags}`:'')
+      ).filter(Boolean);
     }
-    L.push('### 优化建议');
-    if(Array.isArray(opt.priority)&&opt.priority.length){ L.push('**优先级建议：**'); opt.priority.forEach((p,i)=>L.push(`${i+1}. ${p}`)); }
-    if(Array.isArray(opt.details)&&opt.details.length){ L.push('','**精细优化建议：**'); opt.details.forEach(d=>{ L.push(`- ${d.range||''}`); if(d.issue) L.push(`  - 问题：${d.issue}`); if(d.suggestion) L.push(`  - 建议：${d.suggestion}`); }); }
-    if(ai.score!=null) L.push(`\n**跑量潜力评分：${ai.score} / 10**`);
+    if(ai.storyboard&&ai.storyboard.length){ L.push('','### 二、画面分镜'); ai.storyboard.forEach(s=>L.push(`- **${s.frame||''}**${s.stage?'（'+s.stage+'）':''}：${s.desc||''}`)); }
+    L.push('','### 三、解析结论');
+    if(an.hook) L.push(`**1. Hook（开头3秒）**：${an.hook}`);
+    if(an.structure) L.push(`**2. 画面分镜结构**：\n${an.structure}`);
+    if(an.selling_points&&an.selling_points.length) L.push(`**3. 核心卖点**：\n${an.selling_points.map(p=>'- '+p).join('\n')}`);
+    if(an.script_direction) L.push(`**4. 口播脚本方向**：\n${an.script_direction}`);
+    if(an.replicable&&an.replicable.length) L.push(`**5. 可复制方向**：\n${an.replicable.map(p=>'- '+p).join('\n')}`);
+    if(ai.next_actions&&ai.next_actions.length) L.push('','### 四、后续可执行动作', ...ai.next_actions.map(a=>'- '+a));
+  } else if(ai && ai.raw){
+    L.push('','## ④ AI 拆解结果（原始）', ai.raw);
   } else {
     L.push('','## ④ AI 拆解结果区',
       `- 黄金3秒钩子：${val('vpHook')}`,
       `- 核心痛点/卖点：${val('vpSells')}`,
-      `- 转化逻辑分析：${val('vpLogic')}`,
+      `- 转化逻辑/分镜结构：${val('vpLogic')}`,
       `- 视听表现拆解：${val('vpAv')}`,
-      `- 复刻脚本：${val('vpDir')}`,
+      `- 复刻脚本方向：${val('vpDir')}`,
       `- 跑量评分：${val('vpScore')||'—'}/10`);
   }
+
   const ins=$('#vpInsight'); if(ins && ins.textContent && !ins.classList.contains('muted')){ L.push('','## ⑤ 信息流投放理解分析', ins.textContent.trim()); }
 
   // 深度分析（零 Key 本地）
@@ -2953,14 +3000,16 @@ function exportVParse(type){
   if(ai){ L.push('','## AI 语义拆解（GLM-4V-Flash·免费）');
     if(ai.raw){ L.push('',ai.raw); }
     else {
-      if(ai.hook) L.push(`- 黄金3秒钩子：${ai.hook}`);
-      if(ai.pain) L.push(`- 核心痛点/卖点：${ai.pain}`);
-      if(ai.logic) L.push(`- 转化逻辑分析：${ai.logic}`);
-      if(ai.audio_visual) L.push(`- 视听表现拆解：${ai.audio_visual}`);
-      if(ai.script) L.push(`- 复刻脚本：${ai.script}`);
-      if(ai.score!=null) L.push(`- 跑量评分：${ai.score}/10`);
+      const an=ai.analysis||{};
+      if(an.hook) L.push(`- Hook：${an.hook}`);
+      if(an.structure) L.push(`- 分镜结构：${an.structure}`);
+      if(an.selling_points&&an.selling_points.length) L.push(`- 核心卖点：${an.selling_points.join('；')}`);
+      if(an.script_direction) L.push(`- 口播脚本方向：${an.script_direction}`);
+      if(an.replicable&&an.replicable.length) L.push(`- 可复制方向：${an.replicable.join('；')}`);
+      if(ai.next_actions&&ai.next_actions.length) L.push(`- 后续动作：${ai.next_actions.join('；')}`);
     }
   }
+
   const md=L.join('\n');
   if(type==='md'){ vpDownload(`视频解析_${VP.sid||'video'}.md`, md, 'text/markdown;charset=utf-8'); }
   else {
@@ -2973,8 +3022,7 @@ function exportVParse(type){
       ad:{cost:$('#vpCost').value, imp:$('#vpImp').value, cpm:$('#vpCpm').value, clk:$('#vpClk').value, ctr:$('#vpCtr').value, cv:$('#vpCv').value, cvr:$('#vpCvr').value, cpa:$('#vpCpa').value, roi:$('#vpRoi').value},
       lifecycle:{create:$('#vpCreate').value, scale:$('#vpScale').value, decline:$('#vpDecline').value, days:$('#vpDays').value, status:$('#vpStatus').value},
       ai:Object.assign({
-        hook:$('#vpHook').value, pain:$('#vpSells').value, logic:$('#vpLogic').value,
-        audioVisual:$('#vpAv').value, script:$('#vpDir').value, score:$('#vpScore').value
+        storyboard:(ai&&ai.storyboard)||[], analysis:(ai&&ai.analysis)||{}, next_actions:(ai&&ai.next_actions)||[]
       }, aiData),
       deep:{ocr:dd.ocr||[], whisper:dd.whisper||null, audio:dd.audio||null, detect:dd.detect||null}
     }, null, 2);
@@ -3894,10 +3942,12 @@ document.addEventListener('click', function(e){
         <input type="text" id="vpAiKey" placeholder="粘贴智谱开放平台生成的 API Key" style="width:100%" autocomplete="off" spellcheck="false">
       </label>
       <label class="fld">模型
-        <select id="vpAiModel" style="width:100%">
-          <option value="glm-4v-flash">glm-4v-flash（免费·推荐）</option>
-          <option value="glm-4v-plus">glm-4v-plus（更强·有额度）</option>
-        </select>
+        <select id="vpAiModel" style="width:100%">      <select id="vpAiModel" style="width:100%">
+        <option value="glm-4v-flash">glm-4v-flash（免费·推荐）</option>
+        <option value="glm-4v-plus">glm-4v-plus（付费·视觉更强）</option>
+        <option value="glm-4v">glm-4v（付费·稳定视觉）</option>
+        <option value="glm-4-plus">glm-4-plus（付费·文本/视觉综合）</option>
+      </select>      </select>
       </label>
       <label class="fld">语音识别模型
         <select id="vpWhisperModel" style="width:100%">
@@ -3916,7 +3966,7 @@ document.addEventListener('click', function(e){
 </div>
 
 <script src="personal-enhance.js?v=20260802j"></script>
-<script src="vparse-deep.js?v=20260802j"></script>
+<script src="vparse-deep.js?v=20260804b"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
 <div class="modal-mask" id="changelogMask" style="display:none">
   <div class="modal" style="max-width:680px">
