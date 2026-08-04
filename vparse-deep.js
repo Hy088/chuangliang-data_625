@@ -55,7 +55,14 @@
 - analysis.script_direction：可复刻的口播脚本方向（带时间节奏）。
 - analysis.replicable：可复制的创意公式（钩子/视觉/信任/门槛等）。
 - next_actions：3 条后续可执行动作。
-若提供了口播时间轴，请优先结合时间轴理解素材节奏再拆解。`;
+若提供了口播时间轴，请优先结合时间轴理解素材节奏再拆解。
+
+【严禁重复 · 必须严格遵守，否则结果无效】
+1. 各字段内容必须彼此独立、互不重复：storyboard 讲"画面发生了什么"，analysis.structure 讲"整体编排逻辑"，两者不得写相同的镜头描述。
+2. analysis.selling_points（卖点）与 analysis.replicable（可复制方向）必须各有侧重：前者讲"这个素材好在哪 / 卖了什么"，后者讲"别人怎么抄这个公式"，禁止出现相同或近似的句子。
+3. 同一字段内的多条内容不得重复或高度相似；不得把同一句话换种说法写两遍。
+4. analysis.hook / analysis.structure / analysis.script_direction 三段不要复述彼此的核心信息。
+5. 字数克制：每个字段只写必要内容，宁少勿滥，绝不为了凑数而重复。`;
 
 
   // ---- 工具 ----
@@ -566,6 +573,12 @@
       const whisper = VP.deep && VP.deep.whisper;
       if (segs && segs.length) promptText += '\n\n【口播时间轴】\n' + whisper;
       else if (whisper) promptText += '\n\n【识别口播】\n' + whisper;
+      // 注入用户标星的解析案例作为参考范本（few-shot），锚定风格与粒度、减少跑偏与重复
+      const refCases = (caseGetAll() || []).filter(function (c) { return c.ref && c.content && c.content.trim(); });
+      if (refCases.length) {
+        promptText += '\n\n【参考案例（请严格参照以下拆解的粒度与风格，但必须基于本次素材的画面与数据独立分析，禁止照抄、禁止与案例内容重复）】\n' +
+          refCases.map(function (c, i) { return '案例' + (i + 1) + '：' + (c.title || '') + '\n' + c.content.trim(); }).join('\n\n');
+      }
       const content = [{ type: 'text', text: promptText }];
       // 仅视觉模型才附带截帧图片；纯文本模型（如 deepseek-chat）只发文字，避免报错
       if (conf.vision) pick.forEach(f => content.push({ type: 'image_url', image_url: { url: f.dataURL } }));
@@ -573,7 +586,7 @@
       const resp = await fetch(ep, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + conf.key },
-        body: JSON.stringify({ model: conf.model, messages: [{ role: 'user', content }], temperature: 0.6, max_tokens: 1024 })
+        body: JSON.stringify({ model: conf.model, messages: [{ role: 'user', content }], temperature: 0.4, max_tokens: 1024 })
       });
       if (!resp.ok) {
         const t = await resp.text();
@@ -586,6 +599,7 @@
       const txt = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
       if (!txt) throw new Error('返回内容为空（可能为风控拦截或额度不足）');
       const ai = parseAi(txt);
+      dedupeAi(ai);
       VP.ai = ai;
       renderAi(ai, txt);
       applyAiToParse(ai);
@@ -732,6 +746,7 @@ function applyAiToParse(ai) {
     const wm = document.getElementById('vpWhisperModel'); if (wm) wm.value = whisperModelGet();
     const h = document.getElementById('vpAiHint'); if (h) h.textContent = '';
     mask.style.display = 'flex';
+    updateAiTag();
   }
   function fillModelDatalist(provider) {
     const dl = document.getElementById('vpAiModelList'); if (!dl) return;
@@ -746,6 +761,7 @@ function applyAiToParse(ai) {
     const md = document.getElementById('vpAiModel');
     if (md && !md.value.trim()) md.value = p.def;
     fillModelDatalist(pv.value);
+    updateAiTag();
   }
   function closeAiModal() { const m = document.getElementById('vpAiMask'); if (m) m.style.display = 'none'; }
   function saveAiKey() {
@@ -766,6 +782,91 @@ function applyAiToParse(ai) {
     try { localStorage.removeItem(AI_KEY); } catch (e) {}
     const k = document.getElementById('vpAiKey'); if (k) k.value = '';
     const h = document.getElementById('vpAiHint'); if (h) h.textContent = '已清除 Key（服务商 / Base 配置保留）';
+  }
+  // ---- 解析案例库（纯本机 localStorage） ----
+  const CASE_KEY = 'vp_cases';
+  function caseGetAll() { try { return JSON.parse(localStorage.getItem(CASE_KEY) || '[]'); } catch (e) { return []; } }
+  function caseSaveAll(arr) { try { localStorage.setItem(CASE_KEY, JSON.stringify(arr)); } catch (e) {} }
+  // 通用数组去重：去掉完全相同的、以及彼此包含（一个完全是另一个子串）的项
+  function caseNormArr(arr) {
+    if (!Array.isArray(arr)) return [];
+    const out = [];
+    const norm = function (s) { return String(s == null ? '' : s).trim().toLowerCase().replace(/[\s，。、；：,.!?;:！？\-—_'"'’“”()（）\[\]【】]/g, ''); };
+    for (let i = 0; i < arr.length; i++) {
+      const s = String(arr[i] == null ? '' : arr[i]).trim();
+      if (!s) continue;
+      const n = norm(s); if (!n) continue;
+      let dup = false;
+      for (let j = 0; j < out.length; j++) {
+        const on = norm(out[j]);
+        if (n === on || n.indexOf(on) >= 0 || on.indexOf(n) >= 0) { dup = true; break; }
+      }
+      if (!dup) out.push(s);
+    }
+    return out;
+  }
+  // AI 解析结果去重（防止模型输出重复条目）
+  function dedupeAi(ai) {
+    if (!ai || ai.raw) return ai;
+    if (ai.storyboard && ai.storyboard.length) {
+      const seen = {}, keep = [];
+      for (const s of ai.storyboard) {
+        const k = ((s.frame || '') + '|' + (s.desc || '')).trim().toLowerCase().replace(/\s+/g, '');
+        if (k && !seen[k]) { seen[k] = 1; keep.push(s); }
+      }
+      ai.storyboard = keep;
+    }
+    const an = ai.analysis || {};
+    if (an.selling_points) an.selling_points = caseNormArr(an.selling_points);
+    if (an.replicable) an.replicable = caseNormArr(an.replicable);
+    if (ai.next_actions) ai.next_actions = caseNormArr(ai.next_actions);
+    return ai;
+  }
+  function caseRender() {
+    const box = document.getElementById('vpCaseList'); if (!box) return;
+    const list = caseGetAll();
+    if (!list.length) { box.innerHTML = '<div class="muted">还没有案例。点「＋ 添加案例」粘贴你的爆款拆解范本，标星后可在 AI 拆解时作为参考示例。</div>'; return; }
+    box.innerHTML = list.map(function (c) {
+      const title = escapeHtml(c.title || '(无标题)');
+      const preview = escapeHtml((c.content || '').replace(/\n/g, ' ').slice(0, 90));
+      return '<div class="vp-case-item' + (c.ref ? ' is-ref' : '') + '">' +
+        '<div class="vp-case-top"><span class="vp-case-title">' + title + '</span>' +
+        '<span class="vp-case-acts">' +
+        '<button class="btn xs ' + (c.ref ? 'primary' : 'ghost') + '" data-act="ref" data-id="' + c.id + '">' + (c.ref ? '★ 参考中' : '☆ 设为参考') + '</button>' +
+        '<button class="btn xs ghost" data-act="edit" data-id="' + c.id + '">编辑</button>' +
+        '<button class="btn xs ghost" data-act="del" data-id="' + c.id + '">删除</button>' +
+        '</span></div>' +
+        '<div class="vp-case-prev">' + preview + '</div>' +
+        '</div>';
+    }).join('');
+  }
+  function caseAddOrEdit(id, title, content) {
+    const list = caseGetAll();
+    if (id) { const it = list.find(function (x) { return x.id === id; }); if (it) { it.title = title; it.content = content; } }
+    else list.push({ id: 'c' + Date.now(), title: title, content: content, ref: false });
+    caseSaveAll(list); caseRender();
+  }
+  function caseToggleRef(id) {
+    const a = caseGetAll(); const it = a.find(function (x) { return x.id === id; });
+    if (it) { it.ref = !it.ref; caseSaveAll(a); }
+    caseRender();
+  }
+  function caseDel(id) { caseSaveAll(caseGetAll().filter(function (x) { return x.id !== id; })); caseRender(); }
+  function caseFillForm(id) {
+    const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'block';
+    const t = document.getElementById('vpCaseTitle'), c = document.getElementById('vpCaseContent');
+    if (id) {
+      const it = caseGetAll().find(function (x) { return x.id === id; });
+      if (it) { if (t) t.value = it.title || ''; if (c) c.value = it.content || ''; f.dataset.edit = id; }
+    } else { if (t) t.value = ''; if (c) c.value = ''; if (f) delete f.dataset.edit; }
+    if (t) t.focus();
+  }
+  function updateAiTag() {
+    const t = document.getElementById('vpAiTag'); if (!t) return;
+    const conf = aiConfGet();
+    const p = AI_PROVIDERS[conf.provider] || AI_PROVIDERS.zhipu;
+    const short = (conf.model || p.def || '').split('/').pop();
+    t.textContent = p.label + ' · ' + short + (conf.provider === 'zhipu' ? ' · 免费' : '');
   }
   function vpGenerateInsight() {
 
@@ -833,6 +934,28 @@ function applyAiToParse(ai) {
     b('vpAiClose', closeAiModal);
     b('vpAiSave', saveAiKey);
     b('vpAiClear', clearAiKey);
+    // 解析案例库
+    b('vpCaseAdd', () => caseFillForm(null));
+    b('vpCaseCancel', () => { const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'none'; });
+    b('vpCaseSave', () => {
+      const t = document.getElementById('vpCaseTitle'), c = document.getElementById('vpCaseContent'), f = document.getElementById('vpCaseForm');
+      if (!t || !c) return;
+      const title = t.value.trim() || '(无标题)';
+      const content = c.value.trim();
+      if (!content) { t.focus(); return; }
+      caseAddOrEdit(f && f.dataset.edit, title, content);
+      if (f) { f.style.display = 'none'; f.dataset.edit = ''; }
+    });
+    const cl = document.getElementById('vpCaseList');
+    if (cl) cl.addEventListener('click', e => {
+      const btn = e.target.closest('button[data-act]'); if (!btn) return;
+      const id = btn.getAttribute('data-id'), act = btn.getAttribute('data-act');
+      if (act === 'ref') caseToggleRef(id);
+      else if (act === 'edit') caseFillForm(id);
+      else if (act === 'del') { if (confirm('确定删除该案例？')) caseDel(id); }
+    });
+    caseRender();
+    updateAiTag();
     const _pv = document.getElementById('vpAiProvider'); if (_pv) _pv.addEventListener('change', onProviderChange);
     const mask = document.getElementById('vpAiMask');
     if (mask) mask.addEventListener('click', e => { if (e.target === mask) closeAiModal(); });
