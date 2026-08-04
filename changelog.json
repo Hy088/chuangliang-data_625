@@ -1,5 +1,17 @@
 [
   {
+    "ver": "v20260805e",
+    "date": "2026-08-05",
+    "type": "fix",
+    "summary": "修复数据面板空白：增加 JSON 数据拉取重试，绕开 CDN 空/截断缓存",
+    "details": [
+      "根因：GitHub Pages CDN 把 period-meta.json / period-data.json 缓存成截断/空响应（HEAD 显示完整大小，GET 实际为空或只有几 MB），导致 rebuildIdMap 抛错、DATA_FULL 为空，所有数据面板空白",
+      "修复：新增 fetchJSONRetry 统一拉取 period-meta.json / period-data.json / period-materials.json，先走 ?v=SEED_VER 利用缓存，若返回空/极小/解析失败则自动用 ?_=Date.now() 时间戳 URL 强制回源重试",
+      "SEED_VER 与 personal-enhance.js 同步升到 v20260805e，避免浏览器继续用已被污染的旧 index.html"
+    ]
+  },
+
+  {
     "ver": "v20260805d",
     "date": "2026-08-05",
     "type": "fix",

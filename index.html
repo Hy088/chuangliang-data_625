@@ -3224,13 +3224,32 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failed', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260805d';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260805e';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+
+// 带重试的 JSON 拉取：先走版本化 URL 利用缓存；若返回空/截断/解析失败，则用时间戳 URL 强制回源
+async function fetchJSONRetry(base, opt={}){
+  const tryFetch = async (url) => {
+    const r = await fetch(url, opt);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const len = r.headers.get('content-length');
+    const txt = await r.text();
+    if(!txt || !txt.trim()) throw new Error('empty body');
+    // 极小体积（<100B）极可能是 CDN 空缓存或 404 页面
+    if(txt.length < 100) throw new Error('body too small: '+txt.length);
+    return JSON.parse(txt);
+  };
+  try{
+    return await tryFetch(base + '?v=' + SEED_VER);
+  }catch(e){
+    console.warn('[fetchJSONRetry] 版本化 URL 失败，用时间戳回源重试', base, e.message);
+    return await tryFetch(base + '?_=' + Date.now());
+  }
+}
+
 async function loadSeedData(){
   // 优先加载轻量元数据（KPI/结构，约 1.6MB），保证看板秒开，不卡在 34MB 素材下载上
   try{
-    const r=await fetch('period-meta.json?v='+SEED_VER);
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const obj=await r.json();
+    const obj=await fetchJSONRetry('period-meta.json');
     DATA_FULL=obj; DATA=DATA_FULL; CUR_PERIOD=null; rebuildIdMap();
     saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e)); // 后台保存，不阻塞渲染
     console.log('[seed] 已从 period-meta.json 载入, periods=', obj.meta.periods);
@@ -3239,9 +3258,7 @@ async function loadSeedData(){
   }catch(e){ console.warn('[seed] period-meta.json 加载失败，回退 period-data.json', e); }
   // 兜底：直接加载完整 period-data.json（较慢但保底，内含全部素材）
   try{
-    const r2=await fetch('period-data.json?v='+SEED_VER);
-    if(!r2.ok) throw new Error('HTTP '+r2.status);
-    const obj2=await r2.json();
+    const obj2=await fetchJSONRetry('period-data.json');
     DATA_FULL=obj2; DATA=DATA_FULL; CUR_PERIOD=null; rebuildIdMap();
     saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e));
     console.log('[seed] 已从 period-data.json 载入(回退), periods=', obj2.meta&&obj2.meta.periods);
@@ -3254,10 +3271,8 @@ async function loadMaterialsAsync(){
     if(ov && !ov.classList.contains('hidden')){ const e=document.getElementById('loadMsg'); if(e) e.textContent='数据已加载，正在后台拉取素材明细（约34MB）...'; }
     const ctrl=new AbortController();
     const to=setTimeout(()=>ctrl.abort(), 90000);
-    const rm=await fetch('period-materials.json?v='+SEED_VER, {signal:ctrl.signal});
+    const m=await fetchJSONRetry('period-materials.json', {signal:ctrl.signal});
     clearTimeout(to);
-    if(!rm.ok) throw new Error('HTTP '+rm.status);
-    const m=await rm.json();
     if(!DATA_FULL) return;
     DATA_FULL.materials = { cols: m.cols||[], rows: m.rows||[] };
     DATA=DATA_FULL; rebuildIdMap();
@@ -4008,7 +4023,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260805d"></script>
+<script src="personal-enhance.js?v=20260805e"></script>
 
 <script src="vparse-deep.js?v=20260804e"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
