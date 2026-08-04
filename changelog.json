@@ -1,5 +1,18 @@
 [
   {
+    "ver": "v20260805h",
+    "date": "2026-08-05",
+    "type": "fix",
+    "summary": "月汇总消耗改为「当前自然月」口径，并修正素材量统计为「上传时间」口径",
+    "details": [
+      "根因：renderMonth / renderMonthChart / renderMonthMatTop 把 me-history.csv(35行:7月31+8月4) 与 me-materials.csv(7月23310+8月2646) 全量求和，导致「本月汇总」实际是 7月+8月 的累计，并非真正的「本月(8月)」",
+      "修复：新增 curMonthPrefix()/monthRows() 辅助，renderMonth 卡片、本月每日柱状图、本月素材TOP50 全部按当前自然月(2026-08)过滤后再聚合；区间文案改为「2026-08-01 ~ 2026-08-31（当月）」",
+      "验证：8月消耗合计 37,075.21 元 / 转化 58,634.35，覆盖 4 天(8/1-8/4)，与 me-history.csv 当月行一致",
+      "素材量统计改为「上传时间」口径：新增 me-uploads-august.csv（从创量【内容】按上传时间导出、分页抓取、按素材ID去重，227 条），UPLOAD_URL 指向该文件；个人素材统计四卡（当月总素材量/AIGC占比/日均/预计产能）自此基于上传时间而非消耗日期",
+      "SEED_VER 与 personal-enhance.js 同步升到 v20260805h，强制浏览器重拉脚本与数据、重新校验 IndexedDB 缓存"
+    ]
+  },
+  {
     "ver": "v20260805g",
     "date": "2026-08-05",
     "type": "fix",

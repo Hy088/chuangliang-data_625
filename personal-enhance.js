@@ -5,8 +5,10 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260805b";
-  var MAT_URL  = "./me-materials.csv?v=20260805b";
+  var HIST_URL = "./me-history.csv?v=20260805h";
+  var MAT_URL  = "./me-materials.csv?v=20260805h";
+  // 当月「上传时间」口径素材量：从创量【内容】按上传时间导出(由脚本分页抓取落盘)，按素材ID去重
+  var UPLOAD_URL = "./me-uploads-august.csv?v=20260805h";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -27,6 +29,7 @@
 
   var histData = [];   // [{日期,消耗,素材数,转化数,CTR}]
   var matData = [];    // [{日期,素材ID,素材名,消耗,展示数,点击数,转化成本,转化数,CTR}]
+  var upData = [];     // [{素材ID,素材名,上传人}] 当月按上传时间统计的素材清单（来自「内容」导出）
   var dates = [];      // 升序日期
   var currentDate = null;
   var sortKey = "消耗";
@@ -262,7 +265,7 @@
   function renderMonthChart() {
     var box = el("meMonthChart");
     if (!box) return;
-    var hs = histData.slice().sort(function (a, b) { return a["日期"] < b["日期"] ? -1 : 1; });
+    var hs = monthRows(histData, "日期").slice().sort(function (a, b) { return a["日期"] < b["日期"] ? -1 : 1; });
     var max = 0;
     hs.forEach(function (h) { max = Math.max(max, num(h["消耗"])); });
     max = max || 1;
@@ -279,7 +282,7 @@
     var box = el("meMonthMatTop");
     if (!box) return;
     var map = {};
-    matData.forEach(function (m) {
+    monthRows(matData, "日期").forEach(function (m) {
       var id = m["素材ID"] || m["素材名"] || "(未知)";
       if (!map[id]) map[id] = { id: id, name: m["素材名"] || id, "消耗": 0, "展示数": 0, "点击数": 0, "转化数": 0, days: {}, "预览链接": "", "封面链接": "" };
       var o = map[id];
@@ -644,21 +647,34 @@
     });
   }
 
-  /* ---------- 渲染：本月总入口 ---------- */
+  // 当前自然月前缀（如 2026-08），所有「本月汇总」口径统一按此过滤
+  function curMonthPrefix() {
+    var t = new Date();
+    return t.getFullYear() + "-" + ("0" + (t.getMonth() + 1)).slice(-2);
+  }
+  function monthRows(arr, dateField) {
+    var p = curMonthPrefix();
+    return arr.filter(function (r) { return (r[dateField] || "").slice(0, 7) === p; });
+  }
+  /* ---------- 渲染：本月总入口（口径：当前自然月） ---------- */
   function renderMonth() {
     var body = el("meMonthBody");
     if (!body) return;
+    var matM = monthRows(matData, "日期");
+    var histM = monthRows(histData, "日期");
     var totalCost = 0, totalConv = 0;
     var totShow = 0, totClick = 0, matSet = {};
-    matData.forEach(function (m) {
+    matM.forEach(function (m) {
       totShow += num(m["展示数"]); totClick += num(m["点击数"]);
       if (m["素材ID"]) matSet[m["素材ID"]] = 1;
     });
-    histData.forEach(function (h) { totalCost += num(h["消耗"]); totalConv += num(h["转化数"]); });
+    histM.forEach(function (h) { totalCost += num(h["消耗"]); totalConv += num(h["转化数"]); });
     var avgCTR = totShow > 0 ? totClick / totShow * 100 : 0;
     var distinctMat = Object.keys(matSet).length;
-    var days = histData.length;
-    var rangeTxt = dates.length ? (dates[0] + " ~ " + dates[dates.length - 1]) : "-";
+    var days = histM.length;
+    var mp = curMonthPrefix();
+    var dTotal = daysInMonth(+mp.slice(0, 4), +mp.slice(5, 7));
+    var rangeTxt = mp + "-01 ~ " + mp + "-" + ("0" + dTotal).slice(-2) + "（当月）";
     var rg = el("meMonthRange"); if (rg) rg.textContent = "（" + rangeTxt + "）";
     renderMonthCards(totalCost, totalConv, avgCTR, distinctMat, days);
     renderMonthChart();
@@ -676,19 +692,16 @@
   function upCompute() {
     if (upByMonth) return;
     upByMonth = {}; upMonths = [];
-    var seen = {};        // key = 月份+素材ID，当月内同一素材只计一次
-    matData.forEach(function (m) {
+    var total = 0, ai = 0;
+    upData.forEach(function (m) {
       var id = m["素材ID"]; if (!id) return;
-      var mo = (m["日期"] || "").slice(0, 7);
-      if (!mo || mo.length !== 7) return;
-      var key = mo + "|" + id;
-      if (seen[key]) return;
-      seen[key] = 1;
-      if (!upByMonth[mo]) upByMonth[mo] = { total: 0, ai: 0 };
-      upByMonth[mo].total++;
-      if (isAiMaterial(m["素材名"])) upByMonth[mo].ai++;
+      total++;
+      if (isAiMaterial(m["素材名"])) ai++;
     });
-    upMonths = Object.keys(upByMonth).sort();
+    var now = new Date();
+    var curMo = now.getFullYear() + "-" + ("0" + (now.getMonth() + 1)).slice(-2);
+    upByMonth[curMo] = { total: total, ai: ai };
+    upMonths = [curMo];
   }
   function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
   function upRenderView() {
@@ -708,12 +721,12 @@
 
     body.innerHTML =
       "<div class='me-up-tiles me-up-tiles-4'>" +
-        "<div class='me-up-tile'><div class='lab'>当月总素材量</div><div class='big'>" + fmtNum(d.total) + "</div><div class='sub'>" + curMo + " 有消耗 · 素材ID去重</div></div>" +
+        "<div class='me-up-tile'><div class='lab'>当月总素材量</div><div class='big'>" + fmtNum(d.total) + "</div><div class='sub'>" + curMo + " 上传 · 素材ID去重</div></div>" +
         "<div class='me-up-tile ai'><div class='lab'>AIGC 占比</div><div class='big'>" + (ratio * 100).toFixed(1) + "%</div><div class='sub'>AI 素材 " + fmtNum(d.ai) + " / " + fmtNum(d.total) + "</div></div>" +
         "<div class='me-up-tile day'><div class='lab'>平均每天素材量</div><div class='big'>" + avg.toFixed(1) + "</div><div class='sub'>已过 " + dPassed + " 天 / " + dTotal + " 天</div></div>" +
         "<div class='me-up-tile forecast'><div class='lab'>预计当月产能</div><div class='big'>" + fmtNum(Math.round(forecast)) + "</div><div class='sub'>按日均 × " + dTotal + " 天估算</div></div>" +
       "</div>" +
-      "<div style='padding:8px 2px 0;color:#8a94a6;font-size:12px'>统计口径：按素材明细的「日期」列归属当月，统计当月有消耗的不重复素材ID数；素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AIGC 素材。</div>";
+      "<div style='padding:8px 2px 0;color:#8a94a6;font-size:12px'>统计口径：按创量【内容】页「上传时间」筛选当月，导出素材清单后按素材ID去重计数（数据来源 me-uploads-august.csv）；素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AIGC 素材。日均=当月上传量÷已过天数，预计产能=日均×当月天数。</div>";
   }
   function renderUploadMonth() {
     upByMonth = null;     // 强制用最新 matData 重新统计
@@ -745,10 +758,12 @@
     var opt = force ? { cache: "no-store" } : undefined;
     Promise.all([
       fetch(HIST_URL + q, opt).then(function (r) { return r.text(); }),
-      fetch(MAT_URL + q, opt).then(function (r) { return r.text(); })
+      fetch(MAT_URL + q, opt).then(function (r) { return r.text(); }),
+      fetch(UPLOAD_URL + q, opt).then(function (r) { return r.text(); })
     ]).then(function (res) {
       histData = csvToObjects(res[0]);
       matData = csvToObjects(res[1]);
+      upData = csvToObjects(res[2]);   // 当月按上传时间统计的素材清单
       detectMediaKeys();   // 探测素材预览/封面链接列
       var ds = {};
       histData.forEach(function (h) { ds[h["日期"]] = 1; });
