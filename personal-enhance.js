@@ -669,45 +669,95 @@
     renderUploadMonth();// 每月上传素材量 & AI 占比
   }
 
-  // ④ 每月上传素材量 & AI 占比：按素材名内创建日期跨月统计，素材ID去重
-  function renderUploadMonth() {
-    var body = el("meUploadBody");
-    if (!body) return;
-    if (!matData.length) { body.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#9aa4b2">暂无素材数据</div>'; return; }
-    var seen = {}, byMonth = {}, unkTotal = 0, unkAi = 0;
+  // ④ 个人素材统计：剪辑师李虹玉 · 区间上传量 & AIGC 占比（默认自 2026-05 起，可筛选月份区间，非表格）
+  var upByMonth = null;   // { "2026-05": {total, ai} }
+  var upMonths = [];      // 升序月份
+  var upUnkTotal = 0, upUnkAi = 0;
+  var UP_START_DEFAULT = "2026-05";
+  var upFrom = "", upTo = "";
+  function upCompute() {
+    if (upByMonth) return;
+    upByMonth = {}; upMonths = []; upUnkTotal = 0; upUnkAi = 0;
+    var seen = {};
     matData.forEach(function (m) {
       var id = m["素材ID"]; if (!id || seen[id]) return;
       seen[id] = 1;
       var ai = isAiMaterial(m["素材名"]);
       var cm = matCreateMonth(m["素材名"] || "");
-      if (!cm) { unkTotal++; if (ai) unkAi++; return; }
-      if (!byMonth[cm]) byMonth[cm] = { total: 0, ai: 0 };
-      byMonth[cm].total++; if (ai) byMonth[cm].ai++;
+      if (!cm) { upUnkTotal++; if (ai) upUnkAi++; return; }
+      if (!upByMonth[cm]) upByMonth[cm] = { total: 0, ai: 0 };
+      upByMonth[cm].total++; if (ai) upByMonth[cm].ai++;
     });
-    var months = Object.keys(byMonth).sort();
-    var totAll = 0, aiAll = 0;
-    months.forEach(function (mo) { totAll += byMonth[mo].total; aiAll += byMonth[mo].ai; });
-    if (!months.length) { body.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#9aa4b2">未能从素材名解析出创建日期</div>'; return; }
-    var maxTotal = Math.max.apply(null, months.map(function (mo) { return byMonth[mo].total; }));
-    var rows = months.map(function (mo) {
-      var d = byMonth[mo], ratio = d.total ? d.ai / d.total : 0, pct = (ratio * 100).toFixed(1) + "%";
-      var barW = maxTotal ? Math.round(d.total / maxTotal * 100) : 0;
-      var aiBarW = maxTotal ? Math.round(d.ai / maxTotal * 100) : 0;
-      return "<tr>" +
-        "<td class='l'>" + mo + "</td>" +
-        "<td><div style='display:flex;align-items:center;gap:6px'><div style='flex:1;height:8px;background:#eef2f7;border-radius:4px;overflow:hidden'><div style='width:" + barW + "%;height:100%;background:#2b6cff'></div></div><span style='min-width:34px;text-align:right'>" + d.total + "</span></div></td>" +
-        "<td>" + d.ai + "</td>" +
-        "<td><div style='display:flex;align-items:center;gap:6px'><div style='flex:1;height:8px;background:#eef2f7;border-radius:4px;overflow:hidden'><div style='width:" + aiBarW + "%;height:100%;background:#7a5cff'></div></div><span style='min-width:44px;text-align:right;color:#7a5cff;font-weight:600'>" + pct + "</span></div></td>" +
-        "</tr>";
-    }).join("");
+    upMonths = Object.keys(upByMonth).sort();
+  }
+  function upBuildFilter() {
+    var f = el("meUploadFilter"); if (!f) return;
+    if (upMonths.length) {
+      if (upFrom < upMonths[0]) upFrom = upMonths[0];
+      if (upFrom > upMonths[upMonths.length - 1]) upFrom = upMonths[upMonths.length - 1];
+      if (upTo < upMonths[0]) upTo = upMonths[0];
+      if (upTo > upMonths[upMonths.length - 1]) upTo = upMonths[upMonths.length - 1];
+    }
+    var opts = upMonths.map(function (mo) { return "<option value='" + mo + "'>" + mo + "</option>"; }).join("");
+    f.innerHTML =
+      "<span style='font-weight:600;color:#334'>📅 统计区间：</span>" +
+      "<select id='upFrom' style='padding:6px 10px;border:1px solid #cdd6e3;border-radius:8px;font-size:14px;background:#fff;color:#2b3340'>" + opts + "</select>" +
+      "<span style='color:#8a94a6'>~</span>" +
+      "<select id='upTo' style='padding:6px 10px;border:1px solid #cdd6e3;border-radius:8px;font-size:14px;background:#fff;color:#2b3340'>" + opts + "</select>" +
+      "<span style='margin-left:auto;color:#8a94a6;font-size:12px'>默认自 2026-05 起 · 可调整</span>";
+    if (upMonths.length) {
+      el("upFrom").value = upFrom;
+      el("upTo").value = upTo;
+      el("upFrom").addEventListener("change", function () { upFrom = this.value; if (upFrom > upTo) { upTo = upFrom; el("upTo").value = upTo; } upRenderView(); });
+      el("upTo").addEventListener("change", function () { upTo = this.value; if (upTo < upFrom) { upFrom = upTo; el("upFrom").value = upFrom; } upRenderView(); });
+    }
+  }
+  function upRenderView() {
+    var body = el("meUploadBody"); if (!body) return;
+    if (!upMonths.length) { body.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#9aa4b2">未能从素材名解析出创建日期</div>'; return; }
+    var lo = upFrom || upMonths[0], hi = upTo || upMonths[upMonths.length - 1];
+    if (lo > hi) { var t = lo; lo = hi; hi = t; }
+    var range = upMonths.filter(function (mo) { return mo >= lo && mo <= hi; });
+    var totAll = 0, aiAll = 0, maxTotal = 0;
+    range.forEach(function (mo) { totAll += upByMonth[mo].total; aiAll += upByMonth[mo].ai; if (upByMonth[mo].total > maxTotal) maxTotal = upByMonth[mo].total; });
     var ratioAll = totAll ? aiAll / totAll : 0;
-    var unkRow = unkTotal ? "<tr style='color:#8a94a6'><td class='l'>未标注创建日期</td><td>" + unkTotal + "</td><td>" + unkAi + "</td><td>" + (unkTotal ? (unkAi / unkTotal * 100).toFixed(1) + "%" : "—") + "</td></tr>" : "";
-    var allRow = "<tr style='font-weight:700;background:#f6f8fb'><td class='l'>合计(已解析)</td><td>" + totAll + "</td><td>" + aiAll + "</td><td style='color:#7a5cff'>" + (ratioAll * 100).toFixed(1) + "%</td></tr>";
+    var barHtml = range.map(function (mo) {
+      var d = upByMonth[mo], r = d.total ? d.ai / d.total : 0;
+      var h = maxTotal ? Math.round(d.total / maxTotal * 100) : 0;
+      var aiH = Math.round(r * 100), fillH = 100 - aiH;
+      return "<div class='me-up-bar'>" +
+        "<div class='mval'>" + fmtNum(d.total) + "</div>" +
+        "<div class='bararea'><div class='barwrap' style='height:" + h + "%'>" +
+          "<div class='fill' style='height:" + fillH + "%'></div>" +
+          "<div class='aifill' style='height:" + aiH + "%'></div>" +
+        "</div></div>" +
+        "<div class='mlab'>" + mo.slice(5) + "月</div>" +
+      "</div>";
+    }).join("");
+    var legend = "<div style='display:flex;align-items:center;gap:16px;font-size:12px;color:#5a6678;margin:0 0 6px'>" +
+      "<span><i style='display:inline-block;width:10px;height:10px;border-radius:2px;background:#2b6cff;margin-right:5px;vertical-align:middle'></i>素材量</span>" +
+      "<span><i style='display:inline-block;width:10px;height:10px;border-radius:2px;background:#7a5cff;margin-right:5px;vertical-align:middle'></i>AIGC 素材</span>" +
+      "<span style='margin-left:auto'>区间：" + lo + " ~ " + hi + "</span></div>";
     body.innerHTML =
-      "<table class='me-rank-tbl' style='min-width:380px'>" +
-      "<thead><tr><th class='l'>月份</th><th>上传素材量</th><th>AI素材数</th><th>AI占比</th></tr></thead>" +
-      "<tbody>" + rows + unkRow + allRow + "</tbody></table>" +
-      "<div style='padding:8px 12px;color:#8a94a6;font-size:12px'>统计口径：按素材名内创建日期(YYYYMMDD / YYMMDD)归属月份，同一素材ID只计一次；素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AI 素材。未从素材名解析出创建日期的 " + unkTotal + " 个素材单列「未标注」行、不参与分月。覆盖自 CSV 投放明细中出现的所有个人素材。</div>";
+      "<div class='me-up-tiles'>" +
+        "<div class='me-up-tile'><div class='lab'>素材量</div><div class='big'>" + fmtNum(totAll) + "</div><div class='sub'>区间合计 · " + range.length + " 个月</div></div>" +
+        "<div class='me-up-tile ai'><div class='lab'>AIGC 占比</div><div class='big'>" + (ratioAll * 100).toFixed(1) + "%</div><div class='sub'>AI 素材 " + fmtNum(aiAll) + " / " + fmtNum(totAll) + "</div></div>" +
+      "</div>" +
+      legend +
+      "<div class='me-up-chart'>" + barHtml + "</div>" +
+      "<div style='padding:8px 2px 0;color:#8a94a6;font-size:12px'>统计口径：按素材名内创建日期(YYYYMMDD/YYMMDD)归属月份，同一素材ID只计一次；素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AIGC 素材。约 " + fmtNum(upUnkTotal) + " 个未标注创建日期的素材不参与统计。</div>";
+  }
+  function renderUploadMonth() {
+    upByMonth = null;     // 强制用最新 matData 重新统计
+    upCompute();
+    if (!upMonths.length) { upFrom = ""; upTo = ""; }
+    else {
+      upFrom = upMonths[0] < UP_START_DEFAULT ? UP_START_DEFAULT : upMonths[0];
+      upTo = upMonths[upMonths.length - 1];
+      if (upFrom > upTo) upFrom = upTo;
+    }
+    upBuildFilter();
+    upRenderView();
   }
 
   function renderPersonal() {
@@ -781,7 +831,23 @@
       ".me-cover-h{width:64px}" +
       ".me-cover-cell{width:56px;text-align:center;padding:4px!important}" +
       ".me-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #e6ebf2;background:#f6f8fb;cursor:zoom-in}" +
-      ".me-thumb:hover{box-shadow:0 2px 8px rgba(43,108,255,.2)}";
+      ".me-thumb:hover{box-shadow:0 2px 8px rgba(43,108,255,.2)}" +
+      ".me-up-filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 14px;padding:10px 12px;background:#f6f8fb;border:1px solid #e6ebf2;border-radius:10px}" +
+      ".me-up-tiles{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}" +
+      ".me-up-tile{border:1px solid #e6ebf2;border-radius:14px;padding:18px 20px;background:linear-gradient(135deg,#fbfcff,#f3f7ff)}" +
+      ".me-up-tile .lab{font-size:13px;color:#8a94a6;font-weight:600;letter-spacing:.5px}" +
+      ".me-up-tile .big{font-size:40px;font-weight:800;line-height:1.1;margin:6px 0 2px;color:#1f2a3a}" +
+      ".me-up-tile.ai{background:linear-gradient(135deg,#fbf9ff,#f3eeff)}" +
+      ".me-up-tile.ai .big{color:#7a5cff}" +
+      ".me-up-tile .sub{font-size:12.5px;color:#8a94a6}" +
+      ".me-up-chart{display:flex;align-items:flex-end;gap:10px;margin-bottom:4px}" +
+      ".me-up-bar{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}" +
+      ".me-up-bar .bararea{height:150px;width:100%;display:flex;align-items:flex-end;justify-content:center}" +
+      ".me-up-bar .barwrap{width:62%;max-width:50px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;border-radius:8px 8px 0 0;overflow:hidden;background:#eef2f7}" +
+      ".me-up-bar .fill{width:100%;background:#2b6cff}" +
+      ".me-up-bar .aifill{width:100%;background:#7a5cff}" +
+      ".me-up-bar .mval{font-size:12.5px;font-weight:700;color:#1f2a3a;margin-bottom:4px;white-space:nowrap}" +
+      ".me-up-bar .mlab{font-size:11.5px;color:#5a6678;margin-top:6px;white-space:nowrap}";
     document.head.appendChild(s);
   }
 
@@ -873,8 +939,9 @@
     var uploadPanel = document.createElement("div");
     uploadPanel.id = "meUpload";
     uploadPanel.innerHTML =
-      panelHd("\ud83d\udce6 \u4e2a\u4eba\u7d20\u6750\u7edf\u8ba1", "\u526a\u8f91\u5e08\u674e\u8679\u7389 \u00b7 \u6bcf\u6708\u4e0a\u4f20\u91cf & AIGC \u5360\u6bd4", "\u6309\u7d20\u6750\u540d\u521b\u5efa\u65e5\u671f(YYYYMMDD) \u00b7 \u7d20\u6750ID\u53bb\u91cd \u00b7 AIGC\u6807\u7b7e(aigc/\u53ef\u7075/sd2.0/\u7a7a\u955c\u2026)") +
-      "<div id='meUploadBody' style='max-height:480px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>";
+      panelHd("\ud83d\udce6 \u4e2a\u4eba\u7d20\u6750\u7edf\u8ba1", "\u526a\u8f91\u5e08\u674e\u8679\u7389 \u00b7 \u533a\u95f4\u4e0a\u4f20\u91cf & AIGC \u5360\u6bd4", "\u6309\u7d20\u6750\u540d\u521b\u5efa\u65e5\u671f \u00b7 \u7d20\u6750ID\u53bb\u91cd \u00b7 \u53ef\u7b5b\u9009\u6708\u4efd\u533a\u95f4 (aigc/\u53ef\u7075/sd2.0/\u7a7a\u955c\u2026)") +
+      "<div id='meUploadFilter' class='me-up-filter'></div>" +
+      "<div id='meUploadBody'></div>";
     mountPanel("slotMeUpload", uploadPanel, matTopPanel);
 
     // ⑤ KPI 绩效
