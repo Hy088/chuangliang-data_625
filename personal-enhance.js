@@ -111,6 +111,23 @@
     return out;
   }
   function num(v) { var n = parseFloat(String(v).replace(/[,%]/g, "")); return isFinite(n) ? n : 0; }
+  // 从素材名解析「创建/上传月份」(YYYY-MM)：优先 8 位 YYYYMMDD，否则合法的 6 位 YYMMDD(如 260409=2026-04-09)
+  function matCreateMonth(name) {
+    if (!name) return "";
+    var parts = String(name).split("-");
+    var cand = "";
+    for (var i = 0; i < parts.length; i++) if (/^20\d{6}$/.test(parts[i])) cand = parts[i];
+    if (!cand) {
+      for (var j = 0; j < parts.length; j++) {
+        var p = parts[j];
+        if (/^\d{6}$/.test(p)) {
+          var yy = parseInt(p.slice(0, 2), 10), mm = parseInt(p.slice(2, 4), 10), dd = parseInt(p.slice(4, 6), 10);
+          if (yy >= 0 && yy <= 30 && mm >= 1 && mm <= 12 && dd >= 1 && dd <= 31) cand = "20" + p;
+        }
+      }
+    }
+    return cand ? cand.slice(0, 4) + "-" + cand.slice(4, 6) : "";
+  }
   // 自动探测素材预览链接列（列名含 预览/视频/url/链接/link 其一即识别）
   function detectMediaKeys() {
     PREVIEW_KEY = null; COVER_KEY = null;
@@ -636,6 +653,48 @@
     renderTimeTabs();   // 月/周/日 筛选标签
     renderTimeTable();  // 时间筛选明细
     renderWeek();       // 周统计
+    renderUploadMonth();// 每月上传素材量 & AI 占比
+  }
+
+  // ④ 每月上传素材量 & AI 占比：按素材名内创建日期跨月统计，素材ID去重
+  function renderUploadMonth() {
+    var body = el("meUploadBody");
+    if (!body) return;
+    if (!matData.length) { body.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#9aa4b2">暂无素材数据</div>'; return; }
+    var seen = {}, byMonth = {}, unkTotal = 0, unkAi = 0;
+    matData.forEach(function (m) {
+      var id = m["素材ID"]; if (!id || seen[id]) return;
+      seen[id] = 1;
+      var ai = (m["素材名"] || "").toLowerCase().indexOf("aigc") >= 0;
+      var cm = matCreateMonth(m["素材名"] || "");
+      if (!cm) { unkTotal++; if (ai) unkAi++; return; }
+      if (!byMonth[cm]) byMonth[cm] = { total: 0, ai: 0 };
+      byMonth[cm].total++; if (ai) byMonth[cm].ai++;
+    });
+    var months = Object.keys(byMonth).sort();
+    var totAll = 0, aiAll = 0;
+    months.forEach(function (mo) { totAll += byMonth[mo].total; aiAll += byMonth[mo].ai; });
+    if (!months.length) { body.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#9aa4b2">未能从素材名解析出创建日期</div>'; return; }
+    var maxTotal = Math.max.apply(null, months.map(function (mo) { return byMonth[mo].total; }));
+    var rows = months.map(function (mo) {
+      var d = byMonth[mo], ratio = d.total ? d.ai / d.total : 0, pct = (ratio * 100).toFixed(1) + "%";
+      var barW = maxTotal ? Math.round(d.total / maxTotal * 100) : 0;
+      var aiBarW = maxTotal ? Math.round(d.ai / maxTotal * 100) : 0;
+      return "<tr>" +
+        "<td class='l'>" + mo + "</td>" +
+        "<td><div style='display:flex;align-items:center;gap:6px'><div style='flex:1;height:8px;background:#eef2f7;border-radius:4px;overflow:hidden'><div style='width:" + barW + "%;height:100%;background:#2b6cff'></div></div><span style='min-width:34px;text-align:right'>" + d.total + "</span></div></td>" +
+        "<td>" + d.ai + "</td>" +
+        "<td><div style='display:flex;align-items:center;gap:6px'><div style='flex:1;height:8px;background:#eef2f7;border-radius:4px;overflow:hidden'><div style='width:" + aiBarW + "%;height:100%;background:#7a5cff'></div></div><span style='min-width:44px;text-align:right;color:#7a5cff;font-weight:600'>" + pct + "</span></div></td>" +
+        "</tr>";
+    }).join("");
+    var ratioAll = totAll ? aiAll / totAll : 0;
+    var unkRow = unkTotal ? "<tr style='color:#8a94a6'><td class='l'>未标注创建日期</td><td>" + unkTotal + "</td><td>" + unkAi + "</td><td>" + (unkTotal ? (unkAi / unkTotal * 100).toFixed(1) + "%" : "—") + "</td></tr>" : "";
+    var allRow = "<tr style='font-weight:700;background:#f6f8fb'><td class='l'>合计(已解析)</td><td>" + totAll + "</td><td>" + aiAll + "</td><td style='color:#7a5cff'>" + (ratioAll * 100).toFixed(1) + "%</td></tr>";
+    body.innerHTML =
+      "<table class='me-rank-tbl' style='min-width:380px'>" +
+      "<thead><tr><th class='l'>月份</th><th>上传素材量</th><th>AI素材数</th><th>AI占比</th></tr></thead>" +
+      "<tbody>" + rows + unkRow + allRow + "</tbody></table>" +
+      "<div style='padding:8px 12px;color:#8a94a6;font-size:12px'>统计口径：按素材名内创建日期(YYYYMMDD / YYMMDD)归属月份，同一素材ID只计一次；素材名含「aigc」记为 AI 素材。未从素材名解析出创建日期的 " + unkTotal + " 个素材单列「未标注」行、不参与分月。覆盖自 CSV 投放明细中出现的所有个人素材。</div>";
   }
 
   function renderPersonal() {
@@ -794,6 +853,14 @@
         "<div id='meMonthChart' style='display:flex;align-items:flex-end;gap:3px;height:150px;padding:0 2px 18px;border-bottom:1px solid #eef2f7'></div>" +
       "</div>";
     mountPanel("slotMeMonth", monthPanel, timePanel);
+
+    // ④ 每月上传素材量 & AI 占比（跨月，按素材创建日期去重）
+    var uploadPanel = document.createElement("div");
+    uploadPanel.id = "meUpload";
+    uploadPanel.innerHTML =
+      panelHd("\ud83d\udce4 每月素材上传量 & AI占比", "按素材创建日期 · 跨月 · 素材ID去重", "从素材名解析创建日期(YYYYMMDD)与 aigc 标识") +
+      "<div id='meUploadBody' style='max-height:480px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>";
+    mountPanel("slotMeUpload", uploadPanel, monthPanel);
 
     // ⑤ KPI 绩效
     var kpiPanel = document.createElement("div");
