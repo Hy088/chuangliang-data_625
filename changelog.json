@@ -1,5 +1,16 @@
 [
   {
+    "ver": "v20260805c",
+    "date": "2026-08-05",
+    "type": "fix",
+    "summary": "修复 personal-enhance.js 语法错误导致页面脚本崩溃",
+    "details": [
+      "根因：当月总素材量卡片 HTML 字符串里 class='sub\" 写错，导致 JavaScript 字符串未闭合，浏览器解析报 Uncaught SyntaxError: Unexpected identifier '有消耗'",
+      "修复：将 class='sub\" 改为 class='sub'，恢复字符串闭合；并升级版本号到 v20260805c 确保 CDN 回源"
+    ]
+  },
+
+  {
     "ver": "v20260805b",
     "date": "2026-08-05",
     "type": "fix",

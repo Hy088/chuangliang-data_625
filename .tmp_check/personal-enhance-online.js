@@ -708,7 +708,7 @@
 
     body.innerHTML =
       "<div class='me-up-tiles me-up-tiles-4'>" +
-        "<div class='me-up-tile'><div class='lab'>当月总素材量</div><div class='big'>" + fmtNum(d.total) + "</div><div class='sub'>" + curMo + " 有消耗 · 素材ID去重</div></div>" +
+        "<div class='me-up-tile'><div class='lab'>当月总素材量</div><div class='big'>" + fmtNum(d.total) + "</div><div class='sub">" + curMo + " 有消耗 · 素材ID去重</div></div>" +
         "<div class='me-up-tile ai'><div class='lab'>AIGC 占比</div><div class='big'>" + (ratio * 100).toFixed(1) + "%</div><div class='sub'>AI 素材 " + fmtNum(d.ai) + " / " + fmtNum(d.total) + "</div></div>" +
         "<div class='me-up-tile day'><div class='lab'>平均每天素材量</div><div class='big'>" + avg.toFixed(1) + "</div><div class='sub'>已过 " + dPassed + " 天 / " + dTotal + " 天</div></div>" +
         "<div class='me-up-tile forecast'><div class='lab'>预计当月产能</div><div class='big'>" + fmtNum(Math.round(forecast)) + "</div><div class='sub'>按日均 × " + dTotal + " 天估算</div></div>" +
