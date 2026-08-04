@@ -867,13 +867,13 @@
       "</div>";
     mountPanel("slotMeMonth", monthPanel, timePanel);
 
-    // ④ 每月上传素材量 & AI 占比（跨月，按素材创建日期去重）
+    // ④ 个人素材统计（剪辑师李虹玉 · 每月上传量 & AIGC占比）
     var uploadPanel = document.createElement("div");
     uploadPanel.id = "meUpload";
     uploadPanel.innerHTML =
-      panelHd("\ud83d\udce4 每月素材上传量 & AI占比", "按素材创建日期 · 跨月 · 素材ID去重", "从素材名解析创建日期(YYYYMMDD)与 AIGC 标签(aigc/可灵/sd2.0/空镜…)") +
+      panelHd("\ud83d\udce6 \u4e2a\u4eba\u7d20\u6750\u7edf\u8ba1", "\u526a\u8f91\u5e08\u674e\u8679\u7389 \u00b7 \u6bcf\u6708\u4e0a\u4f20\u91cf & AIGC \u5360\u6bd4", "\u6309\u7d20\u6750\u540d\u521b\u5efa\u65e5\u671f(YYYYMMDD) \u00b7 \u7d20\u6750ID\u53bb\u91cd \u00b7 AIGC\u6807\u7b7e(aigc/\u53ef\u7075/sd2.0/\u7a7a\u955c\u2026)") +
       "<div id='meUploadBody' style='max-height:480px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>";
-    mountPanel("slotMeUpload", uploadPanel, monthPanel);
+    mountPanel("slotMeUpload", uploadPanel, matTopPanel);
 
     // ⑤ KPI 绩效
     var kpiPanel = document.createElement("div");
