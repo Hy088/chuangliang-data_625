@@ -1,5 +1,17 @@
 [
   {
+    "ver": "v20260805g",
+    "date": "2026-08-05",
+    "type": "fix",
+    "summary": "根治「强刷后还是空白」：本地 IndexedDB 缓存加版本签名校验",
+    "details": [
+      "根因：之前多个坏版本（materials 缺失）已把无效数据存入浏览器 IndexedDB；loadRuntimeState 只判断 !saved.materials 就 return，但坏数据 materials 是 {cols:[],rows:[]}（对象存在），于是被「优先用本地缓存」逻辑恢复，覆盖了线上正确数据 → 用户强刷后仍空白",
+      "修复：saveRuntimeState 写入时记录 snap._appVer=SEED_VER；loadRuntimeState 恢复前校验——无 _appVer 标记、_appVer 与当前 SEED_VER 不一致、或缺少 materials 的旧缓存一律丢弃，改用线上最新 period-meta.json",
+      "SEED_VER 与 personal-enhance.js 升到 v20260805g，强制浏览器重新拉取脚本与数据，绕开旧缓存",
+      "验证：无头浏览器实测线上 v20260805f 各数据面板（素材排行/本月Top50/个人素材统计/周统计/时间筛选/本月汇总/KPI）均正常渲染，本修复确保用户旧缓存不再遮罩正确数据"
+    ]
+  },
+  {
     "ver": "v20260805f",
     "date": "2026-08-05",
     "type": "fix",

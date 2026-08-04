@@ -3211,6 +3211,7 @@ async function saveRuntimeState(){
     if(p.length===0 && rows.length===0){ console.warn('[state] 跳过保存：当前为空'); return; }
     const snap=JSON.parse(JSON.stringify(DATA_FULL));
     snap._fileSig=fileSignature();   // 记录写入时的文件签名
+    snap._appVer=SEED_VER;          // 记录写入时的应用版本，用于过期校验
     await idbPut(IDB_KEY, snap);
     updateStateBanner();
     console.log('[state] runtime saved, periods=', p);
@@ -3220,18 +3221,21 @@ async function loadRuntimeState(){
   try{
     if(window.__skipIdb || (function(){try{return localStorage.getItem('skipIdbOnce')==='1';}catch(e){return false;}})()) return;
     const saved=await idbGet(IDB_KEY);
-    if(!saved||!saved.meta||!saved.materials) return;
+    if(!saved||!saved.meta) return;
+    // 版本校验：无版本标记或版本过期的旧缓存（含之前坏版本写入的空 materials 数据）一律丢弃，改用线上最新数据，避免页面空白
+    if(!saved._appVer){ console.log('[state] 发现无版本标记的老缓存，丢弃并使用线上数据'); return; }
+    if(saved._appVer!==SEED_VER){ console.log('[state] 本地缓存版本过期(_appVer='+saved._appVer+')，丢弃并使用线上数据'); return; }
+    if(!saved.materials){ console.log('[state] 本地缓存缺少 materials，丢弃并使用线上数据'); return; }
     const p=(saved.meta.periods)||[];
     const rows=(saved.materials.rows)||[];
     if(p.length===0 && rows.length===0){ console.warn('[state] 缓存为空，忽略'); return; }
-    // 以浏览器本地缓存为优先（用户导入/修改的周期都在这里），不再因签名不一致而丢弃
     DATA_FULL=saved; DATA=DATA_FULL; CUR_PERIOD=null;
     rebuildIdMap();
     console.log('[state] restored from IndexedDB, periods=', saved.meta.periods);
   }catch(e){ console.warn('[state] restore failed', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260805f';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260805g';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走版本化 URL 利用缓存；若返回空/截断/解析失败，则用时间戳 URL 强制回源
 async function fetchJSONRetry(base, opt={}){
@@ -4030,7 +4034,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260805f"></script>
+<script src="personal-enhance.js?v=20260805g"></script>
 
 <script src="vparse-deep.js?v=20260804e"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
