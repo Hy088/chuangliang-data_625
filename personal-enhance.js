@@ -5,10 +5,10 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260805h";
-  var MAT_URL  = "./me-materials.csv?v=20260805h";
+  var HIST_URL = "./me-history.csv?v=20260805i";
+  var MAT_URL  = "./me-materials.csv?v=20260805i";
   // 当月「上传时间」口径素材量：从创量【内容】按上传时间导出(由脚本分页抓取落盘)，按素材ID去重
-  var UPLOAD_URL = "./me-uploads-august.csv?v=20260805h";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260805i";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -37,6 +37,7 @@
   var daySortKey = "日期";
   var daySortDir = 1;  // 1 升序 / -1 降序
   var timeFilterMode = "day";  // month / week / day
+  var consStart = null, consEnd = null;  // 消耗汇总独立日期范围（与素材面板各自独立）
   var PREVIEW_KEY = null;      // 素材预览链接列名（自动探测，无则隐藏预览列）
   var COVER_KEY = null;        // 素材封面图列名（自动探测，无则隐藏缩略图）
   var ready = false;
@@ -265,7 +266,7 @@
   function renderMonthChart() {
     var box = el("meMonthChart");
     if (!box) return;
-    var hs = monthRows(histData, "日期").slice().sort(function (a, b) { return a["日期"] < b["日期"] ? -1 : 1; });
+    var hs = consFiltered(histData, "日期").slice().sort(function (a, b) { return a["日期"] < b["日期"] ? -1 : 1; });
     var max = 0;
     hs.forEach(function (h) { max = Math.max(max, num(h["消耗"])); });
     max = max || 1;
@@ -282,7 +283,7 @@
     var box = el("meMonthMatTop");
     if (!box) return;
     var map = {};
-    monthRows(matData, "日期").forEach(function (m) {
+    consFiltered(matData, "日期").forEach(function (m) {
       var id = m["素材ID"] || m["素材名"] || "(未知)";
       if (!map[id]) map[id] = { id: id, name: m["素材名"] || id, "消耗": 0, "展示数": 0, "点击数": 0, "转化数": 0, days: {}, "预览链接": "", "封面链接": "" };
       var o = map[id];
@@ -656,12 +657,30 @@
     var p = curMonthPrefix();
     return arr.filter(function (r) { return (r[dateField] || "").slice(0, 7) === p; });
   }
-  /* ---------- 渲染：本月总入口（口径：当前自然月） ---------- */
+  // 消耗汇总独立日期范围过滤（与素材面板各自独立）。未设置时默认当前自然月。
+  function consRange() {
+    if (!consStart && !consEnd) {
+      var mp = curMonthPrefix();
+      consStart = mp + "-01";
+      consEnd = mp + "-" + ("0" + daysInMonth(+mp.slice(0, 4), +mp.slice(5, 7))).slice(-2);
+    }
+    return { s: consStart || "0000-01-01", e: consEnd || "9999-12-31" };
+  }
+  function consFiltered(arr, dateField) {
+    var r = consRange();
+    return arr.filter(function (x) {
+      var d = (x[dateField] || "").replace(/\//g, "-").slice(0, 10);
+      if (!d) return false;
+      return d >= r.s && d <= r.e;
+    });
+  }
+  /* ---------- 渲染：消耗汇总总入口（口径：独立日期范围） ---------- */
   function renderMonth() {
     var body = el("meMonthBody");
     if (!body) return;
-    var matM = monthRows(matData, "日期");
-    var histM = monthRows(histData, "日期");
+    var r = consRange();
+    var matM = consFiltered(matData, "日期");
+    var histM = consFiltered(histData, "日期");
     var totalCost = 0, totalConv = 0;
     var totShow = 0, totClick = 0, matSet = {};
     matM.forEach(function (m) {
@@ -672,10 +691,10 @@
     var avgCTR = totShow > 0 ? totClick / totShow * 100 : 0;
     var distinctMat = Object.keys(matSet).length;
     var days = histM.length;
-    var mp = curMonthPrefix();
-    var dTotal = daysInMonth(+mp.slice(0, 4), +mp.slice(5, 7));
-    var rangeTxt = mp + "-01 ~ " + mp + "-" + ("0" + dTotal).slice(-2) + "（当月）";
+    var rangeTxt = r.s + " ~ " + r.e;
     var rg = el("meMonthRange"); if (rg) rg.textContent = "（" + rangeTxt + "）";
+    var ci = el("consStart"); if (ci) ci.value = r.s;
+    var ce = el("consEnd"); if (ce) ce.value = r.e;
     renderMonthCards(totalCost, totalConv, avgCTR, distinctMat, days);
     renderMonthChart();
     renderMonthMatTop();
@@ -685,52 +704,145 @@
     renderUploadMonth();// 每月上传素材量 & AI 占比
   }
 
-  // ④ 个人素材统计：剪辑师李虹玉 · 当月素材量 & AI占比 & 日均素材量 & 预计月产能
-  // 口径：按「日期」列归属月份，统计当月有消耗的不重复素材ID数；AIGC 由素材名标签判定。
-  var upByMonth = null;   // { "2026-08": {total:Set, ai:Set} }
-  var upMonths = [];      // 升序月份
-  function upCompute() {
-    if (upByMonth) return;
-    upByMonth = {}; upMonths = [];
-    var total = 0, ai = 0;
-    upData.forEach(function (m) {
-      var id = m["素材ID"]; if (!id) return;
-      total++;
-      if (isAiMaterial(m["素材名"])) ai++;
-    });
-    var now = new Date();
-    var curMo = now.getFullYear() + "-" + ("0" + (now.getMonth() + 1)).slice(-2);
-    upByMonth[curMo] = { total: total, ai: ai };
-    upMonths = [curMo];
-  }
+  // ④ 个人素材统计：剪辑师李虹玉 · 上传时间口径 · 日/周/月/总 产出汇总
+  // 口径：按创量【内容】页「上传时间」导出素材清单，按素材ID去重；AIGC 由素材名标签判定。
+  // upData 列：素材ID,素材名,上传人,上传时间（来自 me-uploads.csv）
+  var upStart = null, upEnd = null, upGran = "total";  // 粒度：day / week / month / total
+  var UP_UPLOADER = "李虹玉";                            // 仅统计个人（上传人含李虹玉）
   function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
+  // 取某行上传日期（优先上传时间列；缺失时从素材名 MMDD 兜底，年份取当前年）
+  function upDateOf(row) {
+    var s = row["上传时间"] || "";
+    if (!s) {
+      var nm = row["素材名"] || "";
+      var mm = nm.match(/-(\d{2})(\d{2})-/);
+      if (mm) s = new Date().getFullYear() + "-" + mm[1] + "-" + mm[2];
+    }
+    if (!s) return "";
+    return (s + "").replace(/\//g, "-").slice(0, 10);
+  }
+  // 上传人过滤 + 日期范围过滤
+  function upFiltered() {
+    return upData.filter(function (m) {
+      var up = m["上传人"] || "";
+      if (UP_UPLOADER && up.indexOf(UP_UPLOADER) < 0) return false;
+      var d = upDateOf(m);
+      if (!d) return false;
+      if (upStart && d < upStart) return false;
+      if (upEnd && d > upEnd) return false;
+      return true;
+    });
+  }
+  // 按粒度分组
+  function upGroups(rows, gran) {
+    var map = {};
+    rows.forEach(function (m) {
+      var d = upDateOf(m);
+      if (!d) return;
+      var key;
+      if (gran === "day") key = d;
+      else if (gran === "month") key = d.slice(0, 7);
+      else if (gran === "week") key = isoWeekKey(d);
+      else key = "总";
+      if (!map[key]) map[key] = { key: key, label: key, total: 0, ai: 0 };
+      map[key].total++;
+      if (isAiMaterial(m["素材名"])) map[key].ai++;
+    });
+    var arr = Object.keys(map).map(function (k) { var g = map[k]; g.ratio = g.total ? g.ai / g.total : 0; return g; });
+    if (gran !== "total") arr.sort(function (a, b) { return a.key < b.key ? -1 : 1; });
+    return arr;
+  }
   function upRenderView() {
     var body = el("meUploadBody"); if (!body) return;
-    if (!upMonths.length) { body.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#9aa4b2">暂无素材明细数据</div>'; return; }
+    if (!upData.length) { body.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#9aa4b2">暂无素材明细数据（me-uploads.csv 未加载）</div>'; return; }
 
-    var now = new Date();
-    var curY = now.getFullYear(), curM = now.getMonth() + 1;
-    var curMo = curY + "-" + ("0" + curM).slice(-2);
-    var dTotal = daysInMonth(curY, curM);
-    var dPassed = Math.min(Math.max(now.getDate(), 1), dTotal);
+    // 默认范围：当前月
+    if (!upStart && !upEnd) {
+      var mp = curMonthPrefix();
+      upStart = mp + "-01";
+      upEnd = mp + "-" + ("0" + daysInMonth(+mp.slice(0, 4), +mp.slice(5, 7))).slice(-2);
+    }
 
-    var d = upByMonth[curMo] || { total: 0, ai: 0 };
-    var ratio = d.total ? d.ai / d.total : 0;
-    var avg = dPassed ? d.total / dPassed : 0;
-    var forecast = avg * dTotal;
+    var rows = upFiltered();
+    var groups = upGroups(rows, upGran);
 
-    body.innerHTML =
-      "<div class='me-up-tiles me-up-tiles-4'>" +
-        "<div class='me-up-tile'><div class='lab'>当月总素材量</div><div class='big'>" + fmtNum(d.total) + "</div><div class='sub'>" + curMo + " 上传 · 素材ID去重</div></div>" +
-        "<div class='me-up-tile ai'><div class='lab'>AIGC 占比</div><div class='big'>" + (ratio * 100).toFixed(1) + "%</div><div class='sub'>AI 素材 " + fmtNum(d.ai) + " / " + fmtNum(d.total) + "</div></div>" +
-        "<div class='me-up-tile day'><div class='lab'>平均每天素材量</div><div class='big'>" + avg.toFixed(1) + "</div><div class='sub'>已过 " + dPassed + " 天 / " + dTotal + " 天</div></div>" +
-        "<div class='me-up-tile forecast'><div class='lab'>预计当月产能</div><div class='big'>" + fmtNum(Math.round(forecast)) + "</div><div class='sub'>按日均 × " + dTotal + " 天估算</div></div>" +
-      "</div>" +
-      "<div style='padding:8px 2px 0;color:#8a94a6;font-size:12px'>统计口径：按创量【内容】页「上传时间」筛选当月，导出素材清单后按素材ID去重计数（数据来源 me-uploads-august.csv）；素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AIGC 素材。日均=当月上传量÷已过天数，预计产能=日均×当月天数。</div>";
+    // 区间汇总
+    var total = 0, ai = 0;
+    rows.forEach(function (m) { total++; if (isAiMaterial(m["素材名"])) ai++; });
+    var ratio = total ? ai / total : 0;
+    var ds = rows.map(function (m) { return upDateOf(m); }).filter(Boolean).sort();
+    var dMin = ds.length ? ds[0] : "—", dMax = ds.length ? ds[ds.length - 1] : "—";
+    var spanDays = 0;
+    if (ds.length) {
+      var a = new Date(dMin), z = new Date(dMax);
+      spanDays = Math.max(1, Math.round((z - a) / 86400000) + 1);
+    }
+    var avg = spanDays ? total / spanDays : 0;
+
+    var granTxt = { day: "日产出汇总", week: "周产出汇总", month: "月产出汇总", total: "总总素材汇总" }[upGran] || "汇总";
+
+    // 工具栏：日期范围 + 粒度切换
+    var bar = "<div class='me-up-bar'>" +
+      "<span class='me-up-bar-l'>日期范围</span>" +
+      "<input type='date' id='upStart' value='" + upStart + "'>" +
+      "<span>~</span>" +
+      "<input type='date' id='upEnd' value='" + upEnd + "'>" +
+      "<button id='upApply'>应用</button>" +
+      "<button id='upAll'>全部</button>" +
+      "<span class='me-up-gran'>" +
+        "<button data-g='day' class='me-gbtn" + (upGran === "day" ? " on" : "") + "'>日</button>" +
+        "<button data-g='week' class='me-gbtn" + (upGran === "week" ? " on" : "") + "'>周</button>" +
+        "<button data-g='month' class='me-gbtn" + (upGran === "month" ? " on" : "") + "'>月</button>" +
+        "<button data-g='total' class='me-gbtn" + (upGran === "total" ? " on" : "") + "'>总</button>" +
+      "</span></div>";
+
+    // 汇总 tiles
+    var tiles = "<div class='me-up-tiles me-up-tiles-4'>" +
+      "<div class='me-up-tile'><div class='lab'>总素材量</div><div class='big'>" + fmtNum(total) + "</div><div class='sub'>" + dMin + " ~ " + dMax + "</div></div>" +
+      "<div class='me-up-tile ai'><div class='lab'>AIGC 占比</div><div class='big'>" + (ratio * 100).toFixed(1) + "%</div><div class='sub'>AI " + fmtNum(ai) + " / " + fmtNum(total) + "</div></div>" +
+      "<div class='me-up-tile day'><div class='lab'>日均产出</div><div class='big'>" + avg.toFixed(1) + "</div><div class='sub'>区间 " + spanDays + " 天</div></div>" +
+      "<div class='me-up-tile forecast'><div class='lab'>总产出</div><div class='big'>" + fmtNum(total) + "</div><div class='sub'>素材ID去重 · 上传时间口径</div></div>" +
+      "</div>";
+
+    // 明细表
+    var table = "";
+    if (groups.length) {
+      var maxV = 1; groups.forEach(function (g) { if (g.total > maxV) maxV = g.total; });
+      var rowsHtml = groups.map(function (g) {
+        var w = Math.max(2, Math.round(g.total / maxV * 100));
+        return "<tr><td class='l'>" + esc(g.label) + "</td><td>" + fmtNum(g.total) + "</td><td>" + fmtNum(g.ai) + "</td><td>" + (g.ratio * 100).toFixed(1) + "%" +
+          "<td style='width:42%'><div style='height:6px;background:#eef2f7;border-radius:3px;overflow:hidden'><i style='display:block;height:100%;width:" + w + "%;background:#4a7bff'></i></div></td></tr>";
+      }).join("");
+      var totalRow = (upGran !== "total")
+        ? "<tr class='me-up-sum'><td class='l'>合计</td><td>" + fmtNum(total) + "</td><td>" + fmtNum(ai) + "</td><td>" + (ratio * 100).toFixed(1) + "%</td><td></td></tr>"
+        : "";
+      table = "<div style='font-weight:700;margin:14px 0 8px;color:#334;font-size:13.5px'>" + granTxt + "</div>" +
+        "<table class='me-rank-tbl'><thead><tr><th class='l'>期次</th><th>素材量</th><th>AI素材</th><th>AIGC占比</th><th></th></tr></thead><tbody>" + rowsHtml + totalRow + "</tbody></table>";
+    } else {
+      table = "<div class='empty' style='padding:14px;text-align:center;color:#9aa4b2'>该范围内暂无素材</div>";
+    }
+
+    var note = "<div style='padding:8px 2px 0;color:#8a94a6;font-size:12px'>统计口径：按创量【内容】页「上传时间」高级筛选导出素材清单，按素材ID去重计数（数据来源 me-uploads.csv，覆盖 2026-05 起）；仅统计上传人含「李虹玉」的素材；素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AIGC 素材。日=按上传日期、周=ISO自然周、月=按上传月份汇总产出。上传时间缺失时按素材名内日期片段兜底。</div>";
+
+    body.innerHTML = bar + tiles + table + note;
+
+    // 事件绑定
+    var apply = el("upApply"); if (apply) apply.onclick = function () {
+      var s = el("upStart"), e = el("upEnd");
+      upStart = s ? s.value : null; upEnd = e ? e.value : null;
+      upRenderView();
+    };
+    var all = el("upAll"); if (all) all.onclick = function () {
+      var ds2 = upData.map(function (m) { return upDateOf(m); }).filter(Boolean).sort();
+      upStart = ds2.length ? ds2[0] : null;
+      upEnd = ds2.length ? ds2[ds2.length - 1] : null;
+      upRenderView();
+    };
+    Array.prototype.forEach.call(body.querySelectorAll(".me-gbtn"), function (btn) {
+      btn.onclick = function () { upGran = btn.getAttribute("data-g"); upRenderView(); };
+    });
   }
   function renderUploadMonth() {
-    upByMonth = null;     // 强制用最新 matData 重新统计
-    upCompute();
     upRenderView();
   }
 
@@ -911,6 +1023,15 @@
     monthPanel.innerHTML =
       panelHd("📊 本月汇总 <span id='meMonthRange' style='font-size:12px;color:#8a94a6;font-weight:400'></span>", "本月累计指标", "") +
       "<div id='meMonthBody'>" +
+        "<div class='me-cons-filter' style='display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 16px;padding:10px 12px;background:#f6f8fc;border:1px solid #e6ebf2;border-radius:10px'>" +
+          "<span style='font-size:13px;color:#556;font-weight:600'>日期筛选</span>" +
+          "<input id='consStart' type='date' style='padding:5px 8px;border:1px solid #cdd6e3;border-radius:6px;font-size:13px;color:#334'>" +
+          "<span style='color:#889'>-</span>" +
+          "<input id='consEnd' type='date' style='padding:5px 8px;border:1px solid #cdd6e3;border-radius:6px;font-size:13px;color:#334'>" +
+          "<button id='consApply' style='padding:5px 14px;border:1px solid #4a7bff;background:#4a7bff;color:#fff;border-radius:6px;font-size:13px;cursor:pointer'>应用</button>" +
+          "<button id='consAll' style='padding:5px 14px;border:1px solid #cdd6e3;background:#fff;color:#334;border-radius:6px;font-size:13px;cursor:pointer'>本月</button>" +
+          "<span style='font-size:12px;color:#8a94a6;margin-left:auto'>与「个人素材统计」各自独立筛选</span>" +
+        "</div>" +
         "<div id='meMonthCards' style='display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px'></div>" +
         "<div style='font-weight:700;margin:0 0 8px;color:#334;font-size:13.5px'>每日消耗走势</div>" +
         "<div id='meMonthChart' style='display:flex;align-items:flex-end;gap:3px;height:150px;padding:0 2px 18px;border-bottom:1px solid #eef2f7'></div>" +
@@ -955,6 +1076,24 @@
         btn.onclick = function () { setTimeMode(btn.getAttribute("data-mode")); };
       });
     }
+
+    // 消耗汇总独立日期范围筛选
+    var cApply = el("consApply");
+    if (cApply) cApply.onclick = function () {
+      var s = el("consStart"), e = el("consEnd");
+      var sv = s ? (s.value || "").trim() : "";
+      var ev = e ? (e.value || "").trim() : "";
+      if (sv && !/^\d{4}-\d{2}-\d{2}$/.test(sv)) { alert("起始日期格式应为 YYYY-MM-DD"); return; }
+      if (ev && !/^\d{4}-\d{2}-\d{2}$/.test(ev)) { alert("结束日期格式应为 YYYY-MM-DD"); return; }
+      if (sv && ev && sv > ev) { alert("起始日期不能晚于结束日期"); return; }
+      consStart = sv || null; consEnd = ev || null;
+      renderMonth();
+    };
+    var cAll = el("consAll");
+    if (cAll) cAll.onclick = function () {
+      consStart = null; consEnd = null;
+      renderMonth();
+    };
 
     // 双月绩效 KPI 进度（首次渲染，数据到达后 loadData 会再刷新实际值）
     renderKpi();

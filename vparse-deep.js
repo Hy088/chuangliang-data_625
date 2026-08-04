@@ -663,9 +663,64 @@ function renderAi(ai, raw) {
   const out = document.getElementById('vpAiOut'); if (!out) return;
   const html = (!ai) ? '<div class="vp-warn">未解析到内容</div>'
     : (ai.raw ? '<div class="vp-ai-out">' + escapeHtml(ai.raw) + '</div>' : renderBoomReport(ai));
-  out.innerHTML = html;
+  const bar = (ai && !ai.raw)
+    ? '<div class="vp-ai-bar" style="margin:0 0 10px;display:flex;gap:8px;align-items:center">' +
+        '<button id="vpSaveCaseBtn" class="btn primary xs" type="button">＋ 保存为案例</button>' +
+        '<span class="muted" style="font-size:12px">将本次 AI 拆解存入案例库，可在「案例库」查看 / 设为参考</span>' +
+      '</div>'
+    : '';
+  out.innerHTML = bar + html;
+  const sb = document.getElementById('vpSaveCaseBtn');
+  if (sb) sb.onclick = saveAiAsCase;
   const rep = document.getElementById('vpParseAiReport');
   if (rep) { rep.innerHTML = html; rep.classList.remove('muted'); }
+}
+
+// 把 AI 解析结果序列化为纯文本，便于存入案例库
+function aiToCaseText(ai) {
+  if (!ai) return '';
+  if (ai.raw) return ai.raw;
+  const m = VP.mat || {};
+  const an = ai.analysis || {};
+  let t = '';
+  t += '【素材ID】' + (VP.sid || '—') + '\n';
+  if (m.proj) t += '【项目】' + m.proj + '\n';
+  if (m.cat) t += '【品类】' + m.cat + '\n';
+  if (m.cost != null) t += '【消耗】' + m.cost + '\n';
+  if (m.imp != null) t += '【展示数】' + m.imp + '\n';
+  if (m.clk != null) t += '【点击数】' + m.clk + '\n';
+  if (m.cv != null) t += '【转化数】' + m.cv + '\n';
+  if (m.cpa != null) t += '【CPA】' + m.cpa + '\n';
+  if (m.ctr != null) t += '【CTR】' + m.ctr + '\n';
+  if (m.cvr != null) t += '【CVR】' + m.cvr + '\n';
+  if (m.opt) t += '【优化师】' + m.opt + '\n';
+  if (m.edit) t += '【剪辑】' + m.edit + '\n';
+  if (m.tags) t += '【标签】' + m.tags + '\n';
+  const sb = ai.storyboard || [];
+  if (sb.length) {
+    t += '\n— 画面分镜 —\n';
+    sb.forEach(function (s) { t += (s.frame || '') + ' ' + (s.stage || '') + '：' + (s.desc || '') + '\n'; });
+  }
+  t += '\n— 解析结论 —\n';
+  if (an.hook) t += '1. Hook（开头3秒）：' + an.hook + '\n';
+  if (an.structure) t += '2. 画面分镜结构：\n' + an.structure + '\n';
+  if (an.selling_points && an.selling_points.length) t += '3. 核心卖点：\n- ' + an.selling_points.join('\n- ') + '\n';
+  if (an.script_direction) t += '4. 口播脚本方向：' + an.script_direction + '\n';
+  if (an.replicable && an.replicable.length) t += '5. 可复制方向：\n- ' + an.replicable.join('\n- ') + '\n';
+  const na = ai.next_actions || [];
+  if (na.length) t += '\n— 后续可执行动作 —\n- ' + na.join('\n- ') + '\n';
+  return t.trim();
+}
+
+function saveAiAsCase() {
+  const ai = VP.ai;
+  if (!ai) { alert('还没有解析结果可保存'); return; }
+  const rawName = (VP.fileName || VP.sid || '视频解析案例');
+  const title = rawName.replace(/\.[^.]+$/, '');
+  const content = aiToCaseText(ai);
+  caseAddOrEdit(null, title, content);
+  if (typeof caseRender === 'function') caseRender();
+  alert('已保存到案例库（标题：' + title + '）。可在「案例库」中查看或「设为参考」。');
 }
 
 function fmtInt(n){ return (n == null || isNaN(n)) ? '—' : Number(n).toLocaleString('zh-CN'); }
