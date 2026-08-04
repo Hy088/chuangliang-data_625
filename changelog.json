@@ -1,5 +1,17 @@
 [
   {
+    "ver": "v20260804g",
+    "date": "2026-08-04",
+    "type": "feature",
+    "summary": "AIGC 素材判定改为「以素材标签为准」",
+    "details": [
+      "新增 isAiMaterial()：AI 素材识别从单一「aigc」改为按用户给定的 AIGC 标签集合判定",
+      "个人素材数据 me-materials.csv 无「素材标签」列，故将 9 个标签映射到素材名中实际出现的片段：aigc / 可灵 / sd2.0 / 空镜 / seedance / 万相 / comfyui",
+      "同步替换 getMonthActual(AIGC消耗) 与 renderUploadMonth(上传量AI占比) 两处判定，口径一致",
+      "实测合计 AI 素材 2106(旧 2098)、AI占比 60.4%(旧 60.1%)，仅多计入 可灵/sd2.0 等片段素材，无误伤"
+  },
+
+  {
     "ver": "v20260804f",
     "date": "2026-08-04",
     "type": "feature",

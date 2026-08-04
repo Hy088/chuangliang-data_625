@@ -52,14 +52,14 @@
     saveKpiStore(kpiStore);
   }
   var kpiMonths = kpiStore._months;   // [月①, 月②]
-  // 取某月实际消耗（总消耗 + AIGC 消耗），AIGC 由素材名含 "aigc" 判定
+  // 取某月实际消耗（总消耗 + AIGC 消耗），AIGC 由 isAiMaterial(素材名) 按 AIGC 标签判定
   function getMonthActual(m) {
     var cost = 0, aigc = 0;
     if (!m) return { cost: 0, aigc: 0 };
     matData.forEach(function (r) {
       if ((r["日期"] || "").slice(0, 7) === m) {
         var c = num(r["消耗"]); cost += c;
-        if ((r["素材名"] || "").toLowerCase().indexOf("aigc") >= 0) aigc += c;
+        if (isAiMaterial(r["素材名"])) aigc += c;
       }
     });
     return { cost: cost, aigc: aigc };
@@ -128,6 +128,19 @@
     }
     return cand ? cand.slice(0, 4) + "-" + cand.slice(4, 6) : "";
   }
+
+  // AIGC 素材判定：以素材在创量打的 AIGC 类标签为准
+  // 个人素材数据 me-materials.csv 无「素材标签」列，仅有素材名简写；故将标签映射到素材名中实际出现的片段
+  var AI_TAG_KEYWORDS = ["aigc", "可灵", "sd2.0", "空镜", "seedance", "万相", "comfyui"];
+  function isAiMaterial(name) {
+    if (!name) return false;
+    var n = String(name).toLowerCase();
+    for (var i = 0; i < AI_TAG_KEYWORDS.length; i++) {
+      if (n.indexOf(AI_TAG_KEYWORDS[i].toLowerCase()) >= 0) return true;
+    }
+    return false;
+  }
+
   // 自动探测素材预览链接列（列名含 预览/视频/url/链接/link 其一即识别）
   function detectMediaKeys() {
     PREVIEW_KEY = null; COVER_KEY = null;
@@ -665,7 +678,7 @@
     matData.forEach(function (m) {
       var id = m["素材ID"]; if (!id || seen[id]) return;
       seen[id] = 1;
-      var ai = (m["素材名"] || "").toLowerCase().indexOf("aigc") >= 0;
+      var ai = isAiMaterial(m["素材名"]);
       var cm = matCreateMonth(m["素材名"] || "");
       if (!cm) { unkTotal++; if (ai) unkAi++; return; }
       if (!byMonth[cm]) byMonth[cm] = { total: 0, ai: 0 };
@@ -694,7 +707,7 @@
       "<table class='me-rank-tbl' style='min-width:380px'>" +
       "<thead><tr><th class='l'>月份</th><th>上传素材量</th><th>AI素材数</th><th>AI占比</th></tr></thead>" +
       "<tbody>" + rows + unkRow + allRow + "</tbody></table>" +
-      "<div style='padding:8px 12px;color:#8a94a6;font-size:12px'>统计口径：按素材名内创建日期(YYYYMMDD / YYMMDD)归属月份，同一素材ID只计一次；素材名含「aigc」记为 AI 素材。未从素材名解析出创建日期的 " + unkTotal + " 个素材单列「未标注」行、不参与分月。覆盖自 CSV 投放明细中出现的所有个人素材。</div>";
+      "<div style='padding:8px 12px;color:#8a94a6;font-size:12px'>统计口径：按素材名内创建日期(YYYYMMDD / YYMMDD)归属月份，同一素材ID只计一次；素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AI 素材。未从素材名解析出创建日期的 " + unkTotal + " 个素材单列「未标注」行、不参与分月。覆盖自 CSV 投放明细中出现的所有个人素材。</div>";
   }
 
   function renderPersonal() {
@@ -858,7 +871,7 @@
     var uploadPanel = document.createElement("div");
     uploadPanel.id = "meUpload";
     uploadPanel.innerHTML =
-      panelHd("\ud83d\udce4 每月素材上传量 & AI占比", "按素材创建日期 · 跨月 · 素材ID去重", "从素材名解析创建日期(YYYYMMDD)与 aigc 标识") +
+      panelHd("\ud83d\udce4 每月素材上传量 & AI占比", "按素材创建日期 · 跨月 · 素材ID去重", "从素材名解析创建日期(YYYYMMDD)与 AIGC 标签(aigc/可灵/sd2.0/空镜…)") +
       "<div id='meUploadBody' style='max-height:480px;overflow:auto;border:1px solid #e6ebf2;border-radius:10px;background:#fff'></div>";
     mountPanel("slotMeUpload", uploadPanel, monthPanel);
 
