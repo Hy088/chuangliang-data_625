@@ -5,8 +5,8 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv";
-  var MAT_URL  = "./me-materials.csv";
+  var HIST_URL = "./me-history.csv?v=20260805b";
+  var MAT_URL  = "./me-materials.csv?v=20260805b";
 
   // 排行可排序指标
   var RANK_METRICS = [

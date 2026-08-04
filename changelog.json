@@ -1,5 +1,17 @@
 [
   {
+    "ver": "v20260805b",
+    "date": "2026-08-05",
+    "type": "fix",
+    "summary": "修复看板打不开：绕开 GitHub Pages CDN 部署瞬间的空缓存",
+    "details": [
+      "根因：v20260805a 推送时 GitHub Pages 在构建瞬间把 me-history.csv / personal-enhance.js?v=20260805a 缓存成了空响应（HTTP 200 size 0），看板加载即白屏",
+      "修复：把 personal-enhance.js 版本号升到 v20260805b，并给 me-history.csv / me-materials.csv 的数据拉取 URL 追加 ?v=20260805b，强制 CDN 走新 URL 回源拿到正确文件",
+      "本地文件内容正常、?_= 强制回源可正常获取，已确认缓存问题，仅部署时刻的空响应被缓存"
+    ]
+  },
+
+  {
     "ver": "v20260805a",
     "date": "2026-08-05",
     "type": "feature",
