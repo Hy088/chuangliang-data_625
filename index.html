@@ -1953,8 +1953,8 @@ function meApplyRows(rows){
     const m=ME.metrics[k]; if(!m.name) m.name=k; if(!m.manual){ m.value=r.value; if(r.target!=null) m.target=r.target; if(r.unit) m.unit=r.unit; } pushHist(m, now, m.value); });
   ME.lastFetch=now; ME.status='ok'; ME.errMsg=''; saveME();
 }
-async function meRefresh(){
-  try{ const rows=await meFetchSource(); meApplyRows(rows); renderMe(); setMeStatus(); meCd=ME.cfg.interval||10; renderMeChannels(); }
+async function meRefresh(force){
+  try{ const rows=await meFetchSource(); meApplyRows(rows); renderMe(); setMeStatus(); meCd=ME.cfg.interval||10; renderMeChannels(force); }
   catch(e){ ME.status='err'; ME.errMsg=e.message; setMeStatus(); }
 }
 function meStart(){ meStop();
@@ -2022,24 +2022,27 @@ function renderMeTrend(){
 
 // 个人数据：总消耗下的三类渠道拆分 + 较昨日同时段增长
 let _meMatCache={text:null, ts:0};
-async function fetchMeText(file){
+// force=true 时绕过缓存强制拉取最新（手动「立即刷新」用）；否则走 HTTP 缓存（GitHub Pages 默认 10 分钟），重复打开秒开
+async function fetchMeText(file, force){
+  const opt = force ? {cache:'no-store'} : undefined;
+  const q = force ? ('?_=' + Date.now()) : '';
   if(file==='me-materials.csv'){
     const now=Date.now();
-    if(_meMatCache.text && now-_meMatCache.ts<300000) return _meMatCache.text;
-    const t=await fetch('me-materials.csv?_='+now, {cache:'no-store'}).then(r=>{ if(!r.ok) throw new Error('素材明细 HTTP '+r.status); return r.text(); });
+    if(!force && _meMatCache.text && now-_meMatCache.ts<300000) return _meMatCache.text;
+    const t=await fetch(file+q, opt).then(r=>{ if(!r.ok) throw new Error('素材明细 HTTP '+r.status); return r.text(); });
     _meMatCache={text:t, ts:now}; return t;
   }
-  return await fetch(file+'?_='+Date.now(), {cache:'no-store'}).then(r=>{ if(!r.ok) throw new Error(file+' HTTP '+r.status); return r.text(); });
+  return await fetch(file+q, opt).then(r=>{ if(!r.ok) throw new Error(file+' HTTP '+r.status); return r.text(); });
 }
 function classifyMeMat(name){
   if(name.startsWith('信息流')) return '标点';        // 标点：素材名以「信息流」开头
   if(name.includes('低活')) return '低活';            // 低活：素材名含「低活」
   return '广义新';                                    // 其余（含广义新、采销等）归广义新
 }
-async function renderMeChannels(){
+async function renderMeChannels(force){
   try{
     // ---- 1. 三类消耗拆分（me-materials.csv，取最新有数据的一天）----
-    const matText=await fetchMeText('me-materials.csv');
+    const matText=await fetchMeText('me-materials.csv', force);
     const {cols, rows}=parseCSV(matText);
     const iDate=cols.indexOf('日期'), iName=cols.indexOf('素材名'), iCost=cols.indexOf('消耗');
     const byDate={};
@@ -2063,7 +2066,7 @@ async function renderMeChannels(){
     let yDate='';
     const yMap={}; // key -> {value, same, growth}
     try{
-      const hText=await fetchMeText('me-history.csv'); const h=parseCSV(hText);
+      const hText=await fetchMeText('me-history.csv', force); const h=parseCSV(hText);
       const hiD=h.cols.indexOf('日期');
       // 取「昨天」日期（本地时区计算，避免 toISOString 在跨日边界的 UTC 偏移导致取错行）
       const _y=new Date(); _y.setDate(_y.getDate()-1);
@@ -3224,18 +3227,18 @@ async function loadRuntimeState(){
 async function loadSeedData(){
   // 优先加载轻量元数据（KPI/结构，约 1.6MB），保证看板秒开，不卡在 34MB 素材下载上
   try{
-    const r=await fetch('period-meta.json?_='+Date.now());
+    const r=await fetch('period-meta.json');
     if(!r.ok) throw new Error('HTTP '+r.status);
     const obj=await r.json();
     DATA_FULL=obj; DATA=DATA_FULL; CUR_PERIOD=null; rebuildIdMap();
     saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e)); // 后台保存，不阻塞渲染
     console.log('[seed] 已从 period-meta.json 载入, periods=', obj.meta.periods);
-    loadMaterialsAsync(); // 素材明细（约34MB/13万行）后台异步加载，不阻塞首屏
+    setTimeout(loadMaterialsAsync, 2500); // 素材明细（约34MB）延迟到首屏渲染完成后再异步拉取，避免与首屏抢带宽
     return;
   }catch(e){ console.warn('[seed] period-meta.json 加载失败，回退 period-data.json', e); }
   // 兜底：直接加载完整 period-data.json（较慢但保底，内含全部素材）
   try{
-    const r2=await fetch('period-data.json?_='+Date.now());
+    const r2=await fetch('period-data.json');
     if(!r2.ok) throw new Error('HTTP '+r2.status);
     const obj2=await r2.json();
     DATA_FULL=obj2; DATA=DATA_FULL; CUR_PERIOD=null; rebuildIdMap();
@@ -3250,7 +3253,7 @@ async function loadMaterialsAsync(){
     if(ov && !ov.classList.contains('hidden')){ const e=document.getElementById('loadMsg'); if(e) e.textContent='数据已加载，正在后台拉取素材明细（约34MB）...'; }
     const ctrl=new AbortController();
     const to=setTimeout(()=>ctrl.abort(), 90000);
-    const rm=await fetch('period-materials.json?_='+Date.now(), {signal:ctrl.signal});
+    const rm=await fetch('period-materials.json', {signal:ctrl.signal});
     clearTimeout(to);
     if(!rm.ok) throw new Error('HTTP '+rm.status);
     const m=await rm.json();
@@ -3451,7 +3454,7 @@ async function renderChangelog(){
   const box=$('#changelogBody'); if(!box) return;
   box.innerHTML='<div class="cl-loading">正在加载版本记录…</div>';
   try{
-    const r=await fetch('changelog.json?_='+Date.now(), {cache:'no-store'});
+    const r=await fetch('changelog.json');
     if(!r.ok) throw new Error('HTTP '+r.status);
     const list=await r.json();
     if(!Array.isArray(list)||!list.length){ box.innerHTML='<div class="cl-loading">暂无更新记录</div>'; return; }
@@ -4004,7 +4007,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260804h"></script>
+<script src="personal-enhance.js?v=20260804i"></script>
 
 <script src="vparse-deep.js?v=20260804e"></script>
 <!-- ========== 更新日志 弹窗 ========== -->

@@ -729,10 +729,12 @@
   }
 
   /* ---------- 数据加载 ---------- */
-  function loadData(cb) {
+  function loadData(cb, force) {
+    var q = force ? ("?_=" + Date.now()) : "";
+    var opt = force ? { cache: "no-store" } : undefined;
     Promise.all([
-      fetch(HIST_URL + "?_=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.text(); }),
-      fetch(MAT_URL + "?_=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.text(); })
+      fetch(HIST_URL + q, opt).then(function (r) { return r.text(); }),
+      fetch(MAT_URL + q, opt).then(function (r) { return r.text(); })
     ]).then(function (res) {
       histData = csvToObjects(res[0]);
       matData = csvToObjects(res[1]);
@@ -924,7 +926,7 @@
     loadData();
     setInterval(function () { loadData(); }, 5 * 60 * 1000);
     var rb = el("meRefresh");
-    if (rb) rb.onclick = function () { loadData(); };
+    if (rb) rb.onclick = function () { loadData(null, true); };
   }
 
   if (document.readyState === "loading") {
