@@ -914,6 +914,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <label class="vp-sid-lbl">素材ID <input type="text" id="vpSid" placeholder="如 13547842562" size="14" autocomplete="off"></label>
         <button class="btn sm" id="vpMatch" title="用上方ID重新匹配报表（回车亦可）">匹配报表</button>
         <label>抽帧数 <input type="number" id="vpFrames" value="8" min="2" max="30"></label>
+        <label title="AI 语义拆解分析视频的前 N 秒；0 = 整段（支持长视频 &gt;60s）">拆解时长(s) <input type="number" id="vpCutDur" value="0" min="0" max="600" step="5"></label>
         <button class="btn sm primary" id="vpReextract">重新抽帧</button>
         <span class="vp-ctl-sep"></span>
         <button class="btn sm" id="vpDeepBtn" title="浏览器本地：中文字幕OCR + 音频节奏 + 人物/物体检测（零Key、免费、不上传）">🔍 深度分析</button>
@@ -4004,7 +4005,7 @@ document.addEventListener('click', function(e){
 
 <script src="personal-enhance.js?v=20260802j"></script>
 
-<script src="vparse-deep.js?v=20260804d"></script>
+<script src="vparse-deep.js?v=20260804e"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
 <div class="modal-mask" id="changelogMask" style="display:none">
   <div class="modal" style="max-width:680px">

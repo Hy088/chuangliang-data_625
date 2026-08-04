@@ -554,11 +554,21 @@
     const out = document.getElementById('vpAiOut');
     if (out) out.innerHTML = '<div class="muted">正在调用 ' + escapeHtml(pName) + ' 分析关键帧…</div>';
     try {
-      const frames = (VP.frames || []).filter(f => f.dataURL);
+      let frames = (VP.frames || []).filter(f => f.dataURL);
       if (!frames.length) { if (out) out.innerHTML = '<div class="vp-warn">请先抽帧（点「重新抽帧」）再拆解。</div>'; return; }
-      const step = Math.max(1, Math.ceil(frames.length / 6));
-      const pick = frames.filter((_, i) => i % step === 0).slice(0, 6);
+      // 拆解时长：仅取视频前 N 秒送 AI（0=整段，支持长视频 >60s）；范围外帧忽略
+      const cutEl = document.getElementById('vpCutDur');
+      const cut = cutEl ? (parseFloat(cutEl.value) || 0) : 0;
+      let cand = frames;
+      if (cut > 0) { const flt = frames.filter(f => (f.t || 0) <= cut + 0.5); if (flt.length >= 2) cand = flt; }
+      // 自适应送帧密度：约每 12 秒 1 帧，最多 24 帧，保证 60s 以上长视频也能细拆
+      const span = cand.length ? ((cand[cand.length - 1].t || 0) - (cand[0].t || 0)) : 0;
+      const target = Math.min(24, Math.max(4, Math.round(span / 12) + 1));
+      const step = Math.max(1, Math.ceil(cand.length / target));
+      const pick = cand.filter((_, i) => i % step === 0).slice(0, target);
       let promptText = AI_PROMPT;
+      const durTxt = (VP.meta && VP.meta.duration) ? VP.meta.duration.toFixed(0) : '?';
+      promptText += '\n\n【分析范围】' + (cut > 0 ? ('视频前 ' + cut + ' 秒') : ('整段视频（约 ' + durTxt + ' 秒）')) + '，请按时间顺序拆解画面，frame 用「起止秒数」标注，且必须覆盖所选时长的全部关键节点。';
       const m = VP.mat || {};
       const metricsParts = [];
       if (m.ctr != null) metricsParts.push('CTR=' + (+m.ctr).toFixed(2) + '%');
