@@ -1,5 +1,17 @@
 [
   {
+    "ver": "v20260805f",
+    "date": "2026-08-05",
+    "type": "fix",
+    "summary": "修复数据面板空白：period-meta.json 缺 materials 字段导致 rebuildIdMap 抛错",
+    "details": [
+      "根因：period-meta.json 是轻量元数据，不含 materials 字段；loadSeedData 加载后没有补默认值，rebuildIdMap 里直接读 DATA_FULL.materials.rows 抛 TypeError，DATA_FULL 被回退逻辑清空，所有数据面板空白",
+      "修复：新增 ensureMaterials() 给 DATA_FULL 补默认值 {cols:[], rows:[]}；rebuildIdMap 和 materialsForPeriod 都改为防御式读取；保留 fetchJSONRetry 时间戳回源重试机制",
+      "SEED_VER 与 personal-enhance.js 同步升到 v20260805f"
+    ]
+  },
+
+  {
     "ver": "v20260805e",
     "date": "2026-08-05",
     "type": "fix",

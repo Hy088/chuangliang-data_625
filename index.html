@@ -1355,9 +1355,16 @@ const EMBEDDED_DATA = DATA;   // 文件原始数据快照，用于校验浏览�
 let DATA_FULL = DATA;   // 初始「全部周期合并」视图，供切回「全部」恢复
 let CUR_PERIOD = null;  // 当前所选周期（null = 全部合并）
 let IDMAP = {};         // 素材ID -> 静态信息（名称/优化师/剪辑/项目/品类/投放端/类型/标签），用于按周期还原素材行
+function ensureMaterials(df){
+  if(!df.materials) df.materials = {cols:[], rows:[]};
+  if(!df.materials.cols) df.materials.cols = [];
+  if(!df.materials.rows) df.materials.rows = [];
+  return df;
+}
 function rebuildIdMap(){
   IDMAP = {};
-  const cols = (DATA_FULL.materials && DATA_FULL.materials.cols) || [];
+  ensureMaterials(DATA_FULL);
+  const cols = DATA_FULL.materials.cols;
   const ci = k => cols.indexOf(k);
   (DATA_FULL.materials.rows||[]).forEach(r=>{ const id=r[ci('id')];
     if(id==null) return;
@@ -1376,7 +1383,7 @@ function materialsForPeriod(pf){
               me.cost, me.imp, me.clk, me.cv, me.cpa, me.cvr, me.ctr, meta.mtype||'', meta.tags||''];
     });
   }
-  return DATA_FULL.materials.rows;
+  return (DATA_FULL.materials && DATA_FULL.materials.rows) || [];
 }
 // 切换周期：重建 DATA 并刷新全部视图（周期对比页始终显示完整多周期数据）
 function rebuildView(pf){
@@ -3224,7 +3231,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failed', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260805e';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260805f';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走版本化 URL 利用缓存；若返回空/截断/解析失败，则用时间戳 URL 强制回源
 async function fetchJSONRetry(base, opt={}){
@@ -4023,7 +4030,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260805e"></script>
+<script src="personal-enhance.js?v=20260805f"></script>
 
 <script src="vparse-deep.js?v=20260804e"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
