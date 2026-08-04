@@ -23,7 +23,7 @@
     custom:   { label: '自定义 (OpenAI 兼容)', base: '', models: [], def: '', vision: true }
   };
   const AI_PROV = 'vp_ai_provider', AI_BASE = 'vp_ai_base', AI_KEY = 'vp_ai_key', AI_MODEL = 'vp_ai_model';
-
+  const CDN = {
 
     tesseract: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
     tf: 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js',
@@ -594,7 +594,7 @@
         '<br><span class="muted">请检查 Key / Base URL / 模型是否正确，且浏览器能直连该服务（部分服务需经后端代理才能避免跨域 CORS）。</span></div>';
     }
   }
-
+  function parseAi(txt) {
 
   if (!txt) return null;
   let s = txt.trim();
@@ -767,10 +767,8 @@ function applyAiToParse(ai) {
     const k = document.getElementById('vpAiKey'); if (k) k.value = '';
     const h = document.getElementById('vpAiHint'); if (h) h.textContent = '已清除 Key（服务商 / Base 配置保留）';
   }
-
-（基于录入数据 + 经验阈值自动生成）
-  // ============================================================
   function vpGenerateInsight() {
+
     const g = id => (document.getElementById(id).value || '').trim();
     const num = id => { const v = parseFloat(g(id)); return isNaN(v) ? null : v; };
     const cost = num('vpCost'), imp = num('vpImp'), clk = num('vpClk'), cv = num('vpCv');
@@ -836,7 +834,7 @@ function applyAiToParse(ai) {
     b('vpAiSave', saveAiKey);
     b('vpAiClear', clearAiKey);
     const _pv = document.getElementById('vpAiProvider'); if (_pv) _pv.addEventListener('change', onProviderChange);
-
+    const mask = document.getElementById('vpAiMask');
     if (mask) mask.addEventListener('click', e => { if (e.target === mask) closeAiModal(); });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initVParseDeep);

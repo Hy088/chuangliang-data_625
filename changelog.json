@@ -1,5 +1,17 @@
 [
   {
+    "ver": "v20260804c",
+    "date": "2026-08-04",
+    "type": "feature",
+    "summary": "视频解析 AI 模块通用化：不再绑死智谱，可随时接入任意 OpenAI 兼容 API",
+    "details": [
+      "新增 AI 服务商注册表：内置 智谱 / OpenAI / DeepSeek / Kimi(月之暗面) / 通义千问，外加「自定义(OpenAI 兼容)」",
+      "设置弹窗改为：服务商下拉 + Base URL + API Key(密码框) + 模型名(带建议列表)，配置存本机 localStorage",
+      "调用统一走 OpenAI 兼容 /chat/completions；仅视觉模型才附截帧图（如 deepseek-chat 纯文本只发文字，避免报错）",
+      "错误提示区分 401/404/400，并提示可能需后端代理规避跨域；版本号 bump 至 v20260804c"
+    ]
+  },
+  {
     "ver": "v20260804b",
     "date": "2026-08-04",
     "type": "fix",
