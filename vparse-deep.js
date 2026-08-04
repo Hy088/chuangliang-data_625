@@ -11,8 +11,20 @@
     VP.deep = VP.deep || { ocr: [], audio: null, detect: null, whisper: null };
     VP.ai = VP.ai || null;
   }
-  const ZHIPU_KEY = 'vp_zhipu_key', ZHIPU_MODEL = 'vp_zhipu_model', WHISPER_MODEL_KEY = 'vp_whisper_model';
-  const CDN = {
+  const WHISPER_MODEL_KEY = 'vp_whisper_model';
+
+  // ---- AI 服务商注册表（通用可插拔：随时换 Key / 模型 / 任意 OpenAI 兼容接口）----
+  const AI_PROVIDERS = {
+    zhipu:    { label: '智谱 GLM (BigModel)', base: 'https://open.bigmodel.cn/api/paas/v4', models: ['glm-4v-flash', 'glm-4v-plus', 'glm-4v', 'glm-4-plus'], def: 'glm-4v-flash', vision: true },
+    openai:   { label: 'OpenAI',              base: 'https://api.openai.com/v1',            models: ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo'], def: 'gpt-4o-mini', vision: true },
+    deepseek: { label: 'DeepSeek',            base: 'https://api.deepseek.com/v1',          models: ['deepseek-chat', 'deepseek-reasoner'], def: 'deepseek-chat', vision: false },
+    moonshot: { label: 'Kimi (月之暗面)',     base: 'https://api.moonshot.cn/v1',           models: ['moonshot-v1-8k-vision-preview', 'moonshot-v1-32k-vision-preview'], def: 'moonshot-v1-8k-vision-preview', vision: true },
+    qwen:     { label: '通义千问 (阿里)',     base: 'https://dashscope.aliyuncs.com/compatible-mode/v1', models: ['qwen-vl-max', 'qwen-vl-plus', 'qwen-max'], def: 'qwen-vl-plus', vision: true },
+    custom:   { label: '自定义 (OpenAI 兼容)', base: '', models: [], def: '', vision: true }
+  };
+  const AI_PROV = 'vp_ai_provider', AI_BASE = 'vp_ai_base', AI_KEY = 'vp_ai_key', AI_MODEL = 'vp_ai_model';
+
+
     tesseract: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
     tf: 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js',
     coco: 'https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js',
@@ -100,10 +112,24 @@
     t = t.replace(/([^\s，。！？；：,.!?;:\n\r]{2,})\1(?=[\s，。！？；：,.!?;:\n\r]|$)/g, '$1');
     return t;
   }
-  function aiKeyGet() { try { return localStorage.getItem(ZHIPU_KEY) || ''; } catch (e) { return ''; } }
-  function aiKeySet(v) { try { localStorage.setItem(ZHIPU_KEY, v); } catch (e) {} }
-  function aiModelGet() { try { return localStorage.getItem(ZHIPU_MODEL) || 'glm-4v-flash'; } catch (e) { return 'glm-4v-flash'; } }
-  function aiModelSet(v) { try { localStorage.setItem(ZHIPU_MODEL, v); } catch (e) {} }
+  function lsGet(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  // 读取通用 AI 配置：未填自定义 base / model 时回退到所选服务商的预设默认值
+  function aiConfGet() {
+    const provider = lsGet(AI_PROV) || 'zhipu';
+    const p = AI_PROVIDERS[provider] || AI_PROVIDERS.zhipu;
+    const base = (lsGet(AI_BASE) || '').trim() || p.base;
+    const model = (lsGet(AI_MODEL) || '').trim() || p.def;
+    return { provider, base, key: lsGet(AI_KEY), model, vision: p.vision !== false };
+  }
+  function aiConfSet(o) {
+    lsSet(AI_PROV, o.provider || 'zhipu');
+    lsSet(AI_BASE, (o.base || '').trim());
+    lsSet(AI_KEY, (o.key || '').trim());
+    lsSet(AI_MODEL, (o.model || '').trim());
+  }
+  function aiConfReady() { return !!lsGet(AI_KEY); }
+
   function whisperModelGet() { try { return localStorage.getItem(WHISPER_MODEL_KEY) || 'Xenova/whisper-base'; } catch (e) { return 'Xenova/whisper-base'; } }
   function whisperModelSet(v) { try { localStorage.setItem(WHISPER_MODEL_KEY, v); } catch (e) {} }
 
@@ -514,19 +540,18 @@
   // 智谱 GLM-4V-Flash 免费语义拆解（浏览器直连，无需后端）
   // ============================================================
   async function vpRunAI() {
-    const key = aiKeyGet();
-    if (!key) { openAiModal(); return; }
-    const model = aiModelGet();
+    const conf = aiConfGet();
+    if (!conf.key) { openAiModal(); return; }
+    const pName = (AI_PROVIDERS[conf.provider] || {}).label || conf.provider;
     showCard('vpAi');
     const out = document.getElementById('vpAiOut');
-    if (out) out.innerHTML = '<div class="muted">抽取关键帧送 GLM-4V-Flash 分析中…</div>';
+    if (out) out.innerHTML = '<div class="muted">正在调用 ' + escapeHtml(pName) + ' 分析关键帧…</div>';
     try {
       const frames = (VP.frames || []).filter(f => f.dataURL);
       if (!frames.length) { if (out) out.innerHTML = '<div class="vp-warn">请先抽帧（点「重新抽帧」）再拆解。</div>'; return; }
       const step = Math.max(1, Math.ceil(frames.length / 6));
       const pick = frames.filter((_, i) => i % step === 0).slice(0, 6);
       let promptText = AI_PROMPT;
-      // 追加可用投放数据，帮助 AI 做真实数据表现分析
       const m = VP.mat || {};
       const metricsParts = [];
       if (m.ctr != null) metricsParts.push('CTR=' + (+m.ctr).toFixed(2) + '%');
@@ -539,39 +564,38 @@
       if (metricsParts.length) promptText += '\n\n【素材投放数据（来自报表）】\n' + metricsParts.join('，');
       const segs = VP.deep && VP.deep.whisperSegs;
       const whisper = VP.deep && VP.deep.whisper;
-      if (segs && segs.length) {
-        promptText += '\n\n【口播时间轴】\n' + whisper;
-      } else if (whisper) {
-        promptText += '\n\n【识别口播】\n' + whisper;
-      }
+      if (segs && segs.length) promptText += '\n\n【口播时间轴】\n' + whisper;
+      else if (whisper) promptText += '\n\n【识别口播】\n' + whisper;
       const content = [{ type: 'text', text: promptText }];
-      pick.forEach(f => content.push({ type: 'image_url', image_url: { url: f.dataURL } }));
-      const resp = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
+      // 仅视觉模型才附带截帧图片；纯文本模型（如 deepseek-chat）只发文字，避免报错
+      if (conf.vision) pick.forEach(f => content.push({ type: 'image_url', image_url: { url: f.dataURL } }));
+      const ep = conf.base.replace(/\/+$/, '') + '/chat/completions';
+      const resp = await fetch(ep, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
-        body: JSON.stringify({ model, messages: [{ role: 'user', content }], temperature: 0.6, max_tokens: 1024 })
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + conf.key },
+        body: JSON.stringify({ model: conf.model, messages: [{ role: 'user', content }], temperature: 0.6, max_tokens: 1024 })
       });
-      if (!resp.ok) { const t = await resp.text(); throw new Error('HTTP ' + resp.status + ' ' + t.slice(0, 200)); }
-      if (resp.status === 400) {
+      if (!resp.ok) {
         const t = await resp.text();
-        // 智谱常见 400：max_tokens 超限、参数非法
-        if (t.indexOf('max_tokens') >= 0 || t.indexOf('1210') >= 0) {
-          throw new Error('max_tokens 参数非法（智谱限制 1-1024），请刷新页面使用最新脚本');
-        }
-        throw new Error('HTTP 400 ' + t.slice(0, 200));
+        if (resp.status === 401) throw new Error('401 鉴权失败：API Key 无效或已过期（' + pName + '）');
+        if (resp.status === 404) throw new Error('404：接口地址不正确，请检查 Base URL（当前 ' + ep + '）');
+        if (resp.status === 400) throw new Error('400：请求参数/模型名有误（' + pName + ' · ' + conf.model + '）');
+        throw new Error('HTTP ' + resp.status + ' ' + t.slice(0, 200));
       }
       const j = await resp.json();
       const txt = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+      if (!txt) throw new Error('返回内容为空（可能为风控拦截或额度不足）');
       const ai = parseAi(txt);
       VP.ai = ai;
       renderAi(ai, txt);
       applyAiToParse(ai);
     } catch (e) {
-      if (out) out.innerHTML = '<div class="vp-warn">AI 拆解失败：' + escapeHtml(e.message) + '（请检查 Key 是否正确、网络是否可访问 open.bigmodel.cn）</div>';
+      if (out) out.innerHTML = '<div class="vp-warn">AI 拆解失败：' + escapeHtml(e.message) +
+        '<br><span class="muted">请检查 Key / Base URL / 模型是否正确，且浏览器能直连该服务（部分服务需经后端代理才能避免跨域 CORS）。</span></div>';
     }
   }
 
-  function parseAi(txt) {
+
   if (!txt) return null;
   let s = txt.trim();
   const m = s.match(/```(?:json)?\s*([\s\S]*?)```/); if (m) s = m[1].trim();
@@ -697,34 +721,54 @@ function applyAiToParse(ai) {
 }
 
 
-  // ---- AI 设置弹窗 ----
+  // ---- AI 设置弹窗（通用服务商配置）----
   function openAiModal() {
     const mask = document.getElementById('vpAiMask'); if (!mask) return;
-    const k = document.getElementById('vpAiKey'); if (k) k.value = aiKeyGet();
-    const md = document.getElementById('vpAiModel'); if (md) md.value = aiModelGet();
+    const conf = aiConfGet();
+    const pv = document.getElementById('vpAiProvider'); if (pv) pv.value = conf.provider;
+    const bs = document.getElementById('vpAiBase'); if (bs) bs.value = lsGet(AI_BASE);
+    const k = document.getElementById('vpAiKey'); if (k) k.value = conf.key;
+    const md = document.getElementById('vpAiModel'); if (md) { md.value = lsGet(AI_MODEL); fillModelDatalist(conf.provider); }
     const wm = document.getElementById('vpWhisperModel'); if (wm) wm.value = whisperModelGet();
     const h = document.getElementById('vpAiHint'); if (h) h.textContent = '';
     mask.style.display = 'flex';
   }
+  function fillModelDatalist(provider) {
+    const dl = document.getElementById('vpAiModelList'); if (!dl) return;
+    const p = AI_PROVIDERS[provider];
+    dl.innerHTML = (p && p.models ? p.models : []).map(function (x) { return '<option value="' + x + '">'; }).join('');
+  }
+  function onProviderChange() {
+    const pv = document.getElementById('vpAiProvider'); if (!pv) return;
+    const p = AI_PROVIDERS[pv.value] || AI_PROVIDERS.zhipu;
+    const bs = document.getElementById('vpAiBase');
+    if (bs && !bs.value.trim()) bs.value = p.base;
+    const md = document.getElementById('vpAiModel');
+    if (md && !md.value.trim()) md.value = p.def;
+    fillModelDatalist(pv.value);
+  }
   function closeAiModal() { const m = document.getElementById('vpAiMask'); if (m) m.style.display = 'none'; }
   function saveAiKey() {
-    const k = document.getElementById('vpAiKey'); if (!k) return;
+    const pv = document.getElementById('vpAiProvider');
+    const bs = document.getElementById('vpAiBase');
+    const k = document.getElementById('vpAiKey');
+    const md = document.getElementById('vpAiModel');
+    if (!k) return;
     const v = (k.value || '').trim();
-    if (!v) { const h = document.getElementById('vpAiHint'); if (h) h.textContent = '请输入 Key'; return; }
-    aiKeySet(v);
-    const md = document.getElementById('vpAiModel'); if (md) aiModelSet(md.value);
+    if (!v) { const h = document.getElementById('vpAiHint'); if (h) h.textContent = '请输入 API Key'; return; }
+    aiConfSet({ provider: pv ? pv.value : 'zhipu', base: bs ? bs.value : '', key: v, model: md ? md.value : '' });
     const wm = document.getElementById('vpWhisperModel'); if (wm) whisperModelSet(wm.value);
-    const h = document.getElementById('vpAiHint'); if (h) h.textContent = '✅ 已保存（仅存于本机浏览器）';
-    setTimeout(closeAiModal, 700);
+    const pName = (AI_PROVIDERS[(pv ? pv.value : 'zhipu')] || {}).label || '';
+    const h = document.getElementById('vpAiHint'); if (h) h.textContent = '✅ 已保存（' + pName + '，Key 仅存于本机浏览器）';
+    setTimeout(closeAiModal, 800);
   }
   function clearAiKey() {
-    try { localStorage.removeItem(ZHIPU_KEY); } catch (e) {}
+    try { localStorage.removeItem(AI_KEY); } catch (e) {}
     const k = document.getElementById('vpAiKey'); if (k) k.value = '';
-    const h = document.getElementById('vpAiHint'); if (h) h.textContent = '已清除 Key';
+    const h = document.getElementById('vpAiHint'); if (h) h.textContent = '已清除 Key（服务商 / Base 配置保留）';
   }
 
-  // ============================================================
-  // 信息流投放理解分析（基于录入数据 + 经验阈值自动生成）
+（基于录入数据 + 经验阈值自动生成）
   // ============================================================
   function vpGenerateInsight() {
     const g = id => (document.getElementById(id).value || '').trim();
@@ -791,7 +835,8 @@ function applyAiToParse(ai) {
     b('vpAiClose', closeAiModal);
     b('vpAiSave', saveAiKey);
     b('vpAiClear', clearAiKey);
-    const mask = document.getElementById('vpAiMask');
+    const _pv = document.getElementById('vpAiProvider'); if (_pv) _pv.addEventListener('change', onProviderChange);
+
     if (mask) mask.addEventListener('click', e => { if (e.target === mask) closeAiModal(); });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initVParseDeep);
