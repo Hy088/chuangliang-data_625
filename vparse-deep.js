@@ -718,9 +718,25 @@ function saveAiAsCase() {
   const rawName = (VP.fileName || VP.sid || '视频解析案例');
   const title = rawName.replace(/\.[^.]+$/, '');
   const content = aiToCaseText(ai);
-  caseAddOrEdit(null, title, content);
+  const rec = {
+    id: 'c' + Date.now(),
+    title: title,
+    content: content,
+    ai: {
+      mat: VP.mat || {},
+      analysis: ai.analysis || {},
+      storyboard: ai.storyboard || [],
+      next_actions: ai.next_actions || []
+    },
+    sid: VP.sid || '',
+    fileName: VP.fileName || '',
+    kind: 'ai',
+    ts: Date.now(),
+    ref: false
+  };
+  casePush(rec);
   if (typeof caseRender === 'function') caseRender();
-  alert('已保存到案例库（标题：' + title + '）。可在「案例库」中查看或「设为参考」。');
+  alert('已保存到案例库（' + title + '）。可在「我的解析案例」中查看、设为参考或导出 Markdown。');
 }
 
 function fmtInt(n){ return (n == null || isNaN(n)) ? '—' : Number(n).toLocaleString('zh-CN'); }
@@ -887,11 +903,50 @@ function applyAiToParse(ai) {
     if (ai.next_actions) ai.next_actions = caseNormArr(ai.next_actions);
     return ai;
   }
+  // AI 拆解结果卡片：整齐呈现指标 + 卖点 + 可复制 + 后续动作，可展开全文
+  function renderAiCaseCard(c) {
+    const ai = c.ai || {};
+    const m = ai.mat || {};
+    const an = ai.analysis || {};
+    const sb = ai.storyboard || [];
+    const na = ai.next_actions || [];
+    const title = escapeHtml(c.title || '(无标题)');
+    const sid = escapeHtml(c.sid || '—');
+    const fname = escapeHtml(c.fileName || '');
+    const chips = [];
+    if (m.cost != null) chips.push('消耗 ' + fmtInt(m.cost));
+    if (m.imp != null) chips.push('展示 ' + fmtInt(m.imp));
+    if (m.clk != null) chips.push('点击 ' + fmtInt(m.clk));
+    if (m.cv != null) chips.push('转化 ' + fmtInt(m.cv));
+    if (m.ctr != null) chips.push('CTR ' + m.ctr + '%');
+    if (m.cpa != null) chips.push('CPA ' + m.cpa);
+    if (m.cvr != null) chips.push('CVR ' + m.cvr + '%');
+    if (m.tags) chips.push('标签 ' + m.tags);
+    const sp = (an.selling_points || []).slice(0, 4);
+    const rep = (an.replicable || []).slice(0, 4);
+    const spHtml = sp.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">核心卖点</span>' + sp.map(function (s) { return '<span class="vp-tag">' + escapeHtml(s) + '</span>'; }).join('') + '</div>' : '';
+    const repHtml = rep.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">可复制</span>' + rep.map(function (s) { return '<span class="vp-tag ok">' + escapeHtml(s) + '</span>'; }).join('') + '</div>' : '';
+    const naHtml = na.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">后续动作</span>' + na.map(function (s) { return '<span class="vp-tag warn">' + escapeHtml(s) + '</span>'; }).join('') + '</div>' : '';
+    const sbHtml = sb.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">分镜</span><span class="vp-chip">' + sb.length + ' 个</span>' + (sb[0] ? ('<span class="vp-muted">首镜：' + escapeHtml((sb[0].frame || '') + ' ' + (sb[0].desc || '')) + '</span>') : '') + '</div>' : '';
+    return '<div class="vp-case-item vp-case-ai' + (c.ref ? ' is-ref' : '') + '">' +
+      '<div class="vp-case-top"><span class="vp-case-title">🎬 ' + title + '</span>' +
+      '<span class="vp-case-acts">' +
+      '<button class="btn xs ' + (c.ref ? 'primary' : 'ghost') + '" data-act="ref" data-id="' + c.id + '">' + (c.ref ? '★ 参考中' : '☆ 设为参考') + '</button>' +
+      '<button class="btn xs ghost" data-act="expand" data-id="' + c.id + '">展开全文</button>' +
+      '<button class="btn xs ghost" data-act="del" data-id="' + c.id + '">删除</button>' +
+      '</span></div>' +
+      '<div class="vp-ai-meta">素材ID ' + sid + (fname ? ' · ' + fname : '') + (c.ts ? ' · ' + new Date(c.ts).toLocaleString('zh-CN') : '') + '</div>' +
+      (chips.length ? '<div class="vp-ai-chips">' + chips.map(function (x) { return '<span class="vp-chip">' + escapeHtml(x) + '</span>'; }).join('') + '</div>' : '') +
+      sbHtml + spHtml + repHtml + naHtml +
+      '<div class="vp-ai-full" id="vpCaseFull-' + c.id + '" style="display:none"><pre class="vp-ai-pre">' + escapeHtml(c.content || '') + '</pre></div>' +
+      '</div>';
+  }
   function caseRender() {
     const box = document.getElementById('vpCaseList'); if (!box) return;
     const list = caseGetAll();
-    if (!list.length) { box.innerHTML = '<div class="muted">还没有案例。点「＋ 添加案例」粘贴你的爆款拆解范本，标星后可在 AI 拆解时作为参考示例。</div>'; return; }
+    if (!list.length) { box.innerHTML = '<div class="muted">还没有案例。点「＋ 添加案例」粘贴你的爆款拆解范本，或解析视频后点「＋ 保存为案例」；标星后可在 AI 拆解时作为参考示例。</div>'; return; }
     box.innerHTML = list.map(function (c) {
+      if (c.kind === 'ai' && c.ai) return renderAiCaseCard(c);
       const title = escapeHtml(c.title || '(无标题)');
       const preview = escapeHtml((c.content || '').replace(/\n/g, ' ').slice(0, 90));
       return '<div class="vp-case-item' + (c.ref ? ' is-ref' : '') + '">' +
@@ -917,6 +972,25 @@ function applyAiToParse(ai) {
     caseRender();
   }
   function caseDel(id) { caseSaveAll(caseGetAll().filter(function (x) { return x.id !== id; })); caseRender(); }
+  function casePush(rec) { const list = caseGetAll(); list.push(rec); caseSaveAll(list); }
+  // 导出案例库为 Markdown，便于离线看板 / 沉淀
+  function caseExportMd() {
+    const list = caseGetAll();
+    if (!list.length) { alert('案例库为空，暂无可导出内容'); return; }
+    let md = '# 视频解析案例库\n\n> 导出时间 ' + new Date().toLocaleString('zh-CN') + '，共 ' + list.length + ' 条\n\n';
+    list.forEach(function (c, i) {
+      md += '## ' + (i + 1) + '. ' + (c.title || '(无标题)') + (c.ref ? ' ★参考' : '') + '\n';
+      if (c.kind === 'ai' && c.sid) md += '- 素材ID：' + c.sid + '\n';
+      if (c.fileName) md += '- 视频：' + c.fileName + '\n';
+      if (c.ts) md += '- 保存时间：' + new Date(c.ts).toLocaleString('zh-CN') + '\n';
+      md += '\n' + (c.content || '') + '\n\n---\n\n';
+    });
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '解析案例库_' + new Date().toISOString().slice(0, 10) + '.md';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
   function caseFillForm(id) {
     const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'block';
     const t = document.getElementById('vpCaseTitle'), c = document.getElementById('vpCaseContent');
@@ -1001,6 +1075,7 @@ function applyAiToParse(ai) {
     b('vpAiClear', clearAiKey);
     // 解析案例库
     b('vpCaseAdd', () => caseFillForm(null));
+    b('vpCaseExport', caseExportMd);
     b('vpCaseCancel', () => { const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'none'; });
     b('vpCaseSave', () => {
       const t = document.getElementById('vpCaseTitle'), c = document.getElementById('vpCaseContent'), f = document.getElementById('vpCaseForm');
@@ -1018,6 +1093,10 @@ function applyAiToParse(ai) {
       if (act === 'ref') caseToggleRef(id);
       else if (act === 'edit') caseFillForm(id);
       else if (act === 'del') { if (confirm('确定删除该案例？')) caseDel(id); }
+      else if (act === 'expand') {
+        const full = document.getElementById('vpCaseFull-' + id);
+        if (full) { const open = full.style.display !== 'none'; full.style.display = open ? 'none' : 'block'; btn.textContent = open ? '展开全文' : '收起'; }
+      }
     });
     caseRender();
     updateAiTag();

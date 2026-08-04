@@ -1016,10 +1016,11 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 
   <div class="card" id="vpCases">
     <h2>📚 我的解析案例 <span class="tag">可粘贴你的爆款拆解范本，标星后作为 AI 参考示例</span></h2>
-    <div class="vp-cases-bar">
-      <button class="btn sm primary" id="vpCaseAdd">＋ 添加案例</button>
-      <span class="note" style="margin:0">把你的拆解范本贴进来；标「★ 参考示例」的案例会在 AI 拆解时注入提示词，减少跑偏与重复。案例仅存于本机浏览器。</span>
-    </div>
+      <div class="vp-cases-bar">
+        <button class="btn sm primary" id="vpCaseAdd">＋ 添加案例</button>
+        <button class="btn sm ghost" id="vpCaseExport">⤓ 导出案例库(MD)</button>
+        <span class="note" style="margin:0">把你的拆解范本贴进来，或解析视频后「＋ 保存为案例」；标「★ 参考示例」的案例会在 AI 拆解时注入提示词。AI 拆解结果会以整齐卡片常驻此处，可一键导出 Markdown 用于离线看板。案例仅存于本机浏览器。</span>
+      </div>
     <div id="vpCaseForm" class="vp-case-form" style="display:none">
       <input type="text" id="vpCaseTitle" class="vp-input" placeholder="案例标题，如：16卷卷纸1分钱 · 黑底大字报钩子">
       <textarea id="vpCaseContent" rows="6" placeholder="粘贴你的拆解范本（支持自由文本 / Markdown）。例如：一、报表数据… 二、画面分镜… 三、解析结论（Hook/卖点/脚本/可复制）… 四、后续动作…"></textarea>
@@ -3235,7 +3236,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failed', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260805i';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260805j';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走版本化 URL 利用缓存；若返回空/截断/解析失败，则用时间戳 URL 强制回源
 async function fetchJSONRetry(base, opt={}){
@@ -3987,6 +3988,19 @@ document.addEventListener('click', function(e){
 .vp-case-acts{display:flex;gap:6px;flex-wrap:wrap}
 .vp-case-prev{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.5;word-break:break-all}
 .btn.xs{font-size:11px;padding:3px 9px;min-height:0}
+/* AI 拆解案例卡片 */
+.vp-case-ai{border-left:3px solid var(--brand)}
+.vp-ai-meta{font-size:12px;color:var(--muted);margin-top:4px;word-break:break-all}
+.vp-ai-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.vp-chip{font-size:11.5px;padding:2px 8px;border-radius:20px;background:var(--graybg);border:1px solid var(--line);color:var(--ink)}
+.vp-ai-sub{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px;font-size:12px}
+.vp-ai-k{color:var(--muted);font-weight:600;margin-right:2px}
+.vp-muted{color:var(--muted);font-size:11.5px}
+.vp-tag{font-size:11.5px;padding:2px 8px;border-radius:6px;background:rgba(47,107,255,.1);color:var(--brand);border:1px solid rgba(47,107,255,.2)}
+.vp-tag.ok{background:rgba(16,160,106,.1);color:#109a6a;border-color:rgba(16,160,106,.25)}
+.vp-tag.warn{background:rgba(245,158,11,.12);color:#b9790a;border-color:rgba(245,158,11,.3)}
+.vp-ai-full{margin-top:8px}
+.vp-ai-pre{white-space:pre-wrap;word-break:break-word;background:var(--graybg);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:12px;line-height:1.6;color:var(--ink);max-height:420px;overflow:auto;margin:0}
 </style>
 
 <!-- ========== 视频解析 · AI 设置（通用服务商 / 任意 OpenAI 兼容） ========== -->
@@ -4034,9 +4048,9 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260805i"></script>
+<script src="personal-enhance.js?v=20260805j"></script>
 
-<script src="vparse-deep.js?v=20260804e"></script>
+<script src="vparse-deep.js?v=20260805j"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
 <div class="modal-mask" id="changelogMask" style="display:none">
   <div class="modal" style="max-width:680px">

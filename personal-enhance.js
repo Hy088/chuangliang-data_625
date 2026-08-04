@@ -5,10 +5,10 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260805i";
-  var MAT_URL  = "./me-materials.csv?v=20260805i";
+  var HIST_URL = "./me-history.csv?v=20260805j";
+  var MAT_URL  = "./me-materials.csv?v=20260805j";
   // 当月「上传时间」口径素材量：从创量【内容】按上传时间导出(由脚本分页抓取落盘)，按素材ID去重
-  var UPLOAD_URL = "./me-uploads.csv?v=20260805i";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260805j";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -715,8 +715,14 @@
     var s = row["上传时间"] || "";
     if (!s) {
       var nm = row["素材名"] || "";
-      var mm = nm.match(/-(\d{2})(\d{2})-/);
-      if (mm) s = new Date().getFullYear() + "-" + mm[1] + "-" + mm[2];
+      // 优先匹配 -YYYYMMDD-（如 -20260730-）
+      var ym = nm.match(/-(20\d{2})(\d{2})(\d{2})-/);
+      if (ym) s = ym[1] + "-" + ym[2] + "-" + ym[3];
+      else {
+        // 其次匹配 -MMDD-（如 -0803-），按当年兜底
+        var mm = nm.match(/-(\d{2})(\d{2})-/);
+        if (mm) s = new Date().getFullYear() + "-" + mm[1] + "-" + mm[2];
+      }
     }
     if (!s) return "";
     return (s + "").replace(/\//g, "-").slice(0, 10);
@@ -782,19 +788,22 @@
     var granTxt = { day: "日产出汇总", week: "周产出汇总", month: "月产出汇总", total: "总总素材汇总" }[upGran] || "汇总";
 
     // 工具栏：日期范围 + 粒度切换
-    var bar = "<div class='me-up-bar'>" +
-      "<span class='me-up-bar-l'>日期范围</span>" +
-      "<input type='date' id='upStart' value='" + upStart + "'>" +
-      "<span>~</span>" +
-      "<input type='date' id='upEnd' value='" + upEnd + "'>" +
-      "<button id='upApply'>应用</button>" +
-      "<button id='upAll'>全部</button>" +
-      "<span class='me-up-gran'>" +
-        "<button data-g='day' class='me-gbtn" + (upGran === "day" ? " on" : "") + "'>日</button>" +
-        "<button data-g='week' class='me-gbtn" + (upGran === "week" ? " on" : "") + "'>周</button>" +
-        "<button data-g='month' class='me-gbtn" + (upGran === "month" ? " on" : "") + "'>月</button>" +
-        "<button data-g='total' class='me-gbtn" + (upGran === "total" ? " on" : "") + "'>总</button>" +
-      "</span></div>";
+    var granBtns = ["day","week","month","total"].map(function (g) {
+      var lbl = { day: "日", week: "周", month: "月", total: "总" }[g];
+      var on = upGran === g;
+      return "<button data-g='" + g + "' class='me-seg" + (on ? " on" : "") + "' title='" + ({ day: "按上传日期日产出汇总", week: "ISO自然周汇总", month: "按上传月份汇总", total: "全部汇总" }[g]) + "'>" + lbl + "</button>";
+    }).join("");
+    var bar = "<div class='me-up-filter'>" +
+      "<span class='me-up-filter-lbl'>📅 日期范围</span>" +
+      "<input type='date' id='upStart' class='me-date-inp' value='" + upStart + "'>" +
+      "<span class='me-up-filter-sep'>-</span>" +
+      "<input type='date' id='upEnd' class='me-date-inp' value='" + upEnd + "'>" +
+      "<button id='upApply' class='me-btn me-btn-primary'>应用</button>" +
+      "<button id='upAll' class='me-btn'>全部</button>" +
+      "<span class='me-up-filter-sep' style='margin-left:auto'></span>" +
+      "<span class='me-up-filter-lbl'>汇总维度</span>" +
+      "<span class='me-seg-group'>" + granBtns + "</span>" +
+      "</div>";
 
     // 汇总 tiles
     var tiles = "<div class='me-up-tiles me-up-tiles-4'>" +
@@ -811,18 +820,18 @@
       var rowsHtml = groups.map(function (g) {
         var w = Math.max(2, Math.round(g.total / maxV * 100));
         return "<tr><td class='l'>" + esc(g.label) + "</td><td>" + fmtNum(g.total) + "</td><td>" + fmtNum(g.ai) + "</td><td>" + (g.ratio * 100).toFixed(1) + "%" +
-          "<td style='width:42%'><div style='height:6px;background:#eef2f7;border-radius:3px;overflow:hidden'><i style='display:block;height:100%;width:" + w + "%;background:#4a7bff'></i></div></td></tr>";
+          "<td class='bar'><div style='height:6px;background:#eef2f7;border-radius:3px;overflow:hidden'><i style='display:block;height:100%;width:" + w + "%;background:linear-gradient(90deg,#4a7bff,#7a5cff)'></i></div></td></tr>";
       }).join("");
       var totalRow = (upGran !== "total")
         ? "<tr class='me-up-sum'><td class='l'>合计</td><td>" + fmtNum(total) + "</td><td>" + fmtNum(ai) + "</td><td>" + (ratio * 100).toFixed(1) + "%</td><td></td></tr>"
         : "";
-      table = "<div style='font-weight:700;margin:14px 0 8px;color:#334;font-size:13.5px'>" + granTxt + "</div>" +
-        "<table class='me-rank-tbl'><thead><tr><th class='l'>期次</th><th>素材量</th><th>AI素材</th><th>AIGC占比</th><th></th></tr></thead><tbody>" + rowsHtml + totalRow + "</tbody></table>";
+      table = "<div class='me-up-tbl-hd'>" + granTxt + "</div>" +
+        "<table class='me-rank-tbl me-up-tbl'><thead><tr><th class='l'>期次</th><th>素材量</th><th>AI素材</th><th>AIGC占比</th><th class='bar-h'></th></tr></thead><tbody>" + rowsHtml + totalRow + "</tbody></table>";
     } else {
-      table = "<div class='empty' style='padding:14px;text-align:center;color:#9aa4b2'>该范围内暂无素材</div>";
+      table = "<div class='empty' style='padding:24px;text-align:center;color:#9aa4b2;background:#fbfcff;border:1px dashed #e0e6ef;border-radius:10px;margin-top:12px'>该范围内暂无素材</div>";
     }
 
-    var note = "<div style='padding:8px 2px 0;color:#8a94a6;font-size:12px'>统计口径：按创量【内容】页「上传时间」高级筛选导出素材清单，按素材ID去重计数（数据来源 me-uploads.csv，覆盖 2026-05 起）；仅统计上传人含「李虹玉」的素材；素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AIGC 素材。日=按上传日期、周=ISO自然周、月=按上传月份汇总产出。上传时间缺失时按素材名内日期片段兜底。</div>";
+    var note = "<div class='me-up-note'>统计口径：按创量【内容】页「上传时间」高级筛选导出素材清单，按素材ID去重计数（数据来源 me-uploads.csv，覆盖 2026-07 起）；仅统计上传人含「李虹玉」的素材；素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AIGC 素材。日=按上传日期、周=ISO自然周、月=按上传月份汇总产出。上传时间缺失时按素材名内日期片段(-YYYYMMDD- / -MMDD-)兜底（「误传」类无日期素材名无法归属，已排除）。</div>";
 
     body.innerHTML = bar + tiles + table + note;
 
@@ -838,7 +847,7 @@
       upEnd = ds2.length ? ds2[ds2.length - 1] : null;
       upRenderView();
     };
-    Array.prototype.forEach.call(body.querySelectorAll(".me-gbtn"), function (btn) {
+    Array.prototype.forEach.call(body.querySelectorAll(".me-seg"), function (btn) {
       btn.onclick = function () { upGran = btn.getAttribute("data-g"); upRenderView(); };
     });
   }
@@ -921,6 +930,20 @@
       ".me-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #e6ebf2;background:#f6f8fb;cursor:zoom-in}" +
       ".me-thumb:hover{box-shadow:0 2px 8px rgba(43,108,255,.2)}" +
       ".me-up-filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 14px;padding:10px 12px;background:#f6f8fb;border:1px solid #e6ebf2;border-radius:10px}" +
+      ".me-up-filter-lbl{font-size:13px;color:#556;font-weight:600;white-space:nowrap}" +
+      ".me-up-filter-sep{color:#aab3c2;font-size:13px;padding:0 2px}" +
+      ".me-date-inp{padding:6px 8px;border:1px solid #cdd6e3;border-radius:8px;font-size:13px;color:#334;background:#fff;min-width:122px}" +
+      ".me-date-inp:focus{outline:none;border-color:#4a7bff;box-shadow:0 0 0 3px rgba(74,123,255,.12)}" +
+      ".me-btn{padding:6px 14px;border:1px solid #cdd6e3;border-radius:8px;background:#fff;color:#334;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}" +
+      ".me-btn:hover{background:#f6f8fb;border-color:#b8c2d3}" +
+      ".me-btn-primary{background:#4a7bff;border-color:#4a7bff;color:#fff}" +
+      ".me-btn-primary:hover{background:#3a6bef;border-color:#3a6bef}" +
+      ".me-seg-group{display:inline-flex;gap:0;border:1px solid #cdd6e3;border-radius:8px;overflow:hidden;background:#fff}" +
+      ".me-seg{padding:6px 14px;border:0;border-right:1px solid #e6ebf2;background:#fff;color:#556;font-size:13px;cursor:pointer;transition:all .15s}" +
+      ".me-seg:last-child{border-right:0}" +
+      ".me-seg:hover{background:#f3f7ff;color:#2b6cff}" +
+      ".me-seg.on{background:#4a7bff;color:#fff}" +
+      ".me-seg.on:hover{background:#3a6bef}" +
       ".me-up-tiles{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}" +
       ".me-up-tiles-4{grid-template-columns:repeat(4,1fr)}" +
       "@media (max-width:900px){.me-up-tiles-4{grid-template-columns:1fr 1fr}}" +
@@ -934,6 +957,10 @@
       ".me-up-tile.forecast{background:linear-gradient(135deg,#fff9f3,#fff0e3)}" +
       ".me-up-tile.forecast .big{color:#f59e0b}" +
       ".me-up-tile .sub{font-size:12.5px;color:#8a94a6}" +
+      ".me-up-tbl-hd{font-weight:700;margin:14px 0 8px;color:#334;font-size:13.5px}" +
+      ".me-up-tbl td.bar,.me-up-tbl th.bar-h{width:38%;min-width:140px}" +
+      ".me-up-tbl tbody tr.me-up-sum{background:#f6f8fb;font-weight:600}" +
+      ".me-up-note{padding:10px 2px 0;color:#8a94a6;font-size:12px;line-height:1.6}" +
       ".me-up-chart{display:flex;align-items:flex-end;gap:10px;margin-bottom:4px}" +
       ".me-up-bar{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}" +
       ".me-up-bar .bararea{height:150px;width:100%;display:flex;align-items:flex-end;justify-content:center}" +
@@ -1042,7 +1069,7 @@
     var uploadPanel = document.createElement("div");
     uploadPanel.id = "meUpload";
     uploadPanel.innerHTML =
-      panelHd("📦 个人素材统计", "剪辑师李虹玉 · 当月素材量 & AI占比 & 日均产能", "按素材名创建日期 · 素材ID去重 · 当月已过天数折算") +
+      panelHd("📦 个人素材统计", "剪辑师李虹玉 · 上传时间口径 · 日/周/月/总汇总", "按素材ID去重 · 上传时间片段兜底 · 区间+维度可切换") +
       "<div id='meUploadBody'></div>";
     mountPanel("slotMeUpload", uploadPanel, matTopPanel);
 
