@@ -1,5 +1,17 @@
 [
   {
+    "ver": "v20260805m",
+    "date": "2026-08-05",
+    "type": "feat",
+    "summary": "导入用户导出的 4 条视频解析案例到 cases.json,离线看板可直接查看",
+    "details": [
+      "用户从看板「⤓ 导出案例库(MD)」下载的 解析案例库_2026-08-05.md 含 4 条 AI 拆解案例(f7009c4d/13242906173/13295272351/13117425652),其中 3 条标★参考",
+      "编写 md2cases.py 解析 MD → 标准 cases.json(AI 卡片结构化: mat 指标 / analysis 卖点+可复制 / storyboard 分镜 / next_actions 后续动作 / content 全文)",
+      "cases.json 部署后,离线看板 fetch 加载即显示 4 条已发布案例(卡片标「已发布」),他人打开链接即可见",
+      "SEED_VER 与脚本引用升到 v20260805m(强制 cases.json 缓存刷新)"
+    ]
+  },
+  {
     "ver": "v20260805l",
     "date": "2026-08-05",
     "type": "feat",
