@@ -864,10 +864,24 @@ function applyAiToParse(ai) {
     const k = document.getElementById('vpAiKey'); if (k) k.value = '';
     const h = document.getElementById('vpAiHint'); if (h) h.textContent = '已清除 Key（服务商 / Base 配置保留）';
   }
-  // ---- 解析案例库（纯本机 localStorage） ----
-  const CASE_KEY = 'vp_cases';
-  function caseGetAll() { try { return JSON.parse(localStorage.getItem(CASE_KEY) || '[]'); } catch (e) { return []; } }
-  function caseSaveAll(arr) { try { localStorage.setItem(CASE_KEY, JSON.stringify(arr)); } catch (e) {} }
+  // ---- 解析案例库（静态 cases.json 发布版 + 本机 localStorage 草稿） ----
+  const CASE_KEY = 'vp_cases';        // 本地工作副本（新增/编辑，未发布）
+  const CASE_HIDE_KEY = 'vp_cases_hidden'; // 本地已隐藏的 published id（已删除的发布案例）
+  const CASE_URL = './cases.json?v=' + (window.SEED_VER || Date.now());
+  let PUBLISHED_CASES = [];           // 来自 cases.json（部署即发布，跨设备可见）
+  function caseGetLocal() { try { return JSON.parse(localStorage.getItem(CASE_KEY) || '[]'); } catch (e) { return []; } }
+  function caseSaveLocal(arr) { try { localStorage.setItem(CASE_KEY, JSON.stringify(arr)); } catch (e) {} }
+  function caseGetHidden() { try { return JSON.parse(localStorage.getItem(CASE_HIDE_KEY) || '[]'); } catch (e) { return []; } }
+  function caseSaveHidden(arr) { try { localStorage.setItem(CASE_HIDE_KEY, JSON.stringify(arr)); } catch (e) {} }
+  // 合并 published（排除已隐藏）与本地工作副本，本地 id 优先覆盖
+  function caseGetAll() {
+    const hidden = caseGetHidden();
+    const map = {};
+    PUBLISHED_CASES.filter(function (c) { return c && c.id && hidden.indexOf(c.id) < 0; })
+      .forEach(function (c) { map[c.id] = Object.assign({}, c, { _src: 'pub' }); });
+    caseGetLocal().forEach(function (c) { if (c && c.id) map[c.id] = Object.assign({}, c, { _src: 'local' }); });
+    return Object.keys(map).map(function (k) { return map[k]; });
+  }
   // 通用数组去重：去掉完全相同的、以及彼此包含（一个完全是另一个子串）的项
   function caseNormArr(arr) {
     if (!Array.isArray(arr)) return [];
@@ -906,6 +920,7 @@ function applyAiToParse(ai) {
   // AI 拆解结果卡片：整齐呈现指标 + 卖点 + 可复制 + 后续动作，可展开全文
   function renderAiCaseCard(c) {
     const ai = c.ai || {};
+    const badge = c._src === 'pub' ? '<span class="vp-src pub">已发布</span>' : '<span class="vp-src local">本地草稿</span>';
     const m = ai.mat || {};
     const an = ai.analysis || {};
     const sb = ai.storyboard || [];
@@ -929,7 +944,7 @@ function applyAiToParse(ai) {
     const naHtml = na.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">后续动作</span>' + na.map(function (s) { return '<span class="vp-tag warn">' + escapeHtml(s) + '</span>'; }).join('') + '</div>' : '';
     const sbHtml = sb.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">分镜</span><span class="vp-chip">' + sb.length + ' 个</span>' + (sb[0] ? ('<span class="vp-muted">首镜：' + escapeHtml((sb[0].frame || '') + ' ' + (sb[0].desc || '')) + '</span>') : '') + '</div>' : '';
     return '<div class="vp-case-item vp-case-ai' + (c.ref ? ' is-ref' : '') + '">' +
-      '<div class="vp-case-top"><span class="vp-case-title">🎬 ' + title + '</span>' +
+      '<div class="vp-case-top"><span class="vp-case-title">🎬 ' + title + '</span>' + badge +
       '<span class="vp-case-acts">' +
       '<button class="btn xs ' + (c.ref ? 'primary' : 'ghost') + '" data-act="ref" data-id="' + c.id + '">' + (c.ref ? '★ 参考中' : '☆ 设为参考') + '</button>' +
       '<button class="btn xs ghost" data-act="expand" data-id="' + c.id + '">展开全文</button>' +
@@ -949,8 +964,9 @@ function applyAiToParse(ai) {
       if (c.kind === 'ai' && c.ai) return renderAiCaseCard(c);
       const title = escapeHtml(c.title || '(无标题)');
       const preview = escapeHtml((c.content || '').replace(/\n/g, ' ').slice(0, 90));
+      const badge = c._src === 'pub' ? '<span class="vp-src pub">已发布</span>' : '<span class="vp-src local">本地草稿</span>';
       return '<div class="vp-case-item' + (c.ref ? ' is-ref' : '') + '">' +
-        '<div class="vp-case-top"><span class="vp-case-title">' + title + '</span>' +
+        '<div class="vp-case-top"><span class="vp-case-title">' + title + '</span>' + badge +
         '<span class="vp-case-acts">' +
         '<button class="btn xs ' + (c.ref ? 'primary' : 'ghost') + '" data-act="ref" data-id="' + c.id + '">' + (c.ref ? '★ 参考中' : '☆ 设为参考') + '</button>' +
         '<button class="btn xs ghost" data-act="edit" data-id="' + c.id + '">编辑</button>' +
@@ -961,18 +977,24 @@ function applyAiToParse(ai) {
     }).join('');
   }
   function caseAddOrEdit(id, title, content) {
-    const list = caseGetAll();
+    const list = caseGetLocal();
     if (id) { const it = list.find(function (x) { return x.id === id; }); if (it) { it.title = title; it.content = content; } }
     else list.push({ id: 'c' + Date.now(), title: title, content: content, ref: false });
-    caseSaveAll(list); caseRender();
+    caseSaveLocal(list); caseRender();
   }
   function caseToggleRef(id) {
-    const a = caseGetAll(); const it = a.find(function (x) { return x.id === id; });
-    if (it) { it.ref = !it.ref; caseSaveAll(a); }
+    const a = caseGetLocal(); const it = a.find(function (x) { return x.id === id; });
+    if (it) { it.ref = !it.ref; caseSaveLocal(a); }
     caseRender();
   }
-  function caseDel(id) { caseSaveAll(caseGetAll().filter(function (x) { return x.id !== id; })); caseRender(); }
-  function casePush(rec) { const list = caseGetAll(); list.push(rec); caseSaveAll(list); }
+  function caseDel(id) {
+    const loc = caseGetLocal();
+    const idx = loc.findIndex(function (x) { return x.id === id; });
+    if (idx >= 0) { loc.splice(idx, 1); caseSaveLocal(loc); }
+    else { const h = caseGetHidden(); if (h.indexOf(id) < 0) { h.push(id); caseSaveHidden(h); } }
+    caseRender();
+  }
+  function casePush(rec) { const list = caseGetLocal(); list.push(rec); caseSaveLocal(list); }
   // 导出案例库为 Markdown，便于离线看板 / 沉淀
   function caseExportMd() {
     const list = caseGetAll();
@@ -990,6 +1012,17 @@ function applyAiToParse(ai) {
     a.href = URL.createObjectURL(blob);
     a.download = '解析案例库_' + new Date().toISOString().slice(0, 10) + '.md';
     document.body.appendChild(a); a.click(); a.remove();
+  }
+  // 导出案例库为 cases.json（合并 published 与本地），用于部署到离线看板 / 跨设备共享
+  function caseExportJson() {
+    const list = caseGetAll().map(function (c) { const o = Object.assign({}, c); delete o._src; return o; });
+    if (!list.length) { alert('案例库为空，暂无可导出内容'); return; }
+    const blob = new Blob([JSON.stringify(list, null, 2)], { type: 'application/json;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'cases.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    alert('已下载 cases.json（共 ' + list.length + ' 条）。把它发给我，我会部署到离线看板，他人打开即可看到你的案例。');
   }
   function caseFillForm(id) {
     const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'block';
@@ -1076,6 +1109,7 @@ function applyAiToParse(ai) {
     // 解析案例库
     b('vpCaseAdd', () => caseFillForm(null));
     b('vpCaseExport', caseExportMd);
+    b('vpCaseExportJson', caseExportJson);
     b('vpCaseCancel', () => { const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'none'; });
     b('vpCaseSave', () => {
       const t = document.getElementById('vpCaseTitle'), c = document.getElementById('vpCaseContent'), f = document.getElementById('vpCaseForm');
@@ -1098,6 +1132,12 @@ function applyAiToParse(ai) {
         if (full) { const open = full.style.display !== 'none'; full.style.display = open ? 'none' : 'block'; btn.textContent = open ? '展开全文' : '收起'; }
       }
     });
+    // 加载已发布案例（cases.json），支持离线看板跨设备展示；失败（如本地 file:// 打开）则仅用 localStorage
+    try {
+      fetch(CASE_URL).then(function (r) { return r.ok ? r.json() : []; }).then(function (j) {
+        if (Array.isArray(j)) { PUBLISHED_CASES = j; caseRender(); }
+      }).catch(function () {});
+    } catch (e) {}
     caseRender();
     updateAiTag();
     const _pv = document.getElementById('vpAiProvider'); if (_pv) _pv.addEventListener('change', onProviderChange);
