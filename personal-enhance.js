@@ -5,10 +5,10 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260805j";
-  var MAT_URL  = "./me-materials.csv?v=20260805j";
-  // 当月「上传时间」口径素材量：从创量【内容】按上传时间导出(由脚本分页抓取落盘)，按素材ID去重
-  var UPLOAD_URL = "./me-uploads.csv?v=20260805j";
+  var HIST_URL = "./me-history.csv?v=20260805k";
+  var MAT_URL  = "./me-materials.csv?v=20260805k";
+  // 当月「上传时间」口径素材量：me-uploads.csv 含「上传时间」列(由创量投放报表首现日反推,高精度近似)
+  var UPLOAD_URL = "./me-uploads.csv?v=20260805k";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -831,7 +831,7 @@
       table = "<div class='empty' style='padding:24px;text-align:center;color:#9aa4b2;background:#fbfcff;border:1px dashed #e0e6ef;border-radius:10px;margin-top:12px'>该范围内暂无素材</div>";
     }
 
-    var note = "<div class='me-up-note'>统计口径：按创量【内容】页「上传时间」高级筛选导出素材清单，按素材ID去重计数（数据来源 me-uploads.csv，覆盖 2026-07 起）；仅统计上传人含「李虹玉」的素材；素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AIGC 素材。日=按上传日期、周=ISO自然周、月=按上传月份汇总产出。上传时间缺失时按素材名内日期片段(-YYYYMMDD- / -MMDD-)兜底（「误传」类无日期素材名无法归属，已排除）。</div>";
+    var note = "<div class='me-up-note'>统计口径：数据来源 me-uploads.csv，按素材ID去重、仅统计上传人含「李虹玉」的素材；「上传时间」取自创量投放报表(me-materials.csv)中该素材<strong>首次出现的数据日</strong>反推（高精度近似，通常较真实上传时间差 1 天内；创量【内容】页导出走 Minio 对象存储、列表无上传时间列，无法自动取精确时间戳）。素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AIGC 素材。日=按上传日期、周=ISO自然周、月=按上传月份汇总产出。无投放数据的「误传」类素材无法归属时间，已排除。</div>";
 
     body.innerHTML = bar + tiles + table + note;
 
@@ -1069,7 +1069,7 @@
     var uploadPanel = document.createElement("div");
     uploadPanel.id = "meUpload";
     uploadPanel.innerHTML =
-      panelHd("📦 个人素材统计", "剪辑师李虹玉 · 上传时间口径 · 日/周/月/总汇总", "按素材ID去重 · 上传时间片段兜底 · 区间+维度可切换") +
+      panelHd("📦 个人素材统计", "剪辑师李虹玉 · 上传时间口径 · 日/周/月/总汇总", "按素材ID去重 · 上传时间=报表首现日(高精度近似) · 区间+维度可切换") +
       "<div id='meUploadBody'></div>";
     mountPanel("slotMeUpload", uploadPanel, matTopPanel);
 
