@@ -1555,16 +1555,10 @@ function decKey(kind, a, b){ return kind==='cat' ? `cat|${a}|${b}` : `mat|${a}|$
 
 // ========== 项目基础看板 - 全局核心指标与项目对比 ==========
 function renderProjSummary(){
-  const empty = !(DATA && DATA.materials && DATA.materials.rows && DATA.materials.rows.length);
+  // 素材明细(35MB)可能尚未加载/加载失败，但核心指标/项目对比/类型占比均来自轻量 period-meta.json，应独立渲染，不受大文件阻塞
+  const hasMat = !!(DATA && DATA.materials && DATA.materials.rows && DATA.materials.rows.length);
   const emptyBanner = $('#proj-empty');
-  if(emptyBanner) emptyBanner.style.display = empty ? 'block' : 'none';
-  if(empty){
-    $('#ov-kpis').innerHTML = '<div class="empty" style="grid-column:1/-1;text-align:left;padding:16px 10px"><b>暂无核心指标数据</b><br><span style="color:var(--muted)">请点击右上角「⤓ 导入新周期」上传素材报表 CSV。</span></div>';
-    $('#ov-period-filter').textContent = '未导入数据';
-    ['chProjCost','chProjEff','chTypeShare'].forEach(id=>{ const el=$(`#${id}`); if(el){ const ctx=el.getContext('2d'); ctx.clearRect(0,0,el.width,el.height); } });
-    $('#ovTypeStats').innerHTML = '<div class="empty" style="text-align:left;padding:40px 10px"><b>暂无视频/图片素材类型数据</b><br><span style="color:var(--muted)">导入后会自动按消耗占比拆分视频与图片。</span></div>';
-    return;
-  }
+  if(emptyBanner) emptyBanner.style.display = hasMat ? 'none' : 'block';
   $('#ov-period-filter').textContent = DATA.meta.period;
   $('#cmpToggle').classList.toggle('on', state.compare);
   const o = DATA.overall;
@@ -1684,16 +1678,27 @@ function renderOverview(){
 
 // ========== 视频 / 图片 素材类型对比 ==========
 function renderTypeOverview(){
-  const C = DATA.materials.cols;
-  const iCost=C.indexOf('cost'), iImp=C.indexOf('imp'), iClk=C.indexOf('clk'), iCv=C.indexOf('cv'), iMt=C.indexOf('mtype');
-  const t={};
-  DATA.materials.rows.forEach(r=>{
-    const k=r[iMt]||'其他';
-    if(!t[k]) t[k]={cost:0,imp:0,clk:0,cv:0,n:0};
-    const o=t[k]; o.cost+=r[iCost];o.imp+=r[iImp];o.clk+=r[iClk];o.cv+=r[iCv];o.n++;
-  });
+  let t={}, types=[];
+  // 优先使用 period-meta.json 预聚合的 typeShare（轻量，不依赖 35MB 素材明细）
+  if(DATA.typeShare && DATA.typeShare.length){
+    DATA.typeShare.forEach(x=>{ t[x.type]={cost:x.cost,imp:x.imp,clk:x.clk,cv:x.cv,n:x.n}; });
+    types = DATA.typeShare.map(x=>x.type);
+  } else if(DATA.materials && DATA.materials.rows && DATA.materials.rows.length){
+    const C=DATA.materials.cols;
+    const iCost=C.indexOf('cost'),iImp=C.indexOf('imp'),iClk=C.indexOf('clk'),iCv=C.indexOf('cv'),iMt=C.indexOf('mtype');
+    DATA.materials.rows.forEach(r=>{
+      const k=r[iMt]||'其他';
+      if(!t[k]) t[k]={cost:0,imp:0,clk:0,cv:0,n:0};
+      const o=t[k]; o.cost+=r[iCost];o.imp+=r[iImp];o.clk+=r[iClk];o.cv+=r[iCv];o.n++;
+    });
+    types=Object.keys(t).sort((a,b)=>t[b].cost-t[a].cost);
+  }
+  if(!types.length){
+    const el=$('#chTypeShare'); if(el){ const ctx=el.getContext('2d'); ctx.clearRect(0,0,el.width,el.height); }
+    $('#ovTypeStats').innerHTML='<div class="empty" style="text-align:left;padding:40px 10px"><b>暂无视频/图片素材类型数据</b><br><span style="color:var(--muted)">素材明细加载中或暂不可用，稍后自动刷新。</span></div>';
+    return;
+  }
   const palette={'视频':'#6366f1','图片':'#10b981'};
-  const types=Object.keys(t).sort((a,b)=>t[b].cost-t[a].cost);
   const colors=types.map(x=>palette[x]||'#94a3b8');
   const totCost=types.reduce((s,k)=>s+t[k].cost,0)||1;
   chart('chTypeShare',{type:'doughnut',
@@ -3238,7 +3243,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260805n';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260808b';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走版本化 URL 利用缓存；若返回空/截断/解析失败，则用时间戳 URL 强制回源
 async function fetchJSONRetry(base, opt={}){
