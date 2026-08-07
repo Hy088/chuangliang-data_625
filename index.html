@@ -3210,13 +3210,14 @@ async function saveRuntimeState(){
   try{
     const p=(DATA_FULL.meta&&DATA_FULL.meta.periods)||[];
     const rows=(DATA_FULL.materials&&DATA_FULL.materials.rows)||[];
-    if(p.length===0 && rows.length===0){ console.warn('[state] 跳过保存：当前为空'); return; }
+    // 必须等素材明细也加载完成再保存，否则IndexedDB会记住一个「有meta但materials为空」的半成品，导致以后每次打开都空白
+    if(p.length===0 || rows.length===0){ console.warn('[state] 跳过保存：数据不完整(meta='+p.length+' rows='+rows.length+')'); return; }
     const snap=JSON.parse(JSON.stringify(DATA_FULL));
     snap._fileSig=fileSignature();   // 记录写入时的文件签名
     snap._appVer=SEED_VER;          // 记录写入时的应用版本，用于过期校验
     await idbPut(IDB_KEY, snap);
     updateStateBanner();
-    console.log('[state] runtime saved, periods=', p);
+    console.log('[state] runtime saved, periods=', p, 'rows=', rows.length);
   }catch(e){ console.warn('[state] save failed', e); }
 }
 async function loadRuntimeState(){
@@ -3230,11 +3231,11 @@ async function loadRuntimeState(){
     if(!saved.materials){ console.log('[state] 本地缓存缺少 materials，丢弃并使用线上数据'); return; }
     const p=(saved.meta.periods)||[];
     const rows=(saved.materials.rows)||[];
-    if(p.length===0 && rows.length===0){ console.warn('[state] 缓存为空，忽略'); return; }
+    if(p.length===0 || rows.length===0){ console.warn('[state] 缓存不完整，忽略'); return; }
     DATA_FULL=saved; DATA=DATA_FULL; CUR_PERIOD=null;
     rebuildIdMap();
-    console.log('[state] restored from IndexedDB, periods=', saved.meta.periods);
-  }catch(e){ console.warn('[state] restore failed', e); }
+    console.log('[state] restored from IndexedDB, periods=', saved.meta.periods, 'rows=', rows.length);
+  }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
 const SEED_VER = '20260805n';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
@@ -3264,7 +3265,7 @@ async function loadSeedData(){
   try{
     const obj=await fetchJSONRetry('period-meta.json');
     DATA_FULL=obj; DATA=DATA_FULL; CUR_PERIOD=null; rebuildIdMap();
-    saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e)); // 后台保存，不阻塞渲染
+    // 注意：此时 materials 尚未加载，不保存 runtime，避免 IndexedDB 记住半成品（有 meta 但 materials 为空）
     console.log('[seed] 已从 period-meta.json 载入, periods=', obj.meta.periods);
     setTimeout(loadMaterialsAsync, 2500); // 素材明细（约34MB）延迟到首屏渲染完成后再异步拉取，避免与首屏抢带宽
     return;
@@ -3283,7 +3284,7 @@ async function loadMaterialsAsync(){
     const ov=document.getElementById('loadOverlay');
     if(ov && !ov.classList.contains('hidden')){ const e=document.getElementById('loadMsg'); if(e) e.textContent='数据已加载，正在后台拉取素材明细（约34MB）...'; }
     const ctrl=new AbortController();
-    const to=setTimeout(()=>ctrl.abort(), 90000);
+    const to=setTimeout(()=>ctrl.abort(), 120000); // 35MB 文件在弱网下可能需要更久，放宽到 120 秒
     const m=await fetchJSONRetry('period-materials.json', {signal:ctrl.signal});
     clearTimeout(to);
     if(!DATA_FULL) return;
@@ -3291,6 +3292,7 @@ async function loadMaterialsAsync(){
     DATA=DATA_FULL; rebuildIdMap();
     try{ renderAll(); }catch(e){ console.error('[materials] 加载后重渲染失败', e); }
     console.log('[seed] 素材明细已异步载入, rows=', m.rows?m.rows.length:0);
+    saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e)); // 完整数据才保存
   }catch(e){ console.warn('[materials] 异步加载失败（素材标签页将暂为空，可刷新重试）', e); }
 }
 function withTimeout(promise, ms, label){
