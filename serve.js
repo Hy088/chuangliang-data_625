@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const ROOT = 'C:/Users/EDY/chuangliang_data';
 const PORT = 8788;
@@ -52,6 +53,8 @@ function readKey(name) {
 const readArkKey = () => readKey('ARK_API_KEY');
 const readSfKey = () => readKey('SILICONFLOW_API_KEY');
 const readPiapiKey = () => readKey('PIAPI_API_KEY');
+const readVolcAk = () => readKey('VOLC_ACCESS_KEY');
+const readVolcSk = () => readKey('VOLC_SECRET_KEY');
 
 function setCors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -151,6 +154,104 @@ async function proxyPiapi(res, method, targetPath, bodyObj) {
   }
 }
 
+// ============ 即梦AI 官方 API（火山引擎·智能视觉，HMAC-SHA256 签名） ============
+const JIMENG_BASE = 'https://visual.volcengineapi.com';
+const JIMENG_HOST = 'visual.volcengineapi.com';
+
+function _hmac(key, data) {
+  return crypto.createHmac('sha256', key).update(data, 'utf8').digest();
+}
+function _sha256Hex(str) {
+  return crypto.createHash('sha256').update(str, 'utf8').digest('hex');
+}
+
+// 火山引擎 V4 风格签名：返回 { xDate, hashedPayload, authorization }
+function signVolcengine({ method, path = '/', query = {}, body = '', ak, sk, region = 'cn-north-1', service = 'cv' }) {
+  const now = new Date();
+  const iso = now.toISOString(); // e.g. 2024-08-28T09:24:45.678Z
+  const xDate = iso.replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z'); // 20240828T092445Z
+  const date = xDate.slice(0, 8); // 20240828
+  const hashedPayload = _sha256Hex(body || '');
+
+  const canonicalHeaders =
+    'host:' + JIMENG_HOST + '\n' +
+    'x-content-sha256:' + hashedPayload + '\n' +
+    'x-date:' + xDate + '\n';
+  const signedHeaders = 'host;x-content-sha256;x-date';
+
+  const canonicalQuery = Object.keys(query).sort().map(k =>
+    encodeURIComponent(k) + '=' + encodeURIComponent(query[k])
+  ).join('&');
+
+  const canonicalRequest = [
+    method.toUpperCase(),
+    path,
+    canonicalQuery,
+    canonicalHeaders,
+    signedHeaders,
+    hashedPayload
+  ].join('\n');
+
+  const scope = date + '/' + region + '/' + service + '/request';
+  const stringToSign = [
+    'HMAC-SHA256',
+    xDate,
+    scope,
+    _sha256Hex(canonicalRequest)
+  ].join('\n');
+
+  let kDate = _hmac('Volc' + sk, date);
+  let kRegion = _hmac(kDate, region);
+  let kService = _hmac(kRegion, service);
+  let kSigning = _hmac(kService, 'request');
+  const signature = _hmac(kSigning, stringToSign).toString('hex');
+
+  const authorization =
+    'HMAC-SHA256 Credential=' + ak + '/' + scope +
+    ', SignedHeaders=' + signedHeaders +
+    ', Signature=' + signature;
+
+  return { xDate, hashedPayload, authorization };
+}
+
+async function proxyJimeng(res, method, queryObj, bodyObj) {
+  const ak = readVolcAk();
+  const sk = readVolcSk();
+  if (!ak || !sk) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({
+      error: '未配置火山引擎 AccessKey/SecretKey。请在 chuangliang_data/.env 写入 VOLC_ACCESS_KEY=你的AK 与 VOLC_SECRET_KEY=你的SK（火山引擎控制台「访问控制→密钥管理」创建；账号需实名认证并开通「即梦AI-视频生成3.0」服务，选免费试用）。保存后本服务会自动读取（无需重启）。'
+    }));
+    return;
+  }
+  try {
+    const body = bodyObj ? JSON.stringify(bodyObj) : '';
+    const q = queryObj || {};
+    const sign = signVolcengine({ method, path: '/', query: q, body, ak, sk });
+    const queryStr = Object.keys(q).sort().map(k =>
+      encodeURIComponent(k) + '=' + encodeURIComponent(q[k])
+    ).join('&');
+    const url = JIMENG_BASE + '/?' + queryStr;
+    const r = await fetch(url, {
+      method,
+      headers: {
+        'Host': JIMENG_HOST,
+        'X-Date': sign.xDate,
+        'X-Content-Sha256': sign.hashedPayload,
+        'Authorization': sign.authorization,
+        'Content-Type': 'application/json'
+      },
+      body: body || undefined
+    });
+    const txt = await r.text();
+    res.writeHead(r.status, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(txt);
+  } catch (e) {
+    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ error: '即梦AI代理转发失败：' + String(e && e.message || e) }));
+  }
+}
+
 async function handleApi(req, res, urlPath) {
   setCors(res);
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
@@ -200,6 +301,18 @@ async function handleApi(req, res, urlPath) {
     if (pm && req.method === 'GET') {
       const id = decodeURIComponent(pm[1]);
       return proxyPiapi(res, 'GET', '/task/' + id, null);
+    }
+    // ---------- 即梦AI 官方 API（火山引擎智能视觉，HMAC 签名） ----------
+    // 提交视频任务：POST /api/jimeng/video -> Action=CVSync2AsyncSubmitTask
+    if (urlPath === '/api/jimeng/video' && req.method === 'POST') {
+      const body = await readJsonBody(req);
+      return proxyJimeng(res, 'POST', { Action: 'CVSync2AsyncSubmitTask', Version: '2022-08-31' }, body);
+    }
+    // 轮询状态：POST /api/jimeng/video/status/:id -> Action=CVSync2AsyncGetResult（body 含 req_key+task_id）
+    let jm = urlPath.match(/^\/api\/jimeng\/video\/status\/(.+)$/);
+    if (jm && req.method === 'POST') {
+      const body = await readJsonBody(req);
+      return proxyJimeng(res, 'POST', { Action: 'CVSync2AsyncGetResult', Version: '2022-08-31' }, body);
     }
     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ error: '未知接口：' + urlPath }));
@@ -258,4 +371,5 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log('Seedance 2.0 proxy ready: /api/seedance  /api/seedance/status/:id  /api/seedream');
   console.log('SiliconFlow proxy ready: /api/sf/image  /api/sf/video  /api/sf/video/status/:id');
   console.log('PiAPI proxy ready: /api/piapi/video  /api/piapi/video/status/:id');
+  console.log('Jimeng(即梦) proxy ready: /api/jimeng/video  /api/jimeng/video/status/:id');
 });

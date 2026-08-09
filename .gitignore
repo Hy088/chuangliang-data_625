@@ -5,3 +5,7 @@ _exports/
 
 # 本地测试日志
 _serve_*.log
+
+# 即梦浏览器自动化：Cookie 与下载产物（含账号态，勿提交）
+jimeng-cookie.json
+jimeng-output/
