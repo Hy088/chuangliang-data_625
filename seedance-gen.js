@@ -20,6 +20,53 @@
     'doubao-seedream-5-0-lite-260128'
   ];
 
+  // ---------------- 爆款范本库（对齐 爆款 DNA：形式/钩子/卖点/CTA/画面） ----------------
+  const TEMPLATES = [
+    { id: 'koubo', name: '口播种草', form: '口播',
+      desc: '真人/第一人称视角，3秒钩子→卖点递进→引导转化',
+      build: s => `第一人称真人出镜视角，${P(s.product)}种草短视频，电影感写实广告质感。开头3秒用「${s.hook || '直击痛点 / 引发好奇'}」强钩子抓住注意力；中段贴近产品特写，自然展示${P(s.product)}的${P(s.sellpoint)}，穿插${SC(s)}使用画面；结尾给出明确行动指引（${s.cta || '点击了解详情 / 下单'}）。${ST(s)}，运镜：缓慢推近 + 轻微手持晃动增强真实感，节奏明快卡点，适配${DUR(s)}秒、9:16 竖屏短视频。` },
+    { id: 'pain', name: '痛点反转', form: '口播/剧情',
+      desc: '开场焦虑痛点→反转解决，情绪对比强',
+      build: s => `剧情向短视频：开场呈现${s.audience || '用户'}在${SC(s)}中遭遇的尴尬 / 焦虑痛点（画面压抑、冷色调），随即反转——使用${P(s.product)}后问题解决、情绪转为轻松愉悦（画面变暖变亮）。突出${P(s.sellpoint)}带来的改变，结尾${s.cta || '引导尝试'}。${ST(s)}，运镜：从固定远景切到产品特写再拉回人物表情，情绪对比强烈，适配${DUR(s)}秒、9:16。` },
+    { id: 'compare', name: '对比测评', form: '混剪',
+      desc: '使用前 vs 使用后强烈对比',
+      build: s => `左右分屏对比短视频：左侧「使用前」灰暗、杂乱、低效；右侧「使用后」${P(s.product)}带来${P(s.sellpoint)}，明亮通透、秩序感强。中间用箭头 / 光效过渡强调差异，节奏紧凑。${ST(s)}，运镜：横向平移扫过对比、产品居中高光，适配${DUR(s)}秒、9:16 或 1:1。` },
+    { id: 'scene', name: '场景代入', form: '剧情/口播',
+      desc: '生活化沉浸，像朋友分享好物',
+      build: s => `生活化沉浸式短视频：在${SC(s)}中自然使用${P(s.product)}，无生硬口播感，像朋友分享好物。镜头跟随人物动线，捕捉${P(s.sellpoint)}的真实细节与微表情。${ST(s)}，运镜：手持跟拍 + 偶尔特写，自然光，节奏舒缓可信，适配${DUR(s)}秒、9:16。` },
+    { id: 'story', name: '剧情种草', form: '剧情',
+      desc: '微剧情，产品作为关键道具登场',
+      build: s => `微剧情短视频：${s.audience || '主角'}在${SC(s)}遇到小状况，恰巧${P(s.product)}作为关键道具登场化解窘境，顺势带出${P(s.sellpoint)}。轻喜剧基调，结尾${s.cta || '自然露出品牌'}。${ST(s)}，运镜：过肩 + 中近景切换，节奏轻快，适配${DUR(s)}秒、9:16。` },
+    { id: 'tutorial', name: '教程演示', form: '口播/混剪',
+      desc: '分步骤演示用法与效果',
+      build: s => `步骤演示类短视频：以清晰字幕 / 画外音分步骤展示${P(s.product)}的用法与${P(s.sellpoint)}效果，镜头对准双手操作与成果特写。${ST(s)}，运镜：俯拍 + 特写切换，节奏稳定不拖沓，适配${DUR(s)}秒、9:16 或 1:1。` }
+  ];
+  // 槽位缺省兜底
+  function P(v) { return (v && v.trim()) ? v.trim() : '产品'; }
+  function SC(s) { return (s.scene && s.scene.trim()) ? s.scene.trim() : '日常场景'; }
+  function ST(s) { return (s.style && s.style.trim()) ? s.style.trim() + '风格' : '明亮清新、生活化广告风格'; }
+  function DUR(s) { const d = parseInt(s.dur, 10); return (d >= 4 && d <= 15) ? d : 5; }
+
+  // 导入的爆款拆解 JSON → 提示词（对接 material-decompose-loop 的「可复制方向」字段）
+  function composeImported(d) {
+    const prod = d.产品 || d.product || d.素材名 || d.素材ID || '产品';
+    const parts = [`基于爆款可复制方向生成「${prod}」短视频：`];
+    const pick = (...ks) => ks.map(k => d[k]).find(v => v != null && String(v).trim());
+    const dir = pick('可复制方向', 'dir', '方向');
+    const sell = pick('核心卖点', 'sellpoint', '卖点');
+    const hook = pick('钩子', '开头3秒', 'hook');
+    const shots = pick('画面分镜', '分镜', 'shots');
+    const script = pick('口播脚本', '脚本', 'script');
+    if (dir) parts.push(String(dir));
+    if (sell) parts.push('核心卖点：' + sell);
+    if (hook) parts.push('开头钩子：' + hook);
+    if (shots) parts.push('画面分镜：' + shots);
+    if (script) parts.push('口播基调：' + script);
+    const dd = parseInt(pick('时长', '时长秒') || '5', 10);
+    parts.push('电影感写实广告质感，运镜贴合内容节奏，适配' + (dd >= 4 && dd <= 15 ? dd : 5) + '秒、9:16 竖屏。');
+    return parts.join('。');
+  }
+
   const state = {
     mode: 'parse',     // parse | gen
     type: 't2v',       // t2v | i2v-first | i2v-fl | i2v-ref | i2i
@@ -70,6 +117,17 @@
   .sdg-copy{font-size:12px;color:var(--brand);cursor:pointer;border:1px solid var(--line);
     border-radius:7px;padding:4px 9px;background:transparent}
   .sdg-copy:hover{background:rgba(47,107,255,.06)}
+  .sdg-tpl-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .sdg-tpl-chips{display:flex;gap:8px;flex-wrap:wrap}
+  .sdg-tpl-chips .chip{cursor:pointer;border:1px solid var(--line);border-radius:999px;padding:6px 13px;
+    font-size:13px;color:var(--ink);background:var(--panel);white-space:nowrap}
+  .sdg-tpl-chips .chip:hover{border-color:var(--brand);color:var(--brand)}
+  .sdg-tpl-chips .chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .sdg-tb{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:2px}
+  .sdg-tpl-slots{margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--panel)}
+  .sdg-tpl-slotgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+  .sdg-tpl-slotgrid .sdg-input{min-width:0;max-width:none}
+  .sdg-tpl-slotgrid .sdg-input.full{grid-column:1/-1}
   `;
   const styleEl = document.createElement('style');
   styleEl.id = 'sdg-style';
@@ -116,9 +174,35 @@
         <span class="note" style="margin:0;flex-basis:100%">视频默认 Seedance 2.0；切到「文生图」会自动换 Seedream，可手动改。</span>
       </div>
 
+      <div class="sdg-row sdg-col" style="border-top:1px dashed var(--line);padding-top:14px">
+        <label class="sdg-lb">📚 爆款范本</label>
+        <div class="sdg-tb">
+          <div id="sdgTplChips" class="sdg-tpl-chips" title="内置 6 类爆款结构，点选后填槽位一键生成提示词"></div>
+          <label class="sdg-ref-add" style="margin-left:auto">＋ 导入爆款拆解 JSON<input type="file" id="sdgTplImport" accept=".json,application/json" hidden></label>
+        </div>
+        <div id="sdgTplSlots" class="sdg-tpl-slots" style="display:none">
+          <div class="sdg-tpl-slotgrid">
+            <input class="sdg-input" id="sdgTplProduct" placeholder="产品名（如 果茶 / 扫地机）">
+            <input class="sdg-input" id="sdgTplSell" placeholder="核心卖点（如 0糖0卡）">
+            <input class="sdg-input" id="sdgTplAud" placeholder="目标人群（选填）">
+            <input class="sdg-input" id="sdgTplScene" placeholder="使用场景（选填）">
+            <input class="sdg-input" id="sdgTplStyle" placeholder="风格基调（选填，如 电影感/清新）">
+            <input class="sdg-input" id="sdgTplHook" placeholder="开头钩子（选填）">
+            <input class="sdg-input" id="sdgTplCta" placeholder="结尾 CTA（选填）">
+            <input class="sdg-input" id="sdgTplDur" placeholder="时长秒（选填·默认5）" style="max-width:130px">
+          </div>
+          <div class="sdg-actions">
+            <button class="btn primary" id="sdgTplApply">✨ 套用范本生成提示词</button>
+            <span class="note" id="sdgTplActive" style="margin:0"></span>
+          </div>
+        </div>
+        <div id="sdgImportedChips" class="sdg-tpl-chips" style="margin-top:10px"></div>
+        <span class="note" style="margin:0">内置爆款结构库一键成稿；或「导入爆款拆解 JSON」（来自素材拆解看板的「可复制方向」），点条目即按真实爆款 DNA 生成提示词。</span>
+      </div>
+
       <div class="sdg-row sdg-col">
         <label class="sdg-lb">提示词 (Prompt)</label>
-        <textarea id="sdgPrompt" rows="4" class="sdg-input" placeholder="例如：第一人称视角果茶宣传广告，手摘下带晨露的红苹果，雪克杯摇匀加冰，分层果茶倒入透明杯，粉色包装贴标，卡点轻快鼓点"></textarea>
+        <textarea id="sdgPrompt" rows="4" class="sdg-input" placeholder="例如：第一人称视角果茶宣传广告，手摘下带晨露的红苹果，雪克杯摇匀加冰，分层果茶倒入透明杯，粉色包装贴标，卡点轻快鼓点。 👆 也可从上方「爆款范本」一键生成"></textarea>
       </div>
 
       <div class="sdg-row sdg-col" id="sdgRefWrap">
@@ -193,6 +277,23 @@
   const resultCard = $('#sdgResult');
   const resultBody = $('#sdgResultBody');
   const resultTag = $('#sdgResultTag');
+
+  // 爆款范本 元素
+  const tplChips = $('#sdgTplChips');
+  const tplSlots = $('#sdgTplSlots');
+  const tplActive = $('#sdgTplActive');
+  const tplApply = $('#sdgTplApply');
+  const tplImport = $('#sdgTplImport');
+  const importedChips = $('#sdgImportedChips');
+  const tplProduct = $('#sdgTplProduct');
+  const tplSell = $('#sdgTplSell');
+  const tplAud = $('#sdgTplAud');
+  const tplScene = $('#sdgTplScene');
+  const tplStyle = $('#sdgTplStyle');
+  const tplHook = $('#sdgTplHook');
+  const tplCta = $('#sdgTplCta');
+  const tplDur = $('#sdgTplDur');
+  let activeTpl = null;
 
   // ---------------- 模式切换 ----------------
   function setMode(mode) {
@@ -491,8 +592,84 @@
     });
   }
 
+  // ---------------- 爆款范本 逻辑 ----------------
+  function renderTplChips() {
+    tplChips.innerHTML = '';
+    TEMPLATES.forEach(t => {
+      const c = document.createElement('div');
+      c.className = 'chip';
+      c.dataset.id = t.id;
+      c.textContent = t.name;
+      c.title = t.desc;
+      c.onclick = () => selectTpl(t.id);
+      tplChips.appendChild(c);
+    });
+  }
+  function selectTpl(id) {
+    activeTpl = TEMPLATES.find(t => t.id === id);
+    tplChips.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c.dataset.id === id));
+    importedChips.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+    tplSlots.style.display = 'block';
+    tplActive.textContent = '当前范本：' + activeTpl.name + '（' + activeTpl.form + '）';
+  }
+  function fillPrompt(text) {
+    promptEl.value = text;
+    // 范本均为视频向，确保生成类型=文生视频，与提示词一致
+    if (state.type !== 't2v') {
+      state.type = 't2v';
+      typeSeg.querySelectorAll('.seg-btn').forEach(x => x.classList.toggle('on', x.dataset.type === 't2v'));
+      applyTypeUI();
+    }
+    promptEl.focus();
+    promptEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  tplApply.onclick = () => {
+    if (!activeTpl) { setStatus('请先点选一个爆款范本', 'err'); return; }
+    const s = {
+      product: tplProduct.value, sellpoint: tplSell.value, audience: tplAud.value,
+      scene: tplScene.value, style: tplStyle.value, hook: tplHook.value,
+      cta: tplCta.value, dur: tplDur.value
+    };
+    fillPrompt(activeTpl.build(s));
+    setStatus('✅ 已套用「' + activeTpl.name + '」范本生成提示词，可直接调整或点 🎬 生成', 'ok');
+  };
+  tplImport.onchange = () => {
+    const f = tplImport.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const data = JSON.parse(r.result);
+        const arr = Array.isArray(data) ? data
+          : (data.viral || data.爆款 || data.list || data.可复制方向 || []);
+        if (!arr.length) { setStatus('JSON 里没找到爆款条目（期望数组或含 viral/list/可复制方向 字段）', 'err'); return; }
+        importedChips.innerHTML = '';
+        arr.forEach((d, i) => {
+          const name = d.产品 || d.product || d.素材名 || d.素材ID || ('爆款范本' + (i + 1));
+          const c = document.createElement('div');
+          c.className = 'chip';
+          c.textContent = name;
+          c.title = '点击按此爆款可复制方向生成提示词';
+          c.onclick = () => {
+            importedChips.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+            c.classList.add('on');
+            tplChips.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+            tplSlots.style.display = 'none';
+            fillPrompt(composeImported(d));
+            setStatus('✅ 已套用导入的「' + name + '」可复制方向生成提示词', 'ok');
+          };
+          importedChips.appendChild(c);
+        });
+        setStatus('✅ 已导入 ' + arr.length + ' 条爆款范本，点击即可生成提示词', 'ok');
+      } catch (e) { setStatus('JSON 解析失败：' + e.message, 'err'); }
+    };
+    r.readAsText(f);
+    tplImport.value = '';
+  };
+
   // ---------------- 初始化 ----------------
   applyTypeUI();
+  renderTplChips();
   // 直连模式若已存过 key，回填
   const savedKey = localStorage.getItem('sdg_ark_key');
   if (savedKey) $('#sdgKey').value = savedKey;
