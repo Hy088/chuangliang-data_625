@@ -1081,17 +1081,11 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <h2>📊 跨素材爆款规律 <span class="tag">已解析视频的内容特征 × 真实投放数据，跨素材找「什么内容=好效果」</span></h2>
     <div class="note">基于「我的解析案例」库（cases.json + 本机草稿，每条都带真实报表数据 + AI 拆解内容）。点下方按钮，自动把「有钩子/无钩子」「AIGC/非AIGC」及「各品类」按 CTR/CVR/CPA 做横向对比，输出可复用的爆款规律。建议先解析几条不同钩子/品类的视频并「＋ 保存为案例」。</div>
     <div class="vp-actions">
-      <button class="btn sm primary" id="vpViralBtn">🔍 跑一遍爆款规律</button>
+      <button class="btn sm primary" id="vpViralBtn" onclick="renderViralPatterns()">🔍 跑一遍爆款规律</button>
       <span class="note" id="vpViralInfo" style="margin:0"></span>
     </div>
     <div id="vpViral"></div>
   </div>
-  <script>
-  (function(){
-    const btn=document.getElementById('vpViralBtn');
-    if(btn && typeof renderViralPatterns==='function') btn.onclick=function(){ renderViralPatterns(); };
-  })();
-  </script>
 
 <div class="card" id="vpDeep" style="display:none">
       <h2>🔬 深度分析 <span class="tag" id="vpDeepTag">零Key·本地浏览器运行</span></h2>
@@ -4283,9 +4277,9 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260810g"></script>
+<script src="personal-enhance.js?v=20260810h"></script>
 
-<script src="vparse-deep.js?v=20260810d"></script>
+<script src="vparse-deep.js?v=20260810h"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->

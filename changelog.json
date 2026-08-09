@@ -1,5 +1,16 @@
 [
   {
+    "ver": "v20260810h",
+    "date": "2026-08-10",
+    "type": "fix",
+    "summary": "彻底修复「跑一遍爆款规律」按钮点击无反应",
+    "details": [
+      "根因：绑定按钮的内联脚本执行时，renderViralPatterns() 尚未定义到全局，typeof 为 undefined，onclick 实际未挂上",
+      "改为 button 的 onclick=\"renderViralPatterns()\"，点击时函数一定已存在，避免脚本执行顺序问题",
+      "移除了冗余的早期绑定脚本"
+    ]
+  },
+  {
     "ver": "v20260810g",
     "date": "2026-08-10",
     "type": "fix",
