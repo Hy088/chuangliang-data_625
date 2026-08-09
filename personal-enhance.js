@@ -52,11 +52,29 @@
     var t = new Date(); t.setDate(1); t.setMonth(t.getMonth() + offset);
     return t.getFullYear() + "-" + ("0" + (t.getMonth() + 1)).slice(-2);
   }
-  if (!kpiStore._months || !Array.isArray(kpiStore._months) || kpiStore._months.length < 2) {
-    kpiStore._months = [monthStr(0), monthStr(-1)];
+  // 兼容旧版 _months 数组；新版用 _range: { start: 'YYYY-MM', count: N }
+  if (!kpiStore._range || typeof kpiStore._range !== "object") {
+    var oldMonths = kpiStore._months;
+    if (oldMonths && Array.isArray(oldMonths) && oldMonths.length >= 1) {
+      kpiStore._range = { start: oldMonths[0], count: oldMonths.length };
+    } else {
+      kpiStore._range = { start: monthStr(-1), count: 2 };
+    }
     saveKpiStore(kpiStore);
   }
-  var kpiMonths = kpiStore._months;   // [月①, 月②]
+  function getKpiMonths() {
+    var range = kpiStore._range || { start: monthStr(-1), count: 2 };
+    var list = [];
+    var d = new Date(range.start + "-01T00:00:00");
+    if (isNaN(d.getTime())) d = new Date(monthStr(-1) + "-01T00:00:00");
+    for (var i = 0; i < (range.count || 2); i++) {
+      var y = d.getFullYear(), m = d.getMonth() + 1;
+      list.push(y + "-" + ("0" + m).slice(-2));
+      d.setMonth(d.getMonth() + 1);
+    }
+    return list;
+  }
+  var kpiMonths = getKpiMonths();
   // 取某月实际消耗（总消耗 + AIGC 消耗），AIGC 由 isAiMaterial(素材标签) 按【素材标签】列判定
   function getMonthActual(m) {
     var cost = 0, aigc = 0;
@@ -567,49 +585,70 @@
       "<div class='kpi-gap me-kpi-gap'>" + kpiGapTxt(actualVal, targetVal) + "</div>" +
     "</div>";
   }
-  function tgInput(i, f, v) {
-    return "<span style='font-weight:400;color:#8a94a6'>目标 <input type='number' class='me-kpi-target-input kpi-in' data-mi='" + i + "' data-f='" + f + "' value='" + v + "' placeholder='0'> 元</span>";
+  function tgInput(m, f, v) {
+    return "<span style='font-weight:400;color:#8a94a6'>目标 <input type='number' class='me-kpi-target-input kpi-in' data-m='" + m + "' data-f='" + f + "' value='" + v + "' placeholder='0'> 元</span>";
   }
-  // 单月卡片（月① / 月②）
-  function kpiMonthBlock(i, m, actual, t) {
-    var tag = i === 0 ? "月①" : "月②";
+  // 单月卡片
+  function kpiMonthBlock(m, actual, t) {
     return "<div class='kpi-mc'>" +
       "<div class='kpi-mc-hd'>" +
-        "<span class='kpi-mc-tag'>" + tag +
-          "<input type='month' class='me-kpi-month kpi-in' data-mi='" + i + "' value='" + m + "' style='width:auto'>" +
-        "</span>" +
+        "<span class='kpi-mc-tag'>" + m + " 月</span>" +
         "<span style='font-size:12px;color:#8a94a6'>实际值按所选月份自动汇总</span>" +
       "</div>" +
       "<div class='kpi-mc-bd'>" +
-        kpiRow("总消耗", i, "cost", actual.cost, t.cost, tgInput(i, "cost", t.cost)) +
-        kpiRow("AIGC 消耗", i, "aigc", actual.aigc, t.aigc, tgInput(i, "aigc", t.aigc)) +
+        kpiRow("总消耗", m, "cost", actual.cost, t.cost, tgInput(m, "cost", t.cost)) +
+        kpiRow("AIGC 消耗", m, "aigc", actual.aigc, t.aigc, tgInput(m, "aigc", t.aigc)) +
       "</div>" +
     "</div>";
   }
-  // 双月合计（mi="t" 表示合计行）
+  // 月份范围合计
   function kpiTotalBlock() {
-    var a1 = getMonthActual(kpiMonths[0]), a2 = getMonthActual(kpiMonths[1]);
-    var t1 = kpiStore[kpiMonths[0]] || { cost: 0, aigc: 0 }, t2 = kpiStore[kpiMonths[1]] || { cost: 0, aigc: 0 };
+    var totalActual = { cost: 0, aigc: 0 }, totalTarget = { cost: 0, aigc: 0 };
+    kpiMonths.forEach(function (m) {
+      var a = getMonthActual(m);
+      var t = kpiStore[m] || { cost: 0, aigc: 0 };
+      totalActual.cost += a.cost; totalActual.aigc += a.aigc;
+      totalTarget.cost += t.cost; totalTarget.aigc += t.aigc;
+    });
+    var rangeLabel = kpiMonths.length === 1 ? kpiMonths[0] : (kpiMonths[0] + " ~ " + kpiMonths[kpiMonths.length - 1]);
     return "<div class='kpi-tot'>" +
-      "<div style='font-weight:800;color:#223;margin-bottom:8px;font-size:14px'>🏁 双月合计考核（" + kpiMonths[0] + " + " + kpiMonths[1] + "）</div>" +
+      "<div style='font-weight:800;color:#223;margin-bottom:8px;font-size:14px'>🏁 合计考核（" + rangeLabel + " · 共 " + kpiMonths.length + " 个月）</div>" +
       "<div class='kpiw'>" +
-        kpiRow("双月总消耗", "t", "cost", a1.cost + a2.cost, t1.cost + t2.cost) +
-        kpiRow("双月 AIGC 消耗", "t", "aigc", a1.aigc + a2.aigc, t1.aigc + t2.aigc) +
+        kpiRow("总消耗", "t", "cost", totalActual.cost, totalTarget.cost) +
+        kpiRow("AIGC 消耗", "t", "aigc", totalActual.aigc, totalTarget.aigc) +
       "</div>" +
+    "</div>";
+  }
+  // 月份范围筛选控件
+  function kpiRangeBar() {
+    var range = kpiStore._range || { start: monthStr(-1), count: 2 };
+    var opts = [1, 2, 3, 6, 12].map(function (n) {
+      return "<option value='" + n + "'" + (range.count === n ? " selected" : "") + ">" + n + " 个月</option>";
+    }).join("");
+    return "<div class='kpi-range-bar'>" +
+      "<label class='kpi-range-lbl'>起始月份</label>" +
+      "<input type='month' class='kpi-in me-kpi-start' value='" + range.start + "' style='width:auto'>" +
+      "<label class='kpi-range-lbl'>范围</label>" +
+      "<select class='kpi-in me-kpi-count'>" + opts + "</select>" +
+      "<button class='btn xs ghost me-kpi-now' data-count='2'>最近 2 个月</button>" +
+      "<button class='btn xs ghost me-kpi-now' data-count='1'>最近 1 个月</button>" +
     "</div>";
   }
   // 轻量刷新：仅重算进度条与实际/目标数值，不动输入框（避免打字时失焦）
   function refreshKpiProgress() {
     Array.prototype.forEach.call(document.querySelectorAll(".me-kpi-bar"), function (bar) {
-      var mi = bar.getAttribute("data-mi"), f = bar.getAttribute("data-f");
+      var m = bar.getAttribute("data-m"), f = bar.getAttribute("data-f");
       var actual, t;
-      if (mi === "t") {
-        var a1 = getMonthActual(kpiMonths[0]), a2 = getMonthActual(kpiMonths[1]);
-        var t1 = kpiStore[kpiMonths[0]] || { cost: 0, aigc: 0 }, t2 = kpiStore[kpiMonths[1]] || { cost: 0, aigc: 0 };
-        actual = { cost: a1.cost + a2.cost, aigc: a1.aigc + a2.aigc };
-        t = { cost: t1.cost + t2.cost, aigc: t1.aigc + t2.aigc };
+      if (m === "t") {
+        actual = { cost: 0, aigc: 0 };
+        t = { cost: 0, aigc: 0 };
+        kpiMonths.forEach(function (mm) {
+          var a = getMonthActual(mm);
+          var tt = kpiStore[mm] || { cost: 0, aigc: 0 };
+          actual.cost += a.cost; actual.aigc += a.aigc;
+          t.cost += tt.cost; t.aigc += tt.aigc;
+        });
       } else {
-        var m = kpiMonths[+mi];
         actual = getMonthActual(m);
         t = kpiStore[m] || { cost: 0, aigc: 0 };
       }
@@ -629,14 +668,15 @@
   }
   function renderKpi() {
     var grid = el("meKpiGrid"); if (!grid) return;
-    // 确保月份数组完整
-    while (kpiMonths.length < 2) kpiMonths.push(monthStr(-(kpiMonths.length)));
-    kpiStore._months = kpiMonths; saveKpiStore(kpiStore);
+    kpiMonths = getKpiMonths();
+    kpiStore._range = kpiStore._range || { start: monthStr(-1), count: 2 };
+    saveKpiStore(kpiStore);
+    var rangeBox = el("meKpiRange"); if (rangeBox) rangeBox.innerHTML = kpiRangeBar();
     var html = "";
-    kpiMonths.forEach(function (m, i) {
+    kpiMonths.forEach(function (m) {
       var actual = getMonthActual(m);
       var t = kpiStore[m] || { cost: 0, aigc: 0 };
-      html += kpiMonthBlock(i, m, actual, t);
+      html += kpiMonthBlock(m, actual, t);
     });
     grid.className = "kpiw";
     grid.innerHTML = html;
@@ -644,19 +684,36 @@
     bindKpi();
   }
   function bindKpi() {
-    Array.prototype.forEach.call(document.querySelectorAll(".me-kpi-month"), function (inp) {
-      inp.onchange = function () {
-        var i = +inp.getAttribute("data-mi");
-        kpiMonths[i] = inp.value;
-        kpiStore._months = kpiMonths; saveKpiStore(kpiStore);
-        renderKpi();   // 换月后重算实际值
+    var startInp = document.querySelector(".me-kpi-start");
+    if (startInp) {
+      startInp.onchange = function () {
+        if (!startInp.value) return;
+        kpiStore._range.start = startInp.value;
+        saveKpiStore(kpiStore);
+        renderKpi();
+      };
+    }
+    var countSel = document.querySelector(".me-kpi-count");
+    if (countSel) {
+      countSel.onchange = function () {
+        kpiStore._range.count = +countSel.value || 2;
+        saveKpiStore(kpiStore);
+        renderKpi();
+      };
+    }
+    Array.prototype.forEach.call(document.querySelectorAll(".me-kpi-now"), function (btn) {
+      btn.onclick = function () {
+        var n = +btn.getAttribute("data-count") || 2;
+        var d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - (n - 1));
+        kpiStore._range = { start: d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2), count: n };
+        saveKpiStore(kpiStore);
+        renderKpi();
       };
     });
     Array.prototype.forEach.call(document.querySelectorAll(".me-kpi-target-input"), function (inp) {
       inp.oninput = function () {
-        var i = +inp.getAttribute("data-mi");
+        var m = inp.getAttribute("data-m");
         var f = inp.getAttribute("data-f");
-        var m = kpiMonths[i];
         if (!kpiStore[m]) kpiStore[m] = { cost: 0, aigc: 0 };
         kpiStore[m][f] = num(inp.value) || 0;
         saveKpiStore(kpiStore);
@@ -1094,8 +1151,9 @@
     var kpiPanel = document.createElement("div");
     kpiPanel.id = "meKpi";
     kpiPanel.innerHTML =
-      panelHd("🎯 双月绩效 KPI 进度", "自定义月份目标 · 消耗自动关联", "") +
-      "<div class='note' style='margin:0 0 14px'>分别选「月① / 月②」并填写 KPI 目标，实际消耗（总消耗、AIGC 消耗）按所选月份自动汇总；目标保存在本地，下次打开仍在。</div>" +
+      panelHd("🎯 KPI 绩效进度", "自定义月份范围 · 消耗自动关联", "") +
+      "<div class='note' style='margin:0 0 14px'>选择起始月份与统计月数，填写 KPI 目标，实际消耗（总消耗、AIGC 消耗）按所选月份自动汇总；目标保存在本地，下次打开仍在。</div>" +
+      "<div id='meKpiRange'></div>" +
       "<div id='meKpiGrid' class='kpiw'></div>" +
       "<div id='meKpiTotal'></div>";
     mountPanel("slotMeKpi", kpiPanel, monthPanel);
