@@ -21,27 +21,36 @@ const TYPES = {
   '.ico': 'image/x-icon'
 };
 
-// ---------- Seedance / Seedream 代理：读取 ARK_API_KEY ----------
+// ---------- 代理密钥读取：支持 ARK_API_KEY 与 SILICONFLOW_API_KEY ----------
 // 实时读取：环境变量每次取最新；.env 按 mtime 缓存，自动化改了 .env 无需重启代理
-let _keyCache = { mtime: 0, value: null };
-function readArkKey() {
-  // 1) 环境变量优先（每次都读最新，便于无重启切换）
-  if (process.env.ARK_API_KEY) return process.env.ARK_API_KEY.trim();
-  // 2) 同目录 .env 文件：ARK_API_KEY=volc-sk-xxx
+let _envCache = { mtime: 0, map: null };
+function readEnvKeys() {
   try {
     const p = path.join(ROOT, '.env');
     if (fs.existsSync(p)) {
       const st = fs.statSync(p);
-      if (st.mtimeMs !== _keyCache.mtime || _keyCache.value === null) {
+      if (st.mtimeMs !== _envCache.mtime || _envCache.map === null) {
         const txt = fs.readFileSync(p, 'utf-8');
-        const m = txt.match(/^\s*ARK_API_KEY\s*=\s*(.+?)\s*$/m);
-        _keyCache = { mtime: st.mtimeMs, value: m && m[1] ? m[1].trim() : '' };
+        const map = {};
+        txt.split(/\r?\n/).forEach(line => {
+          const m = line.match(/^\s*([A-Za-z0-9_]+)\s*=\s*(.+?)\s*$/);
+          if (m) map[m[1]] = m[2];
+        });
+        _envCache = { mtime: st.mtimeMs, map };
       }
-      return _keyCache.value || '';
+      return _envCache.map || {};
     }
   } catch (e) { /* ignore */ }
-  return '';
+  return {};
 }
+function readKey(name) {
+  // 1) 环境变量优先（每次都读最新，便于无重启切换）
+  if (process.env[name]) return process.env[name].trim();
+  // 2) 同目录 .env 文件
+  return (readEnvKeys()[name] || '').trim();
+}
+const readArkKey = () => readKey('ARK_API_KEY');
+const readSfKey = () => readKey('SILICONFLOW_API_KEY');
 
 function setCors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -87,6 +96,33 @@ async function proxyArk(res, method, targetPath, bodyObj) {
   }
 }
 
+// 代理转发到硅基流动 SiliconFlow（免费/低成本通道）：图片 / 视频
+const SF_BASE = 'https://api.siliconflow.cn/v1';
+async function proxySf(res, method, targetPath, bodyObj) {
+  const key = readSfKey();
+  if (!key) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({
+      error: '未配置 SILICONFLOW_API_KEY。请在 chuangliang_data/.env 写入 SILICONFLOW_API_KEY=sk-xxx（硅基流动控制台获取），本服务将自动读取。'
+    }));
+    return;
+  }
+  try {
+    const opts = {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key }
+    };
+    if (bodyObj) opts.body = JSON.stringify(bodyObj);
+    const r = await fetch(SF_BASE + targetPath, opts);
+    const txt = await r.text();
+    res.writeHead(r.status, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(txt);
+  } catch (e) {
+    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ error: '硅基流动代理转发失败：' + String(e && e.message || e) }));
+  }
+}
+
 async function handleApi(req, res, urlPath) {
   setCors(res);
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
@@ -107,6 +143,23 @@ async function handleApi(req, res, urlPath) {
     if (urlPath === '/api/seedream' && req.method === 'POST') {
       const body = await readJsonBody(req);
       return proxyArk(res, 'POST', '/images/generations', body);
+    }
+    // ---------- 硅基流动 SiliconFlow 免费/低成本通道 ----------
+    // 图片生成（同步）：POST /api/sf/image -> /v1/images/generations
+    if (urlPath === '/api/sf/image' && req.method === 'POST') {
+      const body = await readJsonBody(req);
+      return proxySf(res, 'POST', '/images/generations', body);
+    }
+    // 视频提交（异步）：POST /api/sf/video -> /v1/video/submit
+    if (urlPath === '/api/sf/video' && req.method === 'POST') {
+      const body = await readJsonBody(req);
+      return proxySf(res, 'POST', '/video/submit', body);
+    }
+    // 视频状态轮询：GET /api/sf/video/status/:id -> /v1/video/status/:id
+    let sm = urlPath.match(/^\/api\/sf\/video\/status\/(.+)$/);
+    if (sm && req.method === 'GET') {
+      const id = decodeURIComponent(sm[1]);
+      return proxySf(res, 'GET', '/video/status/' + id, null);
     }
     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ error: '未知接口：' + urlPath }));
@@ -163,4 +216,5 @@ server.on('error', (e) => {
 server.listen(PORT, '0.0.0.0', () => {
   console.log('Dashboard local server running at http://localhost:' + PORT + '/');
   console.log('Seedance 2.0 proxy ready: /api/seedance  /api/seedance/status/:id  /api/seedream');
+  console.log('SiliconFlow proxy ready: /api/sf/image  /api/sf/video  /api/sf/video/status/:id');
 });

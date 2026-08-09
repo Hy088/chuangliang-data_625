@@ -20,6 +20,59 @@
     'doubao-seedream-5-0-lite-260128'
   ];
 
+  // ---------------- 硅基流动 SiliconFlow（免费/低成本通道） ----------------
+  const SF_IMG_MODELS = [
+    'black-forest-labs/FLUX.1-schnell', 'Kwai-Kolors/Kolors',
+    'black-forest-labs/FLUX.1-dev'
+  ];
+  const SF_VID_MODELS = [
+    'Wan-AI/Wan2.2-T2V-A14B', 'Wan-AI/Wan2.2-I2V-A14B',
+    'Wan-AI/Wan2.1-T2V-14B-720P'
+  ];
+  const SF_IMG_SIZES = ['1024x1024', '768x1344', '1344x768'];
+  function sfVideoSize(ratio) {
+    return ({ '16:9': '1280x720', '9:16': '720x1280', '1:1': '960x960' })[ratio] || '1280x720';
+  }
+  // 各通道的「生成类型」选项
+  const TYPE_OPTS = {
+    ark: [
+      { t: 't2v', label: '文生视频' },
+      { t: 'i2v-first', label: '图生视频·首帧' },
+      { t: 'i2v-fl', label: '图生视频·首尾帧' },
+      { t: 'i2v-ref', label: '图生视频·参考图' },
+      { t: 'i2i', label: '文生图(Seedream)' }
+    ],
+    sf: [
+      { t: 'sf-i2i', label: '文生图(FLUX/Kolors)' },
+      { t: 'sf-t2v', label: '文生视频(Wan)' },
+      { t: 'sf-i2v', label: '图生视频(Wan)' }
+    ]
+  };
+
+  // ---------------- 预估费用（火山方舟视频，付费） ----------------
+  // 单价：不含视频输入 46 元/百万tokens；含视频输入 28 元/百万tokens
+  // Token 估算 ≈ (输入时长+输出时长) × 宽 × 高 × 帧率 / 1024
+  function estimateArkCost() {
+    const res = $('#sdgRes').value;
+    const dur = Math.max(4, Math.min(15, +$('#sdgDur').value || 5));
+    const fps = +$('#sdgFps').value || 24;
+    const hasVideoIn = ['i2v-first', 'i2v-fl', 'i2v-ref'].includes(state.type);
+    const dim = ({ '480p': [848, 480], '720p': [1280, 720], '1080p': [1920, 1080] })[res] || [1280, 720];
+    const outTokens = (dur * dim[0] * dim[1] * fps) / 1024;
+    const inTokens = hasVideoIn ? outTokens : 0;
+    const totalTokens = Math.ceil(inTokens + outTokens);
+    const unit = hasVideoIn ? 28 : 46;
+    return { totalTokens, cost: (totalTokens / 1e6) * unit, hasVideoIn, unit };
+  }
+  function updateCost() {
+    const box = $('#sdgCost');
+    if (state.provider !== 'ark' || state.type === 'i2i') { box.style.display = 'none'; return; }
+    const c = estimateArkCost();
+    box.style.display = '';
+    box.innerHTML = `💰 预估费用（方舟付费）：<b>${c.totalTokens.toLocaleString()} tokens ≈ ¥${c.cost.toFixed(3)}</b> ` +
+      `<span class="note" style="margin:0">（${c.hasVideoIn ? '含视频输入 28' : '纯文/图输入 46'} 元/百万tokens，仅参考；新用户每模型 50 万免费 tokens）</span>`;
+  }
+
   // ---------------- 爆款范本库（对齐 爆款 DNA：形式/钩子/卖点/CTA/画面） ----------------
   const TEMPLATES = [
     { id: 'koubo', name: '口播种草', form: '口播',
@@ -69,7 +122,8 @@
 
   const state = {
     mode: 'parse',     // parse | gen
-    type: 't2v',       // t2v | i2v-first | i2v-fl | i2v-ref | i2i
+    provider: 'ark',   // ark | sf
+    type: 't2v',       // ark: t2v|i2v-first|i2v-fl|i2v-ref|i2i ; sf: sf-i2i|sf-t2v|sf-i2v
     call: 'proxy',     // proxy | direct
     refs: []           // {name, dataUrl}
   };
@@ -151,28 +205,27 @@
       <div class="note">填好提示词与参数后一键生成。视频为异步任务（提交后自动轮询，约 1–5 分钟）；图片同步返回。密钥仅存本机浏览器（直连模式）或本地 <code>.env</code>（代理模式），不会上传任何第三方。</div>
 
       <div class="sdg-row">
-        <label class="sdg-lb">生成类型</label>
-        <div class="seg" id="sdgType">
-          <span class="seg-btn on" data-type="t2v">文生视频</span>
-          <span class="seg-btn" data-type="i2v-first">图生视频·首帧</span>
-          <span class="seg-btn" data-type="i2v-fl">图生视频·首尾帧</span>
-          <span class="seg-btn" data-type="i2v-ref">图生视频·参考图</span>
-          <span class="seg-btn" data-type="i2i">文生图(Seedream)</span>
+        <label class="sdg-lb">生成通道</label>
+        <div class="seg" id="sdgProvider">
+          <span class="seg-btn on" data-provider="ark">🔥 火山方舟 (Seedance/Seedream)</span>
+          <span class="seg-btn" data-provider="sf">🆓 硅基流动 免费</span>
         </div>
+        <span class="note" id="sdgProviderNote" style="margin:0;flex-basis:100%"></span>
+      </div>
+
+      <div class="sdg-row">
+        <label class="sdg-lb">生成类型</label>
+        <div class="seg" id="sdgType"></div>
       </div>
 
       <div class="sdg-row">
         <label class="sdg-lb">模型</label>
-        <input list="sdgModels" id="sdgModel" class="sdg-input" value="doubao-seedance-2-0-260128" style="max-width:420px">
-        <datalist id="sdgModels">
-          <option value="doubao-seedance-2-0-260128">Seedance 2.0</option>
-          <option value="doubao-seedance-2-0-fast-260128">Seedance 2.0 fast</option>
-          <option value="doubao-seedream-4-0-250828">Seedream 4.0</option>
-          <option value="doubao-seedream-4-5-251128">Seedream 4.5</option>
-          <option value="doubao-seedream-5-0-lite-260128">Seedream 5.0 lite</option>
-        </datalist>
-        <span class="note" style="margin:0;flex-basis:100%">视频默认 Seedance 2.0；切到「文生图」会自动换 Seedream，可手动改。</span>
+        <input list="sdgModels" id="sdgModel" class="sdg-input" style="max-width:420px">
+        <datalist id="sdgModels"></datalist>
+        <span class="note" id="sdgModelNote" style="margin:0;flex-basis:100%"></span>
       </div>
+
+      <div class="sdg-row" id="sdgCost" style="display:none"></div>
 
       <div class="sdg-row sdg-col" style="border-top:1px dashed var(--line);padding-top:14px">
         <label class="sdg-lb">📚 爆款范本</label>
@@ -262,6 +315,7 @@
   // ---------------- 元素引用 ----------------
   const modeSeg = $('#sdgMode');
   const typeSeg = $('#sdgType');
+  const providerSeg = $('#sdgProvider');
   const callSeg = $('#sdgCall');
   const refWrap = $('#sdgRefWrap');
   const refInput = $('#sdgRefInput');
@@ -310,32 +364,77 @@
   }
   modeSeg.querySelectorAll('.seg-btn').forEach(b => b.onclick = () => setMode(b.dataset.mode));
 
-  // ---------------- 类型切换 ----------------
+  // ---------------- 通道 / 类型 / 模型 动态渲染 ----------------
+  function renderTypeSeg() {
+    const opts = TYPE_OPTS[state.provider];
+    typeSeg.innerHTML = opts.map(o =>
+      `<span class="seg-btn${o.t === state.type ? ' on' : ''}" data-type="${o.t}">${o.label}</span>`).join('');
+    typeSeg.querySelectorAll('.seg-btn').forEach(b => b.onclick = () => {
+      state.type = b.dataset.type;
+      typeSeg.querySelectorAll('.seg-btn').forEach(x => x.classList.toggle('on', x === b));
+      applyTypeUI();
+    });
+  }
+
+  function renderModels() {
+    const isSf = state.provider === 'sf';
+    const isImg = (state.type === 'i2i') || (state.type === 'sf-i2i');
+    let models, def;
+    if (isSf) {
+      models = isImg ? SF_IMG_MODELS : SF_VID_MODELS;
+    } else {
+      models = isImg ? IMG_MODELS : VID_MODELS;
+    }
+    def = models[0];
+    $('#sdgModels').innerHTML = models.map(m => `<option value="${m}">${m}</option>`).join('');
+    modelEl.value = def;
+    $('#sdgModelNote').textContent = isSf
+      ? (isImg ? '硅基流动图片：FLUX.1-schnell 为免费档，Kolors 高质量。'
+               : '硅基流动视频：Wan2.2 系列（消耗免费 tokens）。')
+      : (isImg ? '切到「文生图」用 Seedream。' : '视频默认 Seedance 2.0，可手动改。');
+  }
+
+  function applyProviderUI() {
+    const isSf = state.provider === 'sf';
+    callSeg.parentElement.style.display = isSf ? 'none' : '';
+    keyWrap.style.display = (isSf || state.call !== 'direct') ? 'none' : '';
+    $('#sdgProviderNote').innerHTML = isSf
+      ? '🆓 硅基流动：新用户送 <b>2000 万永久免费 tokens</b> + 16 元代金券。图片 FLUX/Kolors、视频 Wan2.2。经本地代理调用（需在 .env 配置 SILICONFLOW_API_KEY 并运行 start-offline.bat）。'
+      : '🔥 火山方舟：视频/图片付费（新用户每模型 50 万免费 tokens）。视频异步、图片同步。';
+    // 重置为该通道首个类型，避免类型越界
+    if (!TYPE_OPTS[state.provider].some(o => o.t === state.type)) {
+      state.type = TYPE_OPTS[state.provider][0].t;
+    }
+    renderTypeSeg();
+    applyTypeUI();
+  }
+
+  // ---------------- 类型切换（UI 联动） ----------------
   function applyTypeUI() {
-    const isImg = state.type === 'i2i';
+    const isImg = (state.type === 'i2i') || (state.type === 'sf-i2i');
     const isVid = !isImg;
     vidParams.style.display = isVid ? '' : 'none';
     imgParams.style.display = isImg ? '' : 'none';
-    // 参考图：文生视频(t2v)不需要；其余都需要
-    refWrap.style.display = (state.type === 't2v') ? 'none' : '';
-    const hint = {
+    // 参考图：纯文生（ark t2v / sf t2v）不需要；其余需要
+    refWrap.style.display = (state.type === 't2v' || state.type === 'sf-t2v') ? 'none' : '';
+    const hints = {
       'i2v-first': '上传 1 张首帧图片，模型据此生成连贯视频。',
       'i2v-fl': '上传 2 张图片：第 1 张为首帧、第 2 张为尾帧（顺序即播放顺序）。',
       'i2v-ref': '可上传多张参考图（主体/风格/场景），模型综合生成。',
-      'i2i': '可选 1 张垫图作为参考（留空则为纯文生图）。'
-    }[state.type];
-    $('#sdgRefHint').textContent = hint;
-    // 模型默认值：切类型时仅在“同族未改”时自动填充，避免覆盖用户自定义
-    const cur = modelEl.value.trim();
-    const looksCustom = !VID_MODELS.includes(cur) && !IMG_MODELS.includes(cur);
-    if (!looksCustom) {
-      modelEl.value = isImg ? IMG_MODELS[0] : VID_MODELS[0];
-    }
+      'i2i': '可选 1 张垫图作为参考（留空则为纯文生图）。',
+      'sf-i2v': '上传 1 张首帧图片（Wan 图生视频）。',
+      'sf-i2i': '可选 1 张垫图作为参考（留空则为纯文生图）。'
+    };
+    $('#sdgRefHint').textContent = hints[state.type] || '';
+    renderModels();
+    updateCost();
   }
-  typeSeg.querySelectorAll('.seg-btn').forEach(b => b.onclick = () => {
-    state.type = b.dataset.type;
-    typeSeg.querySelectorAll('.seg-btn').forEach(x => x.classList.toggle('on', x === b));
-    applyTypeUI();
+
+  // 通道切换
+  providerSeg.querySelectorAll('.seg-btn').forEach(b => b.onclick = () => {
+    state.provider = b.dataset.provider;
+    providerSeg.querySelectorAll('.seg-btn').forEach(x => x.classList.toggle('on', x === b));
+    applyProviderUI();
   });
 
   // ---------------- 调用方式切换 ----------------
@@ -415,17 +514,11 @@
   genBtn.onclick = async () => {
     const prompt = promptEl.value.trim();
     if (!prompt) { setStatus('请先填写提示词', 'err'); return; }
-    const needsRef = ['i2v-first', 'i2v-fl', 'i2v-ref'].includes(state.type);
+    const needsRef = ['i2v-first', 'i2v-fl', 'i2v-ref'].includes(state.type) || state.type === 'sf-i2v';
     if (needsRef && !state.refs.length) {
-      const want = state.type === 'i2v-fl' ? '首尾帧各 1 张' : '至少 1 张参考图';
-      setStatus('「' + typeSeg.querySelector('.on').textContent + '」需要' + want, 'err');
+      const want = (state.type === 'i2v-fl') ? '首尾帧各 1 张' : '至少 1 张参考图';
+      setStatus('「' + (typeSeg.querySelector('.on') || {}).textContent + '」需要' + want, 'err');
       return;
-    }
-    let key = null;
-    if (state.call === 'direct') {
-      key = ($('#sdgKey').value.trim() || localStorage.getItem('sdg_ark_key') || '');
-      if (!key) { setStatus('请填写 ARK API Key（或改用本地代理）', 'err'); return; }
-      localStorage.setItem('sdg_ark_key', key);
     }
 
     pollAbort = false;
@@ -434,13 +527,23 @@
     resultCard.style.display = 'none';
     resultBody.innerHTML = '';
 
-    const { isImg, endpoint, payload } = buildPayload();
     try {
-      if (isImg) {
-        await genImage(endpoint, payload, key);
+      if (state.provider === 'sf') {
+        await genSf();
       } else {
-        const taskId = await createVideo(endpoint, payload, key);
-        await pollVideo(taskId, key);
+        let key = null;
+        if (state.call === 'direct') {
+          key = ($('#sdgKey').value.trim() || localStorage.getItem('sdg_ark_key') || '');
+          if (!key) { setStatus('请填写 ARK API Key（或改用本地代理）', 'err'); return; }
+          localStorage.setItem('sdg_ark_key', key);
+        }
+        const { isImg, endpoint, payload } = buildPayload();
+        if (isImg) {
+          await genImage(endpoint, payload, key);
+        } else {
+          const taskId = await createVideo(endpoint, payload, key);
+          await pollVideo(taskId, key);
+        }
       }
     } catch (e) {
       setStatus('❌ ' + (e.message || e), 'err');
@@ -449,6 +552,95 @@
       cancelBtn.style.display = 'none';
     }
   };
+
+  // ---------------- 硅基流动 SiliconFlow 生成流程 ----------------
+  async function genSf() {
+    const prompt = promptEl.value.trim();
+    const model = modelEl.value.trim();
+    if (state.type === 'sf-i2i') {
+      const p = {
+        model,
+        prompt,
+        image_size: SF_IMG_SIZES[0],
+        batch_size: Math.max(1, Math.min(4, +$('#sdgCount').value || 1)),
+        num_inference_steps: 20,
+        guidance_scale: 7.5
+      };
+      if (state.refs.length) p.image = state.refs[0].dataUrl;
+      await genSfImage(p);
+    } else {
+      const isI2v = state.type === 'sf-i2v';
+      const p = {
+        model,
+        prompt,
+        image_size: sfVideoSize($('#sdgRatio').value),
+        negative_prompt: ''
+      };
+      if (isI2v) p.image = state.refs[0].dataUrl;
+      const rid = await submitSfVideo(p);
+      await pollSfVideo(rid);
+    }
+  }
+  async function genSfImage(payload) {
+    setStatus('硅基流动生成图片中…（免费额度）');
+    const res = await fetch(PROXY + '/api/sf/image', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    const j = await res.json();
+    if (!res.ok) throw new Error('图片生成失败(' + res.status + ')：' + errText(j));
+    const urls = (j.data || []).map(d => d.url).filter(Boolean);
+    if (!urls.length) throw new Error('未返回图片 URL：' + errText(j));
+    showImages(urls);
+    setStatus('✅ 硅基流动图片生成完成（' + urls.length + ' 张，免费额度）', 'ok');
+  }
+  async function submitSfVideo(payload) {
+    setStatus('硅基流动提交视频任务…');
+    const res = await fetch(PROXY + '/api/sf/video', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    const j = await res.json();
+    if (!res.ok) throw new Error('提交失败(' + res.status + ')：' + errText(j));
+    if (!j.requestId) throw new Error('未返回 requestId：' + errText(j));
+    return j.requestId;
+  }
+  async function pollSfVideo(requestId) {
+    setStatus('硅基流动生成中…（异步任务，约 1–5 分钟）');
+    const deadline = Date.now() + 6 * 60 * 1000;
+    let waited = 0;
+    while (Date.now() < deadline) {
+      if (pollAbort) throw new Error('已取消');
+      await sleep(6000);
+      waited += 6;
+      if (pollAbort) throw new Error('已取消');
+      const res = await fetch(PROXY + '/api/sf/video/status/' + encodeURIComponent(requestId));
+      const j = await res.json();
+      const st = (j && (j.status || (j.data && j.data.status))) || 'Processing';
+      if (/succeed|success|完成|succeeded/i.test(st)) {
+        const url = extractSfVideoUrl(j);
+        if (!url) throw new Error('任务成功但未找到视频 URL：' + errText(j));
+        showVideo(url, requestId);
+        setStatus('✅ 硅基流动视频生成完成（免费额度）', 'ok');
+        return;
+      } else if (/fail|error|failed/i.test(st)) {
+        throw new Error('生成失败：' + errText(j));
+      } else {
+        setStatus('生成中… 状态：' + st + '（已等待 ' + waited + 's）');
+      }
+    }
+    throw new Error('轮询超时（6 分钟）。requestId：' + requestId);
+  }
+  function extractSfVideoUrl(j) {
+    const c = (j && j.data) ? j.data : j;
+    if (c && c.results && c.results.videos && c.results.videos[0]) {
+      const v = c.results.videos[0]; return v.url || v.video_url || null;
+    }
+    if (c && Array.isArray(c.videos) && c.videos[0]) {
+      const v = c.videos[0]; return v.url || v.video_url || null;
+    }
+    if (j && j.video && j.video.url) return j.video.url;
+    if (j && j.url) return j.url;
+    return null;
+  }
 
   cancelBtn.onclick = () => { pollAbort = true; setStatus('已请求取消，将在下一轮询点停止…', ''); };
 
@@ -614,10 +806,11 @@
   }
   function fillPrompt(text) {
     promptEl.value = text;
-    // 范本均为视频向，确保生成类型=文生视频，与提示词一致
-    if (state.type !== 't2v') {
-      state.type = 't2v';
-      typeSeg.querySelectorAll('.seg-btn').forEach(x => x.classList.toggle('on', x.dataset.type === 't2v'));
+    // 范本均为视频向，确保生成类型=文生视频，与提示词一致（按当前通道选类型）
+    const wantType = state.provider === 'sf' ? 'sf-t2v' : 't2v';
+    if (state.type !== wantType) {
+      state.type = wantType;
+      typeSeg.querySelectorAll('.seg-btn').forEach(x => x.classList.toggle('on', x.dataset.type === wantType));
       applyTypeUI();
     }
     promptEl.focus();
@@ -668,8 +861,12 @@
   };
 
   // ---------------- 初始化 ----------------
-  applyTypeUI();
+  applyProviderUI();     // 渲染通道/类型/模型/参数/费用
   renderTplChips();
+  // 参数变动时实时刷新预估费用
+  ['sdgDur', 'sdgRes', 'sdgRatio', 'sdgFps'].forEach(id => {
+    const el = $('#' + id); if (el) el.addEventListener('change', updateCost);
+  });
   // 直连模式若已存过 key，回填
   const savedKey = localStorage.getItem('sdg_ark_key');
   if (savedKey) $('#sdgKey').value = savedKey;
