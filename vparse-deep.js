@@ -943,6 +943,17 @@ function applyAiToParse(ai) {
     const repHtml = rep.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">可复制</span>' + rep.map(function (s) { return '<span class="vp-tag ok">' + escapeHtml(s) + '</span>'; }).join('') + '</div>' : '';
     const naHtml = na.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">后续动作</span>' + na.map(function (s) { return '<span class="vp-tag warn">' + escapeHtml(s) + '</span>'; }).join('') + '</div>' : '';
     const sbHtml = sb.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">分镜</span><span class="vp-chip">' + sb.length + ' 个</span>' + (sb[0] ? ('<span class="vp-muted">首镜：' + escapeHtml((sb[0].frame || '') + ' ' + (sb[0].desc || '')) + '</span>') : '') + '</div>' : '';
+    const hasVideoUrl = !!(c.videoUrl || '').trim();
+    const videoHtml = '<div class="vp-case-video" style="margin:8px 0 14px">' +
+      '<div class="vp-case-video-wrap" id="vpCaseVideoWrap-' + c.id + '" style="display:' + (hasVideoUrl ? 'block' : 'none') + '">' +
+        '<video id="vpCaseVideo-' + c.id + '" controls preload="metadata" playsinline style="width:100%;max-width:520px;border-radius:10px;background:#000;max-height:320px"></video>' +
+      '</div>' +
+      '<div class="vp-case-video-ctrl" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
+        '<input type="file" accept="video/*" style="display:none" data-video-for="' + c.id + '" id="vpCaseFile-' + c.id + '" onchange="return false">' +
+        '<button class="btn xs ghost" data-act="loadVideo" data-id="' + c.id + '">▶️ 预览视频</button>' +
+        '<span class="vp-muted" style="font-size:12px">点按钮选择你电脑上的原视频，即可在卡片内播放</span>' +
+      '</div>' +
+    '</div>';
     return '<div class="vp-case-item vp-case-ai' + (c.ref ? ' is-ref' : '') + '">' +
       '<div class="vp-case-top"><span class="vp-case-title">🎬 ' + title + '</span>' + badge +
       '<span class="vp-case-acts">' +
@@ -951,6 +962,7 @@ function applyAiToParse(ai) {
       '<button class="btn xs ghost" data-act="del" data-id="' + c.id + '">删除</button>' +
       '</span></div>' +
       '<div class="vp-ai-meta">素材ID ' + sid + (fname ? ' · ' + fname : '') + (c.ts ? ' · ' + new Date(c.ts).toLocaleString('zh-CN') : '') + '</div>' +
+      videoHtml +
       (chips.length ? '<div class="vp-ai-chips">' + chips.map(function (x) { return '<span class="vp-chip">' + escapeHtml(x) + '</span>'; }).join('') + '</div>' : '') +
       sbHtml + spHtml + repHtml + naHtml +
       '<div class="vp-ai-full" id="vpCaseFull-' + c.id + '" style="display:none"><pre class="vp-ai-pre">' + escapeHtml(c.content || '') + '</pre></div>' +
@@ -1131,6 +1143,22 @@ function applyAiToParse(ai) {
         const full = document.getElementById('vpCaseFull-' + id);
         if (full) { const open = full.style.display !== 'none'; full.style.display = open ? 'none' : 'block'; btn.textContent = open ? '展开全文' : '收起'; }
       }
+      else if (act === 'loadVideo') {
+        const fin = document.getElementById('vpCaseFile-' + id); if (fin) fin.click();
+      }
+    });
+    if (cl) cl.addEventListener('change', e => {
+      const input = e.target.closest('input[type="file"][data-video-for]'); if (!input) return;
+      const file = input.files && input.files[0]; if (!file) return;
+      const id = input.getAttribute('data-video-for');
+      const wrap = document.getElementById('vpCaseVideoWrap-' + id);
+      const video = document.getElementById('vpCaseVideo-' + id);
+      if (!video || !wrap) return;
+      const url = URL.createObjectURL(file);
+      const old = video.src; video.src = url;
+      if (old && old.startsWith('blob:')) { try { URL.revokeObjectURL(old); } catch (e) {} }
+      wrap.style.display = 'block';
+      video.play().catch(function () {});
     });
     // 加载已发布案例（cases.json），支持离线看板跨设备展示；失败（如本地 file:// 打开）则仅用 localStorage
     try {
