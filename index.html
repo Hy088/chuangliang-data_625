@@ -3699,8 +3699,8 @@ async function renderChangelog(){
     const list=await r.json();
     if(!Array.isArray(list)||!list.length){ box.innerHTML='<div class="cl-loading">暂无更新记录</div>'; return; }
     const v0=document.getElementById('curVer'); if(v0) v0.textContent=list[0].ver||'';
-    const typeTxt={feature:'新功能',fix:'修复',chore:'维护'};
-    const typeCls={feature:'t-feat',fix:'t-fix',chore:'t-chore'};
+    const typeTxt={feature:'新功能',feat:'新功能',ui:'优化',fix:'修复',chore:'维护'};
+    const typeCls={feature:'t-feat',feat:'t-feat',ui:'t-feat',fix:'t-fix',chore:'t-chore'};
     box.innerHTML=list.map(it=>{
       const details=(it.details||[]).map(d=>'<li>'+clEscape(d)+'</li>').join('');
       const t=it.type||'chore';
