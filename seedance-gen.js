@@ -29,6 +29,23 @@
     'Wan-AI/Wan2.2-T2V-A14B', 'Wan-AI/Wan2.2-I2V-A14B',
     'Wan-AI/Wan2.1-T2V-14B-720P'
   ];
+  // ---------------- PiAPI（Seedance 2.0 真模型，注册送免费额度，可进看板） ----------------
+  // task_type 即模型档位；mini 默认 720p、速度快 2 倍、质量接近 Pro，最适合白嫖额度
+  const PIAPI_VID_MODELS = [
+    'seedance-2-mini', 'seedance-2-fast', 'seedance-2'
+  ];
+  // 各档位支持的分辨率（mini / fast 不支持 1080p）
+  const PIAPI_RES = {
+    'seedance-2-mini': ['480p', '720p'],
+    'seedance-2-fast': ['480p', '720p'],
+    'seedance-2': ['480p', '720p', '1080p']
+  };
+  // 促销价（USD/秒），用于预估费用展示
+  const PIAPI_PRICE = {
+    'seedance-2-mini': { '480p': 0.042, '720p': 0.084 },
+    'seedance-2-fast': { '480p': 0.064, '720p': 0.128 },
+    'seedance-2': { '480p': 0.10, '720p': 0.20, '1080p': 0.50 }
+  };
   const SF_IMG_SIZES = ['1024x1024', '768x1344', '1344x768'];
   function sfVideoSize(ratio) {
     return ({ '16:9': '1280x720', '9:16': '720x1280', '1:1': '960x960' })[ratio] || '1280x720';
@@ -46,6 +63,9 @@
       { t: 'sf-i2i', label: '文生图(FLUX/Kolors)' },
       { t: 'sf-t2v', label: '文生视频(Wan)' },
       { t: 'sf-i2v', label: '图生视频(Wan)' }
+    ],
+    piapi: [
+      { t: 'piapi-t2v', label: '文生视频(Seedance 2.0)' }
     ]
   };
 
@@ -209,6 +229,7 @@
         <div class="seg" id="sdgProvider">
           <span class="seg-btn on" data-provider="ark">🔥 火山方舟 (Seedance/Seedream)</span>
           <span class="seg-btn" data-provider="sf">🆓 硅基流动 免费</span>
+          <span class="seg-btn" data-provider="piapi">🌟 PiAPI·Seedance真模型</span>
         </div>
         <span class="note" id="sdgProviderNote" style="margin:0;flex-basis:100%"></span>
       </div>
@@ -379,28 +400,34 @@
 
   function renderModels() {
     const isSf = state.provider === 'sf';
+    const isPiapi = state.provider === 'piapi';
     const isImg = (state.type === 'i2i') || (state.type === 'sf-i2i');
-    let models, def;
-    if (isSf) {
-      models = isImg ? SF_IMG_MODELS : SF_VID_MODELS;
+    let models, def, note;
+    if (isPiapi) {
+      models = PIAPI_VID_MODELS; def = models[0];
+      note = 'PiAPI·Seedance 2.0 真模型（注册送约 $0.5 免费额度，可白嫖数段 720p 视频）。默认 mini：720p 仅 $0.084/秒（促销），质量接近 Pro、速度快 2 倍。密钥在本地 .env 的 PIAPI_API_KEY，经本地代理调用。';
+    } else if (isSf) {
+      models = isImg ? SF_IMG_MODELS : SF_VID_MODELS; def = models[0];
+      note = isImg ? '硅基流动图片：Kolors 当前默认可用（免费）。FLUX 系列若报 403 表示本账号未开启，可在硅基流动控制台启用。'
+                   : '硅基流动视频：Wan2.2 系列（消耗免费 tokens）。';
     } else {
-      models = isImg ? IMG_MODELS : VID_MODELS;
+      models = isImg ? IMG_MODELS : VID_MODELS; def = models[0];
+      note = isImg ? '切到「文生图」用 Seedream。' : '视频默认 Seedance 2.0，可手动改。';
     }
-    def = models[0];
     $('#sdgModels').innerHTML = models.map(m => `<option value="${m}">${m}</option>`).join('');
     modelEl.value = def;
-    $('#sdgModelNote').textContent = isSf
-      ? (isImg ? '硅基流动图片：Kolors 当前默认可用（免费）。FLUX 系列若报 403 表示本账号未开启，可在硅基流动控制台启用。'
-               : '硅基流动视频：Wan2.2 系列（消耗免费 tokens）。')
-      : (isImg ? '切到「文生图」用 Seedream。' : '视频默认 Seedance 2.0，可手动改。');
+    $('#sdgModelNote').textContent = note;
   }
 
   function applyProviderUI() {
     const isSf = state.provider === 'sf';
-    callSeg.parentElement.style.display = isSf ? 'none' : '';
-    keyWrap.style.display = (isSf || state.call !== 'direct') ? 'none' : '';
+    const isPiapi = state.provider === 'piapi';
+    callSeg.parentElement.style.display = (isSf || isPiapi) ? 'none' : '';
+    keyWrap.style.display = (isSf || isPiapi || state.call !== 'direct') ? 'none' : '';
     $('#sdgProviderNote').innerHTML = isSf
       ? '🆓 硅基流动：新用户送 <b>2000 万永久免费 tokens</b> + 16 元代金券。图片 FLUX/Kolors、视频 Wan2.2。经本地代理调用（需在 .env 配置 SILICONFLOW_API_KEY 并运行 start-offline.bat）。'
+      : isPiapi
+      ? '🌟 <b>PiAPI · Seedance 2.0 真模型</b>：注册即送免费额度（约 $0.5，可白嫖数段 720p 视频），质量远胜 Wan2.2。密钥在本地 <code>.env</code> 的 <code>PIAPI_API_KEY</code>，经本地代理(localhost:8788)调用——页面无需填 key。'
       : '🔥 火山方舟：视频/图片付费（新用户每模型 50 万免费 tokens）。视频异步、图片同步。';
     // 重置为该通道首个类型，避免类型越界
     if (!TYPE_OPTS[state.provider].some(o => o.t === state.type)) {
@@ -531,6 +558,8 @@
     try {
       if (state.provider === 'sf') {
         await genSf();
+      } else if (state.provider === 'piapi') {
+        await genPiapi();
       } else {
         let key = null;
         if (state.call === 'direct') {
@@ -642,6 +671,91 @@
     }
     if (j && j.video && j.video.url) return j.video.url;
     if (j && j.url) return j.url;
+    return null;
+  }
+
+  // ---------------- PiAPI（Seedance 2.0 真模型）生成流程 ----------------
+  async function genPiapi() {
+    const prompt = promptEl.value.trim();
+    const model = modelEl.value.trim(); // seedance-2-mini | seedance-2-fast | seedance-2
+    const isI2v = state.type === 'piapi-i2v';
+    // 分辨率按模型裁剪（mini / fast 不支持 1080p）
+    let res = $('#sdgRes').value;
+    const allowed = PIAPI_RES[model] || ['480p', '720p'];
+    if (!allowed.includes(res)) { res = allowed[allowed.length - 1]; }
+    const p = {
+      model: 'seedance',
+      task_type: model,
+      input: {
+        prompt,
+        mode: isI2v ? 'first_last_frames' : 'text_to_video',
+        duration: Math.max(4, Math.min(15, +$('#sdgDur').value || 5)),
+        aspect_ratio: $('#sdgRatio').value,
+        resolution: res
+      }
+    };
+    if (isI2v && state.refs.length) {
+      // PiAPI 需图片 URL（公开可访问）；本面板参考图为本地 dataURL，故 i2v 暂以提示词为主
+      p.input.image_urls = state.refs.slice(0, 2).map(r => r.dataUrl);
+    }
+    const price = (PIAPI_PRICE[model] && PIAPI_PRICE[model][res]) ? PIAPI_PRICE[model][res] : 0;
+    const est = (price * (+p.input.duration)).toFixed(3);
+    setStatus('PiAPI 提交 Seedance 2.0 任务（预估 ≈ $' + est + '）…');
+    const taskId = await submitPiapiVideo(p);
+    await pollPiapiVideo(taskId);
+  }
+  async function submitPiapiVideo(payload) {
+    const res = await fetch(PROXY + '/api/piapi/video', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    const j = await res.json();
+    if (!res.ok) throw new Error('提交失败(' + res.status + ')：' + errText(j));
+    if (!j.data || !j.data.task_id) throw new Error('未返回 task_id：' + errText(j));
+    return j.data.task_id;
+  }
+  async function pollPiapiVideo(taskId) {
+    setStatus('Seedance 2.0 生成中…（PiAPI 异步，约 1–5 分钟）');
+    const deadline = Date.now() + 8 * 60 * 1000;
+    let waited = 0;
+    while (Date.now() < deadline) {
+      if (pollAbort) throw new Error('已取消');
+      await sleep(7000);
+      waited += 7;
+      if (pollAbort) throw new Error('已取消');
+      const res = await fetch(PROXY + '/api/piapi/video/status/' + encodeURIComponent(taskId), {
+        method: 'GET', headers: { 'Content-Type': 'application/json' }
+      });
+      const j = await res.json();
+      const d = (j && j.data) || {};
+      const st = d.status || (j && j.status) || 'pending';
+      if (/completed|succeed|success/i.test(st)) {
+        const url = extractPiapiVideoUrl(d, j);
+        if (!url) throw new Error('视频已生成但响应中未找到 URL：' + errText(j));
+        showVideo(url, taskId);
+        setStatus('✅ Seedance 2.0 视频生成完成（PiAPI）', 'ok');
+        return;
+      } else if (/failed|error|rejected|cancel/i.test(st)) {
+        throw new Error('生成失败(' + st + ')：' + errText(j));
+      } else {
+        setStatus('生成中… 状态：' + st + '（已等待 ' + waited + 's）');
+      }
+    }
+    throw new Error('轮询超时（8 分钟）。taskId：' + taskId);
+  }
+  function extractPiapiVideoUrl(d, j) {
+    const out = d && d.output;
+    if (!out) return null;
+    if (typeof out === 'string') return out;
+    if (out.video_url) return out.video_url;
+    if (out.url) return out.url;
+    if (Array.isArray(out.urls) && out.urls[0]) return out.urls[0];
+    if (Array.isArray(out.videos) && out.videos[0]) return (out.videos[0].url || out.videos[0]);
+    // 兜底：扫描 output 对象里的第一个 http(s) 字符串
+    for (const k of Object.keys(out)) {
+      const v = out[k];
+      if (typeof v === 'string' && /^https?:\/\//.test(v)) return v;
+      if (Array.isArray(v) && v[0] && /^https?:\/\//.test(v[0])) return v[0];
+    }
     return null;
   }
 

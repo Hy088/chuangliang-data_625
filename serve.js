@@ -51,6 +51,7 @@ function readKey(name) {
 }
 const readArkKey = () => readKey('ARK_API_KEY');
 const readSfKey = () => readKey('SILICONFLOW_API_KEY');
+const readPiapiKey = () => readKey('PIAPI_API_KEY');
 
 function setCors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -123,6 +124,33 @@ async function proxySf(res, method, targetPath, bodyObj) {
   }
 }
 
+// 代理转发到 PiAPI（Seedance 2.0 真模型：注册送免费额度，可进看板）
+const PIAPI_BASE = 'https://api.piapi.ai/api/v1';
+async function proxyPiapi(res, method, targetPath, bodyObj) {
+  const key = readPiapiKey();
+  if (!key) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({
+      error: '未配置 PIAPI_API_KEY。请在 chuangliang_data/.env 写入 PIAPI_API_KEY=你的PiAPI密钥（从 piapi.ai 控制台「API Key」页复制 X-API-Key），保存后本服务会自动读取（无需重启）。'
+    }));
+    return;
+  }
+  try {
+    const opts = {
+      method,
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': key }
+    };
+    if (bodyObj) opts.body = JSON.stringify(bodyObj);
+    const r = await fetch(PIAPI_BASE + targetPath, opts);
+    const txt = await r.text();
+    res.writeHead(r.status, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(txt);
+  } catch (e) {
+    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ error: 'PiAPI 代理转发失败：' + String(e && e.message || e) }));
+  }
+}
+
 async function handleApi(req, res, urlPath) {
   setCors(res);
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
@@ -160,6 +188,18 @@ async function handleApi(req, res, urlPath) {
     if (sm && req.method === 'POST') {
       const id = decodeURIComponent(sm[1]);
       return proxySf(res, 'POST', '/video/status', { requestId: id });
+    }
+    // ---------- PiAPI（Seedance 2.0 真模型：注册送免费额度，可进看板） ----------
+    // 提交视频任务：POST /api/piapi/video -> /api/v1/task
+    if (urlPath === '/api/piapi/video' && req.method === 'POST') {
+      const body = await readJsonBody(req);
+      return proxyPiapi(res, 'POST', '/task', body);
+    }
+    // 轮询状态：GET /api/piapi/video/status/:id -> /api/v1/task/:id
+    let pm = urlPath.match(/^\/api\/piapi\/video\/status\/(.+)$/);
+    if (pm && req.method === 'GET') {
+      const id = decodeURIComponent(pm[1]);
+      return proxyPiapi(res, 'GET', '/task/' + id, null);
     }
     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ error: '未知接口：' + urlPath }));
@@ -217,4 +257,5 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log('Dashboard local server running at http://localhost:' + PORT + '/');
   console.log('Seedance 2.0 proxy ready: /api/seedance  /api/seedance/status/:id  /api/seedream');
   console.log('SiliconFlow proxy ready: /api/sf/image  /api/sf/video  /api/sf/video/status/:id');
+  console.log('PiAPI proxy ready: /api/piapi/video  /api/piapi/video/status/:id');
 });
