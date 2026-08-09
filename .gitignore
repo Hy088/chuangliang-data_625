@@ -1,3 +1,4 @@
 .tmp_check/
 _exports/
 .workbuddy/
+.env
