@@ -200,7 +200,7 @@ function signVolcengine({ method, path = '/', query = {}, body = '', ak, sk, reg
     _sha256Hex(canonicalRequest)
   ].join('\n');
 
-  let kDate = _hmac('Volc' + sk, date);
+  let kDate = _hmac(sk, date);
   let kRegion = _hmac(kDate, region);
   let kService = _hmac(kRegion, service);
   let kSigning = _hmac(kService, 'request');
