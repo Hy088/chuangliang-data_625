@@ -5,11 +5,11 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260809d";
-  var MAT_URL  = "./me-materials.csv?v=20260809d";
+  var HIST_URL = "./me-history.csv?v=20260809e";
+  var MAT_URL  = "./me-materials.csv?v=20260809e";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
-  var UPLOAD_URL = "./me-uploads.csv?v=20260809d";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260809e";
 
   // 排行可排序指标
   var RANK_METRICS = [
