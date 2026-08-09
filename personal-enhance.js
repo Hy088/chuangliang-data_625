@@ -52,24 +52,39 @@
     var t = new Date(); t.setDate(1); t.setMonth(t.getMonth() + offset);
     return t.getFullYear() + "-" + ("0" + (t.getMonth() + 1)).slice(-2);
   }
-  // 兼容旧版 _months 数组；新版用 _range: { start: 'YYYY-MM', count: N }
+  // 兼容旧版 _months 数组 与 {start,count}；新版用 _range: { start: 'YYYY-MM', end: 'YYYY-MM' }
   if (!kpiStore._range || typeof kpiStore._range !== "object") {
     var oldMonths = kpiStore._months;
     if (oldMonths && Array.isArray(oldMonths) && oldMonths.length >= 1) {
-      kpiStore._range = { start: oldMonths[0], count: oldMonths.length };
+      kpiStore._range = { start: oldMonths[0], end: oldMonths[oldMonths.length - 1] };
     } else {
-      kpiStore._range = { start: monthStr(-1), count: 2 };
+      kpiStore._range = { start: monthStr(-1), end: monthStr(0) };
     }
     saveKpiStore(kpiStore);
   }
+  // 兼容旧版 { start, count }
+  if (kpiStore._range.count && !kpiStore._range.end) {
+    var d = new Date(kpiStore._range.start + "-01T00:00:00");
+    if (!isNaN(d.getTime())) {
+      d.setMonth(d.getMonth() + (parseInt(kpiStore._range.count, 10) || 2) - 1);
+      kpiStore._range.end = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2);
+      saveKpiStore(kpiStore);
+    }
+  }
   function getKpiMonths() {
-    var range = kpiStore._range || { start: monthStr(-1), count: 2 };
+    var range = kpiStore._range || { start: monthStr(-1), end: monthStr(0) };
     var list = [];
     var d = new Date(range.start + "-01T00:00:00");
+    var end = range.end || range.start;
+    var endD = new Date(end + "-01T00:00:00");
     if (isNaN(d.getTime())) d = new Date(monthStr(-1) + "-01T00:00:00");
-    for (var i = 0; i < (range.count || 2); i++) {
+    if (isNaN(endD.getTime())) endD = d;
+    // 保证 start <= end
+    if (d > endD) { var tmp = d; d = endD; endD = tmp; }
+    while (true) {
       var y = d.getFullYear(), m = d.getMonth() + 1;
       list.push(y + "-" + ("0" + m).slice(-2));
+      if (y === endD.getFullYear() && m === (endD.getMonth() + 1)) break;
       d.setMonth(d.getMonth() + 1);
     }
     return list;
@@ -610,7 +625,8 @@
       totalActual.cost += a.cost; totalActual.aigc += a.aigc;
       totalTarget.cost += t.cost; totalTarget.aigc += t.aigc;
     });
-    var rangeLabel = kpiMonths.length === 1 ? kpiMonths[0] : (kpiMonths[0] + " ~ " + kpiMonths[kpiMonths.length - 1]);
+    var range = kpiStore._range || {};
+    var rangeLabel = (range.start || kpiMonths[0]) + " ~ " + (range.end || kpiMonths[kpiMonths.length - 1]);
     return "<div class='kpi-tot'>" +
       "<div style='font-weight:800;color:#223;margin-bottom:8px;font-size:14px'>🏁 合计考核（" + rangeLabel + " · 共 " + kpiMonths.length + " 个月）</div>" +
       "<div class='kpiw'>" +
@@ -619,19 +635,20 @@
       "</div>" +
     "</div>";
   }
-  // 月份范围筛选控件
+  // 月份范围筛选控件：起始月 + 结束月 + 快捷按钮
   function kpiRangeBar() {
-    var range = kpiStore._range || { start: monthStr(-1), count: 2 };
-    var opts = [1, 2, 3, 6, 12].map(function (n) {
-      return "<option value='" + n + "'" + (range.count === n ? " selected" : "") + ">" + n + " 个月</option>";
-    }).join("");
+    var range = kpiStore._range || { start: monthStr(-1), end: monthStr(0) };
     return "<div class='kpi-range-bar'>" +
       "<label class='kpi-range-lbl'>起始月份</label>" +
       "<input type='month' class='kpi-in me-kpi-start' value='" + range.start + "' style='width:auto'>" +
-      "<label class='kpi-range-lbl'>范围</label>" +
-      "<select class='kpi-in me-kpi-count'>" + opts + "</select>" +
-      "<button class='btn xs ghost me-kpi-now' data-count='2'>最近 2 个月</button>" +
-      "<button class='btn xs ghost me-kpi-now' data-count='1'>最近 1 个月</button>" +
+      "<label class='kpi-range-lbl'>结束月份</label>" +
+      "<input type='month' class='kpi-in me-kpi-end' value='" + range.end + "' style='width:auto'>" +
+      "<span class='kpi-range-sep'></span>" +
+      "<button class='btn xs ghost me-kpi-now' data-start='" + monthStr(0) + "' data-end='" + monthStr(0) + "'>本月</button>" +
+      "<button class='btn xs ghost me-kpi-now' data-start='" + monthStr(-1) + "' data-end='" + monthStr(0) + "'>最近 2 个月</button>" +
+      "<button class='btn xs ghost me-kpi-now' data-start='" + monthStr(-2) + "' data-end='" + monthStr(0) + "'>最近 3 个月</button>" +
+      "<button class='btn xs ghost me-kpi-quarter'>本季度</button>" +
+      "<button class='btn xs ghost me-kpi-half'>上半年</button>" +
     "</div>";
   }
   // 轻量刷新：仅重算进度条与实际/目标数值，不动输入框（避免打字时失焦）
@@ -668,8 +685,16 @@
   }
   function renderKpi() {
     var grid = el("meKpiGrid"); if (!grid) return;
+    kpiStore._range = kpiStore._range || { start: monthStr(-1), end: monthStr(0) };
+    // 兼容旧 count 格式
+    if (kpiStore._range.count && !kpiStore._range.end) {
+      var d = new Date(kpiStore._range.start + "-01T00:00:00");
+      if (!isNaN(d.getTime())) {
+        d.setMonth(d.getMonth() + (parseInt(kpiStore._range.count, 10) || 2) - 1);
+        kpiStore._range.end = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2);
+      }
+    }
     kpiMonths = getKpiMonths();
-    kpiStore._range = kpiStore._range || { start: monthStr(-1), count: 2 };
     saveKpiStore(kpiStore);
     var rangeBox = el("meKpiRange"); if (rangeBox) rangeBox.innerHTML = kpiRangeBar();
     var html = "";
@@ -685,31 +710,43 @@
   }
   function bindKpi() {
     var startInp = document.querySelector(".me-kpi-start");
-    if (startInp) {
-      startInp.onchange = function () {
-        if (!startInp.value) return;
-        kpiStore._range.start = startInp.value;
-        saveKpiStore(kpiStore);
-        renderKpi();
-      };
+    var endInp = document.querySelector(".me-kpi-end");
+    function applyRange(start, end) {
+      if (!start || !end) return;
+      if (start > end) { var tmp = start; start = end; end = tmp; }
+      kpiStore._range = { start: start, end: end };
+      saveKpiStore(kpiStore);
+      renderKpi();
     }
-    var countSel = document.querySelector(".me-kpi-count");
-    if (countSel) {
-      countSel.onchange = function () {
-        kpiStore._range.count = +countSel.value || 2;
-        saveKpiStore(kpiStore);
-        renderKpi();
-      };
+    if (startInp) {
+      startInp.onchange = function () { applyRange(startInp.value, kpiStore._range.end); };
+    }
+    if (endInp) {
+      endInp.onchange = function () { applyRange(kpiStore._range.start, endInp.value); };
     }
     Array.prototype.forEach.call(document.querySelectorAll(".me-kpi-now"), function (btn) {
       btn.onclick = function () {
-        var n = +btn.getAttribute("data-count") || 2;
-        var d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - (n - 1));
-        kpiStore._range = { start: d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2), count: n };
-        saveKpiStore(kpiStore);
-        renderKpi();
+        var s = btn.getAttribute("data-start"), e = btn.getAttribute("data-end");
+        if (s && e) applyRange(s, e);
       };
     });
+    var qBtn = document.querySelector(".me-kpi-quarter");
+    if (qBtn) {
+      qBtn.onclick = function () {
+        var d = new Date(); d.setDate(1);
+        var q = Math.floor(d.getMonth() / 3);
+        var sD = new Date(d.getFullYear(), q * 3, 1);
+        var eD = new Date(d.getFullYear(), q * 3 + 2, 1);
+        applyRange(sD.getFullYear() + "-" + ("0" + (sD.getMonth() + 1)).slice(-2), eD.getFullYear() + "-" + ("0" + (eD.getMonth() + 1)).slice(-2));
+      };
+    }
+    var hBtn = document.querySelector(".me-kpi-half");
+    if (hBtn) {
+      hBtn.onclick = function () {
+        var y = new Date().getFullYear();
+        applyRange(y + "-01", y + "-06");
+      };
+    }
     Array.prototype.forEach.call(document.querySelectorAll(".me-kpi-target-input"), function (inp) {
       inp.oninput = function () {
         var m = inp.getAttribute("data-m");

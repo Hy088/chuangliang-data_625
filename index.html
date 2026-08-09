@@ -238,6 +238,7 @@ nav button.active{color:#fff;background:var(--grad);box-shadow:0 6px 16px rgba(9
   background:linear-gradient(100deg,rgba(224,83,61,.07),transparent 70%)}
 .kpi-range-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .kpi-range-lbl{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap}
+.kpi-range-sep{width:1px;height:20px;background:var(--line);margin:0 2px}
 .subnav{display:flex;gap:9px;margin:14px 0 20px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px}
 .subnav button{background:var(--panel);border:1px solid var(--line);padding:9px 20px;font-size:14px;color:var(--muted);cursor:pointer;font-weight:700;border-radius:11px;transition:.18s;box-shadow:var(--shadow-sm)}
 .subnav button:hover{color:var(--brand);border-color:var(--brand);transform:translateY(-1px)}
@@ -2681,7 +2682,6 @@ function initVParse(){
   const assocClose=$('#vpAssocClose'); if(assocClose) assocClose.onclick=closeAssocPanel;
   const assocInput=$('#vpAssocInput'); if(assocInput) assocInput.addEventListener('keydown',e=>{ if(e.key==='Enter') searchAssoc(); });
   const advT=$('#vpAdvToggle'); if(advT) advT.onclick=()=>{ const p=$('#vpAdv'); if(p){ const on=p.style.display==='none'; p.style.display=on?'inline-flex':'none'; advT.textContent=(on?'⚙ 高级 ▴':'⚙ 高级 ▾'); } };
-  const viralBtn=$('#vpViralBtn'); if(viralBtn) viralBtn.onclick=()=>renderViralPatterns();
   const em=$('#vpExportMd'); if(em) em.onclick=()=>exportVParse('md');
   const ej=$('#vpExportJson'); if(ej) ej.onclick=()=>exportVParse('json');
   const editToggle=$('#vpEditToggle'); const editFields=$('#vpEditFields');
@@ -4230,6 +4230,12 @@ document.addEventListener('click', function(e){
     </div>
     <div id="vpViral"></div>
   </div>
+<script>
+(function(){
+  const btn=document.getElementById('vpViralBtn');
+  if(btn && typeof renderViralPatterns==='function') btn.onclick=function(){ renderViralPatterns(); };
+})();
+</script>
 
 <!-- ========== 视频解析 · AI 设置（通用服务商 / 任意 OpenAI 兼容） ========== -->
 <div class="modal-mask" id="vpAiMask" style="display:none">
@@ -4276,7 +4282,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260810e"></script>
+<script src="personal-enhance.js?v=20260810f"></script>
 
 <script src="vparse-deep.js?v=20260810d"></script>
 
