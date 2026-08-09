@@ -730,13 +730,16 @@ function saveAiAsCase() {
     },
     sid: VP.sid || '',
     fileName: VP.fileName || '',
+    videoName: VP.videoFile ? VP.videoFile.name : '',
+    hasVideo: !!VP.videoFile,
     kind: 'ai',
     ts: Date.now(),
     ref: false
   };
   casePush(rec);
+  if (VP.videoFile) saveVideo(rec.id, VP.videoFile, VP.videoFile.name).catch(function(){});
   if (typeof caseRender === 'function') caseRender();
-  alert('已保存到案例库（' + title + '）。可在「我的解析案例」中查看、设为参考或导出 Markdown。');
+  alert('已保存到案例库（' + title + '）。视频已一并缓存到浏览器，案例卡片可直接播放。');
 }
 
 function fmtInt(n){ return (n == null || isNaN(n)) ? '—' : Number(n).toLocaleString('zh-CN'); }
@@ -1016,14 +1019,18 @@ function applyAiToParse(ai) {
     const naHtml = na.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">后续动作</span>' + na.map(function (s) { return '<span class="vp-tag warn">' + escapeHtml(s) + '</span>'; }).join('') + '</div>' : '';
     const sbHtml = sb.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">分镜</span><span class="vp-chip">' + sb.length + ' 个</span>' + (sb[0] ? ('<span class="vp-muted">首镜：' + escapeHtml((sb[0].frame || '') + ' ' + (sb[0].desc || '')) + '</span>') : '') + '</div>' : '';
     const hasVideoUrl = !!(c.videoUrl || '').trim();
+    const hasLocalVideo = !!c.hasVideo;
+    const relVideoUrl = hasLocalVideo ? ('./videos/' + c.id + '.mp4') : '';
+    const showWrap = hasVideoUrl || hasLocalVideo;
+    const videoHint = hasLocalVideo ? '视频已随案例保存，卡片加载后自动播放' : '点按钮选择你电脑上的原视频，即可在卡片内播放';
     const videoHtml = '<div class="vp-case-video" style="margin:8px 0 14px">' +
-      '<div class="vp-case-video-wrap" id="vpCaseVideoWrap-' + c.id + '" style="display:' + (hasVideoUrl ? 'block' : 'none') + '">' +
-        '<video id="vpCaseVideo-' + c.id + '" controls preload="metadata" playsinline style="width:100%;max-width:520px;border-radius:10px;background:#000;max-height:320px"></video>' +
+      '<div class="vp-case-video-wrap" id="vpCaseVideoWrap-' + c.id + '" style="display:' + (showWrap ? 'block' : 'none') + '">' +
+        '<video id="vpCaseVideo-' + c.id + '" controls preload="metadata" playsinline style="width:100%;max-width:520px;border-radius:10px;background:#000;max-height:320px"' + (hasVideoUrl ? ' src="' + escapeHtml(c.videoUrl) + '"' : (relVideoUrl ? ' src="' + escapeHtml(relVideoUrl) + '"' : '')) + '></video>' +
       '</div>' +
       '<div class="vp-case-video-ctrl" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
         '<input type="file" accept="video/*" style="display:none" data-video-for="' + c.id + '" id="vpCaseFile-' + c.id + '" onchange="return false">' +
         '<button class="btn xs ghost" data-act="loadVideo" data-id="' + c.id + '">▶️ 预览视频</button>' +
-        '<span class="vp-muted" style="font-size:12px">点按钮选择你电脑上的原视频，即可在卡片内播放</span>' +
+        '<span class="vp-muted" style="font-size:12px" id="vpCaseVideoHint-' + c.id + '">' + videoHint + '</span>' +
       '</div>' +
     '</div>';
     return '<div class="vp-case-item vp-case-ai' + (c.ref ? ' is-ref' : '') + '">' +
@@ -1059,6 +1066,26 @@ function applyAiToParse(ai) {
         '<div class="vp-case-prev">' + preview + '</div>' +
         '</div>';
     }).join('');
+    // 对带视频缓存的案例，把 Blob 回填到 video 标签
+    setTimeout(caseRenderVideos, 0);
+  }
+  // 从 IndexedDB 读出视频 Blob，赋值给案例卡片里的 <video>
+  function caseRenderVideos() {
+    const list = caseGetAll().filter(function (c) { return c.kind === 'ai' && c.ai && c.hasVideo; });
+    list.forEach(function (c) {
+      loadVideo(c.id).then(function (v) {
+        if (!v || !v.blob) return;
+        const video = document.getElementById('vpCaseVideo-' + c.id);
+        const wrap = document.getElementById('vpCaseVideoWrap-' + c.id);
+        const hint = document.getElementById('vpCaseVideoHint-' + c.id);
+        if (!video || !wrap) return;
+        const old = video.src;
+        video.src = URL.createObjectURL(v.blob);
+        if (old && old.startsWith('blob:')) { try { URL.revokeObjectURL(old); } catch (e) {} }
+        wrap.style.display = 'block';
+        if (hint) hint.textContent = '视频已缓存于浏览器，可直接播放';
+      }).catch(function () {});
+    });
   }
   function caseAddOrEdit(id, title, content) {
     const list = caseGetLocal();
@@ -1076,8 +1103,58 @@ function applyAiToParse(ai) {
     const idx = loc.findIndex(function (x) { return x.id === id; });
     if (idx >= 0) { loc.splice(idx, 1); caseSaveLocal(loc); }
     else { const h = caseGetHidden(); if (h.indexOf(id) < 0) { h.push(id); caseSaveHidden(h); } }
+    if (typeof deleteVideo === 'function') deleteVideo(id).catch(function(){});
     caseRender();
   }
+
+  // ===== IndexedDB 视频缓存：案例保存时把原视频文件一起持久化到浏览器 =====
+  const VIDEO_DB_NAME = 'vp_case_videos';
+  const VIDEO_STORE_NAME = 'videos';
+  function openVideoDB() {
+    return new Promise(function (resolve, reject) {
+      const req = indexedDB.open(VIDEO_DB_NAME, 1);
+      req.onerror = function () { reject(req.error); };
+      req.onupgradeneeded = function () {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(VIDEO_STORE_NAME)) db.createObjectStore(VIDEO_STORE_NAME, { keyPath: 'id' });
+      };
+      req.onsuccess = function () { resolve(req.result); };
+    });
+  }
+  function saveVideo(id, blob, name) {
+    if (!id || !blob) return Promise.resolve();
+    return openVideoDB().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        const tx = db.transaction(VIDEO_STORE_NAME, 'readwrite');
+        tx.objectStore(VIDEO_STORE_NAME).put({ id: id, blob: blob, name: name || (id + '.mp4'), ts: Date.now() });
+        tx.oncomplete = function () { resolve(); };
+        tx.onerror = function () { reject(tx.error); };
+      });
+    });
+  }
+  function loadVideo(id) {
+    if (!id) return Promise.resolve(null);
+    return openVideoDB().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        const tx = db.transaction(VIDEO_STORE_NAME, 'readonly');
+        const req = tx.objectStore(VIDEO_STORE_NAME).get(id);
+        req.onsuccess = function () { resolve(req.result || null); };
+        req.onerror = function () { reject(req.error); };
+      });
+    });
+  }
+  function deleteVideo(id) {
+    if (!id) return Promise.resolve();
+    return openVideoDB().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        const tx = db.transaction(VIDEO_STORE_NAME, 'readwrite');
+        tx.objectStore(VIDEO_STORE_NAME).delete(id);
+        tx.oncomplete = function () { resolve(); };
+        tx.onerror = function () { reject(tx.error); };
+      });
+    });
+  }
+
   function casePush(rec) { const list = caseGetLocal(); list.push(rec); caseSaveLocal(list); }
   // 导出案例库为 Markdown，便于离线看板 / 沉淀
   function caseExportMd() {
@@ -1107,6 +1184,44 @@ function applyAiToParse(ai) {
     a.download = 'cases.json';
     document.body.appendChild(a); a.click(); a.remove();
     alert('已下载 cases.json（共 ' + list.length + ' 条）。把它发给我，我会部署到离线看板，他人打开即可看到你的案例。');
+  }
+  // 导出完整离线包：cases.json + videos/ 文件夹，便于部署到 GitHub Pages 或离线看板
+  async function caseExportFull() {
+    const list = caseGetAll().map(function (c) { const o = Object.assign({}, c); delete o._src; return o; });
+    if (!list.length) { alert('案例库为空，暂无可导出内容'); return; }
+    const withVideo = list.filter(function (c) { return c.hasVideo; });
+    if (!withVideo.length) { alert('当前没有带视频缓存的案例。请先解析视频并「保存为案例」，或给已有案例点「预览视频」补选原视频。'); return; }
+    if (typeof showDirectoryPicker !== 'function') {
+      alert('你的浏览器不支持「文件夹保存」API，无法一键导出 videos/ 文件夹。\n\n请换用 Chrome / Edge，或：\n1) 点「导出案例库(JSON)」下载 cases.json；\n2) 手动把视频文件复制到同目录的 videos/ 文件夹（按 {案例ID}.mp4 命名）。');
+      return;
+    }
+    try {
+      const dir = await showDirectoryPicker();
+      // 写 cases.json
+      const jsonBlob = new Blob([JSON.stringify(list, null, 2)], { type: 'application/json;charset=utf-8' });
+      const jsonHandle = await dir.getFileHandle('cases.json', { create: true });
+      const jsonWriter = await jsonHandle.createWritable();
+      await jsonWriter.write(jsonBlob);
+      await jsonWriter.close();
+      // 写 videos/ 文件夹
+      const videosDir = await dir.getDirectoryHandle('videos', { create: true });
+      let saved = 0;
+      for (const c of withVideo) {
+        const v = await loadVideo(c.id);
+        if (!v || !v.blob) continue;
+        const ext = String(v.name || '').split('.').pop() || 'mp4';
+        const fileName = c.id + '.' + ext;
+        const fh = await videosDir.getFileHandle(fileName, { create: true });
+        const w = await fh.createWritable();
+        await w.write(v.blob);
+        await w.close();
+        saved++;
+      }
+      alert('离线包已导出：\n• cases.json（' + list.length + ' 条）\n• videos/ 文件夹（' + saved + ' 个视频）\n\n把它们和 index.html 一起部署到 GitHub Pages 或任意静态托管，即可在线/离线播放视频。');
+    } catch (e) {
+      console.error(e);
+      if (e.name !== 'AbortError') alert('导出失败：' + (e.message || e));
+    }
   }
   function caseFillForm(id) {
     const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'block';
@@ -1194,6 +1309,7 @@ function applyAiToParse(ai) {
     b('vpCaseAdd', () => caseFillForm(null));
     b('vpCaseExport', caseExportMd);
     b('vpCaseExportJson', caseExportJson);
+    b('vpCaseExportFull', caseExportFull);
     b('vpCaseCancel', () => { const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'none'; });
     b('vpCaseSave', () => {
       const t = document.getElementById('vpCaseTitle'), c = document.getElementById('vpCaseContent'), f = document.getElementById('vpCaseForm');
@@ -1225,12 +1341,20 @@ function applyAiToParse(ai) {
       const id = input.getAttribute('data-video-for');
       const wrap = document.getElementById('vpCaseVideoWrap-' + id);
       const video = document.getElementById('vpCaseVideo-' + id);
+      const hint = document.getElementById('vpCaseVideoHint-' + id);
       if (!video || !wrap) return;
       const url = URL.createObjectURL(file);
       const old = video.src; video.src = url;
       if (old && old.startsWith('blob:')) { try { URL.revokeObjectURL(old); } catch (e) {} }
       wrap.style.display = 'block';
       video.play().catch(function () {});
+      // 同时把用户补选的视频文件持久化到 IndexedDB，并更新案例记录
+      saveVideo(id, file, file.name).then(function () {
+        const loc = caseGetLocal();
+        const it = loc.find(function (x) { return x.id === id; });
+        if (it) { it.hasVideo = true; it.videoName = file.name; caseSaveLocal(loc); }
+        if (hint) hint.textContent = '视频已缓存于浏览器，可直接播放';
+      }).catch(function () {});
     });
     // 加载已发布案例（cases.json），支持离线看板跨设备展示；失败（如本地 file:// 打开）则仅用 localStorage
     try {

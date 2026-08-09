@@ -1060,7 +1060,8 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <button class="btn sm primary" id="vpCaseAdd">＋ 添加案例</button>
         <button class="btn sm ghost" id="vpCaseExport">⤓ 导出案例库(MD)</button>
         <button class="btn sm ghost" id="vpCaseExportJson">⤓ 导出案例库(JSON)</button>
-        <span class="note" style="margin:0">案例库由 <b>cases.json</b> 持久化，离线看板自带数据、他人打开即可见。本地新增/编辑先存浏览器草稿，点「导出案例库(JSON)」下载 cases.json 发我，即可部署同步到离线看板（卡片标「已发布」）。</span>
+        <button class="btn sm primary" id="vpCaseExportFull" title="导出 cases.json + videos/ 文件夹，可部署到 GitHub Pages 或离线看板，视频也能直接播放">⤓ 导出完整包（含视频）</button>
+        <span class="note" style="margin:0">案例库由 <b>cases.json</b> 持久化，视频文件缓存在浏览器 IndexedDB。点「导出完整包」可一次性输出 <b>cases.json + videos/</b> 文件夹，部署到 GitHub Pages/离线看板后他人打开即可看到分析的视频。</span>
       </div>
     <div id="vpCaseForm" class="vp-case-form" style="display:none">
       <input type="text" id="vpCaseTitle" class="vp-input" placeholder="案例标题，如：16卷卷纸1分钱 · 黑底大字报钩子">
@@ -2700,6 +2701,7 @@ function parseMatId(name){ const m=String(name).match(/(\d{6,})/); return m?m[1]
 function loadVParseVideo(file){
   try{ if(VP.url) URL.revokeObjectURL(VP.url); }catch(e){}
   VP.url=URL.createObjectURL(file);
+  VP.videoFile=file;
   VP.sid=parseMatId(file.name); VP.fileName=file.name;
   const sidInput=$('#vpSid'); if(sidInput) sidInput.value=VP.sid;
   const v=document.createElement('video');
@@ -4274,7 +4276,7 @@ document.addEventListener('click', function(e){
 
 <script src="personal-enhance.js?v=20260809e"></script>
 
-<script src="vparse-deep.js?v=20260810c"></script>
+<script src="vparse-deep.js?v=20260810d"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
