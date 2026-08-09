@@ -2706,25 +2706,25 @@ function loadVParseVideo(file){
   $('#vpMeta').textContent='加载中…';
   $('#vpResult').style.display='none';
   $('#vpParseCard').style.display='none';
-  v.addEventListener('loadedmetadata',()=>{
+  v.addEventListener('loadedmetadata', async ()=>{
     VP.meta={duration:v.duration, w:v.videoWidth, h:v.videoHeight};
     const m=lookupVParseMat(VP.sid); VP.mat=m.row;
     renderVParseReport();
-    fillVParseFromReport();
+    await fillVParseFromReport();
     extractVParseFrames(Math.max(2,Math.min(30,+$('#vpFrames').value||8)));
   });
   v.addEventListener('error',()=>{ $('#vpMeta').textContent='视频加载失败，请确认文件可播放'; });
 }
 
-function matchVParseReport(){
+async function matchVParseReport(){
   const sidInput=$('#vpSid'); if(!sidInput) return;
   const sid=(sidInput.value||'').trim();
   if(!sid){ alert('请先在「素材ID」框填入素材ID'); return; }
   VP.sid=sid;
   VP.mat=lookupVParseMat(sid).row;
   renderVParseReport();
-  fillVParseFromReport();
-  if(VP.frames&&VP.frames.length) autoVParse();
+  await fillVParseFromReport();
+  if(VP.frames&&VP.frames.length) await autoVParse();
 }
 
 // ---- 🔗 关联素材：按 ID / 名称检索 me-materials.csv 并回填 VP.mat ----
@@ -2745,12 +2745,12 @@ function searchAssoc(){
   }).join('');
   res.querySelectorAll('.vp-assoc-item').forEach(el=>el.onclick=()=>assocMat(el.getAttribute('data-sid')));
 }
-function assocMat(sid){
+async function assocMat(sid){
   if(!sid) return;
   VP.sid=sid; const si=$('#vpSid'); if(si) si.value=sid;
   const m=lookupVParseMat(sid); VP.mat=m.row;
-  renderVParseReport(); fillVParseFromReport();
-  if(VP.frames&&VP.frames.length) autoVParse();
+  renderVParseReport(); await fillVParseFromReport();
+  if(VP.frames&&VP.frames.length) await autoVParse();
   const tag=$('#vpMatchedTag'); if(tag) tag.textContent='已关联报表';
   closeAssocPanel();
   const meta=$('#vpMeta'); if(meta && !VP.meta) meta.textContent='已关联素材 '+sid+'（视频未加载，仅数据侧）';
@@ -2852,39 +2852,87 @@ function parsePeriodRange(p){
   const start=m[1]+'-'+m[2]+'-'+m[3], end=m[4]+'-'+m[5]+'-'+m[6];
   return {start, end, startDate:new Date(start), endDate:new Date(end)};
 }
-// 根据周期数据推算素材生命周期（创建/起量/衰退/状态）
+
+// ========== 素材生命周期：优先按周期数据推算，兜底读 me-materials.csv 日报日期 ==========
+let _ME_MAT_DATES = null;
+async function ensureMeMatDates(){
+  if(_ME_MAT_DATES !== null) return _ME_MAT_DATES;
+  _ME_MAT_DATES = {};
+  try{
+    const t = await fetchMeText('me-materials.csv', false);
+    const {cols, rows} = parseCSV(t);
+    const iDate = cols.indexOf('日期'), iId = cols.indexOf('素材ID'), iCost = cols.indexOf('消耗');
+    if(iDate < 0 || iId < 0) return _ME_MAT_DATES;
+    rows.forEach(r=>{
+      const id = String(r[iId] || '').trim();
+      const d = r[iDate] || '';
+      const cost = fnum(r[iCost]);
+      if(!id || !d || id==='--' || d==='--') return;
+      if(!_ME_MAT_DATES[id]) _ME_MAT_DATES[id] = [];
+      _ME_MAT_DATES[id].push({date:d, cost});
+    });
+  }catch(e){ console.warn('[ensureMeMatDates]', e); }
+  return _ME_MAT_DATES;
+}
+function getMeMatLifecycle(sid){
+  const arr = (_ME_MAT_DATES || {})[sid];
+  if(!arr || !arr.length) return null;
+  arr.sort((a,b)=>a.date.localeCompare(b.date));
+  const first = arr[0], last = arr[arr.length-1];
+  const max = arr.reduce((m,c)=>c.cost > m.cost ? c : m, arr[0]);
+  const today = new Date();
+  const firstDate = new Date(first.date);
+  const days = Math.max(1, Math.round((today - firstDate) / (1000*60*60*24)));
+  let status = '测试中';
+  if(arr.length >= 2 && max.cost > 0 && last.cost < max.cost * 0.25){
+    status = '已衰退';
+  }else if(max.cost > 0 && last.cost >= max.cost * 0.25){
+    status = '跑量中';
+  }
+  if(days > 21 && last.cost === 0) status = '已停止';
+  return {
+    createDate: first.date,
+    scaleDate: max.date,
+    declineDate: (status==='已衰退' ? last.date : ''),
+    days,
+    status
+  };
+}
+// 根据周期数据推算素材生命周期（创建/起量/衰退/状态）；无周期数据则兜底 me-materials 日报
 function computeMatLifecycle(sid){
   const pm=DATA_FULL.periodMats;
   const periods=(DATA_FULL.periodData||[]).map(p=>p.period).filter(Boolean);
-  if(!periods.length) return null;
-  let perCosts=[];
-  if(pm){
+  if(periods.length && pm){
+    let perCosts=[];
     periods.forEach(p=>{
       const rows=pm[p]||[];
       const r=rows.find(x=>String(x[0])===String(sid));
       if(r) perCosts.push({period:p, cost:+r[1]||0});
     });
+    if(perCosts.length){
+      perCosts.sort((a,b)=>{ const pa=parsePeriodRange(a.period), pb=parsePeriodRange(b.period); return (pa?pa.startDate:0)-(pb?pb.startDate:0); });
+      const first=perCosts[0], last=perCosts[perCosts.length-1];
+      const prFirst=parsePeriodRange(first.period), prLast=parsePeriodRange(last.period);
+      if(prFirst){
+        const max=perCosts.reduce((m,c)=>c.cost>m.cost?c:m, perCosts[0]);
+        const prMax=parsePeriodRange(max.period);
+        const today=new Date();
+        const createDate=prFirst.start;
+        const scaleDate=prMax?prMax.start:'';
+        const days=Math.max(1, Math.round((today - prFirst.startDate)/(1000*60*60*24)));
+        let declineDate='', status='测试中';
+        if(perCosts.length>=2 && max.cost>0 && last.cost < max.cost*0.25){
+          declineDate=prLast?prLast.start:'';
+          status='已衰退';
+        }else if(max.cost>0 && last.cost >= max.cost*0.25){
+          status='跑量中';
+        }
+        if(days>21 && last.cost===0) status='已停止';
+        return {createDate, scaleDate, declineDate, days, status};
+      }
+    }
   }
-  if(!perCosts.length) return null;
-  perCosts.sort((a,b)=>{ const pa=parsePeriodRange(a.period), pb=parsePeriodRange(b.period); return (pa?pa.startDate:0)-(pb?pb.startDate:0); });
-  const first=perCosts[0], last=perCosts[perCosts.length-1];
-  const prFirst=parsePeriodRange(first.period), prLast=parsePeriodRange(last.period);
-  if(!prFirst) return null;
-  const max=perCosts.reduce((m,c)=>c.cost>m.cost?c:m, perCosts[0]);
-  const prMax=parsePeriodRange(max.period);
-  const today=new Date();
-  const createDate=prFirst.start;
-  const scaleDate=prMax?prMax.start:'';
-  const days=Math.max(1, Math.round((today - prFirst.startDate)/(1000*60*60*24)));
-  let declineDate='', status='测试中';
-  if(perCosts.length>=2 && max.cost>0 && last.cost < max.cost*0.25){
-    declineDate=prLast?prLast.start:'';
-    status='已衰退';
-  }else if(max.cost>0 && last.cost >= max.cost*0.25){
-    status='跑量中';
-  }
-  if(days>21 && last.cost===0) status='已停止';
-  return {createDate, scaleDate, declineDate, days, status};
+  return getMeMatLifecycle(sid);
 }
 
 function seekTo(v,t){ return new Promise(res=>{ const h=()=>{v.removeEventListener('seeked',h);res();}; v.addEventListener('seeked',h); try{v.currentTime=Math.max(0,Math.min(t,(v.duration||1)-0.04));}catch(e){res();} }); }
@@ -2923,7 +2971,7 @@ function extractVParseFrames(n){
     VP.frames=frames;
     renderVParseFrames();
     computeVParseAnalysis();
-    autoVParse();
+    await autoVParse();
     $('#vpMeta').textContent=`${vpDur(VP.meta.duration)} · ${VP.meta.w}×${VP.meta.h} · ${n}帧`;
   })();
 }
@@ -2995,9 +3043,10 @@ function fillVParseTemplate(){
 function vpDownload(name,content,type){ const b=new Blob([content],{type}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove(); setTimeout(()=>URL.revokeObjectURL(u),2000); }
 
 // 把报表数据填入「投放数据区 + 生命周期区」（匹配后立即执行，不依赖抽帧/AI）
-function fillVParseFromReport(){
+async function fillVParseFromReport(){
   const m=VP.mat;
   if(!m) return;
+  await ensureMeMatDates();  // 预加载 me-materials 日报日期，供生命周期兜底
   const setV=(id,val)=>{const el=$('#'+id); if(el&&el.value===''&&val!=null&&val!=='') el.value=val;};
   setV('vpCost', m.cost||''); setV('vpImp', m.imp||''); setV('vpClk', m.clk||'');
   setV('vpCv', m.cv||''); setV('vpCtr', m.ctr||''); setV('vpCvr', m.cvr||'');
@@ -3015,8 +3064,8 @@ function fillVParseFromReport(){
 }
 
 // 自动解析：依据「画面分析 + 报表指标 + 品类模板」一次性填好五个框（无需手动）
-function autoVParse(){
-  fillVParseFromReport();
+async function autoVParse(){
+  await fillVParseFromReport();
   const cat=VP.mat&&VP.mat.cat||'';
   const t=VP_TEMPLATES[cat]||VP_TEMPLATES['default'];
   const a=VP.analysis||{};
@@ -3736,7 +3785,7 @@ function isAppBiaod(plan){ const p=(plan||'').trim().toLowerCase(); return p.inc
 function rowChannel(plan, name){
   plan=(plan||'').trim(); name=(name||'').trim();
   if(isAppBiaod(plan) && name.startsWith('信息流')) return '标点';
-  if(plan.includes('低活')) return '低活';
+  if(plan.includes('低活') || name.includes('低活')) return '低活';          // 素材名本身含「低活」也归低活
   if(plan.includes('广义新') || CH_BROAD.some(k=>name.includes(k))) return '广义新';
   return null; // 无明确计划：交给文件级兜底或默认广义新
 }
@@ -4220,7 +4269,7 @@ document.addEventListener('click', function(e){
 
 <script src="personal-enhance.js?v=20260809e"></script>
 
-<script src="vparse-deep.js?v=20260810a"></script>
+<script src="vparse-deep.js?v=20260810b"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
