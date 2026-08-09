@@ -5,11 +5,11 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260809c";
-  var MAT_URL  = "./me-materials.csv?v=20260809c";
+  var HIST_URL = "./me-history.csv?v=20260809d";
+  var MAT_URL  = "./me-materials.csv?v=20260809d";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
-  var UPLOAD_URL = "./me-uploads.csv?v=20260809c";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260809d";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -138,21 +138,21 @@
   // 9 个 AIGC 标签（OR 并集，命中其一即为 AIGC）：
   //   平台一组AIGC / 平台一组AIGC-sd / 京东本部-模型-seedance2.0 / 平台一组AIGC-wx /
   //   京东本部-工具-万相 / 平台一组AIGC-k / 京东本部-工具-可灵 / 平台一组AIGC-c空镜 / 京东本部-工作流-comfyui
-  // me-materials.csv / me-uploads.csv 已由 enrich_tags.py 按素材ID 从源数据回接【素材标签】列。
-  // 判定逻辑：有【素材标签】列 → 直接按 9 标签 OR 匹配（不再依赖素材名猜测）；
-  //           仅当某行确实无【素材标签】数据（如源未覆盖的月份）时回退素材名片段，避免漏计。
+  // me-materials.csv / me-uploads.csv 的【素材标签】列来自创量【内容】->导出素材信息 xlsx（逗号分隔多标签）。
+  // 判定逻辑：按逗号切出每个标签 token，与 9 个 AIGC 标签做【精确】匹配（避免 "平台一组AIGC" 误命中 "平台一组AIGC-sd"）；
+  //           仅当某行确实无【素材标签】数据（如源未覆盖的素材）时回退素材名片段，避免漏计。
   var AIGC_TAGS = ["平台一组AIGC","平台一组AIGC-sd","京东本部-模型-seedance2.0","平台一组AIGC-wx","京东本部-工具-万相","平台一组AIGC-k","京东本部-工具-可灵","平台一组AIGC-c空镜","京东本部-工作流-comfyui"];
   var AI_TAG_KEYWORDS = ["aigc","seedance","万相","可灵","空镜","comfyui"];
   // tag: 素材标签列原值（逗号分隔多标签）；name: 素材名（仅当无素材标签时兜底）
   function isAiMaterial(tag, name) {
     if (tag && String(tag).trim()) {
-      var t = String(tag);
-      for (var i = 0; i < AIGC_TAGS.length; i++) {
-        if (t.indexOf(AIGC_TAGS[i]) >= 0) return true;   // 命中 9 标签任一 → AIGC
+      var toks = String(tag).split(/[,，]/).map(function (x) { return x.trim(); });
+      for (var i = 0; i < toks.length; i++) {
+        if (AIGC_TAGS.indexOf(toks[i]) >= 0) return true;   // 精确命中 9 标签任一 → AIGC
       }
       return false; // 有标签列但无命中 → 非 AIGC（严格按标签判定，不回退命名）
     }
-    // 无【素材标签】数据时回退素材名片段判定（兼容尚未回接的月份）
+    // 无【素材标签】数据时回退素材名片段判定（兼容尚未回接的素材）
     if (name) {
       var n = String(name).toLowerCase();
       for (var i = 0; i < AI_TAG_KEYWORDS.length; i++) {
