@@ -1410,6 +1410,49 @@ function applyAiToParse(ai) {
     genDerivativeScripts();
   }
 
+  // ===== 脚本生成器：参考当前素材脚本生成全新口播文案 =====
+  function zeroKeyGenFromRef(modes, sells, cat, ref) {
+    const tpl = (typeof VP_TEMPLATES !== 'undefined' && VP_TEMPLATES[cat]) || (typeof VP_TEMPLATES !== 'undefined' ? VP_TEMPLATES['default'] : { sells: '核心卖点', hook: '' });
+    const sellList = sells.length ? sells : (tpl.sells ? tpl.sells.split(/[、,，]/).map(function (s) { return s.trim(); }).filter(Boolean) : ['核心卖点']);
+    const pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
+    const sentences = (ref || '').split(/[。！？!?；;\n]+/).map(function (s) { return s.trim(); }).filter(Boolean);
+    const origHook = sentences[0] || '';
+    const body = sentences.slice(1).join('。') || pick(sellList);
+    const items = [];
+    if (modes.indexOf('hook') >= 0) GEN_HOOKS.slice(0, 3).forEach(function (h, i) { items.push({ label: '换钩子·' + (i + 1), text: h + '，' + body + '。' + pick(GEN_CTA) + '。' }); });
+    if (modes.indexOf('crowd') >= 0) GEN_CROWD.slice(0, 3).forEach(function (c, i) { items.push({ label: '换人群·' + c, text: c + '注意了：' + body + '。' + pick(GEN_CTA) + '。' }); });
+    if (modes.indexOf('scene') >= 0) GEN_SCENE.slice(0, 3).forEach(function (sc, i) { items.push({ label: '换场景·' + (i + 1), text: sc + '的时候，' + body + '。' + pick(GEN_CTA) + '。' }); });
+    if (modes.indexOf('short') >= 0) items.push({ label: '浓缩版', text: (origHook ? origHook + '，' : '') + sellList.slice(0, 2).join('，') + '。' + pick(GEN_CTA) + '。' });
+    if (modes.indexOf('long') >= 0) items.push({ label: '扩写版', text: (origHook || pick(GEN_HOOKS)) + '。' + body + '。' + pick(sellList) + '。' + pick(GEN_CTA) + '。' });
+    return items;
+  }
+  function vpRunScriptGen() {
+    const out = document.getElementById('vpScriptGenOut'); if (!out) return;
+    const refTa = document.getElementById('vpGenRef');
+    const srcTa = document.getElementById('vpScript');
+    let ref = (refTa ? refTa.value : '').trim() || (srcTa ? srcTa.value : '').trim();
+    if (!ref) { out.innerHTML = '<div class="vp-note-inline">请先在「素材文案/逐字稿」框填入参考脚本，或在本面板参考脚本框中粘贴。</div>'; return; }
+    const sells = (VP.ai && VP.ai.analysis && VP.ai.analysis.selling_points) || [];
+    const cat = (VP.mat && VP.mat.cat) || '';
+    const modes = [].slice.call(document.querySelectorAll('#vpScriptGenModes .vp-mode.on')).map(function (b) { return b.dataset.m; });
+    const useModes = modes.length ? modes : ['hook', 'crowd', 'scene'];
+    const conf = aiConfGet();
+    if (conf.key) {
+      const sellTxt = sells.length ? sells.join('；') : ((typeof VP_TEMPLATES !== 'undefined' && (VP_TEMPLATES[cat] || VP_TEMPLATES['default'])) ? (VP_TEMPLATES[cat] || VP_TEMPLATES['default']).sells : '核心卖点');
+      const modeTxt = useModes.map(function (m) { return ({ hook: '换不同类型钩子', crowd: '换目标人群', scene: '换使用场景', short: '浓缩成一句话', long: '扩写成完整版' })[m] || m; }).join('、');
+      const prompt = '你是有10年经验的短视频信息流投放脚本写手。请基于以下「参考脚本」，生成若干条全新的跑量口播文案，要求保留原脚本的核心卖点与叙事节奏，但在钩子、人群、场景或篇幅上做出差异化。每条控制在120字以内，口语化、有钩子有CTA，禁止照搬原句。\n素材品类：' + (cat || '未指定') + '\n核心卖点：' + sellTxt + '\n参考脚本：' + ref + '\n请按以下角度各生成1条：' + modeTxt + '。\n严格只输出 JSON 数组，格式：[{"label":"角度名","text":"口播文案"}]，不要任何解释文字。';
+      out.innerHTML = '<div class="vp-note-inline">🤖 调用 AI 生成中…</div>';
+      vpCallAi(prompt).then(function (txt) {
+        let items = [];
+        try { const m = txt.match(/\[[\s\S]*\]/); if (m) items = JSON.parse(m[0]); } catch (e) {}
+        if (!items.length) items = zeroKeyGenFromRef(useModes, sells, cat, ref);
+        renderGen(out, items);
+      }).catch(function () { renderGen(out, zeroKeyGenFromRef(useModes, sells, cat, ref)); });
+    } else {
+      renderGen(out, zeroKeyGenFromRef(useModes, sells, cat, ref));
+    }
+  }
+
   function initVParseDeep() {
     const b = (id, fn) => { const e = document.getElementById(id); if (e) e.onclick = fn; };
     b('vpDeepBtn', vpRunDeep);
@@ -1422,6 +1465,8 @@ function applyAiToParse(ai) {
     b('vpAnalyseScript', analyzeScript);
     b('vpGenScript', toggleGenModes);
     const _gm = document.getElementById('vpGenModes'); if (_gm) { _gm.querySelectorAll('.vp-mode').forEach(function (mb) { mb.onclick = function () { mb.classList.toggle('on'); genDerivativeScripts(); }; }); }
+    b('vpScriptGenBtn', vpRunScriptGen);
+    const _sgm = document.getElementById('vpScriptGenModes'); if (_sgm) { _sgm.querySelectorAll('.vp-mode').forEach(function (mb) { mb.onclick = function () { mb.classList.toggle('on'); }; }); }
     b('vpAiClose', closeAiModal);
     b('vpAiSave', saveAiKey);
     b('vpAiClear', clearAiKey);

@@ -1021,6 +1021,26 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div id="vpInsight" class="vp-insight muted">点「生成理解分析」，我会结合投放数据与信息流经验，给出跑量阶段判断、效率诊断与优化建议。</div>
   </div>
 
+  <div class="vp-region" id="vpScriptGenRegion">
+    <div class="vp-region-h">🎯 脚本生成器 <span class="vp-hint">直接参考当前素材脚本，一键生成全新口播文案</span></div>
+    <div class="vp-gen-ref">
+      <label>参考脚本（可编辑；留空则自动取「素材文案/逐字稿」）</label>
+      <textarea id="vpGenRef" rows="3" placeholder="解析得到的口播/语音文字会自动作为参考，你也可以直接粘贴或修改…"></textarea>
+    </div>
+    <div class="vp-script-acts" style="margin-top:10px">
+      <span class="vp-gen-lbl">变体方向：</span>
+      <span id="vpScriptGenModes" class="vp-gen-modes">
+        <button type="button" class="vp-mode on" data-m="hook">换钩子</button>
+        <button type="button" class="vp-mode on" data-m="crowd">换人群</button>
+        <button type="button" class="vp-mode on" data-m="scene">换场景</button>
+        <button type="button" class="vp-mode" data-m="short">浓缩</button>
+        <button type="button" class="vp-mode" data-m="long">扩写</button>
+      </span>
+      <button class="btn sm primary" id="vpScriptGenBtn">✨ 生成全新脚本</button>
+    </div>
+    <div id="vpScriptGenOut" class="vp-script-out"></div>
+  </div>
+
   <div class="vp-region">
     <div class="vp-region-h vp-collapsible" id="vpRawToggle">▸ 录入/编辑原始字段（基础信息 · 投放数据 · 生命周期）</div>
     <div id="vpRawFields" style="display:none">
@@ -4156,6 +4176,9 @@ document.addEventListener('click', function(e){
 .vp-mode.on{background:var(--brand);color:#fff;border-color:var(--brand)}
 .vp-mode:hover{background:#eef4ff}
 .vp-script-out{margin-top:6px}
+.vp-gen-ref{margin-top:6px}
+.vp-gen-ref label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.vp-gen-ref textarea{width:100%;min-height:54px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font-family:inherit;resize:vertical;box-sizing:border-box}
 .vp-sa-metrics{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:4px}
 .vp-sa-metric{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-width:84px}
 .vp-sa-metric .l{font-size:11px;color:var(--muted)}
@@ -4318,9 +4341,9 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260810i"></script>
+<script src="personal-enhance.js?v=20260810k"></script>
 
-<script src="vparse-deep.js?v=20260810i"></script>
+<script src="vparse-deep.js?v=20260810k"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->

@@ -815,6 +815,57 @@
     renderUploadMonth();// 每月上传素材量 & AI 占比
   }
 
+  /* ---------- 渲染：消耗渠道构成（今日 / 当月范围联动） ---------- */
+  function classifyChannel(name) {
+    name = (name || "").trim();
+    if (name.indexOf("信息流") === 0) return "标点";
+    if (name.indexOf("低活") >= 0) return "低活";
+    return "广义新";
+  }
+  function renderChannelRows(rows, label, mode) {
+    var sum = { "广义新": 0, "低活": 0, "标点": 0 };
+    rows.forEach(function (m) { sum[classifyChannel(m["素材名"])] += num(m["消耗"]); });
+    var total = sum["广义新"] + sum["低活"] + sum["标点"];
+    var box = el("meChannelBars"), diff = el("meChannelDiff");
+    var items = [["广义新", sum["广义新"], "var(--green)"], ["低活", sum["低活"], "var(--yellow)"], ["标点", sum["标点"], "var(--brand)"]];
+    if (box) {
+      box.innerHTML = items.map(function (it) {
+        var nm = it[0], val = it[1], col = it[2];
+        var p = total > 0 ? Math.round(val / total * 100) : 0;
+        return "<div class='kpi'><div class='l'>" + esc(nm) + "</div>" +
+          "<div class='v'>¥" + fmtNum(Math.round(val)) + "</div>" +
+          "<div class='note' style='margin:2px 0 0'>占比 " + p + "%</div>" +
+          "<div class='me-prog'><i style='width:" + p + "%;background:" + col + "'></i></div></div>";
+      }).join("") || "<div class='empty'>暂无素材明细</div>";
+    }
+    if (diff) {
+      diff.innerHTML = "数据日期：<b>" + esc(label) + "</b> ｜ 总消耗 <b>¥" + fmtNum(Math.round(total)) + "</b>" +
+        (mode === "今日" ? " ｜ 较昨日同时段见上方 KPI 卡片" : " ｜ 按所选月份范围汇总");
+    }
+  }
+  function renderChannelToday() {
+    if (!matData.length) return;
+    var byDate = {};
+    matData.forEach(function (m) { var d = m["日期"]; if (d) (byDate[d] = byDate[d] || []).push(m); });
+    var dates = Object.keys(byDate).sort();
+    var latest = dates[dates.length - 1] || "";
+    renderChannelRows(byDate[latest] || [], latest || "—", "今日");
+  }
+  function renderChannelByRange(start, end) {
+    var s = start || "0000-01-01", e = end || "9999-12-31";
+    var rows = matData.filter(function (m) {
+      var d = (m["日期"] || "").replace(/\//g, "-").slice(0, 10);
+      return d && d >= s && d <= e;
+    });
+    var label = (start && end) ? (start + " ~ " + end) : "所选范围";
+    renderChannelRows(rows, label, "区间");
+  }
+  function isMonthTabActive() {
+    var tabs = el("meCoreTabs"); if (!tabs) return false;
+    var on = tabs.querySelector(".me-mtab.on");
+    return on && on.getAttribute("data-v") === "month";
+  }
+
   // ④ 个人素材统计：剪辑师李虹玉 · 上传时间口径 · 日/周/月/总 产出汇总
   // 口径：按创量【内容】页「上传时间」导出素材清单，按素材ID去重；AIGC 由【素材标签】列判定（enrich_tags 回接）。
   // upData 列：素材ID,素材名,上传人,上传时间（来自 me-uploads.csv）
@@ -1231,11 +1282,13 @@
       if (sv && ev && sv > ev) { alert("起始日期不能晚于结束日期"); return; }
       consStart = sv || null; consEnd = ev || null;
       renderMonth();
+      if (isMonthTabActive()) renderChannelByRange(consStart, consEnd);
     };
     var cAll = el("consAll");
     if (cAll) cAll.onclick = function () {
       consStart = null; consEnd = null;
       renderMonth();
+      if (isMonthTabActive()) { var r = consRange(); renderChannelByRange(r.s, r.e); }
     };
 
     // 双月绩效 KPI 进度（首次渲染，数据到达后 loadData 会再刷新实际值）
@@ -1254,6 +1307,9 @@
         var today = el("meCoreToday"), mo = el("slotMeMonth");
         if (today) today.style.display = (v === "today") ? "block" : "none";
         if (mo) mo.style.display = (v === "month") ? "block" : "none";
+        // 渠道构成随 Tab 联动：今日=最新一天，当月=当前消耗汇总日期范围
+        if (v === "month") { var r = consRange(); renderChannelByRange(r.s, r.e); }
+        else { renderChannelToday(); }
       };
     });
   }
