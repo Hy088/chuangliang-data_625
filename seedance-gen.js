@@ -22,7 +22,7 @@
 
   // ---------------- 硅基流动 SiliconFlow（免费/低成本通道） ----------------
   const SF_IMG_MODELS = [
-    'black-forest-labs/FLUX.1-schnell', 'Kwai-Kolors/Kolors',
+    'Kwai-Kolors/Kolors', 'black-forest-labs/FLUX.1-schnell',
     'black-forest-labs/FLUX.1-dev'
   ];
   const SF_VID_MODELS = [
@@ -390,7 +390,7 @@
     $('#sdgModels').innerHTML = models.map(m => `<option value="${m}">${m}</option>`).join('');
     modelEl.value = def;
     $('#sdgModelNote').textContent = isSf
-      ? (isImg ? '硅基流动图片：FLUX.1-schnell 为免费档，Kolors 高质量。'
+      ? (isImg ? '硅基流动图片：Kolors 当前默认可用（免费）。FLUX 系列若报 403 表示本账号未开启，可在硅基流动控制台启用。'
                : '硅基流动视频：Wan2.2 系列（消耗免费 tokens）。')
       : (isImg ? '切到「文生图」用 Seedream。' : '视频默认 Seedance 2.0，可手动改。');
   }
