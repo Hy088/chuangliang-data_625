@@ -76,7 +76,7 @@ async function proxyArk(res, method, targetPath, bodyObj) {
   if (!key) {
     res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({
-      error: '未配置 ARK_API_KEY。请在 chuangliang_data/.env 写入 ARK_API_KEY=volc-sk-xxx，或设置系统环境变量 ARK_API_KEY 后重启本服务。'
+      error: '未配置 ARK_API_KEY。请在 chuangliang_data/.env 写入 ARK_API_KEY=ark-xxx（方舟 Key 以 ark- 开头），或设置系统环境变量 ARK_API_KEY 后重启本服务。'
     }));
     return;
   }
