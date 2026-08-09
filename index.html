@@ -901,6 +901,36 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
   <div class="section" id="vparse">
     <div class="card">
       <h2>🎬 视频解析 <span class="tag">拖入 / 选择视频，自动按「素材ID.mp4」匹配；也可手动输入ID</span></h2>
+      <style>
+        .vp-assoc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;padding:10px 12px;background:#f4f6fb;border:1px solid var(--line);border-radius:10px}
+        .vp-assoc-res{width:100%;max-height:240px;overflow:auto;display:flex;flex-direction:column;gap:5px;margin-top:2px}
+        .vp-assoc-item{padding:7px 11px;background:#fff;border:1px solid var(--line);border-radius:8px;cursor:pointer;font-size:13px;display:flex;gap:10px;align-items:center}
+        .vp-assoc-item:hover{background:#eef3ff;border-color:var(--brand)}
+        .vp-assoc-nm{color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .vp-assoc-m{color:#8a93a6;font-size:12px;white-space:nowrap}
+        .vp-boom-hero{background:linear-gradient(135deg,#eef2ff,#e8f6ef);border:1px solid #d8e0f5;border-radius:12px;padding:14px 16px;margin-bottom:12px}
+        .vp-boom-hero-row{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between}
+        .vp-boom-title{font-size:16px;font-weight:800;color:#1c2540}
+        .vp-boom-stage{font-size:13px;color:#5b6478}
+        .vp-boom-pills{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px}
+        .vp-pill-green{background:#e6f7ef;color:#128a5b;font-weight:700;padding:2px 9px;border-radius:20px;font-size:12px}
+        .vp-pill-yellow{background:#fdf1e2;color:#a9700a;font-weight:700;padding:2px 9px;border-radius:20px;font-size:12px}
+        .vp-pill-red{background:#fdeaea;color:#c0392b;font-weight:700;padding:2px 9px;border-radius:20px;font-size:12px}
+        .vp-tl-item{display:flex;gap:14px;padding:9px 0;border-bottom:1px dashed #e2e6ee}
+        .vp-tl-item:last-child{border-bottom:none}
+        .vp-tl-time{font-weight:700;min-width:150px;color:#3b62d4;font-size:13px}
+        .vp-tl-adv{font-size:13px;line-height:1.7;flex:1;color:#374151}
+        .vp-script{white-space:pre-wrap;font-size:12.5px;line-height:1.6;max-height:150px;overflow:auto;background:#f7f8fb;padding:9px 11px;border-radius:8px;color:#374151;border:1px solid var(--line)}
+        .vp-viral-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:10px 0}
+        .vp-viral-card{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff}
+        .vp-viral-card h4{margin:0 0 8px;font-size:13px;color:var(--muted)}
+        .vp-viral-row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:1px dashed #eef1f6}
+        .vp-viral-row:last-child{border-bottom:none}
+        .vp-viral-bar{height:8px;border-radius:4px;background:#eef1f6;overflow:hidden;margin-top:6px}
+        .vp-viral-bar>i{display:block;height:100%;background:var(--brand)}
+        .vp-viral-up{color:#128a5b;font-weight:700}
+        .vp-viral-dn{color:#c0392b;font-weight:700}
+      </style>
       <div class="note">把本地视频直接拖进下方区域（或点击选择）。系统从<strong>文件名</strong>提取素材ID，自动匹配报表的消耗 / 转化 / CVR 等指标，并在浏览器内<strong>抽帧 + 画面分析</strong>（节奏、钩子、画面风格），无需任何后端、不上传数据。若文件名不含素材ID，加载后把ID粘贴到上方「素材ID」框点「匹配报表」即可强制关联。</div>
       <div class="vparse-drop" id="vpDrop">
         <input type="file" id="vpFile" accept="video/*" hidden>
@@ -913,6 +943,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       <div class="vp-controls" id="vpCtrls" style="display:none">
         <label class="vp-sid-lbl">素材ID <input type="text" id="vpSid" placeholder="如 13547842562" size="14" autocomplete="off"></label>
         <button class="btn sm" id="vpMatch" title="用上方ID重新匹配报表（回车亦可）">匹配报表</button>
+        <button class="btn sm" id="vpAssoc" title="按素材ID或素材名关联到报表数据（导入/生成视频无ID时用）">🔗 关联素材</button>
         <label>抽帧数 <input type="number" id="vpFrames" value="8" min="2" max="30"></label>
         <label title="AI 语义拆解分析视频的前 N 秒；0 = 整段（支持长视频 &gt;60s）">拆解时长(s) <input type="number" id="vpCutDur" value="0" min="0" max="600" step="5"></label>
         <button class="btn sm primary" id="vpReextract">重新抽帧</button>
@@ -922,6 +953,12 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <button class="btn sm" id="vpAiBtn" title="填入 API Key 后，调用所选服务商（智谱/OpenAI/DeepSeek 等）做语义级拆解">🤖 AI语义拆解</button>
         <button class="btn sm ghost" id="vpAiSetBtn" title="设置 AI 服务商 / Key">⚙</button>
         <span class="tag" id="vpMeta"></span>
+      </div>
+      <div class="vp-assoc" id="vpAssocPanel" style="display:none">
+        <input type="text" id="vpAssocInput" class="vp-input" style="flex:1;min-width:200px" placeholder="输入素材ID或素材名关键字，回车搜索…">
+        <button class="btn sm primary" id="vpAssocSearch">搜索</button>
+        <button class="btn sm ghost" id="vpAssocClose">✕</button>
+        <div class="vp-assoc-res" id="vpAssocRes"></div>
       </div>
     </div>
 
@@ -2633,6 +2670,11 @@ function initVParse(){
   const matchBtn=$('#vpMatch'); if(matchBtn) matchBtn.onclick=matchVParseReport;
   const sidInput=$('#vpSid'); if(sidInput) sidInput.addEventListener('keydown',e=>{ if(e.key==='Enter') matchVParseReport(); });
   const auto=$('#vpAuto'); if(auto) auto.onclick=autoVParse;
+  const assoc=$('#vpAssoc'); if(assoc) assoc.onclick=openAssocPanel;
+  const assocSearch=$('#vpAssocSearch'); if(assocSearch) assocSearch.onclick=searchAssoc;
+  const assocClose=$('#vpAssocClose'); if(assocClose) assocClose.onclick=closeAssocPanel;
+  const assocInput=$('#vpAssocInput'); if(assocInput) assocInput.addEventListener('keydown',e=>{ if(e.key==='Enter') searchAssoc(); });
+  const viralBtn=$('#vpViralBtn'); if(viralBtn) viralBtn.onclick=()=>renderViralPatterns();
   const em=$('#vpExportMd'); if(em) em.onclick=()=>exportVParse('md');
   const ej=$('#vpExportJson'); if(ej) ej.onclick=()=>exportVParse('json');
   const editToggle=$('#vpEditToggle'); const editFields=$('#vpEditFields');
@@ -2685,6 +2727,34 @@ function matchVParseReport(){
   if(VP.frames&&VP.frames.length) autoVParse();
 }
 
+// ---- 🔗 关联素材：按 ID / 名称检索 me-materials.csv 并回填 VP.mat ----
+function openAssocPanel(){ const p=$('#vpAssocPanel'); if(p) p.style.display=(p.style.display==='none'?'flex':'none'); const i=$('#vpAssocInput'); if(i && p && p.style.display==='flex') i.focus(); }
+function closeAssocPanel(){ const p=$('#vpAssocPanel'); if(p) p.style.display='none'; const r=$('#vpAssocRes'); if(r) r.innerHTML=''; }
+function searchAssoc(){
+  const i=$('#vpAssocInput'); const q=(i&&i.value||'').trim().toLowerCase();
+  const res=$('#vpAssocRes'); if(!res) return;
+  if(!q){ res.innerHTML='<div class="muted">请输入素材ID或素材名关键字。</div>'; return; }
+  const M=DATA_FULL.materials; if(!M||!M.rows){ res.innerHTML='<div class="muted">报表数据未加载，无法检索。</div>'; return; }
+  const cols=M.cols||[]; const ci=k=>cols.indexOf(k);
+  const idI=ci('id'), nmI=ci('name'), costI=ci('cost'), cvI=ci('cv'), catI=ci('cat');
+  const hits=M.rows.filter(r=> (idI>=0 && String(r[idI]).toLowerCase().includes(q)) || (nmI>=0 && String(r[nmI]).toLowerCase().includes(q)) ).slice(0,25);
+  if(!hits.length){ res.innerHTML='<div class="muted">未找到匹配素材，换个关键字试试。</div>'; return; }
+  res.innerHTML=hits.map(r=>{
+    const id=idI>=0?r[idI]:'', nm=nmI>=0?String(r[nmI]||''):'', cost=costI>=0?fmtMoney(+r[costI]||0):'', cv=cvI>=0?fmtInt(+r[cvI]||0):'', cat=catI>=0?String(r[catI]||''):'';
+    return '<div class="vp-assoc-item" data-sid="'+escapeHtml(id)+'"><b>'+escapeHtml(id)+'</b> <span class="vp-assoc-nm">'+escapeHtml(nm.slice(0,46))+'</span> <span class="vp-assoc-m">'+cat+' · 消耗 '+cost+' · 转化 '+cv+'</span></div>';
+  }).join('');
+  res.querySelectorAll('.vp-assoc-item').forEach(el=>el.onclick=()=>assocMat(el.getAttribute('data-sid')));
+}
+function assocMat(sid){
+  if(!sid) return;
+  VP.sid=sid; const si=$('#vpSid'); if(si) si.value=sid;
+  const m=lookupVParseMat(sid); VP.mat=m.row;
+  renderVParseReport(); fillVParseFromReport();
+  if(VP.frames&&VP.frames.length) autoVParse();
+  const tag=$('#vpMatchedTag'); if(tag) tag.textContent='已关联报表';
+  closeAssocPanel();
+  const meta=$('#vpMeta'); if(meta && !VP.meta) meta.textContent='已关联素材 '+sid+'（视频未加载，仅数据侧）';
+}
 function lookupVParseMat(sid){
   const cols=(DATA_FULL.materials&&DATA_FULL.materials.cols)||[];
   const ci=k=>cols.indexOf(k);
@@ -2694,6 +2764,85 @@ function lookupVParseMat(sid){
   const cost=+g('cost')||0, imp=+g('imp')||0, clk=+g('clk')||0, cv=+g('cv')||0, roi=+g('roi')||0;
   const me=_metrics({cost,imp,clk,cv,n:0});
   return {row:{id:sid,name:g('name'),opt:g('opt'),edit:g('edit'),proj:g('proj'),cat:g('cat'),chan:g('chan'),mtype:g('mtype'),tags:g('tags'),cost,imp,clk,cv,cpa:me.cpa,cvr:me.cvr,ctr:me.ctr, roi: roi || undefined}};
+}
+
+// ========== 📊 跨素材爆款规律（内容特征 × 真实投放数据 横向对比）==========
+function gatherViralCases(){
+  let list=[];
+  try{ const local=JSON.parse(localStorage.getItem('vp_cases')||'[]'); if(Array.isArray(local)) list=list.concat(local); }catch(e){}
+  return list;
+}
+async function renderViralPatterns(){
+  const el=document.getElementById('vpViral'); if(!el) return;
+  el.innerHTML='<div class="muted">加载案例库并关联报表数据中…</div>';
+  let cases=gatherViralCases();
+  try{
+    const r=await fetch('./cases.json?v='+(window.SEED_VER||Date.now()));
+    if(r.ok){ const j=await r.json(); if(Array.isArray(j)){ const ids=new Set(cases.map(c=>c.id)); j.forEach(c=>{ if(!ids.has(c.id)) cases.push(c); }); } }
+  }catch(e){}
+  const samples=cases.map(c=>{
+    const mat=(c.ai&&c.ai.mat)||{}; const an=(c.ai&&c.ai.analysis)||{};
+    return {
+      sid:c.sid||mat.id||'', cat:mat.cat||'', proj:mat.proj||'', tags:mat.tags||'',
+      cost:+mat.cost||0, imp:+mat.imp||0, clk:+mat.clk||0, cv:+mat.cv||0,
+      ctr:mat.ctr!=null?+mat.ctr:NaN, cvr:mat.cvr!=null?+mat.cvr:NaN, cpa:mat.cpa!=null?+mat.cpa:NaN,
+      hasHook:!!(an.hook&&String(an.hook).trim()),
+      sellCount:(an.selling_points&&an.selling_points.length)||0,
+      hasSb:!!(c.ai&&c.ai.storyboard&&c.ai.storyboard.length)
+    };
+  }).filter(s=> s.ctr!=null && !isNaN(s.ctr));
+  const info=document.getElementById('vpViralInfo');
+  if(info) info.textContent='参与样本：'+samples.length+' 条（需带真实 CTR 的已解析案例）';
+  if(!samples.length){ el.innerHTML='<div class="vp-warn">暂无可分析样本。请先「🤖 AI语义拆解」几条视频并「＋ 保存为案例」（视频需按素材ID匹配到报表，才有真实 CTR 参与对比）。</div>'; return; }
+  const avg=arr=>{ const v=arr.filter(x=>!isNaN(x)); return v.length? v.reduce((a,b)=>a+b,0)/v.length : NaN; };
+  const byHook=splitCompare(samples,s=>s.hasHook,avg);
+  const isAigc=s=>/AIGC/.test(s.tags||'');
+  const byAigc=splitCompare(samples,isAigc,avg);
+  const byCat=groupBy(samples,s=>s.cat||'未知',avg).sort((a,b)=>b.ctr-a.ctr).slice(0,8);
+  const top=samples.slice().sort((a,b)=>b.ctr-a.ctr).slice(0,8);
+  let h='<div class="vp-viral-grid">';
+  h+=viralCard('有钩子 vs 无钩子 · CTR', {a:byHook.a.ctr,b:byHook.b.ctr}, '有钩子 '+byHook.a.n+' 条 / 无钩子 '+byHook.b.n+' 条');
+  h+=viralCard('AIGC vs 非AIGC · CTR', {a:byAigc.a.ctr,b:byAigc.b.ctr}, 'AIGC '+byAigc.a.n+' 条 / 非AIGC '+byAigc.b.n+' 条');
+  h+=viralCard('有钩子 vs 无钩子 · CVR', {a:byHook.a.cvr,b:byHook.b.cvr}, '');
+  h+=viralCard('AIGC vs 非AIGC · CPA', {a:byAigc.a.cpa,b:byAigc.b.cpa}, '越低越好');
+  h+='</div>';
+  h+='<div class="vp-boom-sec"><div class="vp-boom-h">品类 CTR 排行榜（已解析素材）</div><table class="vp-boom-tbl"><tbody>';
+  byCat.forEach(g=>{ h+='<tr><td class="vp-bt-k">'+escapeHtml(g.key)+' <span class="muted">('+g.n+')</span></td><td class="vp-bt-v">CTR '+fmtPct(g.ctr)+' · CVR '+(isNaN(g.cvr)?'—':fmtPct(g.cvr))+' · CPA '+(isNaN(g.cpa)?'—':fmtMoney(g.cpa))+'</td></tr>'; });
+  h+='</tbody></table></div>';
+  h+='<div class="vp-boom-sec"><div class="vp-boom-h">CTR 最高的已解析素材 Top8</div><table class="vp-boom-tbl"><tbody>';
+  h+='<tr><td class="vp-bt-k">素材</td><td class="vp-bt-v">品类 · CTR · CVR · CPA · 消耗</td></tr>';
+  top.forEach(s=>{ h+='<tr><td class="vp-bt-k">'+escapeHtml(s.sid||'—')+(s.hasHook?' 🪝':'')+'</td><td class="vp-bt-v">'+escapeHtml(s.cat||'')+' · '+fmtPct(s.ctr)+' · '+(isNaN(s.cvr)?'—':fmtPct(s.cvr))+' · '+(isNaN(s.cpa)?'—':fmtMoney(s.cpa))+' · '+fmtMoney(s.cost)+'</td></tr>'; });
+  h+='</tbody></table></div>';
+  h+='<div class="vp-boom-blk"><div class="vp-boom-bh">规律小结</div><div class="vp-boom-bd">'+viralSummary(byHook,byAigc)+'</div></div>';
+  el.innerHTML=h;
+}
+function splitCompare(samples,pred,avg){
+  const a=samples.filter(pred), b=samples.filter(s=>!pred(s));
+  return { a:{n:a.length,ctr:avg(a.map(s=>s.ctr)),cvr:avg(a.map(s=>s.cvr)),cpa:avg(a.map(s=>s.cpa))},
+           b:{n:b.length,ctr:avg(b.map(s=>s.ctr)),cvr:avg(b.map(s=>s.cvr)),cpa:avg(b.map(s=>s.cpa))} };
+}
+function groupBy(samples,key,avg){
+  const m={}; samples.forEach(s=>{ const k=key(s); (m[k]=m[k]||[]).push(s); });
+  return Object.keys(m).map(k=>({key:k,n:m[k].length,ctr:avg(m[k].map(s=>s.ctr)),cvr:avg(m[k].map(s=>s.cvr)),cpa:avg(m[k].map(s=>s.cpa))})).filter(g=>g.n>0);
+}
+function viralCard(title,comp,note){
+  const av=comp.a, bv=comp.b; const aOk=!isNaN(av), bOk=!isNaN(bv);
+  let delta='', cls='gray';
+  if(aOk&&bOk&&bv!==0){ const d=(av-bv)/Math.abs(bv)*100; delta=(d>=0?'▲ +':'▼ ')+d.toFixed(0)+'%'; cls=d>=0?'green':'red'; }
+  const w=delta?Math.min(100,Math.max(6,Math.abs(parseFloat(delta)))):0;
+  return '<div class="vp-viral-card"><h4>'+escapeHtml(title)+'</h4>'+
+    '<div class="vp-viral-row"><span>A 组</span><b>'+(aOk?av.toFixed(2):'—')+'</b></div>'+
+    '<div class="vp-viral-row"><span>B 组</span><b>'+(bOk?bv.toFixed(2):'—')+'</b></div>'+
+    (delta?'<div class="vp-viral-bar"><i style="width:'+w+'%;'+(cls==='red'?'background:#c0392b':'background:#1f8a70')+'"></i></div><div class="vp-dg-compare '+cls+'">A 较 B '+delta+'</div>':'')+
+    (note?'<div class="muted" style="font-size:11px;margin-top:4px">'+escapeHtml(note)+'</div>':'')+'</div>';
+}
+function viralSummary(byHook,byAigc){
+  const parts=[];
+  const hk=byHook.ctr; if(!isNaN(hk.a)&&!isNaN(hk.b)&&hk.b){ const d=(hk.a-hk.b)/Math.abs(hk.b)*100; parts.push('有钩子素材平均 CTR '+hk.a.toFixed(2)+'%，比无钩子（'+hk.b.toFixed(2)+'%）'+(d>=0?'高':'低')+Math.abs(d).toFixed(0)+'%，「前3秒钩子」是撬动点击的核心杠杆。'); }
+  const ag=byAigc.ctr; if(!isNaN(ag.a)&&!isNaN(ag.b)&&ag.b){ const d=(ag.a-ag.b)/Math.abs(ag.b)*100; parts.push('AIGC 素材平均 CTR '+ag.a.toFixed(2)+'%，相对非AIGC（'+ag.b.toFixed(2)+'%）'+(d>=0?'高':'低')+Math.abs(d).toFixed(0)+'%。'); }
+  const ac=byAigc.cpa; if(!isNaN(ac.a)&&!isNaN(ac.b)&&ac.b){ const d=(ac.a-ac.b)/Math.abs(ac.b)*100; parts.push('AIGC 素材平均 CPA '+ac.a.toFixed(1)+' 元，相对非AIGC（'+ac.b.toFixed(1)+' 元）'+(d<=0?'低':'高')+Math.abs(d).toFixed(0)+'%，量产下成本'+(d<=0?'更优':'略高')+'.'); }
+  if(!parts.length) parts.push('样本量不足或分组内无有效数据，先多解析几条不同钩子/品类的视频再来看规律。');
+  return parts.map(p=>'· '+p).join('<br>');
 }
 
 function parsePeriodRange(p){
@@ -4014,6 +4163,16 @@ document.addEventListener('click', function(e){
 .vp-ai-pre{white-space:pre-wrap;word-break:break-word;background:var(--graybg);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:12px;line-height:1.6;color:var(--ink);max-height:420px;overflow:auto;margin:0}
 </style>
 
+  <div class="card" id="vpViralCard">
+    <h2>📊 跨素材爆款规律 <span class="tag">已解析视频的内容特征 × 真实投放数据，跨素材找「什么内容=好效果」</span></h2>
+    <div class="note">基于「我的解析案例」库（cases.json + 本机草稿，每条都带真实报表数据 + AI 拆解内容）。点下方按钮，自动把「有钩子/无钩子」「AIGC/非AIGC」及「各品类」按 CTR/CVR/CPA 做横向对比，输出可复用的爆款规律。建议先解析几条不同钩子/品类的视频并「＋ 保存为案例」。</div>
+    <div class="vp-actions">
+      <button class="btn sm primary" id="vpViralBtn">🔍 跑一遍爆款规律</button>
+      <span class="note" id="vpViralInfo" style="margin:0"></span>
+    </div>
+    <div id="vpViral"></div>
+  </div>
+
 <!-- ========== 视频解析 · AI 设置（通用服务商 / 任意 OpenAI 兼容） ========== -->
 <div class="modal-mask" id="vpAiMask" style="display:none">
   <div class="modal" style="max-width:560px">
@@ -4061,7 +4220,7 @@ document.addEventListener('click', function(e){
 
 <script src="personal-enhance.js?v=20260809e"></script>
 
-<script src="vparse-deep.js?v=20260809a"></script>
+<script src="vparse-deep.js?v=20260810a"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->

@@ -742,10 +742,38 @@ function saveAiAsCase() {
 function fmtInt(n){ return (n == null || isNaN(n)) ? '—' : Number(n).toLocaleString('zh-CN'); }
 function renderBoomReport(ai) {
   const m = VP.mat || {};
-  const an = ai.analysis || {};
+  const an = (ai && ai.analysis) || {};
+  const sb = (ai && ai.storyboard) || [];
+  const a = VP.analysis || {};
   let h = '<div class="vp-boom">';
 
-  h += '<div class="vp-boom-sec"><div class="vp-boom-h">一、报表数据（真实）</div>';
+  // ===== 顶部概览 =====
+  const life = (typeof computeMatLifecycle === 'function') ? computeMatLifecycle(VP.sid) : null;
+  const stageTxt = life ? life.status : '未关联数据';
+  const daysTxt = life && life.days != null ? life.days + ' 天' : '—';
+  const scoreEl = document.getElementById('vpScore');
+  const score = scoreEl ? parseFloat(scoreEl.value) : NaN;
+  const pill = (txt, lv) => '<span class="vp-pill-' + lv + '">' + txt + '</span>';
+  const ctrv = m.ctr != null ? +m.ctr : NaN;
+  const cvrv = m.cvr != null ? +m.cvr : NaN;
+  const cpav = m.cpa != null ? +m.cpa : NaN;
+  const cpmv = (m.cost != null && m.imp) ? m.cost / m.imp * 1000 : NaN;
+  const ovPills = [];
+  if (!isNaN(ctrv)) ovPills.push('CTR ' + ctrv.toFixed(2) + '% ' + (ctrv >= 2 ? pill('优', 'green') : ctrv >= 1 ? pill('中', 'yellow') : pill('偏低', 'red')));
+  if (!isNaN(cvrv)) ovPills.push('CVR ' + cvrv.toFixed(2) + '% ' + (cvrv >= 3 ? pill('优', 'green') : cvrv >= 2 ? pill('中', 'yellow') : pill('偏低', 'red')));
+  if (!isNaN(cpav)) ovPills.push('CPA ¥' + cpav.toFixed(1));
+  if (!isNaN(cpmv)) ovPills.push('CPM ¥' + cpmv.toFixed(1));
+  h += '<div class="vp-boom-hero">';
+  h += '<div class="vp-boom-hero-row">';
+  h += '<div class="vp-boom-title">🎯 ' + escapeHtml(VP.sid || '未识别素材') + (m.name ? ' <span style="font-weight:400;font-size:13px;color:#5b6478">' + escapeHtml(String(m.name).slice(0, 30)) + '</span>' : '') + '</div>';
+  h += '<div class="vp-boom-stage">生命周期：<b>' + escapeHtml(stageTxt) + '</b> · 已跑 ' + escapeHtml(daysTxt) + (m.proj ? ' · 项目 ' + escapeHtml(m.proj) : '') + (m.cat ? ' · ' + escapeHtml(m.cat) : '') + '</div>';
+  h += '</div>';
+  h += '<div class="vp-boom-pills">' + (ovPills.length ? ovPills.join('　') : '<span class="muted">（未关联投放数据）</span>');
+  if (!isNaN(score)) h += '　综合跑量评分 <b>' + score + '/10</b> ' + (score >= 7 ? pill('母本', 'green') : score >= 5 ? pill('中规', 'yellow') : pill('谨慎', 'red'));
+  h += '</div></div>';
+
+  // ===== 一、数据表现（真实报表）=====
+  h += '<div class="vp-boom-sec"><div class="vp-boom-h">一、数据表现（真实报表）</div>';
   if (m && (m.cost != null || m.cv != null || m.ctr != null)) {
     h += '<table class="vp-boom-tbl"><tbody>';
     const row = (k, v) => '<tr><td class="vp-bt-k">' + k + '</td><td class="vp-bt-v">' + v + '</td></tr>';
@@ -764,41 +792,85 @@ function renderBoomReport(ai) {
     if (m.tags) h += row('标签', escapeHtml(m.tags));
     h += '</tbody></table>';
   } else {
-    h += '<div class="muted">未在报表匹配到该素材ID，以下仅视频侧分析。</div>';
+    h += '<div class="muted">未在报表匹配到该素材ID。可用上方「🔗 关联素材」按名称/ID 关联，或手动在下方填写投放数据，报告即会带上数据表现。</div>';
   }
   h += '</div>';
 
-  const sb = ai.storyboard || [];
-  h += '<div class="vp-boom-sec"><div class="vp-boom-h">二、画面分镜（AI 读帧）</div>';
+  // ===== 二、视频结构（画面 + 口播）=====
+  h += '<div class="vp-boom-sec"><div class="vp-boom-h">二、视频结构（画面 + 口播）</div>';
+  if (a && a.changes !== undefined) {
+    const rhythm = a.shotLen < 2 ? '快节奏/信息密度高' : a.shotLen < 4 ? '中节奏' : '慢节奏/留白多';
+    h += '<div class="vp-boom-blk"><div class="vp-boom-bh">画面节奏</div><div class="vp-boom-bd">⏱ 时长 ' + (VP.meta ? vpDur(VP.meta.duration) : '—') + ' · 镜头切换 <b>' + a.changes + '</b> 次 · 平均镜头 ' + (a.shotLen ? vpDur(a.shotLen) : '—') + '（' + rhythm + '）· 前3秒钩子 ' + (a.hook ? '<b>有强切换，开场抓人</b>' : '无明显切换，偏平稳') + ' · ' + escapeHtml(a.style || '') + '·' + escapeHtml(a.color || '') + '</div></div>';
+  }
   if (sb.length) {
-    h += '<div class="vp-boom-sb">';
+    h += '<div class="vp-boom-blk"><div class="vp-boom-bh">分镜（AI 读帧）</div><div class="vp-boom-sb">';
     sb.forEach(function (s) {
-      h += '<div class="vp-sb-item">';
-      h += '<div class="vp-sb-frame">' + escapeHtml(s.frame || '') + '</div>';
-      h += '<div class="vp-sb-body"><div class="vp-sb-stage">' + escapeHtml(s.stage || '') + '</div><div class="vp-sb-desc">' + escapeHtml(s.desc || '') + '</div></div>';
-      h += '</div>';
+      h += '<div class="vp-sb-item"><div class="vp-sb-frame">' + escapeHtml(s.frame || '') + '</div><div class="vp-sb-body"><div class="vp-sb-stage">' + escapeHtml(s.stage || '') + '</div><div class="vp-sb-desc">' + escapeHtml(s.desc || '') + '</div></div></div>';
     });
-    h += '</div>';
-  } else {
-    h += '<div class="muted">AI 未返回分镜（可重新拆解或手动在下方填写）。</div>';
+    h += '</div></div>';
+  } else if (VP.frames && VP.frames.length) {
+    h += '<div class="vp-boom-blk"><div class="vp-boom-bh">抽帧预览</div><div class="vp-boom-sb">';
+    VP.frames.forEach(function (f) { h += '<div class="vp-sb-item"><div class="vp-sb-frame">' + f.t.toFixed(1) + 's</div><div class="vp-sb-body"><img src="' + f.dataURL + '" style="max-width:120px;border-radius:6px"></div></div>'; });
+    h += '</div></div>';
   }
+  const ocrTxt = (VP.deep && VP.deep.ocr || []).filter(x => x.text).map(x => x.text).join(' ');
+  const spch = VP.deep && VP.deep.whisper || '';
+  const scriptTxt = spch || ocrTxt;
+  if (scriptTxt) h += '<div class="vp-boom-blk"><div class="vp-boom-bh">口播 / 字幕原文</div><div class="vp-script">' + escapeHtml(scriptTxt.slice(0, 600)) + (scriptTxt.length > 600 ? '…' : '') + '</div></div>';
   h += '</div>';
 
-  h += '<div class="vp-boom-sec"><div class="vp-boom-h">三、解析结论</div>';
-  if (an.hook) h += '<div class="vp-boom-blk"><div class="vp-boom-bh">1. Hook（开头3秒）</div><div class="vp-boom-bd">' + escapeHtml(an.hook) + '</div></div>';
-  if (an.structure) h += '<div class="vp-boom-blk"><div class="vp-boom-bh">2. 画面分镜结构</div><div class="vp-boom-bd">' + escapeHtml(an.structure).replace(/\n/g, '<br>') + '</div></div>';
-  if (an.selling_points && an.selling_points.length) h += '<div class="vp-boom-blk"><div class="vp-boom-bh">3. 核心卖点</div><div class="vp-boom-bd">' + an.selling_points.map(function (p) { return '<div class="vp-boom-li">' + escapeHtml(p) + '</div>'; }).join('') + '</div></div>';
-  if (an.script_direction) h += '<div class="vp-boom-blk"><div class="vp-boom-bh">4. 口播脚本方向</div><div class="vp-boom-bd">' + escapeHtml(an.script_direction).replace(/\n/g, '<br>') + '</div></div>';
-  if (an.replicable && an.replicable.length) h += '<div class="vp-boom-blk"><div class="vp-boom-bh">5. 可复制方向</div><div class="vp-boom-bd">' + an.replicable.map(function (p) { return '<div class="vp-boom-li">' + escapeHtml(p) + '</div>'; }).join('') + '</div></div>';
-  h += '</div>';
+  // ===== 三、优化建议（数据 + 内容双驱动）=====
+  h += '<div class="vp-boom-sec"><div class="vp-boom-h">三、优化建议（数据 + 内容双驱动）</div><div class="vp-boom-bd"><ul class="vp-boom-ul">';
+  const tips = [];
+  if (!isNaN(ctrv) && ctrv < 1) tips.push('CTR 偏低：前 3 秒画面/封面吸引力不够，建议强化反差、利益点前置，或换首帧缩略图。');
+  if (!isNaN(cvrv) && cvrv < 2) tips.push('CVR 偏低：落地页承接或信任背书弱，建议加限时/赠品钩子、强信任元素（销量/资质）。');
+  if (!isNaN(cpmv) && cpmv > 80) tips.push('CPM 偏高：竞争激烈或定向过窄，建议放宽受众、优化出价、提升完播率拉低单价。');
+  if (a && a.hook === false) tips.push('前3秒无明显切换：偏平稳开场，建议把钩子压缩到 0-3 秒制造反差/好奇。');
+  if (an.replicable && an.replicable.length) an.replicable.forEach(function (p) { tips.push('可复制：' + p); });
+  if (an.script_direction) tips.push('脚本方向：' + an.script_direction);
+  if (life && (life.status === '已衰退' || (life.days != null && life.days > 12))) tips.push('已处衰退：单素材生命周期通常 7-14 天，建议尽快产出 2-3 条迭代版（换钩子/换场景/换口播）接力。');
+  if (!tips.length) tips.push('各项指标健康，维持当前投放节奏，持续监控衰退信号即可。');
+  h += tips.map(function (t) { return '<li>' + escapeHtml(t) + '</li>'; }).join('') + '</ul></div></div>';
 
-  const na = ai.next_actions || [];
-  h += '<div class="vp-boom-sec"><div class="vp-boom-h">四、后续可执行动作</div>';
-  if (na.length) h += '<ul class="vp-boom-ul">' + na.map(function (a) { return '<li>' + escapeHtml(a) + '</li>'; }).join('') + '</ul>';
+  // ===== 四、分时段建议（按视频时间线）=====
+  h += buildTimelineAdvice(m, a, an);
+
+  // ===== 五、后续可执行动作 =====
+  const na = ai && ai.next_actions || [];
+  h += '<div class="vp-boom-sec"><div class="vp-boom-h">五、后续可执行动作</div>';
+  if (na.length) h += '<ul class="vp-boom-ul">' + na.map(function (x) { return '<li>' + escapeHtml(x) + '</li>'; }).join('') + '</ul>';
   else h += '<div class="muted">（无）</div>';
   h += '</div>';
 
   h += '</div>';
+  return h;
+}
+
+function buildTimelineAdvice(m, a, an) {
+  const dur = VP.meta ? VP.meta.duration : 0;
+  let h = '<div class="vp-boom-sec"><div class="vp-boom-h">四、分时段建议（按视频时间线）</div><div class="vp-boom-bd">';
+  if (!dur) { h += '<span class="muted">（无视频时长信息，加载视频并抽帧后显示分时段建议）</span></div></div>'; return h; }
+  const ctrv = m.ctr != null ? +m.ctr : NaN, cvrv = m.cvr != null ? +m.cvr : NaN;
+  const hookOk = a && a.hook;
+  const segs = [
+    { name: '0-3s 开场钩子', focus: '钩子' },
+    { name: '3s-' + Math.max(3, Math.round(dur * 0.7)) + 's 中段卖点', focus: '卖点' },
+    { name: Math.round(dur * 0.7) + 's-' + Math.round(dur) + 's 结尾行动', focus: 'CTA' }
+  ];
+  segs.forEach(function (s) {
+    const adv = [];
+    if (s.focus === '钩子') {
+      adv.push(hookOk ? '前3秒已有强画面切换，开场有效，保持并前置利益点。' : '前3秒偏平稳，建议用反差/价格冲击/痛点直击做钩子，0-3秒抓人。');
+      if (!isNaN(ctrv) && ctrv < 1) adv.push('CTR 偏低，开场画面与首帧缩略图需更强吸引力。');
+    } else if (s.focus === '卖点') {
+      adv.push('中段集中放核心卖点（' + (an.selling_points && an.selling_points.length ? an.selling_points.length : 1) + ' 条以内），每 5-8 秒一个信息点。');
+      if (!isNaN(cvrv) && cvrv < 2) adv.push('CVR 偏低，此段补强信任背书（销量/资质/限时）。');
+    } else {
+      adv.push('结尾给明确行动指令（点击/下单/领券），呼应钩子形成闭环。');
+    }
+    h += '<div class="vp-tl-item"><div class="vp-tl-time">' + s.name + '</div><div class="vp-tl-adv">' + adv.map(function (x) { return '· ' + escapeHtml(x); }).join('<br>') + '</div></div>';
+  });
+  h += '</div></div>';
   return h;
 }
 
