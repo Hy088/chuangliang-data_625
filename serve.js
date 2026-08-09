@@ -22,22 +22,25 @@ const TYPES = {
 };
 
 // ---------- Seedance / Seedream 代理：读取 ARK_API_KEY ----------
-let _keyCache = null;
+// 实时读取：环境变量每次取最新；.env 按 mtime 缓存，自动化改了 .env 无需重启代理
+let _keyCache = { mtime: 0, value: null };
 function readArkKey() {
-  if (_keyCache !== null) return _keyCache;
-  // 1) 环境变量优先
-  if (process.env.ARK_API_KEY) { _keyCache = process.env.ARK_API_KEY.trim(); return _keyCache; }
+  // 1) 环境变量优先（每次都读最新，便于无重启切换）
+  if (process.env.ARK_API_KEY) return process.env.ARK_API_KEY.trim();
   // 2) 同目录 .env 文件：ARK_API_KEY=volc-sk-xxx
   try {
     const p = path.join(ROOT, '.env');
     if (fs.existsSync(p)) {
-      const txt = fs.readFileSync(p, 'utf-8');
-      const m = txt.match(/^\s*ARK_API_KEY\s*=\s*(.+?)\s*$/m);
-      if (m && m[1]) { _keyCache = m[1].trim(); return _keyCache; }
+      const st = fs.statSync(p);
+      if (st.mtimeMs !== _keyCache.mtime || _keyCache.value === null) {
+        const txt = fs.readFileSync(p, 'utf-8');
+        const m = txt.match(/^\s*ARK_API_KEY\s*=\s*(.+?)\s*$/m);
+        _keyCache = { mtime: st.mtimeMs, value: m && m[1] ? m[1].trim() : '' };
+      }
+      return _keyCache.value || '';
     }
   } catch (e) { /* ignore */ }
-  _keyCache = '';
-  return _keyCache;
+  return '';
 }
 
 function setCors(res) {
