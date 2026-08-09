@@ -12,8 +12,8 @@
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   const VID_MODELS = [
-    'doubao-seedance-2-0-260128', 'doubao-seedance-2-0-fast-260128',
-    'doubao-seedance-2-0-mini-260615'
+    'doubao-seedance-2-0-mini-260615', 'doubao-seedance-2-0-260128',
+    'doubao-seedance-2-0-fast-260128'
   ];
   const IMG_MODELS = [
     'doubao-seedream-4-5-251128', 'doubao-seedream-4-0-250828',
@@ -50,7 +50,7 @@
   };
 
   // ---------------- 预估费用（火山方舟视频，付费） ----------------
-  // 单价：不含视频输入 46 元/百万tokens；含视频输入 28 元/百万tokens
+  // 单价（Seedance 2.0-mini 折后价）：不含视频输入 9.2 元/百万tokens；含视频输入 5.6 元/百万tokens
   // Token 估算 ≈ (输入时长+输出时长) × 宽 × 高 × 帧率 / 1024
   function estimateArkCost() {
     const res = $('#sdgRes').value;
@@ -61,7 +61,7 @@
     const outTokens = (dur * dim[0] * dim[1] * fps) / 1024;
     const inTokens = hasVideoIn ? outTokens : 0;
     const totalTokens = Math.ceil(inTokens + outTokens);
-    const unit = hasVideoIn ? 28 : 46;
+    const unit = hasVideoIn ? 5.6 : 9.2; // mini 版折后价
     return { totalTokens, cost: (totalTokens / 1e6) * unit, hasVideoIn, unit };
   }
   function updateCost() {
@@ -69,8 +69,8 @@
     if (state.provider !== 'ark' || state.type === 'i2i') { box.style.display = 'none'; return; }
     const c = estimateArkCost();
     box.style.display = '';
-    box.innerHTML = `💰 预估费用（方舟付费）：<b>${c.totalTokens.toLocaleString()} tokens ≈ ¥${c.cost.toFixed(3)}</b> ` +
-      `<span class="note" style="margin:0">（${c.hasVideoIn ? '含视频输入 28' : '纯文/图输入 46'} 元/百万tokens，仅参考；新用户每模型 50 万免费 tokens）</span>`;
+    box.innerHTML = `💰 预估费用（方舟 mini）：<b>${c.totalTokens.toLocaleString()} tokens ≈ ¥${c.cost.toFixed(3)}</b> ` +
+      `<span class="note" style="margin:0">（${c.hasVideoIn ? '含视频输入 5.6' : '纯文/图输入 9.2'} 元/百万tokens，mini 版折后价；超免费额度自动暂停）</span>`;
   }
 
   // ---------------- 爆款范本库（对齐 爆款 DNA：形式/钩子/卖点/CTA/画面） ----------------
@@ -279,7 +279,7 @@
           <label>尺寸<select id="sdgSize"><option>1K</option><option selected>2K</option><option>4K</option></select></label>
           <label>数量<input type="number" id="sdgCount" value="1" min="1" max="4"></label>
           <label class="sdg-chk"><input type="checkbox" id="sdgWatermark"> 加水印</label>
-          <span class="note" style="margin:0;flex-basis:100%">⚠️ 你已开通的是 <b>Seedream 4.5</b>（默认即用）。4.5 要求尺寸 ≥ 2K，选 1K 会报错。视频模型 Seedance 2.0 尚未开通，需到方舟控制台单独开通后才能出视频。</span>
+          <span class="note" style="margin:0;flex-basis:100%">⚠️ 图片默认 <b>Seedream 4.5</b>（已开通，要求尺寸 ≥ 2K）。视频默认 <b>Seedance 2.0-mini</b>（已开通，折后价约 ¥0.005/千tokens）。</span>
         </div>
       </div>
 
@@ -613,7 +613,9 @@
       await sleep(6000);
       waited += 6;
       if (pollAbort) throw new Error('已取消');
-      const res = await fetch(PROXY + '/api/sf/video/status/' + encodeURIComponent(requestId));
+      const res = await fetch(PROXY + '/api/sf/video/status/' + encodeURIComponent(requestId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }
+      });
       const j = await res.json();
       const st = (j && (j.status || (j.data && j.data.status))) || 'Processing';
       if (/succeed|success|完成|succeeded/i.test(st)) {

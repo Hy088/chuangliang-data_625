@@ -155,11 +155,11 @@ async function handleApi(req, res, urlPath) {
       const body = await readJsonBody(req);
       return proxySf(res, 'POST', '/video/submit', body);
     }
-    // 视频状态轮询：GET /api/sf/video/status/:id -> /v1/video/status/:id
+    // 视频状态轮询：POST /api/sf/video/status/:id -> /v1/video/status (body: {"requestId": id})
     let sm = urlPath.match(/^\/api\/sf\/video\/status\/(.+)$/);
-    if (sm && req.method === 'GET') {
+    if (sm && req.method === 'POST') {
       const id = decodeURIComponent(sm[1]);
-      return proxySf(res, 'GET', '/video/status/' + id, null);
+      return proxySf(res, 'POST', '/video/status', { requestId: id });
     }
     res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ error: '未知接口：' + urlPath }));
