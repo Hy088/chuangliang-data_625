@@ -2,3 +2,6 @@
 _exports/
 .workbuddy/
 .env
+
+# 本地测试日志
+_serve_*.log
