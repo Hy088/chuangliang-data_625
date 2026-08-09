@@ -948,8 +948,11 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <label title="AI 语义拆解分析视频的前 N 秒；0 = 整段（支持长视频 &gt;60s）">拆解时长(s) <input type="number" id="vpCutDur" value="0" min="0" max="600" step="5"></label>
         <button class="btn sm primary" id="vpReextract">重新抽帧</button>
         <span class="vp-ctl-sep"></span>
-        <button class="btn sm" id="vpDeepBtn" title="浏览器本地：中文字幕OCR + 音频节奏 + 人物/物体检测（零Key、免费、不上传）">🔍 深度分析</button>
-        <button class="btn sm ghost" id="vpOcrDebugBtn" title="可视化每帧：原图 → 预处理黑白图 → OCR 原始输出，定位乱码原因">🔬 OCR调试</button>
+        <button class="btn sm ghost" id="vpAdvToggle" title="展开本地深度分析 / OCR 调试等高级功能">⚙ 高级 ▾</button>
+        <div class="vp-adv" id="vpAdv" style="display:none">
+          <button class="btn sm" id="vpDeepBtn" title="浏览器本地：中文字幕OCR + 音频节奏 + 人物/物体检测（零Key、免费、不上传）">🔍 深度分析</button>
+          <button class="btn sm ghost" id="vpOcrDebugBtn" title="可视化每帧：原图 → 预处理黑白图 → OCR 原始输出，定位乱码原因">🔬 OCR调试</button>
+        </div>
         <button class="btn sm" id="vpAiBtn" title="填入 API Key 后，调用所选服务商（智谱/OpenAI/DeepSeek 等）做语义级拆解">🤖 AI语义拆解</button>
         <button class="btn sm ghost" id="vpAiSetBtn" title="设置 AI 服务商 / Key">⚙</button>
         <span class="tag" id="vpMeta"></span>
@@ -2674,6 +2677,7 @@ function initVParse(){
   const assocSearch=$('#vpAssocSearch'); if(assocSearch) assocSearch.onclick=searchAssoc;
   const assocClose=$('#vpAssocClose'); if(assocClose) assocClose.onclick=closeAssocPanel;
   const assocInput=$('#vpAssocInput'); if(assocInput) assocInput.addEventListener('keydown',e=>{ if(e.key==='Enter') searchAssoc(); });
+  const advT=$('#vpAdvToggle'); if(advT) advT.onclick=()=>{ const p=$('#vpAdv'); if(p){ const on=p.style.display==='none'; p.style.display=on?'inline-flex':'none'; advT.textContent=(on?'⚙ 高级 ▴':'⚙ 高级 ▾'); } };
   const viralBtn=$('#vpViralBtn'); if(viralBtn) viralBtn.onclick=()=>renderViralPatterns();
   const em=$('#vpExportMd'); if(em) em.onclick=()=>exportVParse('md');
   const ej=$('#vpExportJson'); if(ej) ej.onclick=()=>exportVParse('json');
@@ -4090,6 +4094,7 @@ document.addEventListener('click', function(e){
 
 <style>
 .vp-ctl-sep{width:1px;height:22px;background:var(--line);margin:0 4px;display:inline-block;vertical-align:middle}
+.vp-adv{display:inline-flex;gap:6px;align-items:center}
 .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
 .btn.ghost:hover{border-color:var(--brand);color:var(--brand)}
 .vp-deep-prog{margin:6px 0 12px}
@@ -4269,7 +4274,7 @@ document.addEventListener('click', function(e){
 
 <script src="personal-enhance.js?v=20260809e"></script>
 
-<script src="vparse-deep.js?v=20260810b"></script>
+<script src="vparse-deep.js?v=20260810c"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
