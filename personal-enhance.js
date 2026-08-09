@@ -1163,7 +1163,7 @@
     var monthPanel = document.createElement("div");
     monthPanel.id = "meMonth";
     monthPanel.innerHTML =
-      panelHd("📊 本月汇总 <span id='meMonthRange' style='font-size:12px;color:#8a94a6;font-weight:400'></span>", "本月累计指标", "") +
+      "<div id='meMonthRange' style='font-size:12px;color:#8a94a6;margin:0 0 12px'></div>" +
       "<div id='meMonthBody'>" +
         "<div class='me-cons-filter' style='display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 16px;padding:10px 12px;background:#f6f8fc;border:1px solid #e6ebf2;border-radius:10px'>" +
           "<span style='font-size:13px;color:#556;font-weight:600'>日期筛选</span>" +
@@ -1244,15 +1244,15 @@
     bindMeMerge();
   }
   function bindMeMerge() {
-    var tabs = el("meMergeTabs");
+    var tabs = el("meCoreTabs");
     if (!tabs) return;
     var btns = tabs.querySelectorAll(".me-mtab");
     Array.prototype.forEach.call(btns, function (btn) {
       btn.onclick = function () {
         var v = btn.getAttribute("data-v");
         Array.prototype.forEach.call(btns, function (x) { x.classList.toggle("on", x === btn); });
-        var up = el("slotMeUpload"), mo = el("slotMeMonth");
-        if (up) up.style.display = (v === "upload") ? "block" : "none";
+        var today = el("meCoreToday"), mo = el("slotMeMonth");
+        if (today) today.style.display = (v === "today") ? "block" : "none";
         if (mo) mo.style.display = (v === "month") ? "block" : "none";
       };
     });

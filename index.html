@@ -1154,7 +1154,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <a class="mj" data-go="g-me-rt"><i style="background:#6d5efc"></i>今日实时</a>
     <a class="mj" data-go="g-me-mat"><i style="background:#12a06a"></i>素材数据</a>
     <a class="mj" data-go="g-me-week"><i style="background:#2b6cff"></i>周数据</a>
-    <a class="mj" data-go="g-me-month"><i style="background:#e08a08"></i>月度汇总</a>
+    <a class="mj" data-go="meCoreMergeCard"><i style="background:#e08a08"></i>月度汇总</a>
     <a class="mj" data-go="g-me-kpi"><i style="background:#e0533d"></i>KPI 绩效</a>
   </div>
 
@@ -1184,9 +1184,13 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <div id="meAlerts" class="note"></div>
       </div>
 
-      <div class="card" id="meCardsCard">
-        <h2>今日核心指标 <span class="tag">当前值 / 目标值 · 进度</span></h2>
-        <div class="kpis" id="meCards"></div>
+      <div class="card" id="meCoreMergeCard">
+        <div class="me-merge-tabs" id="meCoreTabs">
+          <button type="button" class="me-mtab on" data-v="today">📌 今日核心指标</button>
+          <button type="button" class="me-mtab" data-v="month">📊 当月汇总</button>
+        </div>
+        <div id="meCoreToday"><div class="kpis" id="meCards"></div></div>
+        <div id="slotMeMonth" style="display:none"></div>
       </div>
 
       <div class="card" id="meChannelCard">
@@ -1223,13 +1227,8 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="dgrp-bd">
       <div class="card" id="meRankCard"><div id="slotMeRank"></div></div>
       <div class="card" id="meMatTopCard"><div id="slotMeMatTop"></div></div>
-      <div class="card" id="meMergeCard">
-        <div class="me-merge-tabs" id="meMergeTabs">
-          <button type="button" class="me-mtab on" data-v="upload">📦 个人数据</button>
-          <button type="button" class="me-mtab" data-v="month">📊 当月汇总</button>
-        </div>
+      <div class="card" id="meUploadCard">
         <div id="slotMeUpload"></div>
-        <div id="slotMeMonth" style="display:none"></div>
       </div>
     </div>
   </div>
