@@ -1079,7 +1079,11 @@
       ".me-up-bar .fill{width:100%;background:#2b6cff}" +
       ".me-up-bar .aifill{width:100%;background:#7a5cff}" +
       ".me-up-bar .mval{font-size:12.5px;font-weight:700;color:#1f2a3a;margin-bottom:4px;white-space:nowrap}" +
-      ".me-up-bar .mlab{font-size:11.5px;color:#5a6678;margin-top:6px;white-space:nowrap}";
+      ".me-up-bar .mlab{font-size:11.5px;color:#5a6678;margin-top:6px;white-space:nowrap}" +
+      ".me-merge-tabs{display:inline-flex;border:1px solid #e6ebf2;border-radius:10px;overflow:hidden;background:#f6f8fb;margin:0 0 14px}" +
+      ".me-mtab{padding:8px 18px;border:0;background:#f6f8fb;color:#556;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}" +
+      ".me-mtab.on{background:#4a7bff;color:#fff}" +
+      ".me-mtab:hover:not(.on){background:#eef4ff}";
     document.head.appendChild(s);
   }
 
@@ -1236,6 +1240,22 @@
 
     // 双月绩效 KPI 进度（首次渲染，数据到达后 loadData 会再刷新实际值）
     renderKpi();
+    // 个人数据 / 当月汇总 合并面板 Tab 切换
+    bindMeMerge();
+  }
+  function bindMeMerge() {
+    var tabs = el("meMergeTabs");
+    if (!tabs) return;
+    var btns = tabs.querySelectorAll(".me-mtab");
+    Array.prototype.forEach.call(btns, function (btn) {
+      btn.onclick = function () {
+        var v = btn.getAttribute("data-v");
+        Array.prototype.forEach.call(btns, function (x) { x.classList.toggle("on", x === btn); });
+        var up = el("slotMeUpload"), mo = el("slotMeMonth");
+        if (up) up.style.display = (v === "upload") ? "block" : "none";
+        if (mo) mo.style.display = (v === "month") ? "block" : "none";
+      };
+    });
   }
 
   /* ---------- 不再覆盖主文件的 KPI 渲染，仅避免旧 personal-enhance 冲突 ---------- */

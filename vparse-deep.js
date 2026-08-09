@@ -1293,6 +1293,123 @@ function applyAiToParse(ai) {
   }
 
   // ---- 初始化绑定 ----
+  // ===== 文案口播分析（零Key 本地结构化）=====
+  function analyzeScript() {
+    const out = document.getElementById('vpScriptOut'); if (!out) return;
+    const ta = document.getElementById('vpScript');
+    const text = (ta ? ta.value : '').trim();
+    if (!text) { out.innerHTML = '<div class="vp-note-inline">请先在「素材文案 / 逐字稿」框填入口播文字（可点「🎙 语音识别」或「🔍 深度分析」获取，再「↧ 填入口播脚本」）。</div>'; return; }
+    const chars = text.replace(/\s/g, '').length;
+    const dur = chars / 4;
+    const speedLabel = dur < 8 ? '偏快' : (dur > 45 ? '偏长' : '适中');
+    const sentences = text.split(/[。！？!?；;\n]+/).map(function (s) { return s.trim(); }).filter(Boolean);
+    const clsOf = function (s) {
+      if (/注意|别再|终于|揭秘|为什么|原来|听我说|小心|竟然|万万|千万别|只需|只要|看这里|重磅/.test(s)) return 'hook';
+      if (/烦恼|麻烦|难|累|贵|怕|坑|乱|脏|旧|烦|愁|焦虑|踩雷|后悔/.test(s)) return 'pain';
+      if (/采用|材质|功能|送|免费|元|折|轻|薄|厚|大|小|快|强|省|多|少|智能|科技|专利|加厚|亲肤|可机洗/.test(s)) return 'sell';
+      if (/品牌|认证|明星|销量|口碑|平台|官方|万|同款|专柜|权威|央视|检测|保障|正品|老字号/.test(s)) return 'trust';
+      if (/点击|立即|下单|购买|领|抢|扫码|链接|现在|小黄车|加购|预约|咨询|私信/.test(s)) return 'cta';
+      return 'other';
+    };
+    const tagName = { hook: '钩子', pain: '痛点', sell: '卖点', trust: '信任', cta: 'CTA', other: '其他' };
+    const segHtml = sentences.map(function (s) { const c = clsOf(s); return '<div class="vp-sa-row ' + c + '"><span class="vp-sa-tag">' + tagName[c] + '</span><span class="t">' + escapeHtml(s) + '</span></div>'; }).join('');
+    const head = text.replace(/\s/g, '').slice(0, 12);
+    const hookHit = /注意|别再|终于|揭秘|为什么|原来|听我说|小心|竟然|万万|千万别|只需|只要|看这里|重磅|烦恼|麻烦|难|累|贵|怕|坑/.test(head);
+    const counts = { hook: 0, pain: 0, sell: 0, trust: 0, cta: 0, other: 0 };
+    sentences.forEach(function (s) { counts[clsOf(s)]++; });
+    let score = 0;
+    if (hookHit) score += 20;
+    if (counts.sell > 0) score += Math.min(30, counts.sell * 12);
+    if (counts.cta > 0) score += 25;
+    if (chars >= 40 && chars <= 320) score += 15; else if (chars > 320) score += 8;
+    if (counts.pain > 0) score += 10;
+    score = Math.min(100, score);
+    const scoreCol = score >= 75 ? '#1f8a70' : (score >= 50 ? '#e8a33d' : '#e0533d');
+    const sells = (VP.ai && VP.ai.analysis && VP.ai.analysis.selling_points) || [];
+    let covHtml = '';
+    if (sells.length) {
+      covHtml = '<div style="font-weight:600;margin:4px 0 2px;font-size:12.5px;color:#556">与 AI 拆解卖点覆盖对照</div><div class="vp-sa-cover">' +
+        sells.map(function (p) { const key = p.replace(/[，。、\s]/g, '').slice(0, 4); const hit = key && text.indexOf(key) >= 0; return '<div class="vp-sa-cov"><span class="dot" style="background:' + (hit ? '#1f8a70' : '#cbd5e1') + '"></span>' + (hit ? '已覆盖' : '未覆盖') + '：' + escapeHtml(p) + '</div>'; }).join('') + '</div>';
+    }
+    const effN = counts.hook + counts.pain + counts.sell + counts.trust + counts.cta;
+    out.innerHTML = '<div class="vp-sa">' +
+      '<div class="vp-sa-metrics">' +
+        '<div class="vp-sa-metric"><div class="l">字数</div><div class="v">' + chars + '</div></div>' +
+        '<div class="vp-sa-metric"><div class="l">预估时长</div><div class="v">' + dur.toFixed(0) + 's</div></div>' +
+        '<div class="vp-sa-metric"><div class="l">语速</div><div class="v">' + speedLabel + '</div></div>' +
+        '<div class="vp-sa-metric"><div class="l">前3秒钩子</div><div class="v" style="color:' + (hookHit ? '#1f8a70' : '#e0533d') + '">' + (hookHit ? '命中' : '缺失') + '</div></div>' +
+      '</div>' +
+      '<div><div style="font-weight:600;margin:2px 0;font-size:12.5px;color:#556">口播结构拆解（' + effN + ' 句有效）</div><div class="vp-sa-rows">' + segHtml + '</div></div>' +
+      '<div class="vp-sa-score"><span style="font-size:12.5px;color:#556">口播评分</span><div class="bar"><div class="fill" style="width:' + score + '%;background:' + scoreCol + '"></div></div><b style="color:' + scoreCol + '">' + score + '</b></div>' +
+      covHtml + '</div>';
+  }
+
+  // ===== 生成衍生跑量口播（零Key + AI 双模式）=====
+  function vpCallAi(text) {
+    const conf = aiConfGet();
+    if (!conf.key) return null;
+    const ep = conf.base.replace(/\/+$/, '') + '/chat/completions';
+    return fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + conf.key }, body: JSON.stringify({ model: conf.model, messages: [{ role: 'user', content: text }], temperature: 0.8, max_tokens: 1400 }) })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (j) { return (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || ''; });
+  }
+  const GEN_HOOKS = ['注意！', '别再花冤枉钱了', '终于被我找到了', '揭秘一个冷知识', '为什么你总买错？', '听我说一句', '小心这个坑', '只需这一步'];
+  const GEN_CTA = ['点击下方小黄车带回家', '现在下单立享优惠', '赶紧点链接抢购', '限量秒杀中手慢无', '点击下方立即领取'];
+  const GEN_CROWD = ['宝妈', '上班族', '租房党', '长辈', '学生党', '新手妈妈'];
+  const GEN_SCENE = ['早起赶时间', '下班回家', '周末大扫除', '朋友聚餐', '换季收纳', '熬夜追剧'];
+  function zeroKeyGen(modes, sells, cat) {
+    const tpl = (typeof VP_TEMPLATES !== 'undefined' && VP_TEMPLATES[cat]) || (typeof VP_TEMPLATES !== 'undefined' ? VP_TEMPLATES['default'] : { sells: '核心卖点', hook: '' });
+    const sellList = sells.length ? sells : (tpl.sells ? tpl.sells.split(/[、,，]/).map(function (s) { return s.trim(); }).filter(Boolean) : ['核心卖点']);
+    const items = [];
+    const pick = function (a) { return a[Math.floor(Math.random() * a.length)]; };
+    if (modes.indexOf('hook') >= 0) GEN_HOOKS.slice(0, 3).forEach(function (h, i) { items.push({ label: '换钩子·' + (i + 1), text: h + '，' + pick(sellList) + '。' + pick(GEN_CTA) + '。' }); });
+    if (modes.indexOf('crowd') >= 0) GEN_CROWD.slice(0, 3).forEach(function (c, i) { items.push({ label: '换人群·' + c, text: c + '注意了：' + pick(sellList) + '。' + pick(GEN_CTA) + '。' }); });
+    if (modes.indexOf('scene') >= 0) GEN_SCENE.slice(0, 3).forEach(function (sc, i) { items.push({ label: '换场景·' + (i + 1), text: sc + '的时候，' + pick(sellList) + '。' + pick(GEN_CTA) + '。' }); });
+    if (modes.indexOf('short') >= 0) items.push({ label: '浓缩版', text: sellList.slice(0, 2).join('，') + '。' + pick(GEN_CTA) + '。' });
+    if (modes.indexOf('long') >= 0) items.push({ label: '扩写版', text: (tpl.hook || GEN_HOOKS[0]) + '。' + pick(sellList) + '。' + pick(sellList) + '。' + pick(GEN_CTA) + '。' });
+    return items;
+  }
+  function genDerivativeScripts() {
+    const out = document.getElementById('vpScriptOut'); if (!out) return;
+    const ta = document.getElementById('vpScript'); const base = (ta ? ta.value : '').trim();
+    const sells = (VP.ai && VP.ai.analysis && VP.ai.analysis.selling_points) || [];
+    const cat = (VP.mat && VP.mat.cat) || '';
+    const modes = [].slice.call(document.querySelectorAll('#vpGenModes .vp-mode.on')).map(function (b) { return b.dataset.m; });
+    const useModes = modes.length ? modes : ['hook', 'crowd', 'scene'];
+    const conf = aiConfGet();
+    if (conf.key) {
+      const sellTxt = sells.length ? sells.join('；') : (((typeof VP_TEMPLATES !== 'undefined' && VP_TEMPLATES[cat]) || VP_TEMPLATES['default']).sells || '核心卖点');
+      const modeTxt = useModes.map(function (m) { return ({ hook: '换不同类型钩子', crowd: '换目标人群', scene: '换使用场景', short: '浓缩成一句话', long: '扩写成完整版' })[m] || m; }).join('、');
+      const prompt = '你是有10年经验的短视频信息流投放脚本写手。基于以下素材信息，生成若干条不同的跑量口播文案，每条控制在120字以内，口语化、有钩子有CTA。\n素材品类：' + (cat || '未指定') + '\n核心卖点：' + sellTxt + '\n原口播参考：' + (base || '无') + '\n请按以下角度各生成1条：' + modeTxt + '。\n严格只输出 JSON 数组，格式：[{"label":"角度名","text":"口播文案"}]，不要任何解释文字。';
+      out.innerHTML = '<div class="vp-note-inline">🤖 调用 AI 生成中…</div>';
+      vpCallAi(prompt).then(function (txt) {
+        let items = [];
+        try { const m = txt.match(/\[[\s\S]*\]/); if (m) items = JSON.parse(m[0]); } catch (e) {}
+        if (!items.length) items = zeroKeyGen(useModes, sells, cat);
+        renderGen(out, items);
+      }).catch(function () { renderGen(out, zeroKeyGen(useModes, sells, cat)); });
+    } else {
+      renderGen(out, zeroKeyGen(useModes, sells, cat));
+    }
+  }
+  function renderGen(out, items) {
+    if (!items.length) { out.innerHTML = '<div class="vp-note-inline">暂无可生成的变体，请先有卖点（AI 拆解或品类模板）或选择变体模式。</div>'; return; }
+    out.innerHTML = '<div class="vp-gen-list">' + items.map(function (it, i) {
+      return '<div class="vp-gen-item"><div class="gh"><span class="gt">' + escapeHtml(it.label || ('变体' + (i + 1))) + '</span></div><div class="gtxt">' + escapeHtml(it.text) + '</div><div class="gbtns"><button type="button" class="btn xs" data-gc="' + i + '">复制</button><button type="button" class="btn xs" data-gf="' + i + '">填入口播</button></div></div>';
+    }).join('') + '</div>';
+    const nodes = out.querySelectorAll('.vp-gen-item');
+    nodes.forEach(function (node, i) {
+      const cb = node.querySelector('[data-gc]'), fb = node.querySelector('[data-gf]');
+      if (cb) cb.onclick = function () { if (navigator.clipboard) navigator.clipboard.writeText(items[i].text); cb.textContent = '已复制'; setTimeout(function () { cb.textContent = '复制'; }, 1200); };
+      if (fb) fb.onclick = function () { const ta = document.getElementById('vpScript'); if (ta) ta.value = items[i].text; fb.textContent = '已填入'; setTimeout(function () { fb.textContent = '填入口播'; }, 1200); };
+    });
+  }
+  function toggleGenModes() {
+    const m = document.getElementById('vpGenModes');
+    if (m) m.style.display = (m.style.display === 'none' || !m.style.display) ? 'inline-flex' : 'none';
+    genDerivativeScripts();
+  }
+
   function initVParseDeep() {
     const b = (id, fn) => { const e = document.getElementById(id); if (e) e.onclick = fn; };
     b('vpDeepBtn', vpRunDeep);
@@ -1302,6 +1419,9 @@ function applyAiToParse(ai) {
     b('vpOcrDebugBtn', vpRunOcrDebug);
     b('vpDeepFill', vpDeepFill);
     b('vpAnalyzeBtn', vpGenerateInsight);
+    b('vpAnalyseScript', analyzeScript);
+    b('vpGenScript', toggleGenModes);
+    const _gm = document.getElementById('vpGenModes'); if (_gm) { _gm.querySelectorAll('.vp-mode').forEach(function (mb) { mb.onclick = function () { mb.classList.toggle('on'); genDerivativeScripts(); }; }); }
     b('vpAiClose', closeAiModal);
     b('vpAiSave', saveAiKey);
     b('vpAiClear', clearAiKey);

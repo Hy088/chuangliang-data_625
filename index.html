@@ -1002,6 +1002,22 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       <button class="btn sm primary" id="vpAnalyzeBtn">生成理解分析</button>
       <button class="btn sm" id="vpAuto" title="按当前画面分析与报表数据重新自动生成">🔄 重新生成解析</button>
     </div>
+    <div class="vp-script-block">
+      <div class="vp-region-h vp-sub-h">📝 文案口播分析 / 🎯 衍生跑量口播 <span class="vp-hint">（基于「素材文案/逐字稿」框内容，零Key 也可分析）</span></div>
+      <div class="vp-script-acts">
+        <button class="btn sm" id="vpAnalyseScript">📝 文案口播分析</button>
+        <button class="btn sm" id="vpGenScript">🎯 生成衍生口播</button>
+        <span id="vpGenModes" style="display:none" class="vp-gen-modes">
+          <span class="vp-gen-lbl">变体：</span>
+          <button type="button" class="vp-mode on" data-m="hook">换钩子</button>
+          <button type="button" class="vp-mode on" data-m="crowd">换人群</button>
+          <button type="button" class="vp-mode on" data-m="scene">换场景</button>
+          <button type="button" class="vp-mode" data-m="short">浓缩</button>
+          <button type="button" class="vp-mode" data-m="long">扩写</button>
+        </span>
+      </div>
+      <div id="vpScriptOut" class="vp-script-out"></div>
+    </div>
     <div id="vpInsight" class="vp-insight muted">点「生成理解分析」，我会结合投放数据与信息流经验，给出跑量阶段判断、效率诊断与优化建议。</div>
   </div>
 
@@ -1207,7 +1223,14 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="dgrp-bd">
       <div class="card" id="meRankCard"><div id="slotMeRank"></div></div>
       <div class="card" id="meMatTopCard"><div id="slotMeMatTop"></div></div>
-      <div class="card" id="meUploadCard"><div id="slotMeUpload"></div></div>
+      <div class="card" id="meMergeCard">
+        <div class="me-merge-tabs" id="meMergeTabs">
+          <button type="button" class="me-mtab on" data-v="upload">📦 个人数据</button>
+          <button type="button" class="me-mtab" data-v="month">📊 当月汇总</button>
+        </div>
+        <div id="slotMeUpload"></div>
+        <div id="slotMeMonth" style="display:none"></div>
+      </div>
     </div>
   </div>
 
@@ -1222,19 +1245,6 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="dgrp-bd">
       <div class="card" id="meWeekCard"><div id="slotMeWeek"></div></div>
       <div class="card" id="meTimeCard"><div id="slotMeTime"></div></div>
-    </div>
-  </div>
-
-  <!-- ④ 月度汇总 -->
-  <div class="dgrp dg-o" id="g-me-month">
-    <div class="dgrp-hd">
-      <span class="dgrp-no">4</span>
-      <span class="dgrp-tx"><span class="dgrp-t">月度汇总</span><span class="dgrp-s">本月累计指标与每日消耗走势</span></span>
-      <span class="dgrp-cnt">按月</span>
-      <span class="dgrp-fold" data-fold>收起</span>
-    </div>
-    <div class="dgrp-bd">
-      <div class="card" id="meMonthCard"><div id="slotMeMonth"></div></div>
     </div>
   </div>
 
@@ -4138,6 +4148,38 @@ document.addEventListener('click', function(e){
 .vp-db-sep{color:var(--muted);font-weight:700}
 /* 视频拆解档案 · 分区 */
 .vp-region{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:12px;background:var(--panel)}
+.vp-sub-h{font-size:13px;margin:4px 0 8px}
+.vp-script-block{margin:10px 0 4px;border-top:1px dashed var(--line);padding-top:12px}
+.vp-script-acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.vp-gen-modes{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}
+.vp-gen-lbl{font-size:12px;color:var(--muted)}
+.vp-mode{padding:4px 11px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:#556;font-size:12px;cursor:pointer;transition:all .15s}
+.vp-mode.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.vp-mode:hover{background:#eef4ff}
+.vp-script-out{margin-top:6px}
+.vp-sa-metrics{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.vp-sa-metric{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-width:84px}
+.vp-sa-metric .l{font-size:11px;color:var(--muted)}
+.vp-sa-metric .v{font-size:18px;font-weight:800;color:#1f2a3a;line-height:1.2}
+.vp-sa-rows{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.vp-sa-row{display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border-radius:8px;background:#f7f8fb;border-left:4px solid #cbd5e1}
+.vp-sa-row.hook{border-left-color:#e0533d}.vp-sa-row.pain{border-left-color:#e8a33d}.vp-sa-row.sell{border-left-color:#1f8a70}.vp-sa-row.trust{border-left-color:#4a7bff}.vp-sa-row.cta{border-left-color:#7a5cff}.vp-sa-row.other{border-left-color:#cbd5e1}
+.vp-sa-tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;background:#eef2f7;color:#556}
+.vp-sa-row.hook .vp-sa-tag{background:#fdecea;color:#e0533d}.vp-sa-row.pain .vp-sa-tag{background:#fdf3e3;color:#cf8a1f}.vp-sa-row.sell .vp-sa-tag{background:#e6f4ef;color:#0e9f6e}.vp-sa-row.trust .vp-sa-tag{background:#e8f0ff;color:#2b6cff}.vp-sa-row.cta .vp-sa-tag{background:#f1ecff;color:#7a5cff}
+.vp-sa-row .t{font-size:13px;line-height:1.5;color:#374151}
+.vp-sa-score{display:flex;align-items:center;gap:10px;margin-top:6px}
+.vp-sa-score .bar{flex:1;height:10px;border-radius:6px;background:#eef2f7;overflow:hidden}
+.vp-sa-score .fill{height:100%;border-radius:6px}
+.vp-sa-cover{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.vp-sa-cov{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.vp-sa-cov .dot{width:9px;height:9px;border-radius:50%}
+.vp-gen-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.vp-gen-item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel)}
+.vp-gen-item .gh{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.vp-gen-item .gt{font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;background:#eef4ff;color:#2b6cff}
+.vp-gen-item .gtxt{font-size:13px;line-height:1.6;color:#374151;white-space:pre-wrap}
+.vp-gen-item .gbtns{display:flex;gap:8px;margin-top:8px}
+.vp-note-inline{font-size:12px;color:var(--muted);margin:4px 0}
 .vp-region-h{font-weight:700;font-size:13px;margin-bottom:10px;color:var(--brand2);display:flex;align-items:center;gap:6px}
 .vp-region-h::before{content:'';width:8px;height:8px;border-radius:2px;background:var(--brand)}
 .vp-grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 14px}
@@ -4277,9 +4319,9 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260810h"></script>
+<script src="personal-enhance.js?v=20260810i"></script>
 
-<script src="vparse-deep.js?v=20260810h"></script>
+<script src="vparse-deep.js?v=20260810i"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
