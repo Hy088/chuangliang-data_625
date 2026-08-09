@@ -5,11 +5,11 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260809b";
-  var MAT_URL  = "./me-materials.csv?v=20260809b";
+  var HIST_URL = "./me-history.csv?v=20260809c";
+  var MAT_URL  = "./me-materials.csv?v=20260809c";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
-  var UPLOAD_URL = "./me-uploads.csv?v=20260809b";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260809c";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -57,14 +57,14 @@
     saveKpiStore(kpiStore);
   }
   var kpiMonths = kpiStore._months;   // [月①, 月②]
-  // 取某月实际消耗（总消耗 + AIGC 消耗），AIGC 由 isAiMaterial(素材名) 按 AIGC 标签判定
+  // 取某月实际消耗（总消耗 + AIGC 消耗），AIGC 由 isAiMaterial(素材标签) 按【素材标签】列判定
   function getMonthActual(m) {
     var cost = 0, aigc = 0;
     if (!m) return { cost: 0, aigc: 0 };
     matData.forEach(function (r) {
       if ((r["日期"] || "").slice(0, 7) === m) {
         var c = num(r["消耗"]); cost += c;
-        if (isAiMaterial(r["素材名"])) aigc += c;
+        if (isAiMaterial(r["素材标签"], r["素材名"])) aigc += c;
       }
     });
     return { cost: cost, aigc: aigc };
@@ -134,18 +134,30 @@
     return cand ? cand.slice(0, 4) + "-" + cand.slice(4, 6) : "";
   }
 
-  // AIGC 素材判定：以用户定义的 9 个 AIGC 标签为准（2026-08-09 约定，见项目记忆）
-  // 平台一组AIGC / 平台一组AIGC-sd / 京东本部-模型-seedance2.0 / 平台一组AIGC-wx /
-  // 京东本部-工具-万相 / 平台一组AIGC-k / 京东本部-工具-可灵 / 平台一组AIGC-c空镜 / 京东本部-工作流-comfyui
-  // 个人素材数据 me-materials.csv / me-uploads.csv 无「素材标签」列，仅有素材名简写；
-  // 故将 9 个标签映射到素材名中实际出现的片段（每个标签都含以下其一，OR 并集判定）。
+  // AIGC 素材判定：以【素材标签】列为准（用户 2026-08-09 约定，见项目记忆）
+  // 9 个 AIGC 标签（OR 并集，命中其一即为 AIGC）：
+  //   平台一组AIGC / 平台一组AIGC-sd / 京东本部-模型-seedance2.0 / 平台一组AIGC-wx /
+  //   京东本部-工具-万相 / 平台一组AIGC-k / 京东本部-工具-可灵 / 平台一组AIGC-c空镜 / 京东本部-工作流-comfyui
+  // me-materials.csv / me-uploads.csv 已由 enrich_tags.py 按素材ID 从源数据回接【素材标签】列。
+  // 判定逻辑：有【素材标签】列 → 直接按 9 标签 OR 匹配（不再依赖素材名猜测）；
+  //           仅当某行确实无【素材标签】数据（如源未覆盖的月份）时回退素材名片段，避免漏计。
   var AIGC_TAGS = ["平台一组AIGC","平台一组AIGC-sd","京东本部-模型-seedance2.0","平台一组AIGC-wx","京东本部-工具-万相","平台一组AIGC-k","京东本部-工具-可灵","平台一组AIGC-c空镜","京东本部-工作流-comfyui"];
   var AI_TAG_KEYWORDS = ["aigc","seedance","万相","可灵","空镜","comfyui"];
-  function isAiMaterial(name) {
-    if (!name) return false;
-    var n = String(name).toLowerCase();
-    for (var i = 0; i < AI_TAG_KEYWORDS.length; i++) {
-      if (n.indexOf(AI_TAG_KEYWORDS[i].toLowerCase()) >= 0) return true;
+  // tag: 素材标签列原值（逗号分隔多标签）；name: 素材名（仅当无素材标签时兜底）
+  function isAiMaterial(tag, name) {
+    if (tag && String(tag).trim()) {
+      var t = String(tag);
+      for (var i = 0; i < AIGC_TAGS.length; i++) {
+        if (t.indexOf(AIGC_TAGS[i]) >= 0) return true;   // 命中 9 标签任一 → AIGC
+      }
+      return false; // 有标签列但无命中 → 非 AIGC（严格按标签判定，不回退命名）
+    }
+    // 无【素材标签】数据时回退素材名片段判定（兼容尚未回接的月份）
+    if (name) {
+      var n = String(name).toLowerCase();
+      for (var i = 0; i < AI_TAG_KEYWORDS.length; i++) {
+        if (n.indexOf(AI_TAG_KEYWORDS[i].toLowerCase()) >= 0) return true;
+      }
     }
     return false;
   }
@@ -710,7 +722,7 @@
   }
 
   // ④ 个人素材统计：剪辑师李虹玉 · 上传时间口径 · 日/周/月/总 产出汇总
-  // 口径：按创量【内容】页「上传时间」导出素材清单，按素材ID去重；AIGC 由素材名标签判定。
+  // 口径：按创量【内容】页「上传时间」导出素材清单，按素材ID去重；AIGC 由【素材标签】列判定（enrich_tags 回接）。
   // upData 列：素材ID,素材名,上传人,上传时间（来自 me-uploads.csv）
   var upStart = null, upEnd = null, upGran = "total";  // 粒度：day / week / month / total
   var UP_UPLOADER = "李虹玉";                            // 仅统计个人（上传人含李虹玉）
@@ -757,7 +769,7 @@
       else key = "总";
       if (!map[key]) map[key] = { key: key, label: key, total: 0, ai: 0 };
       map[key].total++;
-      if (isAiMaterial(m["素材名"])) map[key].ai++;
+      if (isAiMaterial(m["素材标签"], m["素材名"])) map[key].ai++;
     });
     var arr = Object.keys(map).map(function (k) { var g = map[k]; g.ratio = g.total ? g.ai / g.total : 0; return g; });
     if (gran !== "total") arr.sort(function (a, b) { return a.key < b.key ? -1 : 1; });
@@ -779,7 +791,7 @@
 
     // 区间汇总
     var total = 0, ai = 0;
-    rows.forEach(function (m) { total++; if (isAiMaterial(m["素材名"])) ai++; });
+    rows.forEach(function (m) { total++; if (isAiMaterial(m["素材标签"], m["素材名"])) ai++; });
     var ratio = total ? ai / total : 0;
     var ds = rows.map(function (m) { return upDateOf(m); }).filter(Boolean).sort();
     var dMin = ds.length ? ds[0] : "—", dMax = ds.length ? ds[ds.length - 1] : "—";
