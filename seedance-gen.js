@@ -16,7 +16,7 @@
     'doubao-seedance-2-0-mini-260615'
   ];
   const IMG_MODELS = [
-    'doubao-seedream-4-0-250828', 'doubao-seedream-4-5-251128',
+    'doubao-seedream-4-5-251128', 'doubao-seedream-4-0-250828',
     'doubao-seedream-5-0-lite-260128'
   ];
 
@@ -279,6 +279,7 @@
           <label>尺寸<select id="sdgSize"><option>1K</option><option selected>2K</option><option>4K</option></select></label>
           <label>数量<input type="number" id="sdgCount" value="1" min="1" max="4"></label>
           <label class="sdg-chk"><input type="checkbox" id="sdgWatermark"> 加水印</label>
+          <span class="note" style="margin:0;flex-basis:100%">⚠️ 你已开通的是 <b>Seedream 4.5</b>（默认即用）。4.5 要求尺寸 ≥ 2K，选 1K 会报错。视频模型 Seedance 2.0 尚未开通，需到方舟控制台单独开通后才能出视频。</span>
         </div>
       </div>
 
@@ -291,7 +292,7 @@
       </div>
       <div class="sdg-row sdg-col" id="sdgKeyWrap" style="display:none">
         <label class="sdg-lb">ARK API Key</label>
-        <input type="password" id="sdgKey" class="sdg-input" placeholder="volc-sk-xxxxxxxx（仅存本机浏览器 localStorage）" style="max-width:420px">
+        <input type="password" id="sdgKey" class="sdg-input" placeholder="ark-xxxxxxxx（仅存本机浏览器 localStorage）" style="max-width:420px">
         <span class="note" style="margin:0">从 火山方舟控制台 获取；仅保存在本机，不上传。注意：方舟 API 大概率有跨域限制，直连可能被浏览器拦截，此时请改用「本地代理」。</span>
       </div>
 
