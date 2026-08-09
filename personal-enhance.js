@@ -595,7 +595,7 @@
         "<b class='me-kpi-pct' style='color:" + col + "'>" + pct + "%</b><span>达成率</span>" +
         "<span class='kpi-badge me-kpi-badge' style='background:" + col + "'>" + kpiState(ratio, targetVal) + "</span>" +
       "</div>" +
-      "<div class='kpi-track'><i class='me-kpi-bar' data-mi='" + mi + "' data-f='" + f + "' style='width:" + Math.min(100, pct) + "%;background:" + col + "'></i></div>" +
+      "<div class='kpi-track'><i class='me-kpi-bar' data-m='" + mi + "' data-f='" + f + "' style='width:" + Math.min(100, pct) + "%;background:" + col + "'></i></div>" +
       "<div class='kpi-num'><span class='me-kpi-actual'>实际 ¥" + fmtNum(actualVal) + "</span><span class='me-kpi-target'>目标 ¥" + fmtNum(targetVal) + "</span></div>" +
       "<div class='kpi-gap me-kpi-gap'>" + kpiGapTxt(actualVal, targetVal) + "</div>" +
     "</div>";
