@@ -5,11 +5,11 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260805n";
-  var MAT_URL  = "./me-materials.csv?v=20260805n";
+  var HIST_URL = "./me-history.csv?v=20260809b";
+  var MAT_URL  = "./me-materials.csv?v=20260809b";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
-  var UPLOAD_URL = "./me-uploads.csv?v=20260805n";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260809b";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -134,9 +134,13 @@
     return cand ? cand.slice(0, 4) + "-" + cand.slice(4, 6) : "";
   }
 
-  // AIGC 素材判定：以素材在创量打的 AIGC 类标签为准
-  // 个人素材数据 me-materials.csv 无「素材标签」列，仅有素材名简写；故将标签映射到素材名中实际出现的片段
-  var AI_TAG_KEYWORDS = ["aigc", "可灵", "sd2.0", "空镜", "seedance", "万相", "comfyui"];
+  // AIGC 素材判定：以用户定义的 9 个 AIGC 标签为准（2026-08-09 约定，见项目记忆）
+  // 平台一组AIGC / 平台一组AIGC-sd / 京东本部-模型-seedance2.0 / 平台一组AIGC-wx /
+  // 京东本部-工具-万相 / 平台一组AIGC-k / 京东本部-工具-可灵 / 平台一组AIGC-c空镜 / 京东本部-工作流-comfyui
+  // 个人素材数据 me-materials.csv / me-uploads.csv 无「素材标签」列，仅有素材名简写；
+  // 故将 9 个标签映射到素材名中实际出现的片段（每个标签都含以下其一，OR 并集判定）。
+  var AIGC_TAGS = ["平台一组AIGC","平台一组AIGC-sd","京东本部-模型-seedance2.0","平台一组AIGC-wx","京东本部-工具-万相","平台一组AIGC-k","京东本部-工具-可灵","平台一组AIGC-c空镜","京东本部-工作流-comfyui"];
+  var AI_TAG_KEYWORDS = ["aigc","seedance","万相","可灵","空镜","comfyui"];
   function isAiMaterial(name) {
     if (!name) return false;
     var n = String(name).toLowerCase();
