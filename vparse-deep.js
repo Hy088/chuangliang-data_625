@@ -544,6 +544,119 @@
   }
 
   // ============================================================
+  // 本次消耗预估（按所选模型单价估算 token / ¥，拆解前可见）
+  // ============================================================
+  // 已知模型单价（单位：元 / 百万 token；cur:'USD' 的按 7.2 折人民币显示）
+  const AI_PRICE = {
+    'glm-4v-flash': { in: 0, out: 0, free: true },
+    'glm-4v-plus': { in: 0, out: 0, free: true },
+    'glm-4v': { in: 0, out: 0, free: true },
+    'glm-4-plus': { in: 0, out: 0, free: true },
+    'qwen-vl-plus': { in: 0.8, out: 2 },
+    'qwen-vl-max': { in: 1.6, out: 4 },
+    'qwen-max': { in: 0.02, out: 0.06 },
+    'qwen3-vl-plus': { in: 1, out: 10 },
+    'qwen3-vl-flash': { in: 0.15, out: 1.5 },
+    'deepseek-chat': { in: 1, out: 2 },
+    'deepseek-reasoner': { in: 1, out: 4 },
+    'moonshot-v1-8k-vision-preview': { in: 8.4, out: 21 },
+    'moonshot-v1-32k-vision-preview': { in: 8.4, out: 21 },
+    'gpt-4o': { in: 2.5, out: 10, cur: 'USD' },
+    'gpt-4o-mini': { in: 0.15, out: 0.6, cur: 'USD' },
+    'gpt-4-turbo': { in: 10, out: 30, cur: 'USD' }
+  };
+  const USD_CNY = 7.2;
+
+  // 与 vpRunAI 完全一致的「送 AI 的抽帧子集」挑选逻辑
+  function getAiPickFrames() {
+    let frames = (VP.frames || []).filter(f => f.dataURL);
+    if (!frames.length) return [];
+    const cutEl = document.getElementById('vpCutDur');
+    const cut = cutEl ? (parseFloat(cutEl.value) || 0) : 0;
+    let cand = frames;
+    if (cut > 0) { const flt = frames.filter(f => (f.t || 0) <= cut + 0.5); if (flt.length >= 2) cand = flt; }
+    const span = cand.length ? ((cand[cand.length - 1].t || 0) - (cand[0].t || 0)) : 0;
+    const target = Math.min(24, Math.max(4, Math.round(span / 12) + 1));
+    const step = Math.max(1, Math.ceil(cand.length / target));
+    return cand.filter((_, i) => i % step === 0).slice(0, target);
+  }
+
+  // 与 vpRunAI 完全一致的提示词构建
+  function buildAiPromptText() {
+    let promptText = AI_PROMPT;
+    const durTxt = (VP.meta && VP.meta.duration) ? VP.meta.duration.toFixed(0) : '?';
+    const cutEl = document.getElementById('vpCutDur');
+    const cut = cutEl ? (parseFloat(cutEl.value) || 0) : 0;
+    promptText += '\n\n【分析范围】' + (cut > 0 ? ('视频前 ' + cut + ' 秒') : ('整段视频（约 ' + durTxt + ' 秒）')) + '，请按时间顺序拆解画面，frame 用「起止秒数」标注，且必须覆盖所选时长的全部关键节点。';
+    const m = VP.mat || {};
+    const metricsParts = [];
+    if (m.ctr != null) metricsParts.push('CTR=' + (+m.ctr).toFixed(2) + '%');
+    if (m.cvr != null) metricsParts.push('CVR=' + (+m.cvr).toFixed(2) + '%');
+    if (m.cost != null) metricsParts.push('消耗=' + (+m.cost).toFixed(2) + '元');
+    if (m.cv != null) metricsParts.push('转化=' + (+m.cv));
+    if (m.cpa != null) metricsParts.push('CPA=' + (+m.cpa).toFixed(2) + '元');
+    if (m.cpm != null) metricsParts.push('CPM=' + (+m.cpm).toFixed(2) + '元');
+    if (m.roi != null) metricsParts.push('ROI=' + (+m.roi).toFixed(2));
+    if (metricsParts.length) promptText += '\n\n【素材投放数据（来自报表）】\n' + metricsParts.join('，');
+    const segs = VP.deep && VP.deep.whisperSegs;
+    const whisper = VP.deep && VP.deep.whisper;
+    if (segs && segs.length) promptText += '\n\n【口播时间轴】\n' + whisper;
+    else if (whisper) promptText += '\n\n【识别口播】\n' + whisper;
+    const refCases = (caseGetAll() || []).filter(function (c) { return c.ref && c.content && c.content.trim(); });
+    if (refCases.length) {
+      promptText += '\n\n【参考案例（请严格参照以下拆解的粒度与风格，但必须基于本次素材的画面与数据独立分析，禁止照抄、禁止与案例内容重复）】\n' +
+        refCases.map(function (c, i) { return '案例' + (i + 1) + '：' + (c.title || '') + '\n' + c.content.trim(); }).join('\n\n');
+    }
+    return promptText;
+  }
+
+  function estimateAiCost() {
+    const conf = aiConfGet();
+    const p = AI_PROVIDERS[conf.provider] || AI_PROVIDERS.zhipu;
+    const pick = getAiPickFrames();
+    // 图片 token：抽帧固定 300px 宽，按 1 token / 32×32 像素 估算
+    let framePx = 300 * 168;
+    if (VP.meta && VP.meta.w && VP.meta.h) framePx = 300 * Math.max(1, Math.round(300 * (VP.meta.h / VP.meta.w)));
+    const perFrameTok = Math.ceil(framePx / 1024);
+    const imgTok = p.vision ? pick.length * perFrameTok : 0;
+    // 文本 token：按字符数 ×1.3 估算（中文为主）
+    const promptText = buildAiPromptText();
+    const textTok = Math.ceil(promptText.length * 1.3);
+    const inputTok = imgTok + textTok;
+    const outputTok = 1024; // vpRunAI 的 max_tokens
+    const pr = AI_PRICE[conf.model] || AI_PRICE[p.def] || null;
+    let inRate = 0, outRate = 0, free = false, cur = 'CNY', unknown = false;
+    if (pr) { inRate = pr.in; outRate = pr.out; free = !!pr.free; cur = pr.cur || 'CNY'; }
+    else { unknown = true; }
+    let cnyIn = 0, cnyOut = 0;
+    if (!free && !unknown) {
+      const fx = (cur === 'USD') ? USD_CNY : 1;
+      cnyIn = inputTok / 1e6 * inRate * fx;
+      cnyOut = outputTok / 1e6 * outRate * fx;
+    }
+    return { model: conf.model, provider: conf.provider, vision: p.vision, frames: pick.length, perFrameTok: perFrameTok, imgTok: imgTok, textTok: textTok, inputTok: inputTok, outputTok: outputTok, free: free, unknown: unknown, cnyIn: cnyIn, cnyOut: cnyOut, total: cnyIn + cnyOut, hasKey: !!conf.key };
+  }
+
+  function renderCostEstimate() {
+    const elc = document.getElementById('vpCostEst'); if (!elc) return;
+    if (!(VP.frames && VP.frames.length)) { elc.className = 'vp-cost-est muted'; elc.innerHTML = '加载视频并抽帧后，这里显示本次拆解的消耗预估（含送图帧数 / 估算 token / 预计 ¥）'; elc.title = ''; return; }
+    const e = estimateAiCost();
+    let priceTxt;
+    if (e.free) priceTxt = '免费模型（不计费）';
+    else if (e.unknown) priceTxt = '单价未内置（以服务商账单为准）';
+    else priceTxt = '约 ¥' + e.total.toFixed(4) + '（输入¥' + e.cnyIn.toFixed(4) + ' + 输出¥' + e.cnyOut.toFixed(4) + '）';
+    elc.className = 'vp-cost-est' + (e.free ? ' free' : '');
+    elc.innerHTML = '🤖 消耗预估 · <b>' + escapeHtml(e.model || '?') + '</b> · 将送 <b>' + e.frames + '</b> 帧' +
+      (e.vision ? '（约 ' + e.imgTok + ' 图token）' : '（纯文本，无图）') +
+      ' · 输入约 ' + e.inputTok + ' token · 输出≤' + e.outputTok +
+      ' · <b>' + priceTxt + '</b>' +
+      (e.hasKey ? '' : ' · <span class="warn">未配置 Key</span>');
+    elc.title = '图片 token 为估算值（按 300px 宽抽帧、1 token/32×32px）；文本按字符×1.3 估算。改「拆解时长」或「AI 模型」会实时重算。实际以服务商账单为准。';
+  }
+  // 暴露给主脚本（index.html）在抽帧完成后触发
+  window.updateVpCostEst = renderCostEstimate;
+
+  // ============================================================
   // 智谱 GLM-4V-Flash 免费语义拆解（浏览器直连，无需后端）
   // ============================================================
   async function vpRunAI() {
@@ -554,41 +667,9 @@
     const out = document.getElementById('vpAiOut');
     if (out) out.innerHTML = '<div class="muted">正在调用 ' + escapeHtml(pName) + ' 分析关键帧…</div>';
     try {
-      let frames = (VP.frames || []).filter(f => f.dataURL);
-      if (!frames.length) { if (out) out.innerHTML = '<div class="vp-warn">请先抽帧（点「重新抽帧」）再拆解。</div>'; return; }
-      // 拆解时长：仅取视频前 N 秒送 AI（0=整段，支持长视频 >60s）；范围外帧忽略
-      const cutEl = document.getElementById('vpCutDur');
-      const cut = cutEl ? (parseFloat(cutEl.value) || 0) : 0;
-      let cand = frames;
-      if (cut > 0) { const flt = frames.filter(f => (f.t || 0) <= cut + 0.5); if (flt.length >= 2) cand = flt; }
-      // 自适应送帧密度：约每 12 秒 1 帧，最多 24 帧，保证 60s 以上长视频也能细拆
-      const span = cand.length ? ((cand[cand.length - 1].t || 0) - (cand[0].t || 0)) : 0;
-      const target = Math.min(24, Math.max(4, Math.round(span / 12) + 1));
-      const step = Math.max(1, Math.ceil(cand.length / target));
-      const pick = cand.filter((_, i) => i % step === 0).slice(0, target);
-      let promptText = AI_PROMPT;
-      const durTxt = (VP.meta && VP.meta.duration) ? VP.meta.duration.toFixed(0) : '?';
-      promptText += '\n\n【分析范围】' + (cut > 0 ? ('视频前 ' + cut + ' 秒') : ('整段视频（约 ' + durTxt + ' 秒）')) + '，请按时间顺序拆解画面，frame 用「起止秒数」标注，且必须覆盖所选时长的全部关键节点。';
-      const m = VP.mat || {};
-      const metricsParts = [];
-      if (m.ctr != null) metricsParts.push('CTR=' + (+m.ctr).toFixed(2) + '%');
-      if (m.cvr != null) metricsParts.push('CVR=' + (+m.cvr).toFixed(2) + '%');
-      if (m.cost != null) metricsParts.push('消耗=' + (+m.cost).toFixed(2) + '元');
-      if (m.cv != null) metricsParts.push('转化=' + (+m.cv));
-      if (m.cpa != null) metricsParts.push('CPA=' + (+m.cpa).toFixed(2) + '元');
-      if (m.cpm != null) metricsParts.push('CPM=' + (+m.cpm).toFixed(2) + '元');
-      if (m.roi != null) metricsParts.push('ROI=' + (+m.roi).toFixed(2));
-      if (metricsParts.length) promptText += '\n\n【素材投放数据（来自报表）】\n' + metricsParts.join('，');
-      const segs = VP.deep && VP.deep.whisperSegs;
-      const whisper = VP.deep && VP.deep.whisper;
-      if (segs && segs.length) promptText += '\n\n【口播时间轴】\n' + whisper;
-      else if (whisper) promptText += '\n\n【识别口播】\n' + whisper;
-      // 注入用户标星的解析案例作为参考范本（few-shot），锚定风格与粒度、减少跑偏与重复
-      const refCases = (caseGetAll() || []).filter(function (c) { return c.ref && c.content && c.content.trim(); });
-      if (refCases.length) {
-        promptText += '\n\n【参考案例（请严格参照以下拆解的粒度与风格，但必须基于本次素材的画面与数据独立分析，禁止照抄、禁止与案例内容重复）】\n' +
-          refCases.map(function (c, i) { return '案例' + (i + 1) + '：' + (c.title || '') + '\n' + c.content.trim(); }).join('\n\n');
-      }
+      const pick = getAiPickFrames();
+      if (!pick.length) { if (out) out.innerHTML = '<div class="vp-warn">请先抽帧（点「重新抽帧」）再拆解。</div>'; return; }
+      const promptText = buildAiPromptText();
       const content = [{ type: 'text', text: promptText }];
       // 仅视觉模型才附带截帧图片；纯文本模型（如 deepseek-chat）只发文字，避免报错
       if (conf.vision) pick.forEach(f => content.push({ type: 'image_url', image_url: { url: f.dataURL } }));
@@ -903,6 +984,7 @@ function applyAiToParse(ai) {
     const h = document.getElementById('vpAiHint'); if (h) h.textContent = '';
     mask.style.display = 'flex';
     updateAiTag();
+    renderCostEstimate();
   }
   function fillModelDatalist(provider) {
     const dl = document.getElementById('vpAiModelList'); if (!dl) return;
@@ -918,6 +1000,7 @@ function applyAiToParse(ai) {
     if (md && !md.value.trim()) md.value = p.def;
     fillModelDatalist(pv.value);
     updateAiTag();
+    renderCostEstimate();
   }
   function closeAiModal() { const m = document.getElementById('vpAiMask'); if (m) m.style.display = 'none'; }
   function saveAiKey() {
@@ -932,6 +1015,7 @@ function applyAiToParse(ai) {
     const wm = document.getElementById('vpWhisperModel'); if (wm) whisperModelSet(wm.value);
     const pName = (AI_PROVIDERS[(pv ? pv.value : 'zhipu')] || {}).label || '';
     const h = document.getElementById('vpAiHint'); if (h) h.textContent = '✅ 已保存（' + pName + '，Key 仅存于本机浏览器）';
+    renderCostEstimate();
     setTimeout(closeAiModal, 800);
   }
   function clearAiKey() {
@@ -1530,6 +1614,8 @@ function applyAiToParse(ai) {
     caseRender();
     updateAiTag();
     const _pv = document.getElementById('vpAiProvider'); if (_pv) _pv.addEventListener('change', onProviderChange);
+    const _cd = document.getElementById('vpCutDur'); if (_cd) _cd.addEventListener('input', renderCostEstimate);
+    renderCostEstimate();
     const mask = document.getElementById('vpAiMask');
     if (mask) mask.addEventListener('click', e => { if (e.target === mask) closeAiModal(); });
   }
