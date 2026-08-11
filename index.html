@@ -2766,9 +2766,7 @@ function loadVParseVideo(file){
   $('#vpParseCard').style.display='none';
   v.addEventListener('loadedmetadata', async ()=>{
     VP.meta={duration:v.duration, w:v.videoWidth, h:v.videoHeight};
-    const m=lookupVParseMat(VP.sid); VP.mat=m.row;
-    renderVParseReport();
-    await fillVParseFromReport();
+    await tryMatchVParseMat(VP.sid);
     extractVParseFrames(Math.max(2,Math.min(30,+$('#vpFrames').value||8)));
   });
   v.addEventListener('error',()=>{ $('#vpMeta').textContent='视频加载失败，请确认文件可播放'; });
@@ -2779,10 +2777,24 @@ async function matchVParseReport(){
   const sid=(sidInput.value||'').trim();
   if(!sid){ alert('请先在「素材ID」框填入素材ID'); return; }
   VP.sid=sid;
-  VP.mat=lookupVParseMat(sid).row;
-  renderVParseReport();
-  await fillVParseFromReport();
+  await tryMatchVParseMat(sid);
   if(VP.frames&&VP.frames.length) await autoVParse();
+}
+
+// 优先从个人日报 me-materials.csv 匹配素材；未命中再回退聚合报表 DATA_FULL.materials
+async function tryMatchVParseMat(sid){
+  if(!sid) return false;
+  let matched=false;
+  if(typeof window.lookupMeMat==='function'){
+    const row=window.lookupMeMat(sid);
+    if(row){ await assocMatFromRow(row); matched=true; }
+  }
+  if(!matched){
+    VP.mat=lookupVParseMat(sid).row;
+    renderVParseReport();
+    await fillVParseFromReport();
+  }
+  return matched;
 }
 
 // ---- 🔗 关联素材：按 ID / 名称检索 me-materials.csv 并回填 VP.mat ----
@@ -2834,6 +2846,7 @@ async function assocMatFromRow(row){
     id: sid,
     name: row['素材名'] || row.name || agg.name || '',
     cost, imp, clk, cv,
+    _src: 'me-materials',
     cpa: cpaRaw || me.cpa,
     ctr: ctrRaw || me.ctr,
     cvr: cvr || me.cvr,
@@ -3114,12 +3127,13 @@ function renderVParseReport(){
   const m=VP.mat;
   if(!m){
     $('#vpMatchedTag').textContent='未匹配到报表';
-    el.innerHTML=`<div class="vp-warn">⚠️ 未在报表中找到素材ID <b>${VP.sid||'(未识别)'}</b>。视频侧解析仍可进行，报表指标需人工补齐（可手动填入下方）。</div>`;
+    el.innerHTML=`<div class="vp-warn">⚠️ 未在个人日报/聚合报表中找到素材ID <b>${VP.sid||'(未识别)'}</b>。视频侧解析仍可进行，报表指标需人工补齐（可手动填入下方）。</div>`;
     return;
   }
   $('#vpMatchedTag').textContent='已匹配报表';
   const rows=[['素材名',m.name],['项目',m.proj],['品类',m.cat],['投放端',m.chan],['优化师',m.opt],['剪辑',m.edit],['素材类型',m.mtype],['标签',m.tags],['消耗',vpMoney(m.cost)],['展示数',vpNum(m.imp)],['点击数',vpNum(m.clk)],['转化数',vpNum(m.cv)],['转化成本CPA',vpCpa(m.cpa)],['点击率CTR',vpPct(m.ctr)],['转化率CVR',vpPct(m.cvr)]];
-  el.innerHTML=`<table class="vp-tbl"><tbody>${rows.map(r=>`<tr><td class="vp-k">${r[0]}</td><td>${r[1]===''?'<span class="muted">—</span>':r[1]}</td></tr>`).join('')}</tbody></table><div class="note">指标为「全部周期合并」汇总；品类由素材名第6段自动解析。可在「项目看板 · 周数据」看分周期表现。</div>`;
+  const noteSrc = m._src==='me-materials' ? '来自个人日报 me-materials.csv 最近一条明细' : '为「全部周期合并」汇总；品类由素材名第6段自动解析';
+  el.innerHTML=`<table class="vp-tbl"><tbody>${rows.map(r=>`<tr><td class="vp-k">${r[0]}</td><td>${r[1]===''?'<span class="muted">—</span>':r[1]}</td></tr>`).join('')}</tbody></table><div class="note">指标${noteSrc}。可在「项目看板 · 周数据」看分周期表现。</div>`;
 }
 
 const VP_TEMPLATES={
@@ -4409,7 +4423,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260811d"></script>
+<script src="personal-enhance.js?v=20260811e"></script>
 
 <script src="vparse-deep.js?v=20260810n"></script>
 

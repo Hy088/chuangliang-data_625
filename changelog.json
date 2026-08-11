@@ -1,5 +1,18 @@
 [
   {
+    "ver": "v20260811e",
+    "date": "2026-08-11",
+    "type": "feat",
+    "summary": "视频解析加载视频时优先自动匹配个人日报 me-materials.csv",
+    "details": [
+      "视频加载/重新填入素材ID 后，先查「个人数据」me-materials.csv 最新明细，命中即用该明细填充投放数据区；未命中再回退聚合报表 DATA_FULL.materials",
+      "新增 index.html tryMatchVParseMat(sid)：个人日报优先 → 聚合报表兜底；更新 renderVParseReport 未命中提示，明确「未在个人日报/聚合报表中找到」",
+      "personal-enhance.js 暴露 window.lookupMeMat(sid)：按素材ID精确匹配、取日期最新的一条（视频加载时个人脚本可能尚未加载完，未命中会自动走聚合兜底）",
+      "匹配来源区分：个人日报命中的报表区标注「来自个人日报 me-materials.csv 最近一条明细」；聚合报表命中仍标注「全部周期合并」汇总",
+      "已验证用户截图中的素材ID 14095132360 在个人日报中存在，加载后应能自动命中"
+    ]
+  },
+  {
     "ver": "v20260811d",
     "date": "2026-08-11",
     "type": "feat",

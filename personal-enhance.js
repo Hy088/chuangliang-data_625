@@ -1398,6 +1398,24 @@
     try { if (window.meStop) window.meStop(); } catch (e) {}
   }
 
+  /* ---------- 暴露给 index.html：按素材ID在个人日报 me-materials.csv 中查最新明细 ---------- */
+  window.lookupMeMat = function (sid) {
+    if (!sid || !matData || !matData.length) return null;
+    var s = String(sid).trim();
+    var hits = [];
+    for (var i = 0; i < matData.length; i++) {
+      var r = matData[i];
+      if (String(r["素材ID"] || "").trim() === s) hits.push(r);
+    }
+    if (!hits.length) return null;
+    // 日期降序，返回最近一条明细
+    hits.sort(function (a, b) {
+      var da = a["日期"] || "", db = b["日期"] || "";
+      return db.localeCompare(da);
+    });
+    return hits[0];
+  };
+
   /* ---------- 初始化 ---------- */
   function init() {
     hookDashboard();
