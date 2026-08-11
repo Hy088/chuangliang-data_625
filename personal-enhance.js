@@ -33,6 +33,7 @@
   var upData = [];     // [{素材ID,素材名,上传人}] 当月按上传时间统计的素材清单（来自「内容」导出）
   var dates = [];      // 升序日期
   var currentDate = null;
+  var dateAuto = true;   // true=实时锁定今日；用户手动选日期后转 false，刷新仍尊重其选择
   var sortKey = "消耗";
   var monthSortKey = "消耗";
   var daySortKey = "日期";
@@ -247,11 +248,16 @@
   function renderRank() {
     var box = el("meRankBody");
     if (!box) return;
+    var t = todayStr();
+    var isToday = (currentDate === t);
     var rows = matData.filter(function (m) { return m["日期"] === currentDate; });
     rows.sort(function (a, b) { return num(b[sortKey]) - num(a[sortKey]); });
     if (!rows.length) {
-      box.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#999">当日暂无素材明细数据</div>';
-      var cnt = el("meRankCount"); if (cnt) cnt.textContent = "当日共 0 个素材";
+      var msg = isToday
+        ? "今日暂无素材明细数据（数据更新后点「🔄 实时刷新」）"
+        : "当日暂无素材明细数据";
+      box.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#999">' + msg + "</div>";
+      var cnt0 = el("meRankCount"); if (cnt0) cnt0.textContent = "当日共 0 个素材" + (isToday ? " · 实时(今日)" : " · 历史日");
       return;
     }
     var max = num(rows[0][sortKey]) || 1;
@@ -294,7 +300,7 @@
       btn.setAttribute("data-cover", coverUrls[i] || "");
       btn.onclick = function (e) { e.stopPropagation(); expandPreview(btn); };
     });
-    var cnt = el("meRankCount"); if (cnt) cnt.textContent = "当日共 " + rows.length + " 个素材（按" + (RANK_METRICS.filter(function (m){return m.key===sortKey;})[0].label) + "排序）";
+    var cnt = el("meRankCount"); if (cnt) cnt.textContent = "当日共 " + rows.length + " 个素材（按" + (RANK_METRICS.filter(function (m){return m.key===sortKey;})[0].label) + "排序）" + (isToday ? " · 实时(今日)" : " · 历史日");
   }
 
   /* ---------- 渲染：本月汇总 ---------- */
@@ -1026,7 +1032,7 @@
     var sel = el("meDate");
     if (!sel) return;
     sel.innerHTML = dates.slice().reverse().map(function (d) {
-      var label = (d === currentDate && d === todayStr()) ? d + "（今日）" : d;
+      var label = (d === todayStr()) ? d + "（今日·实时）" : d;
       return "<option value='" + d + "'" + (d === currentDate ? " selected" : "") + ">" + label + "</option>";
     }).join("");
   }
@@ -1037,7 +1043,7 @@
 
   /* ---------- 数据加载 ---------- */
   function loadData(cb, force) {
-    var q = force ? ("?_=" + Date.now()) : "";
+    var q = force ? ("&_=" + Date.now()) : "";  // 三个 URL 均带 ?v=，force 时用 & 追加防缓存
     var opt = force ? { cache: "no-store" } : undefined;
     Promise.all([
       fetch(HIST_URL + q, opt).then(function (r) { return r.text(); }),
@@ -1052,6 +1058,7 @@
       histData.forEach(function (h) { ds[h["日期"]] = 1; });
       matData.forEach(function (m) { if (m["日期"]) ds[m["日期"]] = 1; });
       dates = Object.keys(ds).sort();
+      if (dateAuto) currentDate = todayStr();   // 实时默认今天（刷新时若仍为自动模式则重新对齐今日）
       if (!currentDate || ds[currentDate] === undefined) {
         currentDate = dates.length ? dates[dates.length - 1] : todayStr();
       }
@@ -1167,7 +1174,8 @@
     bar.innerHTML =
       '<span style="font-weight:600;color:#334">📅 时间筛选：</span>' +
       "<select id='meDate' style='padding:6px 10px;border:1px solid #cdd6e3;border-radius:8px;font-size:14px;min-width:160px'></select>" +
-      "<span style='color:#8a94a6;font-size:12px'>切换日期查看当日 KPI 与素材情况（历史自今日起逐日累积）</span>";
+      "<button id='meRefresh' type='button' style='padding:6px 12px;border:1px solid #4a7bff;background:#fff;color:#4a7bff;border-radius:8px;font-size:13px;cursor:pointer'>🔄 实时刷新</button>" +
+      "<span style='color:#8a94a6;font-size:12px'>默认显示今日实时数据；手动选日期后刷新会尊重所选日</span>";
     if (h2 && h2.parentNode) h2.parentNode.insertBefore(bar, h2.nextSibling);
 
     var cards = el("meCards");
@@ -1261,7 +1269,12 @@
 
     // 事件
     var sel = el("meDate");
-    if (sel) sel.onchange = function () { currentDate = sel.value; renderPersonal(); };
+    if (sel) sel.onchange = function () { currentDate = sel.value; dateAuto = false; renderPersonal(); };
+    var rf = el("meRefresh");
+    if (rf) rf.onclick = function () {
+      rf.disabled = true; rf.textContent = "刷新中…";
+      loadData(function () { rf.disabled = false; rf.textContent = "🔄 实时刷新"; }, true);
+    };
 
     // 月/周/日 筛选标签事件
     var tabs = el("meTimeTabs");
