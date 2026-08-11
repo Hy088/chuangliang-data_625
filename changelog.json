@@ -1,5 +1,17 @@
 [
   {
+    "ver": "v20260812b",
+    "date": "2026-08-12",
+    "type": "fix",
+    "summary": "修复：初始化合并本地缓存时未校验版本，旧 IndexedDB 周期覆盖线上最新数据",
+    "details": [
+      "根因：initAll 第3步 idbGet 取出旧缓存后直接 DATA_FULL=saved 整体替换，无 _appVer 版本校验",
+      "表现：新数据（6周期）加载完约4秒后被浏览器旧快照（4周期）覆盖，周期下拉看不到更新",
+      "修复：与 loadRuntimeState 对齐，缓存 _appVer 与 SEED_VER 不一致则跳过合并，保留线上最新",
+      "线上 period-meta.json 实为 6 周期（已部署），本次仅为前端缓存覆盖 bug 修复"
+    ]
+  },
+  {
     "ver": "v20260812a",
     "date": "2026-08-12",
     "type": "data",
