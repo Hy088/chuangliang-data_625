@@ -1002,6 +1002,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="vp-region-h">🚀 一键复刻跑量素材 <span class="vp-hint">解析爆款 → 直接产出可复刻的拆解卡 / 口播 / 即梦提示词</span></div>
     <div class="vp-actions">
       <button class="btn sm primary" id="vpReplicateBtn">🚀 一键复刻</button>
+      <button class="btn sm" id="vpRepSave">💾 保存案例</button>
       <span class="vp-cost-est muted" id="vpRepCostEst" style="margin-left:8px">加载视频并抽帧后，这里显示本次复刻的消耗预估（含送图帧数 / 估算 token / 预计 ¥）</span>
     </div>
     <div id="vpReplicateOut" class="vp-rep muted">点「🚀 一键复刻」，我会基于抽帧 + 投放数据 + 口播，直接产出「爆款拆解卡 / 复刻口播脚本 / 即梦生成提示词」三件套，拿来就能拍、能剪、能生成。</div>
@@ -1012,6 +1013,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="vp-actions">
       <button class="btn sm primary" id="vpAnalyzeBtn">生成理解分析</button>
       <button class="btn sm" id="vpAuto" title="按当前画面分析与报表数据重新自动生成">🔄 重新生成解析</button>
+      <button class="btn sm" id="vpInsightSave">💾 保存案例</button>
     </div>
     <div class="vp-script-block">
       <div class="vp-region-h vp-sub-h">📝 文案口播分析 / 🎯 衍生跑量口播 <span class="vp-hint">（基于「素材文案/逐字稿」框内容，零Key 也可分析）</span></div>
@@ -1048,6 +1050,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <button type="button" class="vp-mode" data-m="long">扩写</button>
       </span>
       <button class="btn sm primary" id="vpScriptGenBtn">✨ 生成全新脚本</button>
+      <button class="btn sm" id="vpScriptGenSave">💾 保存案例</button>
     </div>
     <div id="vpScriptGenOut" class="vp-script-out"></div>
   </div>
@@ -4434,7 +4437,7 @@ document.addEventListener('click', function(e){
 
 <script src="personal-enhance.js?v=20260811e"></script>
 
-<script src="vparse-deep.js?v=20260812d"></script>
+<script src="vparse-deep.js?v=20260812e"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->

@@ -1,5 +1,18 @@
 [
   {
+    "ver": "v20260812e",
+    "date": "2026-08-12",
+    "type": "feat",
+    "summary": "三大分析模块新增「💾 保存案例」按钮，可各自导出独立离线 HTML",
+    "details": [
+      "🚀 一键复刻跑量素材：新增「💾 保存案例」→ 导出 vpReplicateOut 三件套为独立 HTML（复刻案例-<素材ID>.html）",
+      "💡 信息流投放理解分析：新增「💾 保存案例」→ 导出 vpInsight + vpScriptOut（理解分析 + 文案口播）为独立 HTML",
+      "🎯 脚本生成器：新增「💾 保存案例」→ 导出 vpScriptGenOut 为独立 HTML",
+      "复用 exportOfflineHtml 的 collectVpCss + downloadBlob 技术，案例 HTML 自带样式、离线双击即看",
+      "每个模块未生成内容时点击会提示"请先生成再保存"；vparse-deep.js 版本升 20260812e"
+    ]
+  },
+  {
     "ver": "v20260812d",
     "date": "2026-08-12",
     "type": "feat",

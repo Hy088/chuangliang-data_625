@@ -1700,6 +1700,9 @@ function applyAiToParse(ai) {
     b('vpDeepBtn', vpRunDeep);
     b('vpAiBtn', vpRunAI);
     b('vpReplicateBtn', vpRunReplicate);
+    b('vpRepSave', function () { exportSectionHtml({ ids: ['vpReplicateOut'], title: '🚀 一键复刻跑量素材', prefix: '复刻案例' }); });
+    b('vpInsightSave', function () { exportSectionHtml({ ids: ['vpInsight', 'vpScriptOut'], title: '💡 信息流投放理解分析', prefix: '理解分析' }); });
+    b('vpScriptGenSave', function () { exportSectionHtml({ ids: ['vpScriptGenOut'], title: '🎯 脚本生成器', prefix: '脚本生成' }); });
     b('vpExportOffline', exportOfflineHtml);
     b('vpAiSetBtn', openAiModal);
     b('vpWhisperBtn', vpRunWhisper);
@@ -1870,6 +1873,51 @@ function applyAiToParse(ai) {
       }, 600);
     } catch (e) {
       alert('导出失败：' + (e && e.message ? e.message : e));
+    }
+  }
+  // 单个/组合分析模块"保存为案例"：导出该模块内容为独立、离线可看的 HTML 文件（自带样式，双击即看，可丢进案例库文件夹）
+  function exportSectionHtml(opts) {
+    var ids = opts.ids || [];
+    function grab(id) { var e = document.getElementById(id); return e ? e.innerHTML : ''; }
+    var parts = ids.map(grab);
+    var allEmpty = parts.every(function (h) {
+      if (!h || !h.trim()) return true;
+      return h.indexOf('muted') >= 0 && (h.indexOf('点「') >= 0 || h.indexOf('还没有') >= 0 || h.indexOf('（未生成') >= 0);
+    });
+    if (allEmpty) { alert('该模块还没有生成内容，请先点击生成后再保存案例。'); return; }
+    var sid = VP.sid || '';
+    var baseName = opts.prefix + '-' + (sid || (VP.fileName || 'video').replace(/\.[^.]+$/, ''));
+    var meta = VP.meta || {};
+    var now = new Date().toLocaleString('zh-CN');
+    var vpCss = collectVpCss();
+    var body = parts.join('\n');
+    var html = [
+      '<!doctype html>',
+      '<html lang="zh-CN"><head><meta charset="utf-8">',
+      '<meta name="viewport" content="width=device-width,initial-scale=1">',
+      '<title>' + escapeHtml(opts.title) + ' · ' + escapeHtml(sid || VP.fileName || 'video') + '</title>',
+      '<style>',
+      'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f5f6f8;color:#1f2430;margin:0;padding:24px;}',
+      '.sec-wrap{max-width:1000px;margin:0 auto;background:#fff;border-radius:14px;padding:22px 26px;box-shadow:0 2px 14px rgba(0,0,0,.06);}',
+      '.sec-head{border-bottom:1px solid #eef0f3;padding-bottom:14px;margin-bottom:18px;}',
+      '.sec-head h1{font-size:20px;margin:0 0 6px}',
+      '.sec-badge{display:inline-block;background:#eef2ff;color:#2563eb;border-radius:8px;padding:3px 10px;font-size:13px;font-weight:700;margin-bottom:10px}',
+      '.sec-meta{color:#6b7280;font-size:13px;line-height:1.7}',
+      vpCss,
+      '</style></head><body><div class="sec-wrap">',
+      '<div class="sec-head"><span class="sec-badge">' + escapeHtml(opts.title) + '</span>',
+      '<h1>📁 素材分析案例</h1>',
+      '<div class="sec-meta">素材ID：' + escapeHtml(sid || '（未识别）') + '　|　文件名：' + escapeHtml(VP.fileName || '—') + '<br>',
+      '时长：' + (meta.duration ? meta.duration.toFixed(1) + 's' : '—') + '　|　分辨率：' + (meta.w ? meta.w + '×' + meta.h : '—') + '<br>',
+      '保存时间：' + now + '</div></div>',
+      body,
+      '</div></body></html>'
+    ].join('\n');
+    try {
+      downloadBlob(new Blob([html], { type: 'text/html;charset=utf-8' }), baseName + '.html');
+      alert('已保存：' + baseName + '.html\n（独立 HTML，离线双击即可查看，可放进你的案例库文件夹）');
+    } catch (e) {
+      alert('保存失败：' + (e && e.message ? e.message : e));
     }
   }
 })();
