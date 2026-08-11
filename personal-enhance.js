@@ -443,7 +443,7 @@
           : "";
         return "<td>" + txt + bar + "</td>";
       }).join("");
-      return "<tr><td class='rk'>" + (idx + 1) + "</td>" + coverCell + prevBtn + "<td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + cells + "</tr>";
+      return "<tr data-ridx='" + idx + "' title='点击整行：自动关联到视频解析并带入本月汇总明细'><td class='rk'>" + (idx + 1) + "</td>" + coverCell + prevBtn + "<td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + cells + "</tr>";
     }).join("");
     box.innerHTML = "<table class='me-rank-tbl'><thead>" + thead + "</thead><tbody>" + tbody + "</tbody></table>";
     Array.prototype.forEach.call(box.querySelectorAll("th[data-key]"), function (th) {
@@ -455,6 +455,13 @@
       btn.setAttribute("data-url", prevUrls[i] || "");
       btn.setAttribute("data-cover", coverUrls[i] || "");
       btn.onclick = function (e) { e.stopPropagation(); expandPreview(btn); };
+    });
+    Array.prototype.forEach.call(box.querySelectorAll("tr[data-ridx]"), function (tr) {
+      tr.onclick = function (e) {
+        if (e.target.closest(".me-play")) return; // 预览按钮各自处理
+        var idx = +tr.getAttribute("data-ridx");
+        associateFromRank(rows[idx]);
+      };
     });
   }
 
