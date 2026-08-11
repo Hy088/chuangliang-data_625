@@ -981,6 +981,62 @@ function saveAiAsCase() {
   alert('已保存到案例库（' + title + '）。视频已一并缓存到浏览器，案例卡片可直接播放。');
 }
 
+// 去除 HTML 片段里的 <button>（案例快照里的"复制/重生成"等按钮在卡片中是无用死按钮）
+function stripButtons(html) {
+  if (!html) return html;
+  const d = document.createElement('div'); d.innerHTML = html;
+  const btns = d.querySelectorAll('button'); for (let i = 0; i < btns.length; i++) btns[i].remove();
+  return d.innerHTML;
+}
+// 把当前视频的全部分析模块打包成一个案例，存进「我的解析案例」库（看板内直接可看）
+function packAllAsCase() {
+  function grab(id) { const e = document.getElementById(id); return e ? e.innerHTML : ''; }
+  const report = stripButtons(grab('vpReport'));
+  const boom = stripButtons(grab('vpParseAiReport'));
+  const replicate = stripButtons(grab('vpReplicateOut'));
+  const insight = stripButtons(grab('vpInsight'));
+  const scriptOut = stripButtons(grab('vpScriptOut'));
+  const scriptGen = stripButtons(grab('vpScriptGenOut'));
+  function isEmpty(h) { return !h || !h.trim() || (h.indexOf('muted') >= 0 && (h.indexOf('点「') >= 0 || h.indexOf('还没有') >= 0 || h.indexOf('（未生成') >= 0)); }
+  const anyContent = ![report, boom, replicate, insight, scriptOut, scriptGen].every(isEmpty);
+  if (!anyContent) { alert('当前还没有可打包的分析内容。请先加载视频并生成「🚀 一键复刻 / 生成理解分析 / AI 语义拆解 / 脚本生成」中的任意一项，再打包为案例。'); return; }
+  const sid = VP.sid || '';
+  const rawName = (VP.fileName || sid || '视频解析案例');
+  const title = rawName.replace(/\.[^.]+$/, '');
+  const ai = VP.ai || null;
+  const mat = VP.mat || {};
+  // 文本版 content（用于导出 MD / 旧"展开全文"回退）
+  const parts = [];
+  if (sid) parts.push('【素材ID】' + sid);
+  if (mat.proj) parts.push('【项目】' + mat.proj);
+  if (mat.cat) parts.push('【品类】' + mat.cat);
+  if (mat.cost != null) parts.push('【消耗】' + mat.cost);
+  if (mat.ctr != null) parts.push('【CTR】' + mat.ctr + '%');
+  if (mat.cpa != null) parts.push('【CPA】' + mat.cpa);
+  if (ai) parts.push('\n' + aiToCaseText(ai));
+  parts.push('\n（完整分析：投放数据 / 爆款拆解逐秒 / 一键复刻三件套 / 理解分析 / 脚本生成，已在看板「我的解析案例」卡片中「📂 展开完整分析」查看）');
+  const content = parts.join('\n').trim();
+  const rec = {
+    id: 'c' + Date.now(),
+    title: title,
+    content: content,
+    ai: { mat: mat, analysis: (ai && ai.analysis) || {}, storyboard: (ai && ai.storyboard) || [], next_actions: (ai && ai.next_actions) || [] },
+    sections: { report: report, boom: boom, replicate: replicate, insight: insight, scriptOut: scriptOut, scriptGen: scriptGen },
+    sid: sid,
+    fileName: VP.fileName || '',
+    videoName: VP.videoFile ? VP.videoFile.name : '',
+    hasVideo: !!VP.videoFile,
+    kind: 'ai',
+    ts: Date.now(),
+    ref: false,
+    packed: true
+  };
+  casePush(rec);
+  if (VP.videoFile) saveVideo(rec.id, VP.videoFile, VP.videoFile.name).catch(function () {});
+  caseRender();
+  alert('已打包为案例「' + title + '」，并存入「我的解析案例」库——刷新 / 重开看板都还在。\n\n视频已一并缓存，卡片可直接播放；点「📂 展开完整分析」即可在看板内直接看全部复刻 / 理解 / 脚本 / 投放 / 拆解内容。');
+}
+
 function fmtInt(n){ return (n == null || isNaN(n)) ? '—' : Number(n).toLocaleString('zh-CN'); }
 function renderBoomReport(ai) {
   const m = VP.mat || {};
@@ -1259,6 +1315,16 @@ function applyAiToParse(ai) {
     const spHtml = sp.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">核心卖点</span>' + sp.map(function (s) { return '<span class="vp-tag">' + escapeHtml(s) + '</span>'; }).join('') + '</div>' : '';
     const repHtml = rep.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">可复制</span>' + rep.map(function (s) { return '<span class="vp-tag ok">' + escapeHtml(s) + '</span>'; }).join('') + '</div>' : '';
     const naHtml = na.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">后续动作</span>' + na.map(function (s) { return '<span class="vp-tag warn">' + escapeHtml(s) + '</span>'; }).join('') + '</div>' : '';
+    // 打包案例的完整分析区块（投放数据 / 爆款拆解 / 复刻 / 理解 / 脚本），看板内直接可看
+    const sections = c.sections || {};
+    const hasSec = !!(sections.report || sections.boom || sections.replicate || sections.insight || sections.scriptOut || sections.scriptGen);
+    const fullAnaHtml = hasSec ? ('<div class="vp-case-fullana"><button class="btn xs ghost" data-act="fullana" data-id="' + c.id + '">📂 展开完整分析（复刻 / 理解 / 脚本 / 投放 / 拆解）</button><div id="vpCaseFullAna-' + c.id + '" style="display:none" class="vp-case-fullana-body">' +
+      (sections.report ? '<div class="vp-cfa-sec"><div class="vp-cfa-h">📊 投放数据</div>' + sections.report + '</div>' : '') +
+      (sections.boom ? '<div class="vp-cfa-sec"><div class="vp-cfa-h">🎯 爆款拆解 / 逐秒分析</div>' + sections.boom + '</div>' : '') +
+      (sections.replicate ? '<div class="vp-cfa-sec"><div class="vp-cfa-h">🚀 一键复刻三件套</div>' + sections.replicate + '</div>' : '') +
+      ((sections.insight || sections.scriptOut) ? '<div class="vp-cfa-sec"><div class="vp-cfa-h">💡 理解分析 / 文案口播</div>' + (sections.insight || '') + (sections.scriptOut || '') + '</div>' : '') +
+      (sections.scriptGen ? '<div class="vp-cfa-sec"><div class="vp-cfa-h">🎯 脚本生成器</div>' + sections.scriptGen + '</div>' : '') +
+      '</div></div>') : '';
     const sbHtml = sb.length ? '<div class="vp-ai-sub"><span class="vp-ai-k">分镜</span><span class="vp-chip">' + sb.length + ' 个</span>' + (sb[0] ? ('<span class="vp-muted">首镜：' + escapeHtml((sb[0].frame || '') + ' ' + (sb[0].desc || '')) + '</span>') : '') + '</div>' : '';
     const hasVideoUrl = !!(c.videoUrl || '').trim();
     const hasLocalVideo = !!c.hasVideo;
@@ -1285,7 +1351,7 @@ function applyAiToParse(ai) {
       '<div class="vp-ai-meta">素材ID ' + sid + (fname ? ' · ' + fname : '') + (c.ts ? ' · ' + new Date(c.ts).toLocaleString('zh-CN') : '') + '</div>' +
       videoHtml +
       (chips.length ? '<div class="vp-ai-chips">' + chips.map(function (x) { return '<span class="vp-chip">' + escapeHtml(x) + '</span>'; }).join('') + '</div>' : '') +
-      sbHtml + spHtml + repHtml + naHtml +
+      sbHtml + spHtml + repHtml + naHtml + fullAnaHtml +
       '<div class="vp-ai-full" id="vpCaseFull-' + c.id + '" style="display:none"><pre class="vp-ai-pre">' + escapeHtml(c.content || '') + '</pre></div>' +
       '</div>';
   }
@@ -1722,6 +1788,8 @@ function applyAiToParse(ai) {
     b('vpCaseExport', caseExportMd);
     b('vpCaseExportJson', caseExportJson);
     b('vpCaseExportFull', caseExportFull);
+    b('vpPackCase', packAllAsCase);
+    b('vpPackCaseBar', packAllAsCase);
     b('vpCaseCancel', () => { const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'none'; });
     b('vpCaseSave', () => {
       const t = document.getElementById('vpCaseTitle'), c = document.getElementById('vpCaseContent'), f = document.getElementById('vpCaseForm');
@@ -1742,6 +1810,10 @@ function applyAiToParse(ai) {
       else if (act === 'expand') {
         const full = document.getElementById('vpCaseFull-' + id);
         if (full) { const open = full.style.display !== 'none'; full.style.display = open ? 'none' : 'block'; btn.textContent = open ? '展开全文' : '收起'; }
+      }
+      else if (act === 'fullana') {
+        const full = document.getElementById('vpCaseFullAna-' + id);
+        if (full) { const open = full.style.display !== 'none'; full.style.display = open ? 'none' : 'block'; btn.textContent = open ? '📂 展开完整分析（复刻 / 理解 / 脚本 / 投放 / 拆解）' : '📁 收起完整分析'; }
       }
       else if (act === 'loadVideo') {
         const fin = document.getElementById('vpCaseFile-' + id); if (fin) fin.click();

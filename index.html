@@ -951,6 +951,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <label title="AI 语义拆解分析视频的前 N 秒；0 = 整段（支持长视频 &gt;60s）">拆解时长(s) <input type="number" id="vpCutDur" value="0" min="0" max="600" step="5"></label>
         <button class="btn sm primary" id="vpReextract">重新抽帧</button>
         <button class="btn sm" id="vpExportOffline" title="导出离线版：轻量 HTML + 同目录视频文件，两者放一起即可离线打开查看">💾 导出离线版</button>
+        <button class="btn sm primary" id="vpPackCase" title="把当前全部分析（投放数据 / 爆款拆解 / 一键复刻 / 理解分析 / 脚本生成）打包成一个案例，存进「我的解析案例」库，看板内直接查看">📦 打包为案例</button>
         <span class="vp-ctl-sep"></span>
         <button class="btn sm ghost" id="vpAdvToggle" title="展开本地深度分析 / OCR 调试等高级功能">⚙ 高级 ▾</button>
         <div class="vp-adv" id="vpAdv" style="display:none">
@@ -1111,6 +1112,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <h2>📚 我的解析案例 <span class="tag">可粘贴你的爆款拆解范本，标星后作为 AI 参考示例</span></h2>
       <div class="vp-cases-bar">
         <button class="btn sm primary" id="vpCaseAdd">＋ 添加案例</button>
+        <button class="btn sm primary" id="vpPackCaseBar" title="把当前正在分析的视频全部分析内容，一键打包成一个案例存进案例库">📦 打包当前分析为案例</button>
         <button class="btn sm ghost" id="vpCaseExport">⤓ 导出案例库(MD)</button>
         <button class="btn sm ghost" id="vpCaseExportJson">⤓ 导出案例库(JSON)</button>
         <button class="btn sm primary" id="vpCaseExportFull" title="导出 cases.json + videos/ 文件夹，可部署到 GitHub Pages 或离线看板，视频也能直接播放">⤓ 导出完整包（含视频）</button>
@@ -4377,6 +4379,10 @@ document.addEventListener('click', function(e){
 .btn.xs{font-size:11px;padding:3px 9px;min-height:0}
 /* AI 拆解案例卡片 */
 .vp-case-ai{border-left:3px solid var(--brand)}
+.vp-case-fullana{margin:10px 0 4px}
+.vp-case-fullana-body{margin-top:8px}
+.vp-cfa-sec{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+.vp-cfa-h{font-weight:700;font-size:13.5px;margin-bottom:6px;color:var(--brand2)}
 .vp-ai-meta{font-size:12px;color:var(--muted);margin-top:4px;word-break:break-all}
 .vp-ai-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .vp-chip{font-size:11.5px;padding:2px 8px;border-radius:20px;background:var(--graybg);border:1px solid var(--line);color:var(--ink)}
@@ -4437,7 +4443,7 @@ document.addEventListener('click', function(e){
 
 <script src="personal-enhance.js?v=20260811e"></script>
 
-<script src="vparse-deep.js?v=20260812e"></script>
+<script src="vparse-deep.js?v=20260812f"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->

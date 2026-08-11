@@ -1,5 +1,18 @@
 [
   {
+    "ver": "v20260812f",
+    "date": "2026-08-12",
+    "type": "feat",
+    "summary": "新增「📦 打包为案例」：当前全部分析一键打包进案例库，看板内直接查看",
+    "details": [
+      "视频解析控制栏（导出离线版右侧）+ 我的解析案例栏（＋添加案例右侧）各加「📦 打包为案例」按钮，均调用 packAllAsCase()",
+      "打包内容：投放数据(#vpReport) + 爆款拆解逐秒(#vpParseAiReport) + 一键复刻三件套(#vpReplicateOut) + 理解分析/文案口播(#vpInsight+#vpScriptOut) + 脚本生成器(#vpScriptGenOut)，stripButtons 去掉卡片内的死按钮",
+      "存入已有的「我的解析案例」库（localStorage + IndexedDB 视频缓存），刷新/重开看板都在；视频一并缓存，卡片可直接播放",
+      "案例卡片新增「📂 展开完整分析」折叠块，看板内直接看全部复刻/理解/脚本/投放/拆解内容（无需导出）",
+      "无内容时点按钮提示先生成分析；vparse-deep.js 版本升 20260812f"
+    ]
+  },
+  {
     "ver": "v20260812e",
     "date": "2026-08-12",
     "type": "feat",
