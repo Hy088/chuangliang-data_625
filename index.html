@@ -3687,8 +3687,14 @@ function updateStateBanner(){
   if(!skipNow){
     withTimeout(idbGet(IDB_KEY), 4000, '读取本地缓存').then(saved=>{
       if(saved && saved.meta && saved.materials){
-        // 版本校验：缓存版本与当前不一致（如数据已更新）一律丢弃，避免旧周期覆盖线上最新数据
-        if(!saved._appVer || saved._appVer !== SEED_VER){ console.log('[init] 本地缓存版本过期(_appVer='+(saved._appVer||'none')+')，跳过合并，使用线上最新数据'); return; }
+        const seedPds = (DATA_FULL.periodData||[]).map(p=>p.period).join('|');
+        const cachePds = (saved.periodData||[]).map(p=>p.period).join('|');
+        // 双重校验：① 缓存版本过期；② 缓存周期集合与线上种子不一致（曾被旧数据重盖章为最新版本号）。
+        // 任一不满足则丢弃缓存的周期/聚合，保留线上最新；仅当「版本一致且周期集合完全一致」才用缓存加速（免重下大文件）。
+        if(!saved._appVer || saved._appVer !== SEED_VER || (seedPds && cachePds !== seedPds)){
+          console.log('[init] 本地缓存版本过期或与线上周期不一致(_appVer='+(saved._appVer||'none')+', seed='+seedPds+', cache='+cachePds+')，跳过合并，使用线上最新数据');
+          return;
+        }
         const p=(saved.meta.periods)||[]; const rows=(saved.materials.rows)||[];
         if(p.length || rows.length){
           DATA_FULL=saved; DATA=DATA_FULL; CUR_PERIOD=null; rebuildIdMap();
