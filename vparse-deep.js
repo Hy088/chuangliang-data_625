@@ -64,6 +64,43 @@
 4. analysis.hook / analysis.structure / analysis.script_direction 三段不要复述彼此的核心信息。
 5. 字数克制：每个字段只写必要内容，宁少勿滥，绝不为了凑数而重复。`;
 
+  // 复刻生产型 prompt：输出 decompose（拆解卡）/ scripts（复刻口播）/ jimeng（即梦提示词）三件套
+  const REPLICATE_PROMPT = `你是一名资深短视频信息流投放创意导演，擅长「拆解爆款 → 复刻再生产」。下面是一段跑量素材的抽帧画面、投放后台真实数据、以及识别出的口播。
+
+你的任务不是"分析评价"，而是帮用户**直接复刻出能跑量的新素材**。请严格只输出如下 JSON（不要 markdown 代码块、不要任何解释文字）：
+
+{
+  "decompose": {
+    "hook_type": "钩子类型（如：悬念反问 / 利益前置 / 反常识 / 恐吓痛点 / 身份代入）",
+    "first3s": "前3秒钩子具体怎么做（画面+字幕+口播，1-2句）",
+    "pain": ["目标人群核心痛点1", "痛点2"],
+    "sell": ["核心卖点/利益点1", "卖点2", "卖点3"],
+    "trust": ["信任背书方式1（真人/检测/销量/平台/权威）", "…"],
+    "cta": "结尾行动号召怎么做的",
+    "emotion": "整条情绪曲线（如：焦虑→好奇→信任→急迫）",
+    "storyboard": [
+      {"t":"0-3s","stage":"钩子","frame":"画面描述","subtitle":"字幕文案","voice":"口播要点"},
+      {"t":"3-12s","stage":"痛点/卖点","frame":"…","subtitle":"…","voice":"…"}
+    ]
+  },
+  "scripts": [
+    {"label":"复刻·换钩子","text":"全新口播，保留跑量公式换表达，120字内，口语化有钩子有CTA"},
+    {"label":"复刻·换人群","text":"…"},
+    {"label":"复刻·原公式","text":"…"}
+  ],
+  "jimeng": [
+    {"label":"即梦·开篇钩子镜头","prompt":"可直接丢进即梦文生/图生视频的提示词：主体+场景+运镜+风格+时长+字幕位置，中文"},
+    {"label":"即梦·产品展示镜头","prompt":"…"},
+    {"label":"即梦·结尾CTA镜头","prompt":"…"}
+  ]
+}
+
+字段要求：
+- decompose 是复刻蓝本：storyboard 每镜头给 t(时间区间)/stage(阶段)/frame(画面)/subtitle(字幕)/voice(口播要点)，覆盖整条时长，4-6 个镜头。
+- scripts 基于 decompose 的卖点与公式，生成 3 条差异化全新口播（换钩子/换人群/原公式各1条），每条≤120字、口语化、必须有钩子与 CTA、禁止照搬原素材口播。
+- jimeng 给出 3 个可直接用于即梦(文生视频/图生视频)的镜头提示词，覆盖开篇钩子/产品展示/结尾CTA，中文，含主体、场景、运镜、风格、建议时长与字幕叠加位置。
+若提供了口播时间轴，请优先结合它理解节奏。各字段内容互不重复。`;
+
 
   // ---- 工具 ----
   function loadScript(src, timeoutMs) {
@@ -582,8 +619,8 @@
   }
 
   // 与 vpRunAI 完全一致的提示词构建
-  function buildAiPromptText() {
-    let promptText = AI_PROMPT;
+  function buildAiPromptText(promptPrefix) {
+    let promptText = promptPrefix || AI_PROMPT;
     const durTxt = (VP.meta && VP.meta.duration) ? VP.meta.duration.toFixed(0) : '?';
     const cutEl = document.getElementById('vpCutDur');
     const cut = cutEl ? (parseFloat(cutEl.value) || 0) : 0;
@@ -610,7 +647,7 @@
     return promptText;
   }
 
-  function estimateAiCost() {
+  function estimateAiCost(outputTokOverride) {
     const conf = aiConfGet();
     const p = AI_PROVIDERS[conf.provider] || AI_PROVIDERS.zhipu;
     const pick = getAiPickFrames();
@@ -623,7 +660,7 @@
     const promptText = buildAiPromptText();
     const textTok = Math.ceil(promptText.length * 1.3);
     const inputTok = imgTok + textTok;
-    const outputTok = 1024; // vpRunAI 的 max_tokens
+    const outputTok = (outputTokOverride != null) ? outputTokOverride : 1024;
     const pr = AI_PRICE[conf.model] || AI_PRICE[p.def] || null;
     let inRate = 0, outRate = 0, free = false, cur = 'CNY', unknown = false;
     if (pr) { inRate = pr.in; outRate = pr.out; free = !!pr.free; cur = pr.cur || 'CNY'; }
@@ -637,10 +674,9 @@
     return { model: conf.model, provider: conf.provider, vision: p.vision, frames: pick.length, perFrameTok: perFrameTok, imgTok: imgTok, textTok: textTok, inputTok: inputTok, outputTok: outputTok, free: free, unknown: unknown, cnyIn: cnyIn, cnyOut: cnyOut, total: cnyIn + cnyOut, hasKey: !!conf.key };
   }
 
-  function renderCostEstimate() {
-    const elc = document.getElementById('vpCostEst'); if (!elc) return;
-    if (!(VP.frames && VP.frames.length)) { elc.className = 'vp-cost-est muted'; elc.innerHTML = '加载视频并抽帧后，这里显示本次拆解的消耗预估（含送图帧数 / 估算 token / 预计 ¥）'; elc.title = ''; return; }
-    const e = estimateAiCost();
+  function renderCostLine(elId, e, label) {
+    const elc = document.getElementById(elId); if (!elc) return;
+    if (!e || !e.frames) { elc.className = 'vp-cost-est muted'; elc.innerHTML = '加载视频并抽帧后，这里显示本次' + (label || '拆解') + '的消耗预估（含送图帧数 / 估算 token / 预计 ¥）'; elc.title = ''; return; }
     let priceTxt;
     if (e.free) priceTxt = '免费模型（不计费）';
     else if (e.unknown) priceTxt = '单价未内置（以服务商账单为准）';
@@ -652,6 +688,11 @@
       ' · <b>' + priceTxt + '</b>' +
       (e.hasKey ? '' : ' · <span class="warn">未配置 Key</span>');
     elc.title = '图片 token 为估算值（按 300px 宽抽帧、1 token/32×32px）；文本按字符×1.3 估算。改「拆解时长」或「AI 模型」会实时重算。实际以服务商账单为准。';
+  }
+  function renderCostEstimate() {
+    const has = !!(VP.frames && VP.frames.length);
+    renderCostLine('vpCostEst', has ? estimateAiCost(1024) : null, '拆解');
+    renderCostLine('vpRepCostEst', has ? estimateAiCost(3000) : null, '复刻');
   }
   // 暴露给主脚本（index.html）在抽帧完成后触发
   window.updateVpCostEst = renderCostEstimate;
@@ -699,7 +740,109 @@
         '<br><span class="muted">请检查 Key / Base URL / 模型是否正确，且浏览器能直连该服务（部分服务需经后端代理才能避免跨域 CORS）。</span></div>';
     }
   }
-  function parseAi(txt) {
+    // ============================================================
+  // 🚀 一键复刻跑量素材：拆解卡 + 复刻口播 + 即梦提示词（生产型，非分析型）
+  // ============================================================
+  function arrOf(x) { return Array.isArray(x) ? x : (x ? [x] : []); }
+  function parseReplicate(txt) {
+    if (!txt) return null;
+    let s = txt.trim();
+    const m = s.match(/```(?:json)?\s*([\s\S]*?)```/); if (m) s = m[1].trim();
+    try {
+      const o = JSON.parse(s);
+      if (o.decompose || o.scripts || o.jimeng) {
+        const d = o.decompose || {};
+        return {
+          decompose: {
+            hook_type: d.hook_type || '',
+            first3s: d.first3s || '',
+            pain: arrOf(d.pain),
+            sell: arrOf(d.sell),
+            trust: arrOf(d.trust),
+            cta: d.cta || '',
+            emotion: d.emotion || '',
+            storyboard: Array.isArray(d.storyboard) ? d.storyboard : []
+          },
+          scripts: Array.isArray(o.scripts) ? o.scripts : [],
+          jimeng: Array.isArray(o.jimeng) ? o.jimeng : []
+        };
+      }
+    } catch (e) {}
+    return { raw: txt };
+  }
+  function repArrHtml(a) { return (Array.isArray(a) && a.length) ? a.map(function (x) { return escapeHtml(x); }).join('；') : '—'; }
+  function repGenItem(it, prefix, i) {
+    return '<div class="vp-gen-item"><div class="gh"><span class="gt">' + escapeHtml(it.label || (prefix + '·' + (i + 1))) + '</span></div>' +
+      '<div class="gtxt">' + escapeHtml(it.text || '') + '</div>' +
+      '<div class="gbtns"><button type="button" class="btn xs" data-' + prefix + '="' + i + '">复制</button></div></div>';
+  }
+  function repCopy(t, btn) { if (navigator.clipboard) navigator.clipboard.writeText(t); const o = btn.textContent; btn.textContent = '已复制'; setTimeout(function () { btn.textContent = o; }, 1200); }
+  function renderReplicate(rep, raw) {
+    const out = document.getElementById('vpReplicateOut'); if (!out) return;
+    if (rep.raw) { out.innerHTML = '<div class="vp-warn">复刻结果未解析为结构化 JSON，原始返回：<pre style="white-space:pre-wrap;font-size:12px">' + escapeHtml(rep.raw) + '</pre></div>'; return; }
+    const d = rep.decompose || {};
+    const sb = Array.isArray(d.storyboard) ? d.storyboard : [];
+    const storyRows = sb.map(function (s) {
+      return '<tr><td>' + escapeHtml(s.t || '') + '</td><td>' + escapeHtml(s.stage || '') + '</td><td>' + escapeHtml(s.frame || '') + '</td><td>' + escapeHtml(s.subtitle || '') + '</td><td>' + escapeHtml(s.voice || '') + '</td></tr>';
+    }).join('');
+    const decomposeHtml =
+      '<div class="vp-rep-row"><span class="vp-rep-k">钩子类型</span><span>' + escapeHtml(d.hook_type || '—') + '</span></div>' +
+      '<div class="vp-rep-row"><span class="vp-rep-k">前3秒</span><span>' + escapeHtml(d.first3s || '—') + '</span></div>' +
+      '<div class="vp-rep-row"><span class="vp-rep-k">核心痛点</span><span>' + repArrHtml(d.pain) + '</span></div>' +
+      '<div class="vp-rep-row"><span class="vp-rep-k">核心卖点</span><span>' + repArrHtml(d.sell) + '</span></div>' +
+      '<div class="vp-rep-row"><span class="vp-rep-k">信任背书</span><span>' + repArrHtml(d.trust) + '</span></div>' +
+      '<div class="vp-rep-row"><span class="vp-rep-k">结尾CTA</span><span>' + escapeHtml(d.cta || '—') + '</span></div>' +
+      '<div class="vp-rep-row"><span class="vp-rep-k">情绪曲线</span><span>' + escapeHtml(d.emotion || '—') + '</span></div>' +
+      (storyRows ? '<table class="vp-rep-story"><thead><tr><th>时间</th><th>阶段</th><th>画面</th><th>字幕</th><th>口播要点</th></tr></thead><tbody>' + storyRows + '</tbody></table>' : '');
+    const scripts = Array.isArray(rep.scripts) ? rep.scripts : [];
+    const jimeng = Array.isArray(rep.jimeng) ? rep.jimeng : [];
+    const scriptHtml = scripts.length ? ('<div class="vp-gen-list">' + scripts.map(function (it, i) { return repGenItem(it, 'sc', i); }).join('') + '</div>') : '<div class="muted">未生成口播脚本</div>';
+    const jimengHtml = jimeng.length ? ('<div class="vp-gen-list">' + jimeng.map(function (it, i) { return repGenItem(it, 'jc', i); }).join('') + '</div>') : '<div class="muted">未生成即梦提示词</div>';
+    out.innerHTML =
+      '<div class="vp-rep-blk"><div class="vp-rep-bh">🧩 爆款拆解卡 <span class="tag">复刻蓝本</span></div><div class="vp-rep-bd">' + decomposeHtml + '</div></div>' +
+      '<div class="vp-rep-blk"><div class="vp-rep-bh">🎙 复刻口播脚本 <span class="tag">换表达·保留公式</span></div><div class="vp-rep-bd">' + scriptHtml + '</div></div>' +
+      '<div class="vp-rep-blk"><div class="vp-rep-bh">🎬 即梦生成提示词 <span class="tag">文/图生视频</span></div><div class="vp-rep-bd">' + jimengHtml + '</div></div>';
+    out.querySelectorAll('[data-sc]').forEach(function (btn) { btn.onclick = function () { repCopy(scripts[+btn.getAttribute('data-sc')].text, btn); }; });
+    out.querySelectorAll('[data-jc]').forEach(function (btn) { btn.onclick = function () { repCopy(jimeng[+btn.getAttribute('data-jc')].text, btn); }; });
+  }
+  async function vpRunReplicate() {
+    const conf = aiConfGet();
+    if (!conf.key) { openAiModal(); return; }
+    const pName = (AI_PROVIDERS[conf.provider] || {}).label || conf.provider;
+    const out = document.getElementById('vpReplicateOut');
+    if (out) out.innerHTML = '<div class="muted">🚀 正在调用 ' + escapeHtml(pName) + ' 生成复刻三件套（拆解卡 / 口播 / 即梦提示词）…</div>';
+    try {
+      const pick = getAiPickFrames();
+      if (!pick.length) { if (out) out.innerHTML = '<div class="vp-warn">请先抽帧（点「重新抽帧」）再复刻。</div>'; return; }
+      const promptText = buildAiPromptText(REPLICATE_PROMPT);
+      const content = [{ type: 'text', text: promptText }];
+      if (conf.vision) pick.forEach(f => content.push({ type: 'image_url', image_url: { url: f.dataURL } }));
+      const ep = conf.base.replace(/\/+$/, '') + '/chat/completions';
+      const resp = await fetch(ep, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + conf.key },
+        body: JSON.stringify({ model: conf.model, messages: [{ role: 'user', content }], temperature: 0.6, max_tokens: 3000 })
+      });
+      if (!resp.ok) {
+        const t = await resp.text();
+        if (resp.status === 401) throw new Error('401 鉴权失败：API Key 无效或已过期（' + pName + '）');
+        if (resp.status === 404) throw new Error('404：接口地址不正确，请检查 Base URL（当前 ' + ep + '）');
+        if (resp.status === 400) throw new Error('400：请求参数/模型名有误（' + pName + ' · ' + conf.model + '）');
+        throw new Error('HTTP ' + resp.status + ' ' + t.slice(0, 200));
+      }
+      const j = await resp.json();
+      const txt = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+      if (!txt) throw new Error('返回内容为空（可能为风控拦截或额度不足）');
+      const rep = parseReplicate(txt);
+      VP.replicate = rep;
+      renderReplicate(rep, txt);
+    } catch (e) {
+      if (out) out.innerHTML = '<div class="vp-warn">复刻失败：' + escapeHtml(e.message) +
+        '<br><span class="muted">请检查 Key / Base URL / 模型是否正确，且浏览器能直连该服务。</span></div>';
+    }
+  }
+
+function parseAi(txt) {
 
   if (!txt) return null;
   let s = txt.trim();
@@ -1541,6 +1684,7 @@ function applyAiToParse(ai) {
     const b = (id, fn) => { const e = document.getElementById(id); if (e) e.onclick = fn; };
     b('vpDeepBtn', vpRunDeep);
     b('vpAiBtn', vpRunAI);
+    b('vpReplicateBtn', vpRunReplicate);
     b('vpAiSetBtn', openAiModal);
     b('vpWhisperBtn', vpRunWhisper);
     b('vpOcrDebugBtn', vpRunOcrDebug);

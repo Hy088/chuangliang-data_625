@@ -997,6 +997,15 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     </div>
   </div>
 
+  <div class="vp-region vp-region-hero" id="vpReplicateRegion">
+    <div class="vp-region-h">🚀 一键复刻跑量素材 <span class="vp-hint">解析爆款 → 直接产出可复刻的拆解卡 / 口播 / 即梦提示词</span></div>
+    <div class="vp-actions">
+      <button class="btn sm primary" id="vpReplicateBtn">🚀 一键复刻</button>
+      <span class="vp-cost-est muted" id="vpRepCostEst" style="margin-left:8px">加载视频并抽帧后，这里显示本次复刻的消耗预估（含送图帧数 / 估算 token / 预计 ¥）</span>
+    </div>
+    <div id="vpReplicateOut" class="vp-rep muted">点「🚀 一键复刻」，我会基于抽帧 + 投放数据 + 口播，直接产出「爆款拆解卡 / 复刻口播脚本 / 即梦生成提示词」三件套，拿来就能拍、能剪、能生成。</div>
+  </div>
+
   <div class="vp-region">
     <div class="vp-region-h">⑤ 信息流投放理解分析<span class="vp-hint">（结合录入数据自动生成）</span></div>
     <div class="vp-actions">
@@ -4142,6 +4151,15 @@ document.addEventListener('click', function(e){
 .vp-ctl-sep{width:1px;height:22px;background:var(--line);margin:0 4px;display:inline-block;vertical-align:middle}
 .vp-adv{display:inline-flex;gap:6px;align-items:center}
 .vp-cost-est{font-size:12.5px;line-height:1.5;color:var(--muted);background:var(--graybg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin:8px 0 2px;cursor:help}
+.vp-rep{font-size:13px;line-height:1.6;color:#374151}
+.vp-rep-blk{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
+.vp-rep-bh{font-weight:700;padding:9px 12px;background:var(--graybg);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;font-size:13.5px}
+.vp-rep-bd{padding:10px 12px}
+.vp-rep-row{display:flex;gap:10px;padding:3px 0;font-size:13px;line-height:1.55}
+.vp-rep-k{color:var(--muted);min-width:70px;flex-shrink:0;font-weight:600}
+.vp-rep-story{margin-top:8px;border-collapse:collapse;width:100%;font-size:12.5px}
+.vp-rep-story th,.vp-rep-story td{border:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top}
+.vp-rep-story th{background:var(--graybg);font-weight:600;white-space:nowrap}
 .vp-cost-est b{color:var(--text);font-weight:600}
 .vp-cost-est.free{border-color:#1f8a70;background:var(--greenbg);color:#1c7a63}
 .vp-cost-est .warn{color:#e08a08;font-weight:600}
