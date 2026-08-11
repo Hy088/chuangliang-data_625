@@ -250,8 +250,8 @@
     var rows = matData.filter(function (m) { return m["日期"] === currentDate; });
     rows.sort(function (a, b) { return num(b[sortKey]) - num(a[sortKey]); });
     if (!rows.length) {
-      box.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#999">该日期暂无素材明细数据</div>';
-      var cnt = el("meRankCount"); if (cnt) cnt.textContent = "共 0 个素材";
+      box.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#999">当日暂无素材明细数据</div>';
+      var cnt = el("meRankCount"); if (cnt) cnt.textContent = "当日共 0 个素材";
       return;
     }
     var max = num(rows[0][sortKey]) || 1;
@@ -294,7 +294,7 @@
       btn.setAttribute("data-cover", coverUrls[i] || "");
       btn.onclick = function (e) { e.stopPropagation(); expandPreview(btn); };
     });
-    var cnt = el("meRankCount"); if (cnt) cnt.textContent = "共 " + rows.length + " 个素材（按" + (RANK_METRICS.filter(function (m){return m.key===sortKey;})[0].label) + "排序）";
+    var cnt = el("meRankCount"); if (cnt) cnt.textContent = "当日共 " + rows.length + " 个素材（按" + (RANK_METRICS.filter(function (m){return m.key===sortKey;})[0].label) + "排序）";
   }
 
   /* ---------- 渲染：本月汇总 ---------- */
@@ -1176,7 +1176,7 @@
     var panel = document.createElement("div");
     panel.id = "meRank";
     panel.innerHTML =
-      panelHd("🏆 素材数据排行 <span id='meRankCount' style='font-size:12px;color:#8a94a6;font-weight:400'></span>", "", "点击表头可切换排序指标") +
+      panelHd("🏆 每日素材消耗排行榜 <span id='meRankCount' style='font-size:12px;color:#8a94a6;font-weight:400'></span>", "", "当日素材按消耗倒序 · 点击表头可切换排序指标") +
       "<div id='meRankBody' style='" + BOXCSS + "'></div>";
     mountPanel("slotMeRank", panel, cards);
 

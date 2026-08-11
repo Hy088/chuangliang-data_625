@@ -1,0 +1,72 @@
+[daily-refresh] git pull rc= 0 Already up to date.
+[daily-refresh] RUN: C:/Users/EDY/.workbuddy/binaries/python/versions/3.13.12/python.exe C:\Users\EDY\.workbuddy\skills\chuangliang-csv-exporter\scripts\export_chuangliang.py --config C:\Users\EDY\.workbuddy\skills\chuangliang-csv-exporter\scripts\config.daily.effective.json --output C:\Users\EDY\chuangliang_daily_raw.csv
+[chuangliang-export] 共需导出 1 天，分 1 批（每批≤1天，批间重新登录规避导出频控）
+[chuangliang-export] ===== 批次 1/1: 2026-08-11 ~ 2026-08-11 =====
+[chuangliang-export] 打开登录页: https://cl.mobgi.com/login
+[chuangliang-export] 已填入账号密码，等待登录按钮可用...
+[chuangliang-export] 点击登录...
+[chuangliang-export] 登录后 URL: https://cl.mobgi.com/pdconfig
+[chuangliang-export] 登录成功，选择标准版...
+[chuangliang-export] 进入平台后 URL: https://cl.mobgi.com/material/common/material
+[chuangliang-export] SPA 初始化完成，当前 URL: https://cl.mobgi.com/material/common/material
+[chuangliang-export] 跳转数据报表: https://cl.mobgi.com/material/common/materialreport
+[chuangliang-export] 报表页 URL: https://cl.mobgi.com/material/common/materialreport
+[chuangliang-export] 自定义指标弹窗尝试1: 复选框数=184
+[chuangliang-export] 指标设置: 已勾选: 消耗
+[chuangliang-export] 指标设置: 已勾选: 转化数
+[chuangliang-export] 指标设置: 未找到指标: 素材标签
+[chuangliang-export] 已应用自定义指标
+[chuangliang-export] 已切换时间粒度为: 日汇总（用于逐日导出）
+[chuangliang-export] 选择媒体/平台筛选: 不限
+[chuangliang-export] 已切换媒体筛选为: 不限
+[chuangliang-export]   [扫描] select[0] cls='el-select el-select--small' 返回 2 项: ['素材名称', '素材ID']
+[chuangliang-export]   [扫描] select[3] cls='el-select cl-filter-select show-close-icon el-select--small' 返回 21 项: ['小牛传媒', '陈煜杭-XNY0006', '林洁涛-XNY0018', '刘廷虎-XNW0001']
+[chuangliang-export]   [扫描] select[4] cls='el-select cl-filter-select show-close-icon el-select--small' 返回 21 项: ['高露洁棕榄（中国）有限公司', '高德软件有限公司', '高个子(广州)文化传媒有限公司', '陽光四季有限公司']
+[chuangliang-export]   [扫描] select[5] cls='el-select el-select--small' 返回 3 项: ['图片', '视频', '稿件']
+[chuangliang-export]   [扫描] select[6] cls='el-select cl-filter-select show-close-icon el-select--small' 返回 21 项: ['王思琪-XNY1931', '任浩天-XNH0915', '钟心敏-XNY1927', '山风']
+[chuangliang-export]   [扫描] select[7] cls='el-select cl-filter-select show-close-icon el-select--small' 返回 2 项: ['曾博、李虹玉', '李虹玉-XNY0271']
+[chuangliang-export] 已定位剪辑人员下拉(select[7], cls='el-select cl-filter-select show-close-icon el-select--small')并选中: 李虹玉-XNY0271
+[chuangliang-export] 剪辑筛选框当前显示值: '|input=李虹玉'
+[chuangliang-export] 已设置剪辑(人员)筛选: 李虹玉-XNY0271
+[chuangliang-export] [本批] 导出 1 天: 2026-08-11 ~ 2026-08-11
+[chuangliang-export] [第1/1天] 设置日期: 2026-08-11
+[chuangliang-export]   第1天 已合并(直连)，累计 815 行明细
+[chuangliang-export] [preview] 已切到整月视图(2026-08-01~2026-08-11)，准备抓取封面/视频
+[chuangliang-export] [preview] DIAG rows=40 scrollMax=1300 idHits=0
+[chuangliang-export] [preview] DIAG headers=['', '', '', '', '', '消耗', '点击数', '展示数', '转化成本', '', '时间', '素材预览', '素材', '近7日趋势', '', '', '', '']
+[chuangliang-export] [preview] DIAG firstRow=['', '', '', '', '', '8161.49', '6880', '535356', '19.81']
+[chuangliang-export] [preview] 滚动遍历抓取封面: 共 0 个素材
+[chuangliang-export] [preview] 无素材数据，已保留既有映射（共 0 条）
+[chuangliang-export] [本批] 结束（累计 815 行明细）
+[chuangliang-export] 已合并生成 CSV: C:\Users\EDY\chuangliang_daily_raw.csv（815 行明细，跨 1 天）
+[chuangliang-export] 完成。
+[daily-refresh] RUN: C:/Users/EDY/.workbuddy/binaries/python/versions/3.13.12/python.exe C:\Users\EDY\.workbuddy\skills\chuangliang-csv-exporter\scripts\map_to_dashboard.py C:\Users\EDY\chuangliang_daily_raw.csv --out C:\Users\EDY\chuangliang_data\me-data.csv --map C:\Users\EDY\.workbuddy\skills\chuangliang-csv-exporter\scripts\map_daily.json
+[map-to-dashboard] 已生成看板格式 CSV: C:\Users\EDY\chuangliang_data\me-data.csv （4 条指标）
+[daily-refresh] 原始列: ['时间', '素材ID', '素材名', '消耗', '点击数', '展示数', '转化成本']  预览列: None  上传标签源: 6613 个素材
+[daily-refresh] 预览映射条数: 0
+[daily-refresh] 本次处理日期=['2026-08-11']  素材明细行数(各天合计)=814  历史保留日数=41
+[daily-refresh] 已用 me-history 最新一天(2026-08-11)回写 me-data.csv（消耗=34030.40 素材数=814 转化数=4892.11 CTR=6.86）
+[daily-refresh] RUN: git add -A
+[daily-refresh] RUN: git commit -m auto: 李虹玉数据 2026-08-11 (mode=today)
+[main 84bb88a] auto: 李虹玉数据 2026-08-11 (mode=today)
+ 4 files changed, 608 insertions(+), 577 deletions(-)
+ create mode 100644 _refresh_2026-08-11.log
+[daily-refresh] RUN: git push origin main
+To https://github.com/Hy088/chuangliang-data_625.git
+   38cf31b..84bb88a  main -> main
+[daily-refresh] push rc= 0
+[daily-refresh] purge: https://hy088.github.io/chuangliang-data_625/me-data.csv -> 名称,当前值,目标,单位,日期
+今日消耗(元),30607.29,15000,元,2026-08-11
+今日在投素材数,783,650,个,2026-08-11
+今日转化数,4478.09,500,个,2026-08-11
+点击率(CTR)
+[daily-refresh] purge: https://hy088.github.io/chuangliang-data_625/me-materials.csv -> 日期,素材ID,素材名,消耗,展示数,点击数,转化成本,转化数,CTR,素材标签,封面链接,预览链接
+2026-07-01,13614624623,CH-SC-广义新-10134479334759-新综合频道-钟表眼镜-京喜拉新-剪辑-转化
+[daily-refresh] purge: https://hy088.github.io/chuangliang-data_625/me-history.csv -> 日期,消耗,素材数,转化数,CTR
+2026-07-01,28979.22,561,58440.68,11.54
+2026-07-02,35549.16,653,68655.09,12.79
+2026-07-03,39219.55,653,
+[daily-refresh] purge: https://hy088.github.io/chuangliang-data_625/personal-enhance.js -> /* 个人数据增强：素材数据排行 + 时间筛选 + 本月每日明细 + 周统计 + 双月绩效
+ * 注入到「个人数据」模块(#me)，读取同目录 me-materials.csv / me-history.csv
+ * 注意：KPI 指标卡（
+[daily-refresh] DONE
