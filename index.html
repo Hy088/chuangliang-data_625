@@ -950,6 +950,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <label>抽帧数 <input type="number" id="vpFrames" value="8" min="2" max="30"></label>
         <label title="AI 语义拆解分析视频的前 N 秒；0 = 整段（支持长视频 &gt;60s）">拆解时长(s) <input type="number" id="vpCutDur" value="0" min="0" max="600" step="5"></label>
         <button class="btn sm primary" id="vpReextract">重新抽帧</button>
+        <button class="btn sm" id="vpExportOffline" title="导出离线版：轻量 HTML + 同目录视频文件，两者放一起即可离线打开查看">💾 导出离线版</button>
         <span class="vp-ctl-sep"></span>
         <button class="btn sm ghost" id="vpAdvToggle" title="展开本地深度分析 / OCR 调试等高级功能">⚙ 高级 ▾</button>
         <div class="vp-adv" id="vpAdv" style="display:none">
@@ -4433,7 +4434,7 @@ document.addEventListener('click', function(e){
 
 <script src="personal-enhance.js?v=20260811e"></script>
 
-<script src="vparse-deep.js?v=20260810n"></script>
+<script src="vparse-deep.js?v=20260812d"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->

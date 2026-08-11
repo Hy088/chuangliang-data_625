@@ -1700,6 +1700,7 @@ function applyAiToParse(ai) {
     b('vpDeepBtn', vpRunDeep);
     b('vpAiBtn', vpRunAI);
     b('vpReplicateBtn', vpRunReplicate);
+    b('vpExportOffline', exportOfflineHtml);
     b('vpAiSetBtn', openAiModal);
     b('vpWhisperBtn', vpRunWhisper);
     b('vpOcrDebugBtn', vpRunOcrDebug);
@@ -1783,4 +1784,92 @@ function applyAiToParse(ai) {
 
   // 暴露到全局，便于调试 / 其它脚本调用
   window.VPDeep = { runDeep: vpRunDeep, runAI: vpRunAI, runWhisper: vpRunWhisper, fill: vpDeepFill, ocrDebug: vpRunOcrDebug, insight: vpGenerateInsight };
+
+  // ===== 导出离线版（轻量 HTML + 同目录视频文件）=====
+  function downloadBlob(blob, name) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { try { URL.revokeObjectURL(a.href); } catch (e) {} try { a.remove(); } catch (e) {} }, 1500);
+  }
+  // 收集文档内所有含 'vp' 的 CSS 规则，内联进离线 HTML，保证离线样式与线上一致
+  function collectVpCss() {
+    let css = '';
+    try {
+      const sheets = document.styleSheets;
+      for (let i = 0; i < sheets.length; i++) {
+        let rules; try { rules = sheets[i].cssRules; } catch (e) { continue; }
+        if (!rules) continue;
+        for (let j = 0; j < rules.length; j++) {
+          const r = rules[j];
+          const sel = r.selectorText || '';
+          if (sel && sel.indexOf('vp') >= 0) css += r.cssText + '\n';
+        }
+      }
+    } catch (e) {}
+    return css;
+  }
+  function exportOfflineHtml() {
+    if (!VP.videoFile) { alert('请先加载视频，再导出离线版。'); return; }
+    const sid = VP.sid || '';
+    const baseName = '视频解析-' + (sid || (VP.fileName || 'video').replace(/\.[^.]+$/, ''));
+    const vfName = VP.videoFile.name || (baseName + '.mp4');
+    const ext = vfName.lastIndexOf('.') >= 0 ? vfName.slice(vfName.lastIndexOf('.')) : '.mp4';
+    const videoRel = baseName + ext; // HTML 用相对路径引用，与下载的视频文件名严格一致
+
+    function grab(id) { const e = document.getElementById(id); return e ? e.innerHTML : ''; }
+    const reportHtml = grab('vpReport');
+    const boomHtml = grab('vpParseAiReport');
+    const repHtml = grab('vpReplicateOut');
+    const scriptHtml = grab('vpScriptOut');
+    const genHtml = grab('vpScriptGenOut');
+    const insightHtml = grab('vpInsight');
+    const meta = VP.meta || {};
+    const now = new Date().toLocaleString('zh-CN');
+    const frameCount = (VP.frames || []).filter(function (f) { return f.dataURL; }).length;
+    const vpCss = collectVpCss();
+
+    const html = [
+      '<!doctype html>',
+      '<html lang="zh-CN"><head><meta charset="utf-8">',
+      '<meta name="viewport" content="width=device-width,initial-scale=1">',
+      '<title>视频解析离线版 · ' + escapeHtml(sid || VP.fileName || 'video') + '</title>',
+      '<style>',
+      'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f5f6f8;color:#1f2430;margin:0;padding:24px;}',
+      '.off-wrap{max-width:1000px;margin:0 auto;background:#fff;border-radius:14px;padding:22px 26px;box-shadow:0 2px 14px rgba(0,0,0,.06);}',
+      '.off-head{border-bottom:1px solid #eef0f3;padding-bottom:14px;margin-bottom:18px;}',
+      '.off-head h1{font-size:20px;margin:0 0 6px}',
+      '.off-meta{color:#6b7280;font-size:13px;line-height:1.7}',
+      '.off-video{margin:14px 0 22px}',
+      '.off-video video{width:100%;max-height:520px;background:#000;border-radius:10px;}',
+      '.off-note{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;font-size:13px;margin:8px 0 18px;}',
+      '.off-sec{margin:22px 0;}',
+      '.off-sec-h{font-size:16px;font-weight:700;margin:0 0 10px;color:#2563eb;}',
+      '.off-empty{color:#9aa1ad;font-size:13px;}',
+      vpCss,
+      '</style></head><body><div class="off-wrap">',
+      '<div class="off-head"><h1>🎬 视频解析离线版</h1>',
+      '<div class="off-meta">素材ID：' + escapeHtml(sid || '（未识别）') + '　|　文件名：' + escapeHtml(VP.fileName || '—') + '<br>',
+      '时长：' + (meta.duration ? meta.duration.toFixed(1) + 's' : '—') + '　|　分辨率：' + (meta.w ? meta.w + '×' + meta.h : '—') + '　|　抽帧：' + frameCount + ' 张<br>',
+      '导出时间：' + now + '</div></div>',
+      '<div class="off-video"><video src="./' + escapeHtml(videoRel) + '" controls preload="metadata"></video>',
+      '<div class="off-note">⚠️ 请把本 HTML 与视频文件 <b>' + escapeHtml(videoRel) + '</b> 放在<b>同一个文件夹</b>，用浏览器打开 HTML 即可离线播放与查看分析。</div></div>',
+      '<div class="off-sec"><div class="off-sec-h">📊 投放数据</div>' + (reportHtml || '<div class="off-empty">（未生成投放数据，请先在看板点「匹配报表」）</div>') + '</div>',
+      '<div class="off-sec"><div class="off-sec-h">🎯 爆款拆解 / 逐秒分析</div>' + (boomHtml || '<div class="off-empty">（未生成，请先点「生成理解分析」或 AI 语义拆解）</div>') + '</div>',
+      '<div class="off-sec"><div class="off-sec-h">🚀 一键复刻三件套</div>' + (repHtml || '<div class="off-empty">（未生成，请先点「🚀 一键复刻」）</div>') + '</div>',
+      '<div class="off-sec"><div class="off-sec-h">💡 理解分析 / 文案口播</div>' + (insightHtml || '') + (scriptHtml || '') + (genHtml || '') + ((insightHtml || scriptHtml || genHtml) ? '' : '<div class="off-empty">（未生成）</div>') + '</div>',
+      '</div></body></html>'
+    ].join('\n');
+
+    try {
+      downloadBlob(VP.videoFile, videoRel);
+      setTimeout(function () {
+        downloadBlob(new Blob([html], { type: 'text/html;charset=utf-8' }), baseName + '.html');
+        alert('已导出 2 个文件到下载目录：\n\n• ' + baseName + '.html\n• ' + videoRel + '\n\n把它们放在同一个文件夹，双击 HTML 即可离线查看（视频会自动加载）。');
+      }, 600);
+    } catch (e) {
+      alert('导出失败：' + (e && e.message ? e.message : e));
+    }
+  }
 })();
