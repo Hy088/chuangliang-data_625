@@ -1,5 +1,19 @@
 [
   {
+    "ver": "v20260812a",
+    "date": "2026-08-12",
+    "type": "data",
+    "summary": "同步新周素材报表（07-26~08-01、08-02~08-08）并入聚合数据",
+    "details": [
+      "源：F:/Workbuddy.renwu/WorkBuddy_数据 下新增的 2 个周期原始创量 CSV（各 3 个分片）",
+      "增量合并（旧 4 周 133,353 行原样未改），period-materials.json 素材行 133,353 → 261,514（+128,161）",
+      "解析逻辑忠实移植 index.html 的 rowChannel/decode/_metrics/accumulate：按 (proj|id) 累加周汇总，cat/chan 由素材名+创量项目推导",
+      "period-meta.json / period-data.json 顶层聚合（overall/projects/categories/placements/optimizers/editors/tags）+ periodData 追加 2 周期并累加；typeShare 按全量 mtype 重算",
+      "meta.periods 现 6 周期：2026-07-01~08-08 全覆盖；视频解析关联/排行/爆款分析现已可检索 07-26 后的新素材",
+      "SEED_VER 升 20260812a 强制刷新数据文件缓存；复用脚本 sync_weekly.py 下次新增周期可直接跑"
+    ]
+  },
+  {
     "ver": "v20260811e",
     "date": "2026-08-11",
     "type": "feat",
