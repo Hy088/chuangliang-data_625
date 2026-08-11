@@ -65,9 +65,9 @@
 5. 字数克制：每个字段只写必要内容，宁少勿滥，绝不为了凑数而重复。`;
 
   // 复刻生产型 prompt：输出 decompose（拆解卡）/ scripts（复刻口播）/ jimeng（即梦提示词）三件套
-  const REPLICATE_PROMPT = `你是一名资深短视频信息流投放创意导演，擅长「拆解爆款 → 复刻再生产」。下面是一段跑量素材的抽帧画面、投放后台真实数据、以及识别出的口播。
+  const REPLICATE_PROMPT = `你是一名有 8 年经验的短视频信息流投放操盘手，亲手拍剪过上千条跑量素材。下面是一段跑量素材的抽帧画面、投放后台真实数据、以及识别出的口播。
 
-你的任务不是"分析评价"，而是帮用户**直接复刻出能跑量的新素材**。请严格只输出如下 JSON（不要 markdown 代码块、不要任何解释文字）：
+你的任务不是"分析评价"，而是帮用户**逐秒复刻出一条能直接拍 / 剪 / 生成的新素材**。请严格只输出如下 JSON（不要 markdown 代码块、不要任何解释文字）：
 
 {
   "decompose": {
@@ -79,12 +79,12 @@
     "cta": "结尾行动号召怎么做的",
     "emotion": "整条情绪曲线（如：焦虑→好奇→信任→急迫）",
     "storyboard": [
-      {"t":"0-3s","stage":"钩子","frame":"画面描述","subtitle":"字幕文案","voice":"口播要点"},
-      {"t":"3-12s","stage":"痛点/卖点","frame":"…","subtitle":"…","voice":"…"}
+      {"t":"0s","frame":"这一秒画面里具体有什么、镜头怎么动","subtitle":"这一秒字幕上写的原话（没有就空串）","voice":"这一秒口播说的原话（真人自然口吻，见下方话术要求）"},
+      {"t":"1s","frame":"…","subtitle":"…","voice":"…"}
     ]
   },
   "scripts": [
-    {"label":"复刻·换钩子","text":"全新口播，保留跑量公式换表达，120字内，口语化有钩子有CTA"},
+    {"label":"复刻·换钩子","text":"全新口播，保留跑量公式换表达，150字内，口语化有钩子有CTA"},
     {"label":"复刻·换人群","text":"…"},
     {"label":"复刻·原公式","text":"…"}
   ],
@@ -96,10 +96,20 @@
 }
 
 字段要求：
-- decompose 是复刻蓝本：storyboard 每镜头给 t(时间区间)/stage(阶段)/frame(画面)/subtitle(字幕)/voice(口播要点)，覆盖整条时长，4-6 个镜头。
-- scripts 基于 decompose 的卖点与公式，生成 3 条差异化全新口播（换钩子/换人群/原公式各1条），每条≤120字、口语化、必须有钩子与 CTA、禁止照搬原素材口播。
+- decompose 是复刻蓝本。
+- **storyboard 必须逐秒拆解**：每一秒一个对象，t 用 "0s","1s","2s"… 一直排到整条结束；若素材超过 30 秒，前 30 秒严格逐秒，30 秒之后每 3 秒一个（t 标 "30-33s" 等）。覆盖整条时长，中间不得跳过任何一秒。
+- storyboard 每个对象的 voice 是该秒口播**说的原话**（不是要点），subtitle 是该秒**字幕上的原话**，frame 是该秒**画面具体元素 + 镜头运动**。三者要能对上，像真人边展示边说。
+- scripts 基于 decompose 的卖点与公式，生成 3 条差异化全新口播（换钩子/换人群/原公式各1条），每条≤150字、口语化、必须有钩子与 CTA、禁止照搬原素材口播。
 - jimeng 给出 3 个可直接用于即梦(文生视频/图生视频)的镜头提示词，覆盖开篇钩子/产品展示/结尾CTA，中文，含主体、场景、运镜、风格、建议时长与字幕叠加位置。
-若提供了口播时间轴，请优先结合它理解节奏。各字段内容互不重复。`;
+
+【话术要求 · 最重要】口播 voice 与 scripts 的 text 必须像**真人投放操盘手 / 带货博主**自然说的话，严禁 AI 味：
+- 禁止套话空话：不要"在这个快节奏的时代""想象一下""首先…其次…最后""总之""不难发现""值得一提的是""众所周知"。
+- 禁止堆 emoji、禁止书面营销腔（"尊享""甄选""助力""赋能"这类能不用就不用）。
+- 用短句、断句、口语词："你看""真的""说实话""咱""我家""我跟你讲""来"。
+- 有互动感、像边拍边说："来，看这个""你猜怎么着""不是我吹""你仔细看"。
+- 每句都要有具体信息（价格 / 数字 / 动作 / 场景），不许说空话套话。
+- 允许口语瑕疵、允许关键卖点自然重复（真人带货就爱重复），但要自然不生硬。
+若提供了口播时间轴，请优先结合它理解节奏与断句。各字段内容互不重复。`;
 
 
   // ---- 工具 ----
@@ -692,7 +702,7 @@
   function renderCostEstimate() {
     const has = !!(VP.frames && VP.frames.length);
     renderCostLine('vpCostEst', has ? estimateAiCost(1024) : null, '拆解');
-    renderCostLine('vpRepCostEst', has ? estimateAiCost(3000) : null, '复刻');
+    renderCostLine('vpRepCostEst', has ? estimateAiCost(4000) : null, '复刻');
   }
   // 暴露给主脚本（index.html）在抽帧完成后触发
   window.updateVpCostEst = renderCostEstimate;
@@ -783,8 +793,11 @@
     const d = rep.decompose || {};
     const sb = Array.isArray(d.storyboard) ? d.storyboard : [];
     const storyRows = sb.map(function (s) {
-      return '<tr><td>' + escapeHtml(s.t || '') + '</td><td>' + escapeHtml(s.stage || '') + '</td><td>' + escapeHtml(s.frame || '') + '</td><td>' + escapeHtml(s.subtitle || '') + '</td><td>' + escapeHtml(s.voice || '') + '</td></tr>';
+      return '<tr><td class="vp-ss-t">' + escapeHtml(s.t || '') + '</td><td>' + escapeHtml(s.frame || '') + '</td><td>' + escapeHtml(s.subtitle || '') + '</td><td class="vp-ss-v">' + escapeHtml(s.voice || '') + '</td></tr>';
     }).join('');
+    const storyCopy = sb.map(function (s) {
+      return (s.t || '') + '｜画面：' + (s.frame || '') + '｜字幕：' + (s.subtitle || '') + '｜口播：' + (s.voice || '');
+    }).join('\n');
     const decomposeHtml =
       '<div class="vp-rep-row"><span class="vp-rep-k">钩子类型</span><span>' + escapeHtml(d.hook_type || '—') + '</span></div>' +
       '<div class="vp-rep-row"><span class="vp-rep-k">前3秒</span><span>' + escapeHtml(d.first3s || '—') + '</span></div>' +
@@ -793,17 +806,19 @@
       '<div class="vp-rep-row"><span class="vp-rep-k">信任背书</span><span>' + repArrHtml(d.trust) + '</span></div>' +
       '<div class="vp-rep-row"><span class="vp-rep-k">结尾CTA</span><span>' + escapeHtml(d.cta || '—') + '</span></div>' +
       '<div class="vp-rep-row"><span class="vp-rep-k">情绪曲线</span><span>' + escapeHtml(d.emotion || '—') + '</span></div>' +
-      (storyRows ? '<table class="vp-rep-story"><thead><tr><th>时间</th><th>阶段</th><th>画面</th><th>字幕</th><th>口播要点</th></tr></thead><tbody>' + storyRows + '</tbody></table>' : '');
+      (storyRows ? '<div class="vp-rep-story-wrap"><button type="button" class="btn xs ghost" id="vpCopyStory">📋 复制逐秒脚本</button><table class="vp-rep-story"><thead><tr><th>秒</th><th>画面（镜头/元素）</th><th>字幕原话</th><th>口播原话</th></tr></thead><tbody>' + storyRows + '</tbody></table></div>' : '');
     const scripts = Array.isArray(rep.scripts) ? rep.scripts : [];
     const jimeng = Array.isArray(rep.jimeng) ? rep.jimeng : [];
     const scriptHtml = scripts.length ? ('<div class="vp-gen-list">' + scripts.map(function (it, i) { return repGenItem(it, 'sc', i); }).join('') + '</div>') : '<div class="muted">未生成口播脚本</div>';
     const jimengHtml = jimeng.length ? ('<div class="vp-gen-list">' + jimeng.map(function (it, i) { return repGenItem(it, 'jc', i); }).join('') + '</div>') : '<div class="muted">未生成即梦提示词</div>';
     out.innerHTML =
-      '<div class="vp-rep-blk"><div class="vp-rep-bh">🧩 爆款拆解卡 <span class="tag">复刻蓝本</span></div><div class="vp-rep-bd">' + decomposeHtml + '</div></div>' +
+      '<div class="vp-rep-blk"><div class="vp-rep-bh">🧩 爆款拆解卡 <span class="tag">逐秒复刻蓝本</span></div><div class="vp-rep-bd">' + decomposeHtml + '</div></div>' +
       '<div class="vp-rep-blk"><div class="vp-rep-bh">🎙 复刻口播脚本 <span class="tag">换表达·保留公式</span></div><div class="vp-rep-bd">' + scriptHtml + '</div></div>' +
       '<div class="vp-rep-blk"><div class="vp-rep-bh">🎬 即梦生成提示词 <span class="tag">文/图生视频</span></div><div class="vp-rep-bd">' + jimengHtml + '</div></div>';
     out.querySelectorAll('[data-sc]').forEach(function (btn) { btn.onclick = function () { repCopy(scripts[+btn.getAttribute('data-sc')].text, btn); }; });
     out.querySelectorAll('[data-jc]').forEach(function (btn) { btn.onclick = function () { repCopy(jimeng[+btn.getAttribute('data-jc')].text, btn); }; });
+    const cs = document.getElementById('vpCopyStory');
+    if (cs) cs.onclick = function () { repCopy(storyCopy, cs); };
   }
   async function vpRunReplicate() {
     const conf = aiConfGet();
@@ -821,7 +836,7 @@
       const resp = await fetch(ep, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + conf.key },
-        body: JSON.stringify({ model: conf.model, messages: [{ role: 'user', content }], temperature: 0.6, max_tokens: 3000 })
+        body: JSON.stringify({ model: conf.model, messages: [{ role: 'user', content }], temperature: 0.6, max_tokens: 4000 })
       });
       if (!resp.ok) {
         const t = await resp.text();
