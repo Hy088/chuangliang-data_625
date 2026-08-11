@@ -244,6 +244,26 @@
     btn.textContent = "▼";
   }
 
+  /* ---------- 排行榜素材ID 自动关联：跳转到视频解析并回填素材 ---------- */
+  function meToast(msg) {
+    var t = document.getElementById("meToast");
+    if (!t) {
+      t = document.createElement("div"); t.id = "meToast";
+      t.style.cssText = "position:fixed;left:50%;bottom:42px;transform:translateX(-50%);background:rgba(30,38,52,.94);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;z-index:9999;box-shadow:0 6px 20px rgba(0,0,0,.28);opacity:0;transition:opacity .25s;pointer-events:none;max-width:84vw;text-align:center";
+      document.body.appendChild(t);
+    }
+    t.textContent = msg; t.style.opacity = "1";
+    clearTimeout(t._tm); t._tm = setTimeout(function () { t.style.opacity = "0"; }, 2800);
+  }
+  // 从排行榜点击素材ID → 自动关联到视频解析（回填 VP.mat，便于直接做一键复刻）
+  function associateFromRank(sid) {
+    if (!sid) return;
+    var nav = document.querySelector('nav button[data-tab="vparse"]');
+    if (nav) nav.click();
+    if (typeof window.assocMat === "function") { try { window.assocMat(sid); } catch (e) {} }
+    meToast("已关联素材 " + sid + " → 视频解析（可继续加载视频做一键复刻）");
+  }
+
   /* ---------- 渲染：素材排行 ---------- */
   function renderRank() {
     var box = el("meRankBody");
@@ -263,7 +283,7 @@
     var max = num(rows[0][sortKey]) || 1;
     var prevOn = !!PREVIEW_KEY;
     var coverOn = !!COVER_KEY;
-    var thead = "<tr><th>#</th>" + (coverOn ? "<th class='me-cover-h'>封面</th>" : "") + (prevOn ? "<th class='me-prev-h'>预览</th>" : "") + "<th class='l'>素材名</th>" + RANK_METRICS.map(function (m) {
+    var thead = "<tr><th>#</th>" + (coverOn ? "<th class='me-cover-h'>封面</th>" : "") + (prevOn ? "<th class='me-prev-h'>预览</th>" : "") + "<th class='l'>素材名</th><th class='l'>素材ID</th>" + RANK_METRICS.map(function (m) {
       return "<th data-key='" + m.key + "' class='" + (m.key === sortKey ? "on" : "") + "'>" + m.label + (m.key === sortKey ? " ↓" : "") + "</th>";
     }).join("") + "</tr>";
     var prevUrls = [];
@@ -273,6 +293,9 @@
       var w = Math.max(2, Math.round(v / max * 100));
       var name = m["素材名"] || m["素材ID"] || "(未命名)";
       var disp = name.length > 38 ? name.slice(0, 38) + "…" : name;
+      var sid = m["素材ID"] || "";
+      var sidDisp = sid.length > 14 ? sid.slice(0, 14) + "…" : sid;
+      var sidCell = sid ? "<td class='l'><a class='me-sid' data-sid='" + esc(sid) + "' title='点击：自动关联到视频解析，回填该素材投放数据'>" + esc(sidDisp) + "</a></td>" : "<td class='l'>-</td>";
       var coverUrl = coverOn ? (m[COVER_KEY] || "") : "";
       var prevUrl = prevOn ? (m[PREVIEW_KEY] || "") : "";
       var coverCell = coverOn ? "<td class='me-cover-cell'>" + (coverUrl ? "<img class='me-thumb' src='" + esc(coverUrl) + "' loading='lazy' alt=''>" : "-") + "</td>" : "";
@@ -287,7 +310,7 @@
           : "";
         return "<td>" + txt + bar + "</td>";
       }).join("");
-      return "<tr><td class='rk'>" + (idx + 1) + "</td>" + coverCell + prevBtn + "<td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + cells + "</tr>";
+      return "<tr><td class='rk'>" + (idx + 1) + "</td>" + coverCell + prevBtn + "<td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + sidCell + cells + "</tr>";
     }).join("");
     box.innerHTML = "<table class='me-rank-tbl'><thead>" + thead + "</thead><tbody>" + tbody + "</tbody></table>";
     Array.prototype.forEach.call(box.querySelectorAll("th[data-key]"), function (th) {
@@ -299,6 +322,9 @@
       btn.setAttribute("data-url", prevUrls[i] || "");
       btn.setAttribute("data-cover", coverUrls[i] || "");
       btn.onclick = function (e) { e.stopPropagation(); expandPreview(btn); };
+    });
+    Array.prototype.forEach.call(box.querySelectorAll(".me-sid"), function (a) {
+      a.onclick = function (e) { e.preventDefault(); e.stopPropagation(); associateFromRank(a.getAttribute("data-sid")); };
     });
     var cnt = el("meRankCount"); if (cnt) cnt.textContent = "当日共 " + rows.length + " 个素材（按" + (RANK_METRICS.filter(function (m){return m.key===sortKey;})[0].label) + "排序）" + (isToday ? " · 实时(今日)" : " · 历史日");
   }
@@ -1088,6 +1114,8 @@
       ".me-rank-tbl th.on{color:#2b6cff}" +
       ".me-rank-tbl tbody tr:hover{background:#f7faff}" +
       ".me-rank-tbl td.rk{color:#9aa4b2;font-weight:600;width:34px}" +
+      ".me-sid{color:#2b6cff;cursor:pointer;font-family:ui-monospace,Menlo,Consolas,\"Courier New\",monospace;font-size:12px;text-decoration:none;border-bottom:1px dashed #a9c2ff;display:inline-block;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}" +
+      ".me-sid:hover{color:#1746c4;border-bottom-color:#1746c4}" +
       ".me-enh-toolbar select:focus{outline:none;border-color:#2b6cff}" +
       ".me-play{padding:2px 9px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#2b6cff;cursor:pointer;font-size:12px;line-height:1.4}" +
       ".me-play:hover{background:#eef4ff}" +
