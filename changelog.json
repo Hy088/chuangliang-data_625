@@ -1,5 +1,17 @@
 [
   {
+    "ver": "v20260811c",
+    "date": "2026-08-11",
+    "type": "feat",
+    "summary": "排行整行可点关联 + 带入当日明细",
+    "details": [
+      "每日素材消耗排行榜：整行（不只素材ID列）可点击，悬停高亮，点击即自动关联到🎬视频解析",
+      "关联时直接采用 me-materials.csv 当天那行的真实明细（消耗/展示数/点击数/转化数/转化成本/CTR）构造 VP.mat，而非仅从聚合报表取数",
+      "类目/渠道/标签/优化师等聚合报表才有的字段，与当天明细做合并补全，保证投放数据区显示当天真实值",
+      "新增 index.html assocMatFromRow(row)，personal-enhance.js associateFromRank 优先走整行明细关联，无明细时回退 assocMat(sid)"
+    ]
+  },
+  {
     "ver": "v20260811b",
     "date": "2026-08-11",
     "type": "feat",

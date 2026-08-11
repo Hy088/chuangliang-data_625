@@ -32,6 +32,7 @@
   var matData = [];    // [{日期,素材ID,素材名,消耗,展示数,点击数,转化成本,转化数,CTR}]
   var upData = [];     // [{素材ID,素材名,上传人}] 当月按上传时间统计的素材清单（来自「内容」导出）
   var dates = [];      // 升序日期
+  var meRankRows = []; // 当前渲染的当日排行行（供整行点击关联时取当天明细）
   var currentDate = null;
   var dateAuto = true;   // true=实时锁定今日；用户手动选日期后转 false，刷新仍尊重其选择
   var sortKey = "消耗";
@@ -255,13 +256,30 @@
     t.textContent = msg; t.style.opacity = "1";
     clearTimeout(t._tm); t._tm = setTimeout(function () { t.style.opacity = "0"; }, 2800);
   }
-  // 从排行榜点击素材ID → 自动关联到视频解析（回填 VP.mat，便于直接做一键复刻）
-  function associateFromRank(sid) {
-    if (!sid) return;
+  // 从排行榜点整行/素材ID → 自动关联到视频解析
+  // arg 可为「素材ID 字符串」或「当日明细行对象（带消耗/展示/点击/转化/CTR 等）」
+  function associateFromRank(arg) {
+    var row = null, sid = "";
+    if (typeof arg === "object" && arg) {
+      row = arg;
+      sid = arg["素材ID"] || arg.id || "";
+    } else if (typeof arg === "string") {
+      sid = arg;
+      if (meRankRows.length) {
+        for (var i = 0; i < meRankRows.length; i++) {
+          if ((meRankRows[i]["素材ID"] || "") === sid) { row = meRankRows[i]; break; }
+        }
+      }
+    }
     var nav = document.querySelector('nav button[data-tab="vparse"]');
     if (nav) nav.click();
-    if (typeof window.assocMat === "function") { try { window.assocMat(sid); } catch (e) {} }
-    meToast("已关联素材 " + sid + " → 视频解析（可继续加载视频做一键复刻）");
+    if (row && typeof window.assocMatFromRow === "function") {
+      try { window.assocMatFromRow(row); } catch (e) { if (sid && window.assocMat) window.assocMat(sid); }
+      meToast("已关联素材 " + (sid || "?") + " → 视频解析（已带入当日明细）");
+      return;
+    }
+    if (sid && typeof window.assocMat === "function") { try { window.assocMat(sid); } catch (e) {} }
+    meToast("已关联素材 " + (sid || "?") + " → 视频解析（可继续加载视频做一键复刻）");
   }
 
   /* ---------- 渲染：素材排行 ---------- */
@@ -272,6 +290,7 @@
     var isToday = (currentDate === t);
     var rows = matData.filter(function (m) { return m["日期"] === currentDate; });
     rows.sort(function (a, b) { return num(b[sortKey]) - num(a[sortKey]); });
+    meRankRows = rows;
     if (!rows.length) {
       var msg = isToday
         ? "今日暂无素材明细数据（数据更新后点「🔄 实时刷新」）"
@@ -310,7 +329,7 @@
           : "";
         return "<td>" + txt + bar + "</td>";
       }).join("");
-      return "<tr><td class='rk'>" + (idx + 1) + "</td>" + coverCell + prevBtn + "<td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + sidCell + cells + "</tr>";
+      return "<tr data-ridx='" + idx + "' title='点击整行：自动关联到视频解析并带入当日明细'><td class='rk'>" + (idx + 1) + "</td>" + coverCell + prevBtn + "<td class='l' title='" + esc(name) + "'>" + esc(disp) + "</td>" + sidCell + cells + "</tr>";
     }).join("");
     box.innerHTML = "<table class='me-rank-tbl'><thead>" + thead + "</thead><tbody>" + tbody + "</tbody></table>";
     Array.prototype.forEach.call(box.querySelectorAll("th[data-key]"), function (th) {
@@ -325,6 +344,13 @@
     });
     Array.prototype.forEach.call(box.querySelectorAll(".me-sid"), function (a) {
       a.onclick = function (e) { e.preventDefault(); e.stopPropagation(); associateFromRank(a.getAttribute("data-sid")); };
+    });
+    Array.prototype.forEach.call(box.querySelectorAll("tr[data-ridx]"), function (tr) {
+      tr.onclick = function (e) {
+        if (e.target.closest(".me-play") || e.target.closest(".me-sid")) return; // 这两类各自处理
+        var idx = +tr.getAttribute("data-ridx");
+        associateFromRank(meRankRows[idx]);
+      };
     });
     var cnt = el("meRankCount"); if (cnt) cnt.textContent = "当日共 " + rows.length + " 个素材（按" + (RANK_METRICS.filter(function (m){return m.key===sortKey;})[0].label) + "排序）" + (isToday ? " · 实时(今日)" : " · 历史日");
   }
@@ -1116,6 +1142,9 @@
       ".me-rank-tbl td.rk{color:#9aa4b2;font-weight:600;width:34px}" +
       ".me-sid{color:#2b6cff;cursor:pointer;font-family:ui-monospace,Menlo,Consolas,\"Courier New\",monospace;font-size:12px;text-decoration:none;border-bottom:1px dashed #a9c2ff;display:inline-block;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}" +
       ".me-sid:hover{color:#1746c4;border-bottom-color:#1746c4}" +
+      ".me-rank-tbl tbody tr{cursor:pointer}" +
+      ".me-rank-tbl tbody tr:hover{background:#f1f6ff}" +
+      ".me-rank-tbl tbody tr:active{background:#e4eeff}" +
       ".me-enh-toolbar select:focus{outline:none;border-color:#2b6cff}" +
       ".me-play{padding:2px 9px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#2b6cff;cursor:pointer;font-size:12px;line-height:1.4}" +
       ".me-play:hover{background:#eef4ff}" +

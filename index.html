@@ -2813,6 +2813,46 @@ async function assocMat(sid){
   closeAssocPanel();
   const meta=$('#vpMeta'); if(meta && !VP.meta) meta.textContent='已关联素材 '+sid+'（视频未加载，仅数据侧）';
 }
+// 从「每日素材消耗排行榜」整行关联：直接采用 me-materials.csv 当天明细（消耗/展示/点击/转化/转化成本/CTR），
+// 再与聚合报表 lookupVParseMat 合并类目/渠道/标签等补充字段，保证视频解析投放数据区显示的是当天真实值。
+async function assocMatFromRow(row){
+  if(!row) return;
+  const sid = row['素材ID'] || row.id || '';
+  if(!sid) return;
+  VP.sid = sid;
+  const si=$('#vpSid'); if(si) si.value=sid;
+  const cost = +row['消耗']||0;
+  const imp  = +row['展示数']||0;
+  const clk  = +row['点击数']||0;
+  const cv   = +row['转化数']||0;
+  const cpaRaw = +row['转化成本']||0;
+  const ctrRaw = parseFloat(String(row['CTR']||'').replace('%',''))||0;
+  const cvr = clk>0 ? cv/clk : 0;
+  const me = _metrics({cost,imp,clk,cv,n:0});
+  const agg = (lookupVParseMat(sid)||{}).row || {};
+  VP.mat = Object.assign({}, agg, {
+    id: sid,
+    name: row['素材名'] || agg.name || '',
+    cost, imp, clk, cv,
+    cpa: cpaRaw || me.cpa,
+    ctr: ctrRaw || me.ctr,
+    cvr: cvr || me.cvr,
+    cat: agg.cat || '',
+    chan: agg.chan || '',
+    tags: agg.tags || '',
+    proj: agg.proj || '',
+    opt: agg.opt || '',
+    edit: agg.edit || '',
+    mtype: agg.mtype || '',
+    roi: (agg.roi!=null?agg.roi:undefined)
+  });
+  renderVParseReport();
+  await fillVParseFromReport();
+  if(VP.frames&&VP.frames.length) await autoVParse();
+  const tag=$('#vpMatchedTag'); if(tag) tag.textContent='已关联报表';
+  closeAssocPanel();
+  const meta=$('#vpMeta'); if(meta && !VP.meta) meta.textContent='已关联素材 '+sid+'（来自每日明细 · 视频未加载）';
+}
 function lookupVParseMat(sid){
   const cols=(DATA_FULL.materials&&DATA_FULL.materials.cols)||[];
   const ci=k=>cols.indexOf(k);
@@ -4369,7 +4409,7 @@ document.addEventListener('click', function(e){
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260811b"></script>
+<script src="personal-enhance.js?v=20260811c"></script>
 
 <script src="vparse-deep.js?v=20260810n"></script>
 
