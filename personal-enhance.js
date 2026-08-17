@@ -374,7 +374,13 @@
   function renderMonthChart() {
     var box = el("meMonthChart");
     if (!box) return;
-    var hs = consFiltered(histData, "日期").slice().sort(function (a, b) { return a["日期"] < b["日期"] ? -1 : 1; });
+    // 按天聚合 matData(me-materials.csv) 的消耗，与月度汇总卡片口径一致
+    var byDay = {};
+    consFiltered(matData, "日期").forEach(function (m) {
+      var d = (m["日期"] || "").replace(/\//g, "-").slice(0, 10);
+      if (d) byDay[d] = (byDay[d] || 0) + num(m["消耗"]);
+    });
+    var hs = Object.keys(byDay).sort().map(function (d) { return { "日期": d, "消耗": byDay[d] }; });
     var max = 0;
     hs.forEach(function (h) { max = Math.max(max, num(h["消耗"])); });
     max = max || 1;
@@ -855,18 +861,21 @@
     var body = el("meMonthBody");
     if (!body) return;
     var r = consRange();
+    // 统一口径：消耗/转化/展示/点击/素材数/天数 全部取自完整日报 matData(me-materials.csv)
+    // （此前总消耗/转化误取自已停更的 me-history.csv，与双月绩效 KPI 口径不一致，导致"当月总数据"对不上）
     var matM = consFiltered(matData, "日期");
-    var histM = consFiltered(histData, "日期");
-    var totalCost = 0, totalConv = 0;
-    var totShow = 0, totClick = 0, matSet = {};
+    var totalCost = 0, totalConv = 0, totShow = 0, totClick = 0;
+    var matSet = {}, daySet = {};
     matM.forEach(function (m) {
+      totalCost += num(m["消耗"]);
+      totalConv += num(m["转化数"]);
       totShow += num(m["展示数"]); totClick += num(m["点击数"]);
       if (m["素材ID"]) matSet[m["素材ID"]] = 1;
+      if (m["日期"]) daySet[m["日期"]] = 1;
     });
-    histM.forEach(function (h) { totalCost += num(h["消耗"]); totalConv += num(h["转化数"]); });
     var avgCTR = totShow > 0 ? totClick / totShow * 100 : 0;
     var distinctMat = Object.keys(matSet).length;
-    var days = histM.length;
+    var days = Object.keys(daySet).length;
     var rangeTxt = r.s + " ~ " + r.e;
     var rg = el("meMonthRange"); if (rg) rg.textContent = "（" + rangeTxt + "）";
     var ci = el("consStart"); if (ci) ci.value = r.s;

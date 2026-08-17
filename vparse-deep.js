@@ -1493,6 +1493,33 @@ function applyAiToParse(ai) {
     document.body.appendChild(a); a.click(); a.remove();
     alert('已下载 cases.json（共 ' + list.length + ' 条）。把它发给我，我会部署到离线看板，他人打开即可看到你的案例。');
   }
+  // 从导出的 cases.json 导入案例库：合并进本机 localStorage，离线看板立即可见并保存
+  function caseImportJson(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function () {
+      try {
+        const arr = JSON.parse(reader.result);
+        if (!Array.isArray(arr)) { alert('文件格式不正确：cases.json 应是一个案例数组'); return; }
+        const local = caseGetLocal();
+        const byId = {};
+        local.forEach(function (c) { if (c && c.id) byId[c.id] = c; });
+        let added = 0, updated = 0, skipped = 0;
+        arr.forEach(function (c) {
+          if (!c || !c.id) { skipped++; return; }
+          const clean = Object.assign({}, c); delete clean._src;
+          if (byId[c.id]) { byId[c.id] = clean; updated++; } else { local.push(clean); byId[c.id] = clean; added++; }
+        });
+        caseSaveLocal(local);
+        caseRender();
+        alert('✅ 已导入案例库：新增 ' + added + ' 条，更新 ' + updated + ' 条' + (skipped ? '（跳过 ' + skipped + ' 条无效记录）' : '') + '。\n最新案例现在就能在离线看板看到了，并自动保存在本机。');
+      } catch (e) {
+        alert('解析 cases.json 失败：' + (e && e.message ? e.message : e));
+      }
+    };
+    reader.onerror = function () { alert('读取文件失败，请重试'); };
+    reader.readAsText(file, 'utf-8');
+  }
   // 导出完整离线包：cases.json + videos/ 文件夹，便于部署到 GitHub Pages 或离线看板
   async function caseExportFull() {
     const list = caseGetAll().map(function (c) { const o = Object.assign({}, c); delete o._src; return o; });
@@ -1788,6 +1815,13 @@ function applyAiToParse(ai) {
     b('vpCaseExport', caseExportMd);
     b('vpCaseExportJson', caseExportJson);
     b('vpCaseExportFull', caseExportFull);
+    // 导入案例库（从导出的 cases.json 合并进本机）
+    b('vpCaseImport', function () { const inp = document.getElementById('vpCaseImportFile'); if (inp) inp.click(); });
+    const _imp = document.getElementById('vpCaseImportFile');
+    if (_imp) _imp.addEventListener('change', function () {
+      if (_imp.files && _imp.files[0]) caseImportJson(_imp.files[0]);
+      _imp.value = '';
+    });
     b('vpPackCase', packAllAsCase);
     b('vpPackCaseBar', packAllAsCase);
     b('vpCaseCancel', () => { const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'none'; });
