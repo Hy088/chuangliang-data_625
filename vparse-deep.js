@@ -782,9 +782,12 @@
   }
   function repArrHtml(a) { return (Array.isArray(a) && a.length) ? a.map(function (x) { return escapeHtml(x); }).join('；') : '—'; }
   function repGenItem(it, prefix, i) {
+    const genBtn = prefix === 'jc'
+      ? ' <button type="button" class="btn xs primary" data-jcgen="' + i + '" title="把这条提示词送进本地「AI视频生成工具」（即创自动化）直接出片；需本机已启动工具（launch_tool.bat）">🎬 生成视频</button>'
+      : '';
     return '<div class="vp-gen-item"><div class="gh"><span class="gt">' + escapeHtml(it.label || (prefix + '·' + (i + 1))) + '</span></div>' +
       '<div class="gtxt">' + escapeHtml(it.text || '') + '</div>' +
-      '<div class="gbtns"><button type="button" class="btn xs" data-' + prefix + '="' + i + '">复制</button></div></div>';
+      '<div class="gbtns"><button type="button" class="btn xs" data-' + prefix + '="' + i + '">复制</button>' + genBtn + '</div></div>';
   }
   function repCopy(t, btn) { if (navigator.clipboard) navigator.clipboard.writeText(t); const o = btn.textContent; btn.textContent = '已复制'; setTimeout(function () { btn.textContent = o; }, 1200); }
   function renderReplicate(rep, raw) {
@@ -817,6 +820,13 @@
       '<div class="vp-rep-blk"><div class="vp-rep-bh">🎬 即梦生成提示词 <span class="tag">文/图生视频</span></div><div class="vp-rep-bd">' + jimengHtml + '</div></div>';
     out.querySelectorAll('[data-sc]').forEach(function (btn) { btn.onclick = function () { repCopy(scripts[+btn.getAttribute('data-sc')].text, btn); }; });
     out.querySelectorAll('[data-jc]').forEach(function (btn) { btn.onclick = function () { repCopy(jimeng[+btn.getAttribute('data-jc')].text, btn); }; });
+    // 🎬 即梦提示词一键送进本地 AI 视频生成工具（即创自动化）
+    out.querySelectorAll('[data-jcgen]').forEach(function (btn) {
+      btn.onclick = function () {
+        var t = (jimeng[+btn.getAttribute('data-jcgen')] || {}).text || '';
+        window.open('http://127.0.0.1:8899/?mode=jichuang&prompt=' + encodeURIComponent(t), '_blank');
+      };
+    });
     const cs = document.getElementById('vpCopyStory');
     if (cs) cs.onclick = function () { repCopy(storyCopy, cs); };
   }
@@ -1824,6 +1834,8 @@ function applyAiToParse(ai) {
     });
     b('vpPackCase', packAllAsCase);
     b('vpPackCaseBar', packAllAsCase);
+    // 🎬 打开本地 AI 视频生成工具（即创自动化，含提示词模板）
+    b('vpAigenBtn', function () { window.open('http://127.0.0.1:8899/?mode=jichuang', '_blank'); });
     b('vpCaseCancel', () => { const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'none'; });
     b('vpCaseSave', () => {
       const t = document.getElementById('vpCaseTitle'), c = document.getElementById('vpCaseContent'), f = document.getElementById('vpCaseForm');
