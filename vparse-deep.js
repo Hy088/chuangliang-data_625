@@ -824,7 +824,7 @@
     out.querySelectorAll('[data-jcgen]').forEach(function (btn) {
       btn.onclick = function () {
         var t = (jimeng[+btn.getAttribute('data-jcgen')] || {}).text || '';
-        window.open('http://127.0.0.1:8899/?mode=jichuang&prompt=' + encodeURIComponent(t), '_blank');
+        window.open('http://127.0.0.1:8900/?prompt=' + encodeURIComponent(t), '_blank');
       };
     });
     const cs = document.getElementById('vpCopyStory');
@@ -1835,7 +1835,7 @@ function applyAiToParse(ai) {
     b('vpPackCase', packAllAsCase);
     b('vpPackCaseBar', packAllAsCase);
     // 🎬 打开本地 AI 视频生成工具（即创自动化，含提示词模板）
-    b('vpAigenBtn', function () { window.open('http://127.0.0.1:8899/?mode=jichuang', '_blank'); });
+    b('vpAigenBtn', function () { window.open('http://127.0.0.1:8900/', '_blank'); });
     b('vpCaseCancel', () => { const f = document.getElementById('vpCaseForm'); if (f) f.style.display = 'none'; });
     b('vpCaseSave', () => {
       const t = document.getElementById('vpCaseTitle'), c = document.getElementById('vpCaseContent'), f = document.getElementById('vpCaseForm');
