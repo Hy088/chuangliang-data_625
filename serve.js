@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const ROOT = 'C:/Users/EDY/chuangliang_data';
+const ROOT = __dirname; // 便携化：跟随 serve.js 所在目录，拷到任何电脑都能用
 const PORT = 8788;
 const ARK_BASE = 'https://ark.cn-beijing.volces.com/api/v3';
 const TYPES = {
