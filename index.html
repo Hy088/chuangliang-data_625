@@ -588,7 +588,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
   <button data-tab="vparse">🎬 视频解析</button>
   <button data-tab="me">个人数据</button>
   <button class="nav-ext" id="openCustom">🎨 个性化</button>
-  <a class="nav-ext" id="openAigenGlobal" href="http://127.0.0.1:8900/" target="_blank" rel="noopener" title="打开本地「AI视频生成台」（独立端口8900：提示词模板→即创自动生成→自动下载）。需本机已启动工具（双击 launch_tool.bat），每次生成消耗即创积分约88/条，不消耗WorkBuddy积分">🎬 AI视频生成台</a>
+  <button class="nav-ext" id="openAigenGlobal" title="打开本地「AI视频生成台」（独立端口8900：提示词模板→即创自动生成→自动下载）。需本机已启动工具（双击 launch_tool.bat），每次生成消耗即创积分约88/条，不消耗WorkBuddy积分">🎬 AI视频生成台</button>
 </nav>
 
 <div class="wrap">
@@ -4446,7 +4446,7 @@ document.addEventListener('click', function(e){
 
 <script src="personal-enhance.js?v=20260817a"></script>
 
-<script src="vparse-deep.js?v=20260819b"></script>
+<script src="vparse-deep.js?v=20260819c"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
@@ -4462,5 +4462,46 @@ document.addEventListener('click', function(e){
     </div>
   </div>
 </div>
+<!-- AI视频生成台弹窗 -->
+<div id="aigenModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2000;align-items:center;justify-content:center;font-family:-apple-system,Segoe UI,Microsoft YaHei,sans-serif">
+  <div style="background:#fff;width:min(420px,92vw);border-radius:14px;padding:22px 24px;box-shadow:0 20px 60px rgba(0,0,0,.25)">
+    <div style="font-size:17px;font-weight:700;margin-bottom:6px">🎬 AI视频生成台</div>
+    <div style="font-size:13px;color:#666;line-height:1.6;margin-bottom:16px">
+      本地工具运行在 <b>http://127.0.0.1:8900/</b>，需要在当前电脑启动「AI视频生成工具」才能打开。
+    </div>
+    <div style="background:#f6f7fa;border-radius:8px;padding:10px 12px;font-size:13px;color:#333;word-break:break-all;margin-bottom:16px">http://127.0.0.1:8900/</div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn sm" id="aigenCopy">📋 复制链接</button>
+      <button class="btn sm" id="aigenCancel">取消</button>
+      <button class="btn primary sm" id="aigenOpen">我已启动，立即打开</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var url = 'http://127.0.0.1:8900/';
+  var modal = document.getElementById('aigenModal');
+  var btn = document.getElementById('openAigenGlobal');
+  if (btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      modal.style.display = 'flex';
+    });
+  }
+  document.getElementById('aigenCancel').addEventListener('click', function(){ modal.style.display='none'; });
+  document.getElementById('aigenOpen').addEventListener('click', function(){
+    window.open(url, '_blank');
+    modal.style.display='none';
+  });
+  document.getElementById('aigenCopy').addEventListener('click', function(){
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function(){ alert('链接已复制：' + url); });
+    } else {
+      var t = document.createElement('textarea'); t.value = url; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); alert('链接已复制：' + url);
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
