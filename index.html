@@ -1328,13 +1328,17 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       </div>
       <div class="card">
         <div class="cap-toolbar" id="capToolbar">
-          <input id="capSearch" class="cap-search" placeholder="🔍 搜索产品名 / 路径">
+          <input id="capSearch" class="cap-search" placeholder="🔍 搜索产品名 / 路径 / 驳回原因">
+          <select id="capQyFilter" class="cap-sort" title="按青云过审状态筛选"><option value="">青云·全部</option><option value="已过审">已过审</option><option value="未过审">未过审</option><option value="其他原因">其他原因</option><option value="未标注">未标注</option></select>
+          <select id="capClFilter" class="cap-sort" title="按是否上传创量筛选"><option value="">创量·全部</option><option value="已传">已传创量</option><option value="未传">未传创量</option></select>
           <span class="cap-spacer"></span>
           <button class="btn sm" id="capExportBtn" title="复制为 CSV 到剪贴板">📋 导出</button>
         </div>
         <div id="capList" class="cap-list"></div>
         <div class="cap-hint">
-          📌 <b>怎么标记「已上传」：</b>在 <code>D:/625/京东/月份/日期/产品名/</code> 文件夹里新建一个空文件，命名为 <code>已上传.txt</code>（或 <code>done.txt</code>）。每天 23:00 自动扫描（或点上方「↻ 立即刷新」）即会判定为已上传。
+          📌 <b>怎么标记（在 <code>D:/625/京东/月份/日期/产品名/</code> 文件夹里放标记文件，空文件即可，原因类写内容）：</b><br>
+          · <code>已上传.txt</code> = 已上传 ｜ <code>青云已过审.txt</code> = 青云已过审 ｜ <code>青云未过审.txt</code> + <code>驳回原因.txt</code>(写原因) = 未过审 ｜ <code>青云其他.txt</code> + <code>其他原因.txt</code>(写原因) = 其他原因 ｜ <code>已上传创量.txt</code> = 已传创量。<br>
+          每天 23:00 自动扫描（或点上方「↻ 立即刷新」）即生效。可用上方「青云 / 创量」下拉按分类快速筛选。
         </div>
       </div>
     </div>
@@ -1357,7 +1361,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .cap-stat-l{font-size:12px;color:var(--muted);margin-top:2px}
 .cap-track{height:14px;background:rgba(125,135,155,.16);border-radius:8px;overflow:hidden}
 .cap-track i{display:block;height:100%;background:var(--grad);border-radius:8px;transition:width .4s}
-.cap-sub{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:12.5px;color:var(--muted)}
+.cap-sub{display:block;margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.95}
 .cap-sub b{color:var(--ink)}
 .cap-form{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:12px;align-items:end}
 .cap-form .cap-fld{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--muted);font-weight:700}
@@ -1375,6 +1379,15 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .cap-badge.todo{background:#94a3b8}
 .cap-badge.doing{background:#2b6cff}
 .cap-badge.done{background:#12a06a}
+.cap-badge.qy-ok{background:#12a06a}
+.cap-badge.qy-rej{background:#e0533d}
+.cap-badge.qy-oth{background:#e08a1e}
+.cap-badge.qy-none{background:#94a3b8}
+.cap-badge.cl-yes{background:#2b6cff}
+.cap-badge.cl-no{background:#94a3b8}
+.cap-reason{font-size:12px;color:var(--muted);margin-top:8px;padding:5px 0 5px 10px;border-left:3px solid var(--line)}
+.cap-reason b{color:#e0533d}
+.cap-sel-tip{font-size:12px;color:var(--muted);align-self:center}
 .cap-meta{font-size:12px;color:var(--muted);margin-left:auto}
 .cap-bar{height:10px;background:rgba(125,135,155,.16);border-radius:6px;overflow:hidden;margin:10px 0 8px}
 .cap-bar i{display:block;height:100%;border-radius:6px;transition:width .4s}
@@ -1644,13 +1657,15 @@ const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&
 // ========== 登记产能上传情况（自动读取本地路径扫描结果 capacity.json） ==========
 let _capBound = false;
 let _capData = { entries: [], summary: null };
-const capState = { q:'' };
+const capState = { q:'', qy:'', cl:'' };
 
 function bindCapacity(){
   if(_capBound) return; _capBound = true;
   const sec = document.getElementById('capacity');
   sec.querySelector('#capRefresh').addEventListener('click', ()=>renderCapacity(true));
   sec.querySelector('#capSearch').addEventListener('input', e=>{ capState.q=e.target.value.trim().toLowerCase(); renderCapList(); });
+  sec.querySelector('#capQyFilter').addEventListener('change', e=>{ capState.qy=e.target.value; renderCapList(); });
+  sec.querySelector('#capClFilter').addEventListener('change', e=>{ capState.cl=e.target.value; renderCapList(); });
   sec.querySelector('#capExportBtn').addEventListener('click', capExportAuto);
 }
 
@@ -1679,40 +1694,66 @@ async function renderCapacity(force){
   document.getElementById('capTotalPct').textContent = rate + '%';
   document.getElementById('capBigBar').style.width = rate + '%';
   document.getElementById('capCnt').textContent = total + ' 条产能';
-  document.getElementById('capSubStats').innerHTML = '素材总数 <b>'+(s.materials!=null?s.materials:'–')+'</b> · 已上传 <b>'+(s.uploaded||0)+'</b> · 未上传 <b>'+(s.notUploaded||0)+'</b>';
+  const qy = s.qingyun || {};
+  const qyOk = qy['已过审']||0, qyRej = qy['未过审']||0, qyOth = qy['其他原因']||0, qyNone = qy['未标注']||0;
+  const clYes = s.chuangliangYes||0;
+  document.getElementById('capSubStats').innerHTML =
+    '素材总数 <b>'+(s.materials!=null?s.materials:'–')+'</b> · 已上传 <b>'+(s.uploaded||0)+'</b> · 未上传 <b>'+(s.notUploaded||0)+'</b>' +
+    '<br>青云过审：已过审 <b>'+qyOk+'</b> · 未过审 <b>'+qyRej+'</b> · 其他原因 <b>'+qyOth+'</b> · 未标注 <b>'+qyNone+'</b>' +
+    '<br>已传创量 <b>'+clYes+'</b> · 未传创量 <b>'+(total-clYes)+'</b>';
   if(data.generatedAt){ document.getElementById('capUpdated').textContent = '最后同步：' + String(data.generatedAt).replace('T',' ').slice(0,16); }
   if(data.root){ document.getElementById('capRoot').textContent = data.root; }
   renderCapList();
 }
+
+const qyBadge = e => {
+  const s = e.qingyun || '';
+  if(s==='已过审') return '<span class="cap-badge qy-ok">青云·已过审</span>';
+  if(s==='未过审') return '<span class="cap-badge qy-rej">青云·未过审</span>';
+  if(s==='其他原因') return '<span class="cap-badge qy-oth">青云·其他原因</span>';
+  return '<span class="cap-badge qy-none">青云·未标注</span>';
+};
+const clBadge = e => e.chuangliang==='yes'
+  ? '<span class="cap-badge cl-yes">已传创量</span>'
+  : '<span class="cap-badge cl-no">未传创量</span>';
+const qyReasonHtml = e => {
+  if(!e.qingyunReason) return '';
+  const label = e.qingyun==='未过审' ? '驳回原因' : '其他原因';
+  return '<div class="cap-reason"><b>'+label+'：</b>'+esc(e.qingyunReason)+'</div>';
+};
 
 function renderCapList(){
   const data = _capData;
   if(!data.entries){ return; }
   const q = capState.q;
   let list = data.entries.slice();
-  if(q){ list = list.filter(x => (x.product+' '+(x.path||'')).toLowerCase().includes(q)); }
+  if(capState.qy) list = list.filter(x => (x.qingyun||'未标注')===capState.qy);
+  if(capState.cl) list = list.filter(x => ((x.chuangliang==='yes')?'已传':'未传')===capState.cl);
+  if(q){ list = list.filter(x => (x.product+' '+(x.path||'')+' '+(x.qingyunReason||'')).toLowerCase().includes(q)); }
   const groups = {};
   list.forEach(e=>{ (groups[e.date] = groups[e.date]||[]).push(e); });
   const dates = Object.keys(groups).sort((a,b)=> b.localeCompare(a));
   const box = document.getElementById('capList');
   if(!list.length){
-    box.innerHTML = '<div class="cap-empty">'+(q? '没有匹配「'+esc(q)+'」的产品':'还没有产能记录')+'</div>';
+    box.innerHTML = '<div class="cap-empty">'+(q||capState.qy||capState.cl? '没有匹配筛选条件的产品':'还没有产能记录')+'</div>';
     return;
   }
   const itemHtml = e=>{
     const up = !!e.uploaded;
-    const badge = up ? '<span class="cap-badge done">已上传</span>' : '<span class="cap-badge todo">未上传</span>';
+    const upBadge = up ? '<span class="cap-badge done">已上传</span>' : '<span class="cap-badge todo">未上传</span>';
     const mat = (e.materials!=null) ? ('<span class="cap-meta">'+e.materials+' 素材</span>') : '';
     return '<div class="cap-item">'+
-      '<div class="cap-item-top"><span class="cap-name">'+esc(e.product)+'</span>'+ badge + mat +'</div>'+
+      '<div class="cap-item-top"><span class="cap-name">'+esc(e.product)+'</span>'+ upBadge + qyBadge(e) + clBadge(e) + mat +'</div>'+
       '<div class="cap-row"><div class="cap-nums"><span style="font-family:monospace;font-size:11.5px;color:var(--muted)">'+esc(e.path||'')+'</span></div></div>'+
+      qyReasonHtml(e)+
       '</div>';
   };
   let html = '';
   dates.forEach(d=>{
     const arr = groups[d];
     const up = arr.filter(x=>x.uploaded).length;
-    html += '<div class="cap-date-hd"><b>'+esc(d)+'</b> <span class="cap-meta">'+up+'/'+arr.length+' 已上传</span></div>';
+    const qyOk = arr.filter(x=>x.qingyun==='已过审').length;
+    html += '<div class="cap-date-hd"><b>'+esc(d)+'</b> <span class="cap-meta">'+up+'/'+arr.length+' 已上传</span> <span class="cap-meta">青云已过审 '+qyOk+'</span></div>';
     html += arr.map(itemHtml).join('');
   });
   box.innerHTML = html;
@@ -1721,8 +1762,8 @@ function renderCapList(){
 function capExportAuto(){
   const data = _capData;
   if(!data.entries || !data.entries.length){ alert('当前没有产能数据可导出'); return; }
-  const head = ['日期','产品','素材数','状态','路径'];
-  const rows = data.entries.map(e=>[e.date, e.product, e.materials!=null?e.materials:'', e.uploaded?'已上传':'未上传', e.path||'']);
+  const head = ['日期','产品','素材数','上传状态','青云过审','驳回/其他原因','是否上传创量','路径'];
+  const rows = data.entries.map(e=>[e.date, e.product, e.materials!=null?e.materials:'', e.uploaded?'已上传':'未上传', e.qingyun||'未标注', e.qingyunReason||'', e.chuangliang==='yes'?'已传':'未传', e.path||'']);
   const csv = [head].concat(rows).map(r=>r.map(c=>{ c=String(c); return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c; }).join(',')).join('\n');
   const md = '# 登记产能上传情况' + '\n\n' + head.join(' | ') + '\n' + rows.map(r=>r.join(' | ')).join('\n');
   const text = csv + '\n\n' + md;

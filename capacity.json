@@ -1,19 +1,36 @@
 {
- "generatedAt": "2026-08-25T11:29:45",
+ "generatedAt": "2026-08-25T11:44:06",
  "root": "D:/625/京东",
  "markerFiles": [
+  "chuangliang.txt",
   "done.txt",
   "uploaded.txt",
+  "其他原因.txt",
+  "原因.txt",
   "完成.txt",
   "已上传.txt",
-  "已传.txt"
+  "已上传创量.txt",
+  "已传.txt",
+  "青云其他.txt",
+  "青云原因.txt",
+  "青云已过审.txt",
+  "青云未过审.txt",
+  "驳回.txt",
+  "驳回原因.txt"
  ],
  "summary": {
   "total": 194,
   "uploaded": 0,
   "notUploaded": 194,
   "rate": 0,
-  "materials": 6726
+  "materials": 6726,
+  "qingyun": {
+   "已过审": 0,
+   "未过审": 0,
+   "其他原因": 0,
+   "未标注": 194
+  },
+  "chuangliangYes": 0
  },
  "entries": [
   {
@@ -23,6 +40,9 @@
    "materials": 20,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0513/DHX"
   },
   {
@@ -32,6 +52,9 @@
    "materials": 14,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0514/DHX"
   },
   {
@@ -41,6 +64,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0514/广一新"
   },
   {
@@ -50,6 +76,9 @@
    "materials": 55,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0518/dhx"
   },
   {
@@ -59,6 +88,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0518/广义新"
   },
   {
@@ -68,6 +100,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0519/dhx"
   },
   {
@@ -77,6 +112,9 @@
    "materials": 23,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0519/广义新"
   },
   {
@@ -86,6 +124,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0520/dhx"
   },
   {
@@ -95,6 +136,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0520/广义新"
   },
   {
@@ -104,6 +148,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0521/dhx"
   },
   {
@@ -113,6 +160,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0521/广义新"
   },
   {
@@ -122,6 +172,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0525/dhx"
   },
   {
@@ -131,6 +184,9 @@
    "materials": 14,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0525/广义新-"
   },
   {
@@ -140,6 +196,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0526/dhx"
   },
   {
@@ -149,6 +208,9 @@
    "materials": 18,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0526/广义新"
   },
   {
@@ -158,6 +220,9 @@
    "materials": 13,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0527/dhx"
   },
   {
@@ -167,6 +232,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0527/广义新"
   },
   {
@@ -176,6 +244,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0528/dhx"
   },
   {
@@ -185,6 +256,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0528/广义新"
   },
   {
@@ -194,6 +268,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0529/dhx"
   },
   {
@@ -203,6 +280,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/5月/0529/广义新"
   },
   {
@@ -212,6 +292,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0601/dhx"
   },
   {
@@ -221,6 +304,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0601/广义新"
   },
   {
@@ -230,6 +316,9 @@
    "materials": 30,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0602/dhx"
   },
   {
@@ -239,6 +328,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0602/广义新"
   },
   {
@@ -248,6 +340,9 @@
    "materials": 21,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0603/hdx"
   },
   {
@@ -257,6 +352,9 @@
    "materials": 2,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0603/广义新"
   },
   {
@@ -266,6 +364,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0604/dhx"
   },
   {
@@ -275,6 +376,9 @@
    "materials": 31,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0604/广义新"
   },
   {
@@ -284,6 +388,9 @@
    "materials": 13,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0604/话费券"
   },
   {
@@ -293,6 +400,9 @@
    "materials": 53,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0605/dhx"
   },
   {
@@ -302,6 +412,9 @@
    "materials": 24,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0605/广义新"
   },
   {
@@ -311,6 +424,9 @@
    "materials": 27,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0605/话费"
   },
   {
@@ -320,6 +436,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0609/dhx"
   },
   {
@@ -329,6 +448,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0609/广义新"
   },
   {
@@ -338,6 +460,9 @@
    "materials": 38,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0609/日常"
   },
   {
@@ -347,6 +472,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0610/dhx"
   },
   {
@@ -356,6 +484,9 @@
    "materials": 68,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0610/广义新"
   },
   {
@@ -365,6 +496,9 @@
    "materials": 60,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0611/dhx"
   },
   {
@@ -374,6 +508,9 @@
    "materials": 46,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0611/广义新"
   },
   {
@@ -383,6 +520,9 @@
    "materials": 51,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0612/dhx"
   },
   {
@@ -392,6 +532,9 @@
    "materials": 25,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0612/外卖"
   },
   {
@@ -401,6 +544,9 @@
    "materials": 63,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0612/广义新"
   },
   {
@@ -410,6 +556,9 @@
    "materials": 62,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0615/dhx"
   },
   {
@@ -419,6 +568,9 @@
    "materials": 66,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0615/广义新"
   },
   {
@@ -428,6 +580,9 @@
    "materials": 55,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0616/dhx"
   },
   {
@@ -437,6 +592,9 @@
    "materials": 104,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0616/广义新"
   },
   {
@@ -446,6 +604,9 @@
    "materials": 25,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0616/扒"
   },
   {
@@ -455,6 +616,9 @@
    "materials": 12,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0616/话费券"
   },
   {
@@ -464,6 +628,9 @@
    "materials": 91,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0617/dhx"
   },
   {
@@ -473,6 +640,9 @@
    "materials": 77,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0617/广义新"
   },
   {
@@ -482,6 +652,9 @@
    "materials": 87,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0618/dhx"
   },
   {
@@ -491,6 +664,9 @@
    "materials": 32,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0618/广义新"
   },
   {
@@ -500,6 +676,9 @@
    "materials": 55,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0623/dhx"
   },
   {
@@ -509,6 +688,9 @@
    "materials": 77,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0623/广义新"
   },
   {
@@ -518,6 +700,9 @@
    "materials": 46,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0624/dhx"
   },
   {
@@ -527,6 +712,9 @@
    "materials": 86,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0624/广义新"
   },
   {
@@ -536,6 +724,9 @@
    "materials": 60,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0625/dhx"
   },
   {
@@ -545,6 +736,9 @@
    "materials": 57,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0625/广义新"
   },
   {
@@ -554,6 +748,9 @@
    "materials": 75,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0626/dhx"
   },
   {
@@ -563,6 +760,9 @@
    "materials": 13,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0626/话费券"
   },
   {
@@ -572,6 +772,9 @@
    "materials": 72,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0629/dhx"
   },
   {
@@ -581,6 +784,9 @@
    "materials": 34,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0629/广义新"
   },
   {
@@ -590,6 +796,9 @@
    "materials": 47,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0630/dhx"
   },
   {
@@ -599,6 +808,9 @@
    "materials": 52,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/6月/0630/广义新"
   },
   {
@@ -608,6 +820,9 @@
    "materials": 83,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0701/dhx"
   },
   {
@@ -617,6 +832,9 @@
    "materials": 130,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0701/广义新"
   },
   {
@@ -626,6 +844,9 @@
    "materials": 22,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0702/dhx"
   },
   {
@@ -635,6 +856,9 @@
    "materials": 103,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0702/广义新"
   },
   {
@@ -644,6 +868,9 @@
    "materials": 25,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0703/dhx"
   },
   {
@@ -653,6 +880,9 @@
    "materials": 79,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0703/广义新-"
   },
   {
@@ -662,6 +892,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0706/外卖-0612"
   },
   {
@@ -671,6 +904,9 @@
    "materials": 87,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0706/广义新"
   },
   {
@@ -680,6 +916,9 @@
    "materials": 115,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0707/广义新"
   },
   {
@@ -689,6 +928,9 @@
    "materials": 68,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0708/dhx"
   },
   {
@@ -698,6 +940,9 @@
    "materials": 40,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0708/广义新"
   },
   {
@@ -707,6 +952,9 @@
    "materials": 55,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0708/扒改0706"
   },
   {
@@ -716,6 +964,9 @@
    "materials": 66,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0709/dhx"
   },
   {
@@ -725,6 +976,9 @@
    "materials": 77,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0709/广义新"
   },
   {
@@ -734,6 +988,9 @@
    "materials": 34,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0710/dhx"
   },
   {
@@ -743,6 +1000,9 @@
    "materials": 15,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0710/外卖-0612"
   },
   {
@@ -752,6 +1012,9 @@
    "materials": 58,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0710/广义新"
   },
   {
@@ -761,6 +1024,9 @@
    "materials": 42,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0713/dhx"
   },
   {
@@ -770,6 +1036,9 @@
    "materials": 80,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0713/广义新"
   },
   {
@@ -779,6 +1048,9 @@
    "materials": 38,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0714/dhx"
   },
   {
@@ -788,6 +1060,9 @@
    "materials": 48,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0714/广义新"
   },
   {
@@ -797,6 +1072,9 @@
    "materials": 78,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0715/dhx"
   },
   {
@@ -806,6 +1084,9 @@
    "materials": 32,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0715/广义新"
   },
   {
@@ -815,6 +1096,9 @@
    "materials": 26,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0715/话费"
   },
   {
@@ -824,6 +1108,9 @@
    "materials": 42,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0716/dhx"
   },
   {
@@ -833,6 +1120,9 @@
    "materials": 32,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0716/广义新"
   },
   {
@@ -842,6 +1132,9 @@
    "materials": 22,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0717/dhx"
   },
   {
@@ -851,6 +1144,9 @@
    "materials": 87,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0717/广义新"
   },
   {
@@ -860,6 +1156,9 @@
    "materials": 11,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0717/话费券"
   },
   {
@@ -869,6 +1168,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0720/dhx"
   },
   {
@@ -878,6 +1180,9 @@
    "materials": 57,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0720/广义新"
   },
   {
@@ -887,6 +1192,9 @@
    "materials": 90,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0720/标点"
   },
   {
@@ -896,6 +1204,9 @@
    "materials": 70,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0721/标点"
   },
   {
@@ -905,6 +1216,9 @@
    "materials": 12,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0722/dhx"
   },
   {
@@ -914,6 +1228,9 @@
    "materials": 33,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0722/广义新"
   },
   {
@@ -923,6 +1240,9 @@
    "materials": 53,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0722/标点"
   },
   {
@@ -932,6 +1252,9 @@
    "materials": 4,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0723/dhx"
   },
   {
@@ -941,6 +1264,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0723/三方"
   },
   {
@@ -950,6 +1276,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0723/主体"
   },
   {
@@ -959,6 +1288,9 @@
    "materials": 16,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0723/广义新"
   },
   {
@@ -968,6 +1300,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0724/dhx"
   },
   {
@@ -977,6 +1312,9 @@
    "materials": 63,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0724/三方"
   },
   {
@@ -986,6 +1324,9 @@
    "materials": 18,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0724/广义新"
   },
   {
@@ -995,6 +1336,9 @@
    "materials": 51,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0727/dhx"
   },
   {
@@ -1004,6 +1348,9 @@
    "materials": 45,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0727/主体"
   },
   {
@@ -1013,6 +1360,9 @@
    "materials": 41,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0727/广义新"
   },
   {
@@ -1022,6 +1372,9 @@
    "materials": 32,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0728/dhx"
   },
   {
@@ -1031,6 +1384,9 @@
    "materials": 46,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0728/主体"
   },
   {
@@ -1040,6 +1396,9 @@
    "materials": 22,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0728/广义新"
   },
   {
@@ -1049,6 +1408,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0729/dhx"
   },
   {
@@ -1058,6 +1420,9 @@
    "materials": 53,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0729/主体"
   },
   {
@@ -1067,6 +1432,9 @@
    "materials": 22,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0729/广义新"
   },
   {
@@ -1076,6 +1444,9 @@
    "materials": 38,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0730/dhx"
   },
   {
@@ -1085,6 +1456,9 @@
    "materials": 44,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0730/主体"
   },
   {
@@ -1094,6 +1468,9 @@
    "materials": 50,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0730/广义新"
   },
   {
@@ -1103,6 +1480,9 @@
    "materials": 44,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/7月/0731/主体"
   },
   {
@@ -1112,6 +1492,9 @@
    "materials": 47,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0803/dhx"
   },
   {
@@ -1121,6 +1504,9 @@
    "materials": 42,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0803/广义新"
   },
   {
@@ -1130,6 +1516,9 @@
    "materials": 30,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0803/标点"
   },
   {
@@ -1139,6 +1528,9 @@
    "materials": 51,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0804/dhx-未传"
   },
   {
@@ -1148,6 +1540,9 @@
    "materials": 63,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0804/广义新"
   },
   {
@@ -1157,6 +1552,9 @@
    "materials": 49,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0805/dhx"
   },
   {
@@ -1166,6 +1564,9 @@
    "materials": 26,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0805/广义新"
   },
   {
@@ -1175,6 +1576,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0805/抽纸-福利价"
   },
   {
@@ -1184,6 +1588,9 @@
    "materials": 76,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0805/透明皂"
   },
   {
@@ -1193,6 +1600,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0806/dhx"
   },
   {
@@ -1202,6 +1612,9 @@
    "materials": 96,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0806/三方"
   },
   {
@@ -1211,6 +1624,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0806/广义新"
   },
   {
@@ -1220,6 +1636,9 @@
    "materials": 4,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0806/陶瓷碗"
   },
   {
@@ -1229,6 +1648,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0807/dhx"
   },
   {
@@ -1238,6 +1660,9 @@
    "materials": 11,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0807/三方"
   },
   {
@@ -1247,6 +1672,9 @@
    "materials": 50,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0807/广义新"
   },
   {
@@ -1256,6 +1684,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0810/dhx-防晒霜-ai福利价"
   },
   {
@@ -1265,6 +1696,9 @@
    "materials": 17,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0810/卷纸(1)-G改"
   },
   {
@@ -1274,6 +1708,9 @@
    "materials": 14,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0810/外卖"
   },
   {
@@ -1283,6 +1720,9 @@
    "materials": 55,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0810/标点"
   },
   {
@@ -1292,6 +1732,9 @@
    "materials": 1,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0810/重新提审-dhx"
   },
   {
@@ -1301,6 +1744,9 @@
    "materials": 36,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0811/dhx"
   },
   {
@@ -1310,6 +1756,9 @@
    "materials": 31,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0811/三方"
   },
   {
@@ -1319,6 +1768,9 @@
    "materials": 28,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0811/广义新"
   },
   {
@@ -1328,6 +1780,9 @@
    "materials": 47,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0812/dhx"
   },
   {
@@ -1337,6 +1792,9 @@
    "materials": 34,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0812/大盘扒改"
   },
   {
@@ -1346,6 +1804,9 @@
    "materials": 57,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0812/广义新"
   },
   {
@@ -1355,6 +1816,9 @@
    "materials": 50,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0812/炒冰机-三方"
   },
   {
@@ -1364,6 +1828,9 @@
    "materials": 51,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0813/围裙-三方"
   },
   {
@@ -1373,6 +1840,9 @@
    "materials": 50,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0813/搓澡皮子"
   },
   {
@@ -1382,6 +1852,9 @@
    "materials": 53,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0813/花生-三方"
   },
   {
@@ -1391,6 +1864,9 @@
    "materials": 11,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0814/0813-卷纸 -"
   },
   {
@@ -1400,6 +1876,9 @@
    "materials": 16,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0814/0814-卷纸"
   },
   {
@@ -1409,6 +1888,9 @@
    "materials": 30,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0814/凳子-广点通-1分钱起-传创量"
   },
   {
@@ -1418,6 +1900,9 @@
    "materials": 23,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0814/围裙-广义新"
   },
   {
@@ -1427,6 +1912,9 @@
    "materials": 17,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0814/抽纸-0.9"
   },
   {
@@ -1436,6 +1924,9 @@
    "materials": 16,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0814/油桃-广义新"
   },
   {
@@ -1445,6 +1936,9 @@
    "materials": 16,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0814/洗衣液"
   },
   {
@@ -1454,6 +1948,9 @@
    "materials": 49,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0817/dhx"
   },
   {
@@ -1463,6 +1960,9 @@
    "materials": 14,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0817/三方"
   },
   {
@@ -1472,6 +1972,9 @@
    "materials": 13,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0817/广义新"
   },
   {
@@ -1481,6 +1984,9 @@
    "materials": 7,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0818/1119934-立白洗洁精-0818-传"
   },
   {
@@ -1490,6 +1996,9 @@
    "materials": 33,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0818/三方衍生"
   },
   {
@@ -1499,6 +2008,9 @@
    "materials": 14,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0818/可口可乐"
   },
   {
@@ -1508,6 +2020,9 @@
    "materials": 12,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0818/吸盘支架-dhx"
   },
   {
@@ -1517,6 +2032,9 @@
    "materials": 11,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0818/外卖福利价-8越21青云"
   },
   {
@@ -1526,6 +2044,9 @@
    "materials": 20,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0818/斜挎包-广义新"
   },
   {
@@ -1535,6 +2056,9 @@
    "materials": 18,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0818/百事可乐-传"
   },
   {
@@ -1544,6 +2068,9 @@
    "materials": 24,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0818/红薯=dhx"
   },
   {
@@ -1553,6 +2080,9 @@
    "materials": 18,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0818/限时抢购=钢丝毛巾"
   },
   {
@@ -1562,6 +2092,9 @@
    "materials": 25,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0819/dhx"
   },
   {
@@ -1571,6 +2104,9 @@
    "materials": 30,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0819/三方"
   },
   {
@@ -1580,6 +2116,9 @@
    "materials": 30,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0819/广义新"
   },
   {
@@ -1589,6 +2128,9 @@
    "materials": 168,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0820/三方"
   },
   {
@@ -1598,6 +2140,9 @@
    "materials": 28,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0820/围裙-dhx-0825的时候传"
   },
   {
@@ -1607,6 +2152,9 @@
    "materials": 28,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0820/牛油火锅-广义新"
   },
   {
@@ -1616,6 +2164,9 @@
    "materials": 12,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0820/雀巢-1分钱起"
   },
   {
@@ -1625,6 +2176,9 @@
    "materials": 29,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0821/dhx-可乐"
   },
   {
@@ -1634,6 +2188,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0821/大米-扒改三方-100178504977"
   },
   {
@@ -1643,6 +2200,9 @@
    "materials": 32,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0821/广义新-卷纸-1分钱"
   },
   {
@@ -1652,6 +2212,9 @@
    "materials": 50,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0821/手机支架-有米云"
   },
   {
@@ -1661,6 +2224,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0821/散热器-1-10215952093313"
   },
   {
@@ -1670,6 +2236,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0821/洗手液-福利价"
   },
   {
@@ -1679,6 +2248,9 @@
    "materials": 50,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0821/笔"
   },
   {
@@ -1688,6 +2260,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0821/茶语抽纸-100123852301"
   },
   {
@@ -1697,6 +2272,9 @@
    "materials": 50,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0824/三方月饼模具"
   },
   {
@@ -1706,6 +2284,9 @@
    "materials": 50,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0824/乳酸菌-三方"
   },
   {
@@ -1715,6 +2296,9 @@
    "materials": 15,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0824/五面鞋刷dhx-福利价"
   },
   {
@@ -1724,6 +2308,9 @@
    "materials": 12,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0824/帆布袋-福利价-广义新"
   },
   {
@@ -1733,6 +2320,9 @@
    "materials": 18,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0824/折叠衣架-福利价-广义新"
   },
   {
@@ -1742,6 +2332,9 @@
    "materials": 15,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0824/料理盆-一分钱起-广义新"
   },
   {
@@ -1751,6 +2344,9 @@
    "materials": 10,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0824/火龙果-dhx-aigc"
   },
   {
@@ -1760,6 +2356,9 @@
    "materials": 0,
    "uploaded": false,
    "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
    "path": "D:/625/京东/8月/0824/转笔刀"
   }
  ]
