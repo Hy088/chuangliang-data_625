@@ -1388,6 +1388,16 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .cap-reason{font-size:12px;color:var(--muted);margin-top:8px;padding:5px 0 5px 10px;border-left:3px solid var(--line)}
 .cap-reason b{color:#e0533d}
 .cap-sel-tip{font-size:12px;color:var(--muted);align-self:center}
+.cap-edit{font-size:11.5px;padding:3px 9px;border-radius:7px;border:1px solid var(--line);background:rgba(43,108,255,.08);color:var(--brand);cursor:pointer;margin-left:auto;white-space:nowrap}
+.cap-edit:hover{background:var(--brand);color:#fff}
+.cap-fld{margin-bottom:14px}
+.cap-fld label{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.cap-fld select,.cap-fld input{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:var(--panel);color:var(--ink);box-sizing:border-box}
+.cap-fld input:disabled{background:rgba(125,135,155,.12);color:var(--muted)}
+.cap-cmd{background:#0f172a;color:#e2e8f0;font-family:Consolas,monospace;font-size:12px;padding:12px;border-radius:8px;white-space:pre-wrap;word-break:break-all;max-height:160px;overflow:auto;margin:10px 0 6px}
+.cap-tip{font-size:12px;color:var(--muted);line-height:1.6}
+.cap-tip code{background:rgba(125,135,155,.15);padding:1px 5px;border-radius:4px;font-family:Consolas,monospace}
+.cap-tip b{color:#e0533d}
 .cap-meta{font-size:12px;color:var(--muted);margin-left:auto}
 .cap-bar{height:10px;background:rgba(125,135,155,.16);border-radius:6px;overflow:hidden;margin:10px 0 8px}
 .cap-bar i{display:block;height:100%;border-radius:6px;transition:width .4s}
@@ -1658,6 +1668,33 @@ const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&
 let _capBound = false;
 let _capData = { entries: [], summary: null };
 const capState = { q:'', qy:'', cl:'' };
+const CAP_OVERRIDE_KEY = 'matopt_capacity_overrides_v1';
+function loadCapOverrides(){ try{ const v = localStorage.getItem(CAP_OVERRIDE_KEY); return v ? JSON.parse(v) : {}; }catch(e){ return {}; } }
+function saveCapOverrides(o){ localStorage.setItem(CAP_OVERRIDE_KEY, JSON.stringify(o)); }
+function applyCapOverrides(data){
+  const ov = loadCapOverrides();
+  if(!data.entries || !Object.keys(ov).length) return data;
+  const entries = data.entries.map(e=>{
+    const key = e.path || (e.date+'/'+e.product);
+    const o = ov[key];
+    if(!o) return e;
+    const ne = {...e};
+    if(o.uploaded != null) ne.uploaded = o.uploaded;
+    if(o.qingyun != null) ne.qingyun = o.qingyun;
+    if(o.qingyunReason != null) ne.qingyunReason = o.qingyunReason;
+    if(o.chuangliang != null) ne.chuangliang = o.chuangliang;
+    return ne;
+  });
+  const s = { ...data.summary };
+  s.total = entries.length;
+  s.uploaded = entries.filter(e=>e.uploaded).length;
+  s.notUploaded = s.total - s.uploaded;
+  s.materials = entries.reduce((a,e)=>a+(e.materials||0),0);
+  s.qingyun = { '已过审':0,'未过审':0,'其他原因':0,'未标注':0 };
+  entries.forEach(e=>{ const k = e.qingyun || '未标注'; s.qingyun[k] = (s.qingyun[k]||0)+1; });
+  s.chuangliangYes = entries.filter(e=>e.chuangliang==='yes').length;
+  return { ...data, entries, summary: s };
+}
 
 function bindCapacity(){
   if(_capBound) return; _capBound = true;
@@ -1667,6 +1704,13 @@ function bindCapacity(){
   sec.querySelector('#capQyFilter').addEventListener('change', e=>{ capState.qy=e.target.value; renderCapList(); });
   sec.querySelector('#capClFilter').addEventListener('change', e=>{ capState.cl=e.target.value; renderCapList(); });
   sec.querySelector('#capExportBtn').addEventListener('click', capExportAuto);
+  sec.querySelector('#capList').addEventListener('click', e=>{
+    const btn = e.target.closest('.cap-edit');
+    if(!btn) return;
+    const key = btn.dataset.key;
+    const entry = _capData.entries.find(x => (x.path || (x.date+'/'+x.product)) === key);
+    if(entry) openCapEdit(entry);
+  });
 }
 
 async function renderCapacity(force){
@@ -1684,6 +1728,7 @@ async function renderCapacity(force){
     box.innerHTML = '<div class="cap-empty">还没读到自动扫描数据。请先运行扫描（每天 23:00 自动跑，或让我「更新产能」），生成 capacity.json 后刷新即可。</div>';
     return;
   }
+  data = applyCapOverrides(data);
   _capData = data;
   const s = data.summary || {};
   const total = s.total != null ? s.total : data.entries.length;
@@ -1742,8 +1787,9 @@ function renderCapList(){
     const up = !!e.uploaded;
     const upBadge = up ? '<span class="cap-badge done">已上传</span>' : '<span class="cap-badge todo">未上传</span>';
     const mat = (e.materials!=null) ? ('<span class="cap-meta">'+e.materials+' 素材</span>') : '';
+    const key = esc(e.path || (e.date+'/'+e.product));
     return '<div class="cap-item">'+
-      '<div class="cap-item-top"><span class="cap-name">'+esc(e.product)+'</span>'+ upBadge + qyBadge(e) + clBadge(e) + mat +'</div>'+
+      '<div class="cap-item-top"><span class="cap-name">'+esc(e.product)+'</span>'+ upBadge + qyBadge(e) + clBadge(e) + mat +'<button class="cap-edit" data-key="'+key+'">✏️ 标注</button></div>'+
       '<div class="cap-row"><div class="cap-nums"><span style="font-family:monospace;font-size:11.5px;color:var(--muted)">'+esc(e.path||'')+'</span></div></div>'+
       qyReasonHtml(e)+
       '</div>';
@@ -1770,6 +1816,117 @@ function capExportAuto(){
   if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(()=>alert('已复制 CSV + Markdown 到剪贴板'), ()=>prompt('复制失败，请手动复制：', text)); }
   else { prompt('复制以下内容：', text); }
 }
+
+// ---------- 产能手动标注 ----------
+let _capEditing = null;
+function openCapEdit(entry){
+  _capEditing = entry;
+  const key = entry.path || (entry.date+'/'+entry.product);
+  const mask = document.getElementById('capEditMask');
+  const pathIn = document.getElementById('capEditPath');
+  const qySel = document.getElementById('capEditQingyun');
+  const reasonIn = document.getElementById('capEditReason');
+  pathIn.value = key;
+  document.getElementById('capEditUploaded').value = entry.uploaded ? 'yes' : (entry.uploaded===false ? 'no' : '');
+  qySel.value = entry.qingyun || '未标注';
+  reasonIn.value = entry.qingyunReason || '';
+  reasonIn.disabled = !(qySel.value==='未过审' || qySel.value==='其他原因');
+  document.getElementById('capEditChuangliang').value = entry.chuangliang==='yes' ? 'yes' : (entry.chuangliang==='no' ? 'no' : '');
+  updateCapEditCmd();
+  mask.style.display = 'flex';
+}
+function closeCapEdit(){ document.getElementById('capEditMask').style.display = 'none'; _capEditing = null; }
+function updateCapEditCmd(){
+  if(!_capEditing) return;
+  const key = _capEditing.path || (_capEditing.date+'/'+ _capEditing.product);
+  const root = (_capData && _capData.root) ? _capData.root : 'D:/625/京东';
+  const folder = root.replace(/\\/g,'/').replace(/\/$/,'') + '/' + key.replace(/\\/g,'/');
+  const uploaded = document.getElementById('capEditUploaded').value;
+  const qy = document.getElementById('capEditQingyun').value;
+  const reason = document.getElementById('capEditReason').value.trim();
+  const cl = document.getElementById('capEditChuangliang').value;
+  const lines = [];
+  lines.push('$dir = "'+folder.replace(/"/g,'""')+'"');
+  lines.push('if (!(Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }');
+  if(uploaded==='yes'){
+    lines.push('New-Item -ItemType File -Path (Join-Path $dir "已上传.txt") -Force | Out-Null');
+  } else if(uploaded==='no'){
+    lines.push('Remove-Item (Join-Path $dir "已上传.txt") -ErrorAction SilentlyContinue');
+  }
+  if(qy==='已过审'){
+    lines.push('New-Item -ItemType File -Path (Join-Path $dir "青云已过审.txt") -Force | Out-Null');
+    lines.push('Remove-Item (Join-Path $dir "青云未过审.txt") -ErrorAction SilentlyContinue');
+    lines.push('Remove-Item (Join-Path $dir "青云其他.txt") -ErrorAction SilentlyContinue');
+  } else if(qy==='未过审'){
+    lines.push('New-Item -ItemType File -Path (Join-Path $dir "青云未过审.txt") -Force | Out-Null');
+    lines.push('Set-Content -Path (Join-Path $dir "驳回原因.txt") -Value "'+reason.replace(/"/g,'""')+'"');
+    lines.push('Remove-Item (Join-Path $dir "青云已过审.txt") -ErrorAction SilentlyContinue');
+    lines.push('Remove-Item (Join-Path $dir "青云其他.txt") -ErrorAction SilentlyContinue');
+  } else if(qy==='其他原因'){
+    lines.push('New-Item -ItemType File -Path (Join-Path $dir "青云其他.txt") -Force | Out-Null');
+    lines.push('Set-Content -Path (Join-Path $dir "其他原因.txt") -Value "'+reason.replace(/"/g,'""')+'"');
+    lines.push('Remove-Item (Join-Path $dir "青云已过审.txt") -ErrorAction SilentlyContinue');
+    lines.push('Remove-Item (Join-Path $dir "青云未过审.txt") -ErrorAction SilentlyContinue');
+  } else if(qy==='未标注'){
+    lines.push('Remove-Item (Join-Path $dir "青云已过审.txt") -ErrorAction SilentlyContinue');
+    lines.push('Remove-Item (Join-Path $dir "青云未过审.txt") -ErrorAction SilentlyContinue');
+    lines.push('Remove-Item (Join-Path $dir "青云其他.txt") -ErrorAction SilentlyContinue');
+  }
+  if(cl==='yes'){
+    lines.push('New-Item -ItemType File -Path (Join-Path $dir "已上传创量.txt") -Force | Out-Null');
+  } else if(cl==='no'){
+    lines.push('Remove-Item (Join-Path $dir "已上传创量.txt") -ErrorAction SilentlyContinue');
+  }
+  document.getElementById('capEditCmd').textContent = lines.join('\n');
+}
+function saveCapEdit(){
+  if(!_capEditing) return;
+  const key = _capEditing.path || (_capEditing.date+'/'+ _capEditing.product);
+  const ov = loadCapOverrides();
+  const o = ov[key] || {};
+  const uploaded = document.getElementById('capEditUploaded').value;
+  if(uploaded==='yes') o.uploaded = true;
+  else if(uploaded==='no') o.uploaded = false;
+  const qy = document.getElementById('capEditQingyun').value;
+  if(qy){
+    o.qingyun = qy;
+    if(qy==='未过审' || qy==='其他原因'){
+      const reason = document.getElementById('capEditReason').value.trim();
+      if(reason) o.qingyunReason = reason;
+      else delete o.qingyunReason;
+    } else { delete o.qingyunReason; }
+  }
+  const cl = document.getElementById('capEditChuangliang').value;
+  if(cl==='yes') o.chuangliang = 'yes';
+  else if(cl==='no') o.chuangliang = 'no';
+  if(Object.keys(o).length){ ov[key] = o; } else { delete ov[key]; }
+  saveCapOverrides(ov);
+  renderCapacity(true);
+  closeCapEdit();
+  setTimeout(()=>alert('已保存到看板。若希望同步到 D:/625/京东 的标记文件，请复制弹窗里的 PowerShell 命令在本地运行一次。'), 50);
+}
+function bindCapEdit(){
+  const mask = document.getElementById('capEditMask');
+  document.getElementById('capEditClose').addEventListener('click', closeCapEdit);
+  document.getElementById('capEditCancel').addEventListener('click', closeCapEdit);
+  document.getElementById('capEditSave').addEventListener('click', saveCapEdit);
+  document.getElementById('capEditQingyun').addEventListener('change', e=>{
+    document.getElementById('capEditReason').disabled = !(e.target.value==='未过审' || e.target.value==='其他原因');
+    updateCapEditCmd();
+  });
+  document.getElementById('capEditUploaded').addEventListener('change', updateCapEditCmd);
+  document.getElementById('capEditChuangliang').addEventListener('change', updateCapEditCmd);
+  document.getElementById('capEditReason').addEventListener('input', updateCapEditCmd);
+  document.getElementById('capEditCopyCmd').addEventListener('click', ()=>{
+    const text = document.getElementById('capEditCmd').textContent;
+    if(!text){ alert('没有可复制的命令'); return; }
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(()=>alert('PowerShell 命令已复制'),()=>prompt('复制失败，请手动复制：',text)); }
+    else { prompt('复制以下命令：', text); }
+  });
+  mask.addEventListener('click', e=>{ if(e.target===mask) closeCapEdit(); });
+}
+bindCapEdit();
+
 const typeBadge = mt => {
   if(mt==='视频') return '<span class="pill p-purple">视频</span>';
   if(mt==='图片') return '<span class="pill p-teal">图片</span>';
@@ -4696,6 +4853,59 @@ document.addEventListener('click', function(e){
     </div>
   </div>
 </div>
+
+<!-- ========== 产能手动标注弹窗 ========== -->
+<div class="modal-mask" id="capEditMask" style="display:none">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-hd"><h3>✏️ 手动标注产能</h3><button class="modal-x" id="capEditClose">✕</button></div>
+    <div class="modal-bd">
+      <div class="cap-fld">
+        <label>产品路径</label>
+        <input id="capEditPath" type="text" readonly>
+      </div>
+      <div class="cap-fld">
+        <label>上传状态</label>
+        <select id="capEditUploaded">
+          <option value="">不修改</option>
+          <option value="yes">已上传</option>
+          <option value="no">未上传</option>
+        </select>
+      </div>
+      <div class="cap-fld">
+        <label>青云过审状态</label>
+        <select id="capEditQingyun">
+          <option value="">不修改</option>
+          <option value="已过审">已过审</option>
+          <option value="未过审">未过审</option>
+          <option value="其他原因">其他原因</option>
+          <option value="未标注">未标注</option>
+        </select>
+      </div>
+      <div class="cap-fld">
+        <label>原因（未过审/其他原因时填写）</label>
+        <input id="capEditReason" type="text" placeholder="例如：画面不清晰 / 涉及竞品">
+      </div>
+      <div class="cap-fld">
+        <label>是否上传创量</label>
+        <select id="capEditChuangliang">
+          <option value="">不修改</option>
+          <option value="yes">已传创量</option>
+          <option value="no">未传创量</option>
+        </select>
+      </div>
+      <div class="cap-tip">
+        ⚠️ <b>注意：</b>点击「保存到看板」只会存在当前浏览器里，刷新后仍有效；但每天 23:00 的自动扫描会按 <code>D:/625/京东</code> 里的标记文件重新覆盖。若想真正持久化，请保存后复制下方的 PowerShell 命令，在本地运行一次即可自动创建标记文件。
+      </div>
+      <div class="cap-cmd" id="capEditCmd"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn sm" id="capEditCopyCmd">📋 复制命令</button>
+      <button class="btn sm" id="capEditCancel">取消</button>
+      <button class="btn primary sm" id="capEditSave">保存到看板</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function(){
   var url = 'http://127.0.0.1:8900/';
