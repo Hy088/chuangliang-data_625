@@ -1,0 +1,1766 @@
+{
+ "generatedAt": "2026-08-25T11:29:45",
+ "root": "D:/625/京东",
+ "markerFiles": [
+  "done.txt",
+  "uploaded.txt",
+  "完成.txt",
+  "已上传.txt",
+  "已传.txt"
+ ],
+ "summary": {
+  "total": 194,
+  "uploaded": 0,
+  "notUploaded": 194,
+  "rate": 0,
+  "materials": 6726
+ },
+ "entries": [
+  {
+   "date": "2026-05-13",
+   "month": "5月",
+   "product": "DHX",
+   "materials": 20,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0513/DHX"
+  },
+  {
+   "date": "2026-05-14",
+   "month": "5月",
+   "product": "DHX",
+   "materials": 14,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0514/DHX"
+  },
+  {
+   "date": "2026-05-14",
+   "month": "5月",
+   "product": "广一新",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0514/广一新"
+  },
+  {
+   "date": "2026-05-18",
+   "month": "5月",
+   "product": "dhx",
+   "materials": 55,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0518/dhx"
+  },
+  {
+   "date": "2026-05-18",
+   "month": "5月",
+   "product": "广义新",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0518/广义新"
+  },
+  {
+   "date": "2026-05-19",
+   "month": "5月",
+   "product": "dhx",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0519/dhx"
+  },
+  {
+   "date": "2026-05-19",
+   "month": "5月",
+   "product": "广义新",
+   "materials": 23,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0519/广义新"
+  },
+  {
+   "date": "2026-05-20",
+   "month": "5月",
+   "product": "dhx",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0520/dhx"
+  },
+  {
+   "date": "2026-05-20",
+   "month": "5月",
+   "product": "广义新",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0520/广义新"
+  },
+  {
+   "date": "2026-05-21",
+   "month": "5月",
+   "product": "dhx",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0521/dhx"
+  },
+  {
+   "date": "2026-05-21",
+   "month": "5月",
+   "product": "广义新",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0521/广义新"
+  },
+  {
+   "date": "2026-05-25",
+   "month": "5月",
+   "product": "dhx",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0525/dhx"
+  },
+  {
+   "date": "2026-05-25",
+   "month": "5月",
+   "product": "广义新-",
+   "materials": 14,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0525/广义新-"
+  },
+  {
+   "date": "2026-05-26",
+   "month": "5月",
+   "product": "dhx",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0526/dhx"
+  },
+  {
+   "date": "2026-05-26",
+   "month": "5月",
+   "product": "广义新",
+   "materials": 18,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0526/广义新"
+  },
+  {
+   "date": "2026-05-27",
+   "month": "5月",
+   "product": "dhx",
+   "materials": 13,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0527/dhx"
+  },
+  {
+   "date": "2026-05-27",
+   "month": "5月",
+   "product": "广义新",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0527/广义新"
+  },
+  {
+   "date": "2026-05-28",
+   "month": "5月",
+   "product": "dhx",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0528/dhx"
+  },
+  {
+   "date": "2026-05-28",
+   "month": "5月",
+   "product": "广义新",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0528/广义新"
+  },
+  {
+   "date": "2026-05-29",
+   "month": "5月",
+   "product": "dhx",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0529/dhx"
+  },
+  {
+   "date": "2026-05-29",
+   "month": "5月",
+   "product": "广义新",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/5月/0529/广义新"
+  },
+  {
+   "date": "2026-06-01",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0601/dhx"
+  },
+  {
+   "date": "2026-06-01",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0601/广义新"
+  },
+  {
+   "date": "2026-06-02",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 30,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0602/dhx"
+  },
+  {
+   "date": "2026-06-02",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0602/广义新"
+  },
+  {
+   "date": "2026-06-03",
+   "month": "6月",
+   "product": "hdx",
+   "materials": 21,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0603/hdx"
+  },
+  {
+   "date": "2026-06-03",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 2,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0603/广义新"
+  },
+  {
+   "date": "2026-06-04",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0604/dhx"
+  },
+  {
+   "date": "2026-06-04",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 31,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0604/广义新"
+  },
+  {
+   "date": "2026-06-04",
+   "month": "6月",
+   "product": "话费券",
+   "materials": 13,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0604/话费券"
+  },
+  {
+   "date": "2026-06-05",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 53,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0605/dhx"
+  },
+  {
+   "date": "2026-06-05",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 24,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0605/广义新"
+  },
+  {
+   "date": "2026-06-05",
+   "month": "6月",
+   "product": "话费",
+   "materials": 27,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0605/话费"
+  },
+  {
+   "date": "2026-06-09",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0609/dhx"
+  },
+  {
+   "date": "2026-06-09",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0609/广义新"
+  },
+  {
+   "date": "2026-06-09",
+   "month": "6月",
+   "product": "日常",
+   "materials": 38,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0609/日常"
+  },
+  {
+   "date": "2026-06-10",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0610/dhx"
+  },
+  {
+   "date": "2026-06-10",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 68,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0610/广义新"
+  },
+  {
+   "date": "2026-06-11",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 60,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0611/dhx"
+  },
+  {
+   "date": "2026-06-11",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 46,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0611/广义新"
+  },
+  {
+   "date": "2026-06-12",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 51,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0612/dhx"
+  },
+  {
+   "date": "2026-06-12",
+   "month": "6月",
+   "product": "外卖",
+   "materials": 25,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0612/外卖"
+  },
+  {
+   "date": "2026-06-12",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 63,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0612/广义新"
+  },
+  {
+   "date": "2026-06-15",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 62,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0615/dhx"
+  },
+  {
+   "date": "2026-06-15",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 66,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0615/广义新"
+  },
+  {
+   "date": "2026-06-16",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 55,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0616/dhx"
+  },
+  {
+   "date": "2026-06-16",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 104,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0616/广义新"
+  },
+  {
+   "date": "2026-06-16",
+   "month": "6月",
+   "product": "扒",
+   "materials": 25,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0616/扒"
+  },
+  {
+   "date": "2026-06-16",
+   "month": "6月",
+   "product": "话费券",
+   "materials": 12,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0616/话费券"
+  },
+  {
+   "date": "2026-06-17",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 91,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0617/dhx"
+  },
+  {
+   "date": "2026-06-17",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 77,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0617/广义新"
+  },
+  {
+   "date": "2026-06-18",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 87,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0618/dhx"
+  },
+  {
+   "date": "2026-06-18",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 32,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0618/广义新"
+  },
+  {
+   "date": "2026-06-23",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 55,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0623/dhx"
+  },
+  {
+   "date": "2026-06-23",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 77,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0623/广义新"
+  },
+  {
+   "date": "2026-06-24",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 46,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0624/dhx"
+  },
+  {
+   "date": "2026-06-24",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 86,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0624/广义新"
+  },
+  {
+   "date": "2026-06-25",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 60,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0625/dhx"
+  },
+  {
+   "date": "2026-06-25",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 57,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0625/广义新"
+  },
+  {
+   "date": "2026-06-26",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 75,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0626/dhx"
+  },
+  {
+   "date": "2026-06-26",
+   "month": "6月",
+   "product": "话费券",
+   "materials": 13,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0626/话费券"
+  },
+  {
+   "date": "2026-06-29",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 72,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0629/dhx"
+  },
+  {
+   "date": "2026-06-29",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 34,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0629/广义新"
+  },
+  {
+   "date": "2026-06-30",
+   "month": "6月",
+   "product": "dhx",
+   "materials": 47,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0630/dhx"
+  },
+  {
+   "date": "2026-06-30",
+   "month": "6月",
+   "product": "广义新",
+   "materials": 52,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/6月/0630/广义新"
+  },
+  {
+   "date": "2026-07-01",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 83,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0701/dhx"
+  },
+  {
+   "date": "2026-07-01",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 130,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0701/广义新"
+  },
+  {
+   "date": "2026-07-02",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 22,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0702/dhx"
+  },
+  {
+   "date": "2026-07-02",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 103,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0702/广义新"
+  },
+  {
+   "date": "2026-07-03",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 25,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0703/dhx"
+  },
+  {
+   "date": "2026-07-03",
+   "month": "7月",
+   "product": "广义新-",
+   "materials": 79,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0703/广义新-"
+  },
+  {
+   "date": "2026-07-06",
+   "month": "7月",
+   "product": "外卖-0612",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0706/外卖-0612"
+  },
+  {
+   "date": "2026-07-06",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 87,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0706/广义新"
+  },
+  {
+   "date": "2026-07-07",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 115,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0707/广义新"
+  },
+  {
+   "date": "2026-07-08",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 68,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0708/dhx"
+  },
+  {
+   "date": "2026-07-08",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 40,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0708/广义新"
+  },
+  {
+   "date": "2026-07-08",
+   "month": "7月",
+   "product": "扒改0706",
+   "materials": 55,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0708/扒改0706"
+  },
+  {
+   "date": "2026-07-09",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 66,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0709/dhx"
+  },
+  {
+   "date": "2026-07-09",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 77,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0709/广义新"
+  },
+  {
+   "date": "2026-07-10",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 34,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0710/dhx"
+  },
+  {
+   "date": "2026-07-10",
+   "month": "7月",
+   "product": "外卖-0612",
+   "materials": 15,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0710/外卖-0612"
+  },
+  {
+   "date": "2026-07-10",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 58,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0710/广义新"
+  },
+  {
+   "date": "2026-07-13",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 42,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0713/dhx"
+  },
+  {
+   "date": "2026-07-13",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 80,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0713/广义新"
+  },
+  {
+   "date": "2026-07-14",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 38,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0714/dhx"
+  },
+  {
+   "date": "2026-07-14",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 48,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0714/广义新"
+  },
+  {
+   "date": "2026-07-15",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 78,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0715/dhx"
+  },
+  {
+   "date": "2026-07-15",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 32,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0715/广义新"
+  },
+  {
+   "date": "2026-07-15",
+   "month": "7月",
+   "product": "话费",
+   "materials": 26,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0715/话费"
+  },
+  {
+   "date": "2026-07-16",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 42,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0716/dhx"
+  },
+  {
+   "date": "2026-07-16",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 32,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0716/广义新"
+  },
+  {
+   "date": "2026-07-17",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 22,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0717/dhx"
+  },
+  {
+   "date": "2026-07-17",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 87,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0717/广义新"
+  },
+  {
+   "date": "2026-07-17",
+   "month": "7月",
+   "product": "话费券",
+   "materials": 11,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0717/话费券"
+  },
+  {
+   "date": "2026-07-20",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0720/dhx"
+  },
+  {
+   "date": "2026-07-20",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 57,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0720/广义新"
+  },
+  {
+   "date": "2026-07-20",
+   "month": "7月",
+   "product": "标点",
+   "materials": 90,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0720/标点"
+  },
+  {
+   "date": "2026-07-21",
+   "month": "7月",
+   "product": "标点",
+   "materials": 70,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0721/标点"
+  },
+  {
+   "date": "2026-07-22",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 12,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0722/dhx"
+  },
+  {
+   "date": "2026-07-22",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 33,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0722/广义新"
+  },
+  {
+   "date": "2026-07-22",
+   "month": "7月",
+   "product": "标点",
+   "materials": 53,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0722/标点"
+  },
+  {
+   "date": "2026-07-23",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 4,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0723/dhx"
+  },
+  {
+   "date": "2026-07-23",
+   "month": "7月",
+   "product": "三方",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0723/三方"
+  },
+  {
+   "date": "2026-07-23",
+   "month": "7月",
+   "product": "主体",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0723/主体"
+  },
+  {
+   "date": "2026-07-23",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 16,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0723/广义新"
+  },
+  {
+   "date": "2026-07-24",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0724/dhx"
+  },
+  {
+   "date": "2026-07-24",
+   "month": "7月",
+   "product": "三方",
+   "materials": 63,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0724/三方"
+  },
+  {
+   "date": "2026-07-24",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 18,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0724/广义新"
+  },
+  {
+   "date": "2026-07-27",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 51,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0727/dhx"
+  },
+  {
+   "date": "2026-07-27",
+   "month": "7月",
+   "product": "主体",
+   "materials": 45,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0727/主体"
+  },
+  {
+   "date": "2026-07-27",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 41,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0727/广义新"
+  },
+  {
+   "date": "2026-07-28",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 32,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0728/dhx"
+  },
+  {
+   "date": "2026-07-28",
+   "month": "7月",
+   "product": "主体",
+   "materials": 46,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0728/主体"
+  },
+  {
+   "date": "2026-07-28",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 22,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0728/广义新"
+  },
+  {
+   "date": "2026-07-29",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0729/dhx"
+  },
+  {
+   "date": "2026-07-29",
+   "month": "7月",
+   "product": "主体",
+   "materials": 53,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0729/主体"
+  },
+  {
+   "date": "2026-07-29",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 22,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0729/广义新"
+  },
+  {
+   "date": "2026-07-30",
+   "month": "7月",
+   "product": "dhx",
+   "materials": 38,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0730/dhx"
+  },
+  {
+   "date": "2026-07-30",
+   "month": "7月",
+   "product": "主体",
+   "materials": 44,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0730/主体"
+  },
+  {
+   "date": "2026-07-30",
+   "month": "7月",
+   "product": "广义新",
+   "materials": 50,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0730/广义新"
+  },
+  {
+   "date": "2026-07-31",
+   "month": "7月",
+   "product": "主体",
+   "materials": 44,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/7月/0731/主体"
+  },
+  {
+   "date": "2026-08-03",
+   "month": "8月",
+   "product": "dhx",
+   "materials": 47,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0803/dhx"
+  },
+  {
+   "date": "2026-08-03",
+   "month": "8月",
+   "product": "广义新",
+   "materials": 42,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0803/广义新"
+  },
+  {
+   "date": "2026-08-03",
+   "month": "8月",
+   "product": "标点",
+   "materials": 30,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0803/标点"
+  },
+  {
+   "date": "2026-08-04",
+   "month": "8月",
+   "product": "dhx-未传",
+   "materials": 51,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0804/dhx-未传"
+  },
+  {
+   "date": "2026-08-04",
+   "month": "8月",
+   "product": "广义新",
+   "materials": 63,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0804/广义新"
+  },
+  {
+   "date": "2026-08-05",
+   "month": "8月",
+   "product": "dhx",
+   "materials": 49,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0805/dhx"
+  },
+  {
+   "date": "2026-08-05",
+   "month": "8月",
+   "product": "广义新",
+   "materials": 26,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0805/广义新"
+  },
+  {
+   "date": "2026-08-05",
+   "month": "8月",
+   "product": "抽纸-福利价",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0805/抽纸-福利价"
+  },
+  {
+   "date": "2026-08-05",
+   "month": "8月",
+   "product": "透明皂",
+   "materials": 76,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0805/透明皂"
+  },
+  {
+   "date": "2026-08-06",
+   "month": "8月",
+   "product": "dhx",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0806/dhx"
+  },
+  {
+   "date": "2026-08-06",
+   "month": "8月",
+   "product": "三方",
+   "materials": 96,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0806/三方"
+  },
+  {
+   "date": "2026-08-06",
+   "month": "8月",
+   "product": "广义新",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0806/广义新"
+  },
+  {
+   "date": "2026-08-06",
+   "month": "8月",
+   "product": "陶瓷碗",
+   "materials": 4,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0806/陶瓷碗"
+  },
+  {
+   "date": "2026-08-07",
+   "month": "8月",
+   "product": "dhx",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0807/dhx"
+  },
+  {
+   "date": "2026-08-07",
+   "month": "8月",
+   "product": "三方",
+   "materials": 11,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0807/三方"
+  },
+  {
+   "date": "2026-08-07",
+   "month": "8月",
+   "product": "广义新",
+   "materials": 50,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0807/广义新"
+  },
+  {
+   "date": "2026-08-10",
+   "month": "8月",
+   "product": "dhx-防晒霜-ai福利价",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0810/dhx-防晒霜-ai福利价"
+  },
+  {
+   "date": "2026-08-10",
+   "month": "8月",
+   "product": "卷纸(1)-G改",
+   "materials": 17,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0810/卷纸(1)-G改"
+  },
+  {
+   "date": "2026-08-10",
+   "month": "8月",
+   "product": "外卖",
+   "materials": 14,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0810/外卖"
+  },
+  {
+   "date": "2026-08-10",
+   "month": "8月",
+   "product": "标点",
+   "materials": 55,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0810/标点"
+  },
+  {
+   "date": "2026-08-10",
+   "month": "8月",
+   "product": "重新提审-dhx",
+   "materials": 1,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0810/重新提审-dhx"
+  },
+  {
+   "date": "2026-08-11",
+   "month": "8月",
+   "product": "dhx",
+   "materials": 36,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0811/dhx"
+  },
+  {
+   "date": "2026-08-11",
+   "month": "8月",
+   "product": "三方",
+   "materials": 31,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0811/三方"
+  },
+  {
+   "date": "2026-08-11",
+   "month": "8月",
+   "product": "广义新",
+   "materials": 28,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0811/广义新"
+  },
+  {
+   "date": "2026-08-12",
+   "month": "8月",
+   "product": "dhx",
+   "materials": 47,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0812/dhx"
+  },
+  {
+   "date": "2026-08-12",
+   "month": "8月",
+   "product": "大盘扒改",
+   "materials": 34,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0812/大盘扒改"
+  },
+  {
+   "date": "2026-08-12",
+   "month": "8月",
+   "product": "广义新",
+   "materials": 57,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0812/广义新"
+  },
+  {
+   "date": "2026-08-12",
+   "month": "8月",
+   "product": "炒冰机-三方",
+   "materials": 50,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0812/炒冰机-三方"
+  },
+  {
+   "date": "2026-08-13",
+   "month": "8月",
+   "product": "围裙-三方",
+   "materials": 51,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0813/围裙-三方"
+  },
+  {
+   "date": "2026-08-13",
+   "month": "8月",
+   "product": "搓澡皮子",
+   "materials": 50,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0813/搓澡皮子"
+  },
+  {
+   "date": "2026-08-13",
+   "month": "8月",
+   "product": "花生-三方",
+   "materials": 53,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0813/花生-三方"
+  },
+  {
+   "date": "2026-08-14",
+   "month": "8月",
+   "product": "0813-卷纸 -",
+   "materials": 11,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0814/0813-卷纸 -"
+  },
+  {
+   "date": "2026-08-14",
+   "month": "8月",
+   "product": "0814-卷纸",
+   "materials": 16,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0814/0814-卷纸"
+  },
+  {
+   "date": "2026-08-14",
+   "month": "8月",
+   "product": "凳子-广点通-1分钱起-传创量",
+   "materials": 30,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0814/凳子-广点通-1分钱起-传创量"
+  },
+  {
+   "date": "2026-08-14",
+   "month": "8月",
+   "product": "围裙-广义新",
+   "materials": 23,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0814/围裙-广义新"
+  },
+  {
+   "date": "2026-08-14",
+   "month": "8月",
+   "product": "抽纸-0.9",
+   "materials": 17,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0814/抽纸-0.9"
+  },
+  {
+   "date": "2026-08-14",
+   "month": "8月",
+   "product": "油桃-广义新",
+   "materials": 16,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0814/油桃-广义新"
+  },
+  {
+   "date": "2026-08-14",
+   "month": "8月",
+   "product": "洗衣液",
+   "materials": 16,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0814/洗衣液"
+  },
+  {
+   "date": "2026-08-17",
+   "month": "8月",
+   "product": "dhx",
+   "materials": 49,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0817/dhx"
+  },
+  {
+   "date": "2026-08-17",
+   "month": "8月",
+   "product": "三方",
+   "materials": 14,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0817/三方"
+  },
+  {
+   "date": "2026-08-17",
+   "month": "8月",
+   "product": "广义新",
+   "materials": 13,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0817/广义新"
+  },
+  {
+   "date": "2026-08-18",
+   "month": "8月",
+   "product": "1119934-立白洗洁精-0818-传",
+   "materials": 7,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0818/1119934-立白洗洁精-0818-传"
+  },
+  {
+   "date": "2026-08-18",
+   "month": "8月",
+   "product": "三方衍生",
+   "materials": 33,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0818/三方衍生"
+  },
+  {
+   "date": "2026-08-18",
+   "month": "8月",
+   "product": "可口可乐",
+   "materials": 14,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0818/可口可乐"
+  },
+  {
+   "date": "2026-08-18",
+   "month": "8月",
+   "product": "吸盘支架-dhx",
+   "materials": 12,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0818/吸盘支架-dhx"
+  },
+  {
+   "date": "2026-08-18",
+   "month": "8月",
+   "product": "外卖福利价-8越21青云",
+   "materials": 11,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0818/外卖福利价-8越21青云"
+  },
+  {
+   "date": "2026-08-18",
+   "month": "8月",
+   "product": "斜挎包-广义新",
+   "materials": 20,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0818/斜挎包-广义新"
+  },
+  {
+   "date": "2026-08-18",
+   "month": "8月",
+   "product": "百事可乐-传",
+   "materials": 18,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0818/百事可乐-传"
+  },
+  {
+   "date": "2026-08-18",
+   "month": "8月",
+   "product": "红薯=dhx",
+   "materials": 24,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0818/红薯=dhx"
+  },
+  {
+   "date": "2026-08-18",
+   "month": "8月",
+   "product": "限时抢购=钢丝毛巾",
+   "materials": 18,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0818/限时抢购=钢丝毛巾"
+  },
+  {
+   "date": "2026-08-19",
+   "month": "8月",
+   "product": "dhx",
+   "materials": 25,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0819/dhx"
+  },
+  {
+   "date": "2026-08-19",
+   "month": "8月",
+   "product": "三方",
+   "materials": 30,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0819/三方"
+  },
+  {
+   "date": "2026-08-19",
+   "month": "8月",
+   "product": "广义新",
+   "materials": 30,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0819/广义新"
+  },
+  {
+   "date": "2026-08-20",
+   "month": "8月",
+   "product": "三方",
+   "materials": 168,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0820/三方"
+  },
+  {
+   "date": "2026-08-20",
+   "month": "8月",
+   "product": "围裙-dhx-0825的时候传",
+   "materials": 28,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0820/围裙-dhx-0825的时候传"
+  },
+  {
+   "date": "2026-08-20",
+   "month": "8月",
+   "product": "牛油火锅-广义新",
+   "materials": 28,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0820/牛油火锅-广义新"
+  },
+  {
+   "date": "2026-08-20",
+   "month": "8月",
+   "product": "雀巢-1分钱起",
+   "materials": 12,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0820/雀巢-1分钱起"
+  },
+  {
+   "date": "2026-08-21",
+   "month": "8月",
+   "product": "dhx-可乐",
+   "materials": 29,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0821/dhx-可乐"
+  },
+  {
+   "date": "2026-08-21",
+   "month": "8月",
+   "product": "大米-扒改三方-100178504977",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0821/大米-扒改三方-100178504977"
+  },
+  {
+   "date": "2026-08-21",
+   "month": "8月",
+   "product": "广义新-卷纸-1分钱",
+   "materials": 32,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0821/广义新-卷纸-1分钱"
+  },
+  {
+   "date": "2026-08-21",
+   "month": "8月",
+   "product": "手机支架-有米云",
+   "materials": 50,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0821/手机支架-有米云"
+  },
+  {
+   "date": "2026-08-21",
+   "month": "8月",
+   "product": "散热器-1-10215952093313",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0821/散热器-1-10215952093313"
+  },
+  {
+   "date": "2026-08-21",
+   "month": "8月",
+   "product": "洗手液-福利价",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0821/洗手液-福利价"
+  },
+  {
+   "date": "2026-08-21",
+   "month": "8月",
+   "product": "笔",
+   "materials": 50,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0821/笔"
+  },
+  {
+   "date": "2026-08-21",
+   "month": "8月",
+   "product": "茶语抽纸-100123852301",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0821/茶语抽纸-100123852301"
+  },
+  {
+   "date": "2026-08-24",
+   "month": "8月",
+   "product": "三方月饼模具",
+   "materials": 50,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0824/三方月饼模具"
+  },
+  {
+   "date": "2026-08-24",
+   "month": "8月",
+   "product": "乳酸菌-三方",
+   "materials": 50,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0824/乳酸菌-三方"
+  },
+  {
+   "date": "2026-08-24",
+   "month": "8月",
+   "product": "五面鞋刷dhx-福利价",
+   "materials": 15,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0824/五面鞋刷dhx-福利价"
+  },
+  {
+   "date": "2026-08-24",
+   "month": "8月",
+   "product": "帆布袋-福利价-广义新",
+   "materials": 12,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0824/帆布袋-福利价-广义新"
+  },
+  {
+   "date": "2026-08-24",
+   "month": "8月",
+   "product": "折叠衣架-福利价-广义新",
+   "materials": 18,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0824/折叠衣架-福利价-广义新"
+  },
+  {
+   "date": "2026-08-24",
+   "month": "8月",
+   "product": "料理盆-一分钱起-广义新",
+   "materials": 15,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0824/料理盆-一分钱起-广义新"
+  },
+  {
+   "date": "2026-08-24",
+   "month": "8月",
+   "product": "火龙果-dhx-aigc",
+   "materials": 10,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0824/火龙果-dhx-aigc"
+  },
+  {
+   "date": "2026-08-24",
+   "month": "8月",
+   "product": "转笔刀",
+   "materials": 0,
+   "uploaded": false,
+   "marker": null,
+   "path": "D:/625/京东/8月/0824/转笔刀"
+  }
+ ]
+}
