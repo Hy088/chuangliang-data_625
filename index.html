@@ -587,6 +587,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
   <button data-tab="mat">素材·爆款</button>
   <button data-tab="vparse">🎬 视频解析</button>
   <button data-tab="me">个人数据</button>
+  <button data-tab="capacity">📊 登记产能</button>
   <button class="nav-ext" id="openCustom">🎨 个性化</button>
   <button class="nav-ext" id="openAigenGlobal" title="打开本地「AI视频生成台」（独立端口8900：提示词模板→即创自动生成→自动下载）。需本机已启动工具（双击 launch_tool.bat），每次生成消耗即创积分约88/条，不消耗WorkBuddy积分">🎬 AI视频生成台</button>
 </nav>
@@ -1300,6 +1301,100 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
   </div>
 </div>
 
+<!-- ========== 登记产能上传情况 ========== -->
+<div class="section" id="capacity">
+  <div class="dgrp dg-c">
+    <div class="dgrp-hd">
+      <span class="dgrp-no">📊</span>
+      <span class="dgrp-tx"><span class="dgrp-t">登记产能上传情况</span><span class="dgrp-s">登记每批素材产能与上传进度，随时快速读取</span></span>
+      <span class="dgrp-cnt" id="capCnt">0 项登记</span>
+    </div>
+    <div class="dgrp-bd">
+      <!-- 汇总卡 -->
+      <div class="card">
+        <div class="cap-sum-head">
+          <div class="cap-stat"><div class="cap-stat-n" id="capTotalItems">0</div><div class="cap-stat-l">登记项</div></div>
+          <div class="cap-stat"><div class="cap-stat-n" id="capTotalPlan">0</div><div class="cap-stat-l">计划上传</div></div>
+          <div class="cap-stat"><div class="cap-stat-n" id="capTotalUp">0</div><div class="cap-stat-l">已上传</div></div>
+          <div class="cap-stat"><div class="cap-stat-n" id="capTotalPct">0%</div><div class="cap-stat-l">总完成率</div></div>
+        </div>
+        <div class="cap-track"><i id="capBigBar" style="width:0%"></i></div>
+        <div class="cap-sub" id="capSubStats"></div>
+      </div>
+      <!-- 登记表单 -->
+      <div class="card">
+        <h2>➕ 登记新产能</h2>
+        <form id="capForm" class="cap-form" autocomplete="off">
+          <label class="cap-fld">名称 / 项目*<input id="capName" required placeholder="如：手机支架-有米云 / 8月第2周"></label>
+          <label class="cap-fld sm">计划上传数*<input id="capPlan" type="number" min="1" step="1" required placeholder="如 30"></label>
+          <label class="cap-fld sm">已上传数<input id="capUp" type="number" min="0" step="1" value="0" placeholder="0"></label>
+          <label class="cap-fld sm">负责人<input id="capOwner" placeholder="选填"></label>
+          <label class="cap-fld sm">日期<input id="capDate" type="date"></label>
+          <label class="cap-fld">备注<input id="capNote" placeholder="选填，如：第3赛道 / 待补拍"></label>
+          <div class="cap-form-btns">
+            <button type="submit" class="btn primary" id="capSubmitBtn">添加登记</button>
+            <button type="button" class="btn" id="capCancelEdit" style="display:none">取消编辑</button>
+          </div>
+        </form>
+      </div>
+      <!-- 列表 -->
+      <div class="card">
+        <div class="cap-toolbar" id="capToolbar">
+          <input id="capSearch" class="cap-search" placeholder="🔍 搜索名称 / 负责人 / 备注">
+          <select id="capSort" class="cap-sort">
+            <option value="status">排序：状态</option>
+            <option value="pct">排序：完成率</option>
+            <option value="plan">排序：计划数</option>
+            <option value="name">排序：名称</option>
+            <option value="date">排序：日期</option>
+          </select>
+          <span class="cap-spacer"></span>
+          <button class="btn sm" data-act="export" title="复制为 CSV 到剪贴板">📋 导出</button>
+          <button class="btn sm" data-act="clear-done" title="删除所有已完成项">🧹 清已完成</button>
+          <button class="btn sm" data-act="reset" title="清空全部登记">♻ 清空全部</button>
+        </div>
+        <div id="capList" class="cap-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+.cap-sum-head{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+.cap-stat{text-align:center;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.cap-stat-n{font-size:24px;font-weight:800;color:var(--ink)}
+.cap-stat-l{font-size:12px;color:var(--muted);margin-top:2px}
+.cap-track{height:14px;background:rgba(125,135,155,.16);border-radius:8px;overflow:hidden}
+.cap-track i{display:block;height:100%;background:var(--grad);border-radius:8px;transition:width .4s}
+.cap-sub{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:12.5px;color:var(--muted)}
+.cap-sub b{color:var(--ink)}
+.cap-form{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:12px;align-items:end}
+.cap-form .cap-fld{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--muted);font-weight:700}
+.cap-form input,.cap-form select{padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:var(--panel);color:var(--ink)}
+.cap-form-btns{grid-column:1/-1;display:flex;gap:10px}
+.cap-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.cap-search{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:var(--panel);color:var(--ink)}
+.cap-sort{padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:var(--panel);color:var(--ink)}
+.cap-spacer{flex:1}
+.cap-list{display:flex;flex-direction:column;gap:12px}
+.cap-item{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--panel)}
+.cap-item-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cap-name{font-size:15px;font-weight:800;color:var(--ink)}
+.cap-badge{font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;color:#fff}
+.cap-badge.todo{background:#94a3b8}
+.cap-badge.doing{background:#2b6cff}
+.cap-badge.done{background:#12a06a}
+.cap-meta{font-size:12px;color:var(--muted);margin-left:auto}
+.cap-bar{height:10px;background:rgba(125,135,155,.16);border-radius:6px;overflow:hidden;margin:10px 0 8px}
+.cap-bar i{display:block;height:100%;border-radius:6px;transition:width .4s}
+.cap-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.cap-nums{font-size:13px;color:var(--ink);font-weight:700}
+.cap-nums span{color:var(--muted);font-weight:600}
+.cap-acts{display:flex;gap:6px}
+.cap-item .note{font-size:12px;color:var(--muted);margin-top:6px}
+.cap-empty{padding:30px;text-align:center;color:var(--muted);font-size:13px}
+@media(max-width:760px){.cap-form{grid-template-columns:1fr 1fr}.cap-sum-head{grid-template-columns:repeat(2,1fr)}}
+</style>
+
 <!-- ========== 个人数据源设置 弹窗 ========== -->
 <div class="modal-mask" id="meCfgMask" style="display:none">
   <div class="modal">
@@ -1553,6 +1648,161 @@ const fmtMoney = n => '¥' + (Math.round(n*100)/100).toLocaleString('zh-CN',{min
 const fmtPct = n => (Math.round(n*100)/100) + '%';
 const fmtCpa = n => n>0 ? '¥'+ (Math.round(n*100)/100).toLocaleString('zh-CN') : '—';
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// ========== 登记产能上传情况 ==========
+const CAP_KEY = 'matopt_capacity_v1';
+const CAP_COLORS = { todo:'#94a3b8', doing:'#2b6cff', done:'#12a06a' };
+let _capBound = false;
+let capEditingId = null;
+const capState = { q:'', sort:'status' };
+function capLoad(){ try{ const a=JSON.parse(localStorage.getItem(CAP_KEY)); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+function capSave(a){ try{ localStorage.setItem(CAP_KEY, JSON.stringify(a)); }catch(e){} }
+function capStatusOf(it){ if(it.uploaded<=0) return 'todo'; if(it.uploaded>=it.planned) return 'done'; return 'doing'; }
+function capStatusText(k){ return k==='done'?'已完成':k==='doing'?'进行中':'未开始'; }
+function capPct(it){ return it.planned>0 ? Math.min(100, Math.round(it.uploaded/it.planned*100)) : 0; }
+function capGenId(){ return 'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function capToday(){ const t=new Date(); const p=n=>String(n).padStart(2,'0'); return t.getFullYear()+'-'+p(t.getMonth()+1)+'-'+p(t.getDate()); }
+function bindCapacity(){
+  if(_capBound) return; _capBound = true;
+  const sec = document.getElementById('capacity');
+  sec.querySelector('#capForm').addEventListener('submit', e=>{ e.preventDefault(); capSubmit(); });
+  sec.querySelector('#capCancelEdit').addEventListener('click', ()=>capCancelEdit());
+  sec.querySelector('#capToolbar').addEventListener('click', e=>{
+    const b=e.target.closest('[data-act]'); if(!b) return;
+    const act=b.dataset.act;
+    if(act==='export') capExport();
+    else if(act==='clear-done') capClearDone();
+    else if(act==='reset') capReset();
+  });
+  sec.querySelector('#capSearch').addEventListener('input', e=>{ capState.q=e.target.value.trim().toLowerCase(); renderCapList(); });
+  sec.querySelector('#capSort').addEventListener('change', e=>{ capState.sort=e.target.value; renderCapList(); });
+  sec.querySelector('#capList').addEventListener('click', e=>{
+    const b=e.target.closest('[data-act]'); if(!b) return;
+    const id=b.dataset.id, act=b.dataset.act;
+    if(act==='inc') capInc(id);
+    else if(act==='dec') capDec(id);
+    else if(act==='edit') capEdit(id);
+    else if(act==='del') capDel(id);
+  });
+  const dEl = sec.querySelector('#capDate'); if(dEl && !dEl.value) dEl.value=capToday();
+}
+function renderCapacity(){ bindCapacity(); renderCapSummary(); renderCapList(); }
+function renderCapSummary(){
+  const a=capLoad();
+  const plan=a.reduce((s,x)=>s+(+x.planned||0),0);
+  const up=a.reduce((s,x)=>s+(+x.uploaded||0),0);
+  const pct = plan>0 ? Math.round(up/plan*100) : 0;
+  const done=a.filter(x=>capStatusOf(x)==='done').length;
+  const doing=a.filter(x=>capStatusOf(x)==='doing').length;
+  const todo=a.filter(x=>capStatusOf(x)==='todo').length;
+  document.getElementById('capTotalItems').textContent=a.length;
+  document.getElementById('capTotalPlan').textContent=plan;
+  document.getElementById('capTotalUp').textContent=up;
+  document.getElementById('capTotalPct').textContent=pct+'%';
+  document.getElementById('capBigBar').style.width=pct+'%';
+  document.getElementById('capCnt').textContent=a.length+' 项登记';
+  document.getElementById('capSubStats').innerHTML='已完成 <b>'+done+'</b> · 进行中 <b>'+doing+'</b> · 未开始 <b>'+todo+'</b>';
+}
+function renderCapList(){
+  const a=capLoad();
+  const q=capState.q;
+  let list = q ? a.filter(x=>(x.name+' '+(x.owner||'')+' '+(x.note||'')).toLowerCase().includes(q)) : a.slice();
+  const rank={done:0,doing:1,todo:2};
+  list.sort((u,v)=>{
+    if(capState.sort==='pct') return capPct(v)-capPct(u);
+    if(capState.sort==='plan') return (+v.planned)-(+u.planned);
+    if(capState.sort==='name') return String(u.name).localeCompare(String(v.name),'zh');
+    if(capState.sort==='date') return String(v.date||'').localeCompare(String(u.date||''));
+    const r=rank[capStatusOf(u)]-rank[capStatusOf(v)]; if(r) return r; return capPct(v)-capPct(u);
+  });
+  const box=document.getElementById('capList');
+  if(!list.length){
+    box.innerHTML='<div class="cap-empty">'+(q?'没有匹配「'+esc(capState.q)+'」的登记':'还没有产能登记，用上方表单添加第一条吧')+'</div>';
+    return;
+  }
+  box.innerHTML = list.map(it=>{
+    const k=capStatusOf(it), pct=capPct(it), color=CAP_COLORS[k];
+    const meta=[it.owner,it.date].filter(Boolean).join(' · ');
+    return '<div class="cap-item">'+
+      '<div class="cap-item-top"><span class="cap-name">'+esc(it.name)+'</span>'+
+      '<span class="cap-badge '+k+'">'+capStatusText(k)+'</span>'+
+      (meta?'<span class="cap-meta">'+esc(meta)+'</span>':'')+'</div>'+
+      '<div class="cap-bar"><i style="width:'+pct+'%;background:'+color+'"></i></div>'+
+      '<div class="cap-row"><div class="cap-nums">已上传 <b>'+it.uploaded+'</b> <span>/ 计划</span> <b>'+it.planned+'</b> · '+pct+'%</div>'+
+      '<div class="cap-acts">'+
+      '<button class="btn sm" data-act="dec" data-id="'+it.id+'">−1</button>'+
+      '<button class="btn sm primary" data-act="inc" data-id="'+it.id+'">+1 已传</button>'+
+      '<button class="btn sm" data-act="edit" data-id="'+it.id+'">编辑</button>'+
+      '<button class="btn sm" data-act="del" data-id="'+it.id+'">删除</button>'+
+      '</div></div>'+
+      (it.note?'<div class="note">'+esc(it.note)+'</div>':'')+
+      '</div>';
+  }).join('');
+}
+function capFieldVal(id){ return document.getElementById(id).value.trim(); }
+function capSubmit(){
+  const name=capFieldVal('capName'); const plan=parseInt(capFieldVal('capPlan'),10); const up=parseInt(capFieldVal('capUp')||'0',10);
+  if(!name){ alert('请填写名称 / 项目'); return; }
+  if(!plan||plan<1){ alert('计划上传数需为大于 0 的整数'); return; }
+  const a=capLoad();
+  if(capEditingId){
+    const it=a.find(x=>x.id===capEditingId);
+    if(it){ it.name=name; it.planned=plan; it.uploaded=Math.max(0, isNaN(up)?0:up); it.owner=capFieldVal('capOwner'); it.date=capFieldVal('capDate'); it.note=capFieldVal('capNote'); }
+    capEditingId=null;
+  } else {
+    a.unshift({ id:capGenId(), name, planned:plan, uploaded:Math.max(0,isNaN(up)?0:up), owner:capFieldVal('capOwner'), date:capFieldVal('capDate'), note:capFieldVal('capNote') });
+  }
+  capSave(a); capResetForm(); renderCapacity();
+}
+function capResetForm(){
+  document.getElementById('capForm').reset();
+  capEditingId=null;
+  document.getElementById('capSubmitBtn').textContent='添加登记';
+  document.getElementById('capCancelEdit').style.display='none';
+  const dEl=document.getElementById('capDate'); if(dEl && !dEl.value) dEl.value=capToday();
+}
+function capCancelEdit(){ capResetForm(); }
+function capInc(id){ const a=capLoad(); const it=a.find(x=>x.id===id); if(it){ it.uploaded=Math.max(0,(+it.uploaded||0)+1); capSave(a); renderCapacity(); } }
+function capDec(id){ const a=capLoad(); const it=a.find(x=>x.id===id); if(it){ it.uploaded=Math.max(0,(+it.uploaded||0)-1); capSave(a); renderCapacity(); } }
+function capEdit(id){
+  const a=capLoad(); const it=a.find(x=>x.id===id); if(!it) return;
+  capEditingId=id;
+  document.getElementById('capName').value=it.name||'';
+  document.getElementById('capPlan').value=it.planned||'';
+  document.getElementById('capUp').value=it.uploaded||0;
+  document.getElementById('capOwner').value=it.owner||'';
+  document.getElementById('capDate').value=it.date||'';
+  document.getElementById('capNote').value=it.note||'';
+  document.getElementById('capSubmitBtn').textContent='保存修改';
+  document.getElementById('capCancelEdit').style.display='inline-flex';
+  document.getElementById('capName').focus();
+  document.getElementById('capacity').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function capDel(id){
+  const a=capLoad(); const it=a.find(x=>x.id===id); if(!it) return;
+  if(!confirm('确认删除「'+it.name+'」这条登记？')) return;
+  capSave(a.filter(x=>x.id!==id)); renderCapacity();
+}
+function capClearDone(){
+  const a=capLoad(); const done=a.filter(x=>capStatusOf(x)==='done'); if(!done.length){ alert('当前没有已完成项'); return; }
+  if(!confirm('确认删除全部 '+done.length+' 条已完成登记？')) return;
+  capSave(a.filter(x=>capStatusOf(x)!=='done')); renderCapacity();
+}
+function capReset(){
+  const a=capLoad(); if(!a.length){ alert('当前没有登记'); return; }
+  if(!confirm('确认清空全部 '+a.length+' 条登记？此操作不可撤销。')) return;
+  capSave([]); renderCapacity();
+}
+function capExport(){
+  const a=capLoad(); if(!a.length){ alert('当前没有登记可导出'); return; }
+  const head=['名称','计划上传','已上传','完成率','状态','负责人','日期','备注'];
+  const rows=a.map(it=>[it.name,it.planned,it.uploaded,capPct(it)+'%',capStatusText(capStatusOf(it)),it.owner||'',it.date||'',it.note||'']);
+  const csv=[head].concat(rows).map(r=>r.map(c=>{ c=String(c); return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c; }).join(',')).join('\n');
+  const md='# 登记产能上传情况\n\n'+head.join(' | ')+'\n'+rows.map(r=>r.join(' | ')).join('\n');
+  const text=csv+'\n\n'+md;
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(()=>alert('已复制 CSV + Markdown 到剪贴板'),()=>prompt('复制失败，请手动复制：',text)); }
+  else { prompt('复制以下内容：', text); }
+}
 const typeBadge = mt => {
   if(mt==='视频') return '<span class="pill p-purple">视频</span>';
   if(mt==='图片') return '<span class="pill p-teal">图片</span>';
@@ -2323,6 +2573,7 @@ function bindNav(){
     else if(b.dataset.tab==='mat'){ buildRankRows(); renderHitCfg(); }
     else if(b.dataset.tab==='vparse'){ renderVParse(); }
     else if(b.dataset.tab==='me'){ renderMe(); }
+    else if(b.dataset.tab==='capacity'){ renderCapacity(); }
   });
   $$('.subnav button[data-sub]').forEach(b=>b.onclick=()=>{ setSub(b.closest('.section').id, b.dataset.sub); });
 }
@@ -3465,7 +3716,8 @@ function applyLayout(){ let saved=null; try{ saved=JSON.parse(localStorage.getIt
 function rerenderCurrent(){ const t=[...$$('nav button.active')][0]; const tab=t&&t.dataset.tab;
   if(tab==='proj'){ renderProject(); }
   else if(tab==='catdir'){ renderCatDir(); }
-  else if(tab==='mat'){ buildRankRows(); renderHitCfg(); } }
+  else if(tab==='mat'){ buildRankRows(); renderHitCfg(); }
+  else if(tab==='capacity'){ renderCapacity(); } }
 function syncColorInputs(v){ if(!v) return; const map={brand:'c_brand',brand2:'c_brand2',bg:'c_bg',panel:'c_panel',ink:'c_ink',line:'c_line',muted:'c_muted'};
   Object.keys(map).forEach(k=>{ const el=document.getElementById(map[k]); if(el&&v[k]) el.value=toHex(v[k]); }); }
 function toHex(c){ if(!c) return '#000000'; c=c.trim(); if(c[0]==='#') return c; const m=c.match(/\d+/g); if(m&&m.length>=3){ return '#'+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,'0')).join(''); } return '#6d5efc'; }
