@@ -1329,6 +1329,8 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       <div class="card">
         <div class="cap-toolbar" id="capToolbar">
           <input id="capSearch" class="cap-search" placeholder="🔍 搜索产品名 / 路径 / 驳回原因">
+          <select id="capMonthFilter" class="cap-sort" title="按月份筛选"><option value="">月份·全部</option></select>
+          <select id="capDayFilter" class="cap-sort" title="按日期筛选"><option value="">日期·全部</option></select>
           <select id="capQyFilter" class="cap-sort" title="按青云过审状态筛选"><option value="">青云·全部</option><option value="已过审">已过审</option><option value="未过审">未过审</option><option value="其他原因">其他原因</option><option value="未标注">未标注</option></select>
           <select id="capClFilter" class="cap-sort" title="按是否上传创量筛选"><option value="">创量·全部</option><option value="已传">已传创量</option><option value="未传">未传创量</option></select>
           <span class="cap-spacer"></span>
@@ -1338,7 +1340,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <div class="cap-hint">
           📌 <b>怎么标记（在 <code>D:/625/京东/月份/日期/产品名/</code> 文件夹里放标记文件，空文件即可，原因类写内容）：</b><br>
           · <code>已上传.txt</code> = 已上传 ｜ <code>青云已过审.txt</code> = 青云已过审 ｜ <code>青云未过审.txt</code> + <code>驳回原因.txt</code>(写原因) = 未过审 ｜ <code>青云其他.txt</code> + <code>其他原因.txt</code>(写原因) = 其他原因 ｜ <code>已上传创量.txt</code> = 已传创量。<br>
-          每天 23:00 自动扫描（或点上方「↻ 立即刷新」）即生效。可用上方「青云 / 创量」下拉按分类快速筛选。
+          每天 23:00 自动扫描（或点上方「↻ 立即刷新」）即生效。可用上方「月份 / 日期 / 青云 / 创量」下拉按层级快速筛选。
         </div>
       </div>
     </div>
@@ -1667,7 +1669,7 @@ const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&
 // ========== 登记产能上传情况（自动读取本地路径扫描结果 capacity.json） ==========
 let _capBound = false;
 let _capData = { entries: [], summary: null };
-const capState = { q:'', qy:'', cl:'' };
+const capState = { q:'', month:'', day:'', qy:'', cl:'' };
 const CAP_OVERRIDE_KEY = 'matopt_capacity_overrides_v1';
 function loadCapOverrides(){ try{ const v = localStorage.getItem(CAP_OVERRIDE_KEY); return v ? JSON.parse(v) : {}; }catch(e){ return {}; } }
 function saveCapOverrides(o){ localStorage.setItem(CAP_OVERRIDE_KEY, JSON.stringify(o)); }
@@ -1701,6 +1703,8 @@ function bindCapacity(){
   const sec = document.getElementById('capacity');
   sec.querySelector('#capRefresh').addEventListener('click', ()=>renderCapacity(true));
   sec.querySelector('#capSearch').addEventListener('input', e=>{ capState.q=e.target.value.trim().toLowerCase(); renderCapList(); });
+  sec.querySelector('#capMonthFilter').addEventListener('change', e=>{ capState.month=e.target.value; updateCapDayOptions(); renderCapList(); });
+  sec.querySelector('#capDayFilter').addEventListener('change', e=>{ capState.day=e.target.value; renderCapList(); });
   sec.querySelector('#capQyFilter').addEventListener('change', e=>{ capState.qy=e.target.value; renderCapList(); });
   sec.querySelector('#capClFilter').addEventListener('change', e=>{ capState.cl=e.target.value; renderCapList(); });
   sec.querySelector('#capExportBtn').addEventListener('click', capExportAuto);
@@ -1748,7 +1752,43 @@ async function renderCapacity(force){
     '<br>已传创量 <b>'+clYes+'</b> · 未传创量 <b>'+(total-clYes)+'</b>';
   if(data.generatedAt){ document.getElementById('capUpdated').textContent = '最后同步：' + String(data.generatedAt).replace('T',' ').slice(0,16); }
   if(data.root){ document.getElementById('capRoot').textContent = data.root; }
+  fillCapFilters();
   renderCapList();
+}
+
+function fillCapFilters(){
+  const data = _capData;
+  const selM = document.getElementById('capMonthFilter');
+  if(!data.entries || !selM){ return; }
+  const months = [...new Set(data.entries.map(e=>e.month).filter(Boolean))].sort((a,b)=>{
+    const ma = parseInt(a,10)||0, mb = parseInt(b,10)||0;
+    return ma - mb;
+  });
+  const oldM = selM.value;
+  selM.innerHTML = '<option value="">月份·全部</option>' + months.map(m=>'<option value="'+esc(m)+'">'+esc(m)+'</option>').join('');
+  selM.value = months.includes(oldM) ? oldM : (capState.month && months.includes(capState.month) ? capState.month : '');
+  capState.month = selM.value;
+  updateCapDayOptions(false);
+}
+
+function updateCapDayOptions(resetDay=true){
+  const data = _capData;
+  const selM = document.getElementById('capMonthFilter');
+  const selD = document.getElementById('capDayFilter');
+  if(!selM || !selD){ return; }
+  const month = selM.value;
+  let days = [];
+  if(data.entries){
+    let list = data.entries;
+    if(month){ list = list.filter(e=>e.month===month); }
+    days = [...new Set(list.map(e=>e.day).filter(Boolean))].sort();
+  }
+  const oldD = selD.value;
+  selD.innerHTML = '<option value="">日期·全部</option>' + days.map(d=>'<option value="'+esc(d)+'">'+esc(d)+'</option>').join('');
+  if(resetDay){ capState.day = ''; }
+  const want = resetDay ? capState.day : (oldD || capState.day);
+  selD.value = days.includes(want) ? want : '';
+  capState.day = selD.value;
 }
 
 const qyBadge = e => {
@@ -1772,6 +1812,8 @@ function renderCapList(){
   if(!data.entries){ return; }
   const q = capState.q;
   let list = data.entries.slice();
+  if(capState.month) list = list.filter(x => x.month===capState.month);
+  if(capState.day) list = list.filter(x => x.day===capState.day);
   if(capState.qy) list = list.filter(x => (x.qingyun||'未标注')===capState.qy);
   if(capState.cl) list = list.filter(x => ((x.chuangliang==='yes')?'已传':'未传')===capState.cl);
   if(q){ list = list.filter(x => (x.product+' '+(x.path||'')+' '+(x.qingyunReason||'')).toLowerCase().includes(q)); }
@@ -1780,7 +1822,7 @@ function renderCapList(){
   const dates = Object.keys(groups).sort((a,b)=> b.localeCompare(a));
   const box = document.getElementById('capList');
   if(!list.length){
-    box.innerHTML = '<div class="cap-empty">'+(q||capState.qy||capState.cl? '没有匹配筛选条件的产品':'还没有产能记录')+'</div>';
+    box.innerHTML = '<div class="cap-empty">'+(q||capState.month||capState.day||capState.qy||capState.cl? '没有匹配筛选条件的产品':'还没有产能记录')+'</div>';
     return;
   }
   const itemHtml = e=>{

@@ -109,6 +109,7 @@ def scan():
                 entries.append({
                     'date': iso,
                     'month': mname,
+                    'day': dname,
                     'product': pname,
                     'materials': materials,
                     'uploaded': marker is not None,
