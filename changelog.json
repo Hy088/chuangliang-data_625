@@ -1,5 +1,18 @@
 [
   {
+    "ver": "v20260827a",
+    "date": "2026-08-27",
+    "type": "feat",
+    "summary": "视频解析新增「零Key爆款结构反推 · 同品类复刻」引擎（viral-kb.js）",
+    "details": [
+      "新增独立脚本 viral-kb.js：纯前端、零 API Key、可离线，把「真实已发布爆款」实证知识固化为规则引擎",
+      "知识来源：巨量千川 200+ 跑量视频实证（时长/前3秒/混剪占比）、6 类钩子、5 套真实拼接模板、同品类裂变矩阵",
+      "新增 region：📊 反推爆款结构（对照真实跑量基准打分：时长/前3秒/真人/CTA/节奏）+ 🧬 生成同品类复刻（锁死品类骨架，钩子×人设×场景裂变多套，含逐秒分镜+口播+即梦提示词）",
+      "与 vparse-deep.js 的「🚀一键复刻（需 AI Key）」互补：无 Key 离线也能直接出可拍/可生成的复刻方案",
+      "按钮 id 用 kbViralAnalyze/kbSameCat，避免与原有 vpViralBtn（跨素材爆款规律）冲突；index.html 末尾引入 viral-kb.js?v=20260827a"
+    ]
+  },
+  {
     "ver": "v20260812f",
     "date": "2026-08-12",
     "type": "feat",
@@ -22,7 +35,7 @@
       "💡 信息流投放理解分析：新增「💾 保存案例」→ 导出 vpInsight + vpScriptOut（理解分析 + 文案口播）为独立 HTML",
       "🎯 脚本生成器：新增「💾 保存案例」→ 导出 vpScriptGenOut 为独立 HTML",
       "复用 exportOfflineHtml 的 collectVpCss + downloadBlob 技术，案例 HTML 自带样式、离线双击即看",
-      "每个模块未生成内容时点击会提示"请先生成再保存"；vparse-deep.js 版本升 20260812e"
+      "每个模块未生成内容时点击会提示「请先生成再保存」；vparse-deep.js 版本升 20260812e"
     ]
   },
   {

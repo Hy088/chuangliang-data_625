@@ -467,6 +467,18 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .ext-list b{color:var(--brand)}
 .vparse-drop{border:2px dashed var(--line);border-radius:14px;padding:34px 20px;text-align:center;cursor:pointer;transition:.15s;background:var(--panel)}
 .vparse-drop:hover,.vparse-drop.on{border-color:var(--brand);background:rgba(47,107,255,.06)}
+  /* ========== 零Key爆款引擎：反推/复刻卡片样式 ========== */
+  .vp-ok{background:rgba(39,174,96,.12);border:1px solid rgba(39,174,96,.4);color:#1f8f4e;padding:8px 11px;border-radius:9px;font-size:13px;margin-bottom:7px;line-height:1.5}
+  .vp-bad{background:rgba(227,90,68,.12);border:1px solid rgba(227,90,68,.4);color:#c0392b;padding:8px 11px;border-radius:9px;font-size:13px;margin-bottom:7px;line-height:1.5}
+  .vp-warn-in{background:rgba(227,160,8,.12);border:1px solid rgba(227,160,8,.4);color:#b07d00;padding:8px 11px;border-radius:9px;font-size:13px;margin-bottom:7px;line-height:1.5}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:rgba(47,107,255,.12);color:var(--brand);margin-left:6px;vertical-align:middle}
+  .vp-setcard{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:12px;background:var(--panel);box-shadow:var(--shadow-sm)}
+  .vp-setc-h{font-weight:800;font-size:14px;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .vp-setc-diff{font-weight:600;font-size:12px;color:var(--brand);background:rgba(47,107,255,.1);padding:2px 10px;border-radius:999px}
+  .vp-setc-sub{font-weight:700;font-size:12.5px;color:var(--muted);margin:10px 0 4px}
+  .vp-setc-script{white-space:pre-wrap;font-size:12.5px;line-height:1.6;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--ink)}
+  .vp-setc-jimeng{font-size:12.5px;line-height:1.7;color:var(--ink);white-space:pre-wrap;padding:2px 0}
+  button[data-copy]{cursor:pointer}
 .vp-drop-inner{color:var(--ink)}
 .vp-ico{font-size:30px;opacity:.5;margin-bottom:8px;color:var(--muted)}
 .vp-controls{display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap}
@@ -1031,6 +1043,16 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       <span class="vp-cost-est muted" id="vpRepCostEst" style="margin-left:8px">加载视频并抽帧后，这里显示本次复刻的消耗预估（含送图帧数 / 估算 token / 预计 ¥）</span>
     </div>
     <div id="vpReplicateOut" class="vp-rep muted">点「🚀 一键复刻」，我会基于抽帧 + 投放数据 + 口播，直接产出「爆款拆解卡 / 复刻口播脚本 / 即梦生成提示词」三件套，拿来就能拍、能剪、能生成。</div>
+  </div>
+
+  <div class="vp-region" id="vpViralRegion">
+    <div class="vp-region-h">📊 零Key爆款结构反推 · 同品类复刻 <span class="vp-hint">本地分析，无需 Key/联网；基于巨量千川 200+ 跑量实证</span></div>
+    <div class="vp-actions">
+      <button class="btn sm primary" id="kbViralAnalyze">📊 反推爆款结构</button>
+      <button class="btn sm" id="kbSameCat">🧬 生成同品类复刻</button>
+      <span class="vp-cost-est muted" id="kbViralHint">加载视频并抽帧后点「反推爆款结构」直接出结果（建议先「🔍 深度分析」以识别字幕/口播/人物）</span>
+    </div>
+    <div id="vpViralOut" class="vp-rep muted">点「📊 反推爆款结构」：本地零Key反推时间轴结构 / 钩子类型 / 情绪曲线，并对照真实跑量基准打分；再点「🧬 生成同品类复刻」产出多套可拍、可剪、可 AI 生成的复刻方案。与上方「🚀 一键复刻（需 AI Key）」互补——本区不依赖任何联网与密钥。</div>
   </div>
 
   <div class="vp-region">
@@ -5312,6 +5334,7 @@ document.addEventListener('click', function(e){
 <script src="vparse-deep.js?v=20260819c"></script>
 
 <script src="seedance-gen.js?v=20260809a"></script>
+<script src="viral-kb.js?v=20260827a"></script>
 <!-- ========== 更新日志 弹窗 ========== -->
 <div class="modal-mask" id="changelogMask" style="display:none">
   <div class="modal" style="max-width:680px">
