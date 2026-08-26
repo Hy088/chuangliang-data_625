@@ -553,6 +553,27 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .vp-boom-li::before{content:'';position:absolute;left:-14px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--brand)}
 .vp-boom-ul{margin:4px 0 0 18px;padding:0}
 .vp-boom-ul li{margin-bottom:4px}
+.cap-cls-hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-bottom:10px}
+.cap-cls-title{font-size:15px;font-weight:700}
+.cap-cls-sub{color:var(--muted,#8b93a7);font-size:12.5px}
+.cap-cls-cards{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.cap-cls-sc{flex:1;min-width:92px;background:var(--panel,#171a21);border:1px solid var(--line,#232733);border-radius:12px;padding:10px 8px;text-align:center}
+.cap-cls-sc .n{font-size:22px;font-weight:700;line-height:1.1}
+.cap-cls-sc .l{font-size:12px;color:var(--muted,#8b93a7);margin-top:3px}
+.cap-cls-sc.ok .n{color:#3fb950}.cap-cls-sc.warn .n{color:#f85149}.cap-cls-sc.oth .n{color:#d29922}.cap-cls-sc.mut .n{color:#8b93a7}
+.cap-cls-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cap-cls-box{background:var(--panel,#171a21);border:1px solid var(--line,#232733);border-radius:12px;padding:12px}
+.cap-cls-box-wide{grid-column:1 / -1}
+.cap-cls-box-t{font-size:13px;color:var(--muted,#8b93a7);margin-bottom:8px}
+.cap-cls-row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:13px}
+.cap-cls-l{width:96px;flex:none;color:#c9d1e0}
+.cap-cls-bar{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:6px;overflow:hidden}
+.cap-cls-bar i{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#58a6ff);border-radius:6px}
+.cap-cls-v{width:92px;flex:none;text-align:right;color:#c9d1e0;font-variant-numeric:tabular-nums}
+.cap-cls-tb{width:100%;border-collapse:collapse;font-size:13px}
+.cap-cls-tb th,.cap-cls-tb td{padding:7px 9px;border:1px solid var(--line,#232733);text-align:center}
+.cap-cls-tb th{background:var(--panel2,#1b1f29);color:#aeb6c8;font-weight:600}
+.cap-cls-cta{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -1326,6 +1347,31 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
           <button class="btn sm" id="capRefresh">↻ 立即刷新</button>
         </div>
       </div>
+      <div class="card" id="capClassifyCard">
+        <div class="cap-cls-hd">
+          <span class="cap-cls-title">📌 已上传产品归类</span>
+          <span class="cap-cls-sub">按「创量上传 / 青云过审」自动交叉统计（仅统计已上传产品，随月份 / 日期筛选联动）</span>
+        </div>
+        <div class="cap-cls-cards" id="capClsStatCards"></div>
+        <div class="cap-cls-grid">
+          <div class="cap-cls-box">
+            <div class="cap-cls-box-t">按创量上传</div>
+            <div id="capClsByCl"></div>
+          </div>
+          <div class="cap-cls-box">
+            <div class="cap-cls-box-t">按青云过审</div>
+            <div id="capClsByQy"></div>
+          </div>
+          <div class="cap-cls-box cap-cls-box-wide">
+            <div class="cap-cls-box-t">创量 × 青云 交叉</div>
+            <div id="capClsCross"></div>
+          </div>
+        </div>
+        <div class="cap-cls-cta">
+          <button class="btn sm" id="capClsFilterBtn">🔍 仅看已上传产品</button>
+          <span class="cap-meta" id="capClsUpCount"></span>
+        </div>
+      </div>
       <div class="card">
         <div class="cap-quick" id="capQuick">
           <span class="cap-quick-label">快捷筛选：</span>
@@ -1720,7 +1766,7 @@ const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&
 // ========== 登记产能上传情况（自动读取本地路径扫描结果 capacity.json） ==========
 let _capBound = false;
 let _capData = { entries: [], summary: null };
-const capState = { q:'', month:'', day:'', qy:'', cl:'' };
+const capState = { q:'', month:'', day:'', qy:'', cl:'', up:false };
 const capSel = new Set();  // 多选标注：选中的 key 集合
 const CAP_OVERRIDE_KEY = 'matopt_capacity_overrides_v1';
 function loadCapOverrides(){ try{ const v = localStorage.getItem(CAP_OVERRIDE_KEY); return v ? JSON.parse(v) : {}; }catch(e){ return {}; } }
@@ -1756,11 +1802,13 @@ function bindCapacity(){
   const sec = document.getElementById('capacity');
   sec.querySelector('#capRefresh').addEventListener('click', ()=>renderCapacity(true));
   sec.querySelector('#capSearch').addEventListener('input', e=>{ capState.q=e.target.value.trim().toLowerCase(); renderCapList(); });
-  sec.querySelector('#capMonthFilter').addEventListener('change', e=>{ capState.month=e.target.value; updateCapDayOptions(); renderCapList(); });
-  sec.querySelector('#capDayFilter').addEventListener('change', e=>{ capState.day=e.target.value; renderCapList(); });
+  sec.querySelector('#capMonthFilter').addEventListener('change', e=>{ capState.month=e.target.value; updateCapDayOptions(); renderCapList(); renderCapUploadClassify(); });
+  sec.querySelector('#capDayFilter').addEventListener('change', e=>{ capState.day=e.target.value; renderCapList(); renderCapUploadClassify(); });
   sec.querySelector('#capQyFilter').addEventListener('change', e=>{ capState.qy=e.target.value; updateCapQuickChips(); renderCapList(); });
   sec.querySelector('#capClFilter').addEventListener('change', e=>{ capState.cl=e.target.value; updateCapQuickChips(); renderCapList(); });
   sec.querySelector('#capExportBtn').addEventListener('click', capExportAuto);
+  const clsBtn = sec.querySelector('#capClsFilterBtn');
+  if(clsBtn) clsBtn.addEventListener('click', ()=>{ capState.up = !capState.up; clsBtn.textContent = capState.up ? '🔍 显示全部产品' : '🔍 仅看已上传产品'; renderCapList(); });
   // 快捷筛选 chips
   document.getElementById('capQuick').addEventListener('click', e=>{
     const chip = e.target.closest('.cap-chip');
@@ -1875,6 +1923,7 @@ async function renderCapacity(force){
   if(data.root){ document.getElementById('capRoot').textContent = data.root; }
   fillCapFilters();
   renderCapList();
+  renderCapUploadClassify();
 }
 
 function fillCapFilters(){
@@ -1941,9 +1990,53 @@ function getCapFiltered(){
   if(capState.day) list = list.filter(x => x.day===capState.day);
   if(capState.qy) list = list.filter(x => (x.qingyun||'未标注')===capState.qy);
   if(capState.cl) list = list.filter(x => ((x.chuangliang==='yes')?'已传':'未传')===capState.cl);
+  if(capState.up) list = list.filter(x => x.uploaded);
   if(q){ list = list.filter(x => (x.product+' '+(x.path||'')+' '+(x.qingyunReason||'')+' '+(x.chuangliangReason||'')).toLowerCase().includes(q)); }
   list.forEach(e=>{ e._key = e.path || (e.date+'/'+e.product); });
   return list;
+}
+
+function clsBar(label, v, n){
+  const pct = n>0 ? Math.round(v/n*100) : 0;
+  return '<div class="cap-cls-row"><span class="cap-cls-l">'+label+'</span><span class="cap-cls-bar"><i style="width:'+pct+'%"></i></span><span class="cap-cls-v">'+v+' · '+pct+'%</span></div>';
+}
+
+function renderCapUploadClassify(){
+  const wrap = document.getElementById('capClassifyCard');
+  if(!wrap) return;
+  let src = (_capData.entries||[]).filter(e=>e.uploaded);
+  if(capState.month) src = src.filter(e=>e.month===capState.month);
+  if(capState.day) src = src.filter(e=>e.day===capState.day);
+  const n = src.length;
+  document.getElementById('capClsUpCount').textContent = n ? ('当前已上传产品 '+n+' 个') : '当前没有已上传产品（可在列表勾选后「批量标注 → 已上传」）';
+  const clYes = src.filter(e=>e.chuangliang==='yes').length;
+  const clNo = n - clYes;
+  const qyMap = {'已过审':0,'未过审':0,'其他原因':0,'未标注':0};
+  src.forEach(e=>{ const k=e.qingyun||'未标注'; qyMap[k]=(qyMap[k]||0)+1; });
+  document.getElementById('capClsStatCards').innerHTML = [
+    ['已上传总数', n, ''],
+    ['已传创量', clYes, 'ok'],
+    ['未传创量', clNo, 'warn'],
+    ['青云已过审', qyMap['已过审'], 'ok'],
+    ['青云未过审', qyMap['未过审'], 'warn'],
+    ['青云其他', qyMap['其他原因'], 'oth'],
+    ['青云未标', qyMap['未标注'], 'mut'],
+  ].map(([t,v,c])=>'<div class="cap-cls-sc '+c+'"><div class="n">'+v+'</div><div class="l">'+t+'</div></div>').join('');
+  document.getElementById('capClsByCl').innerHTML = clsBar('已传创量', clYes, n) + clsBar('未传创量', clNo, n);
+  document.getElementById('capClsByQy').innerHTML = ['已过审','未过审','其他原因','未标注'].map(k=>clsBar('青云·'+k, qyMap[k], n)).join('');
+  const clKeys=['已传','未传']; const qyKeys=['已过审','未过审','其他原因','未标注'];
+  const cross={};
+  src.forEach(e=>{ const ck=e.chuangliang==='yes'?'已传':'未传'; const qk=e.qingyun||'未标注'; cross[ck+'|'+qk]=(cross[ck+'|'+qk]||0)+1; });
+  let html='<table class="cap-cls-tb"><thead><tr><th>创量 \\ 青云</th>'+qyKeys.map(k=>'<th>'+k+'</th>').join('')+'<th>小计</th></tr></thead><tbody>';
+  clKeys.forEach(ck=>{
+    html+='<tr><td><b>'+ck+'创量</b></td>';
+    let row=0;
+    qyKeys.forEach(qk=>{ const v=cross[ck+'|'+qk]||0; row+=v; html+='<td>'+v+'</td>'; });
+    html+='<td><b>'+row+'</b></td></tr>';
+  });
+  html+='<tr><td><b>小计</b></td>'+qyKeys.map(qk=>'<td><b>'+src.filter(e=>(e.qingyun||'未标注')===qk).length+'</b></td>').join('')+'<td><b>'+n+'</b></td></tr>';
+  html+='</tbody></table>';
+  document.getElementById('capClsCross').innerHTML = html;
 }
 
 function renderCapList(){
