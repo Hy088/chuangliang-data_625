@@ -1389,6 +1389,8 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .cap-badge.cl-no{background:#94a3b8}
 .cap-reason{font-size:12px;color:var(--muted);margin-top:8px;padding:5px 0 5px 10px;border-left:3px solid var(--line)}
 .cap-reason b{color:#e0533d}
+.cap-reason.cl{border-left-color:#2b6cff}
+.cap-reason.cl b{color:#2b6cff}
 .cap-sel-tip{font-size:12px;color:var(--muted);align-self:center}
 .cap-edit{font-size:11.5px;padding:3px 9px;border-radius:7px;border:1px solid var(--line);background:rgba(43,108,255,.08);color:var(--brand);cursor:pointer;margin-left:auto;white-space:nowrap}
 .cap-edit:hover{background:var(--brand);color:#fff}
@@ -1700,6 +1702,7 @@ function applyCapOverrides(data){
     if(o.qingyun != null) ne.qingyun = o.qingyun;
     if(o.qingyunReason != null) ne.qingyunReason = o.qingyunReason;
     if(o.chuangliang != null) ne.chuangliang = o.chuangliang;
+    if(o.chuangliangReason != null) ne.chuangliangReason = o.chuangliangReason;
     return ne;
   });
   const s = { ...data.summary };
@@ -1836,6 +1839,10 @@ const qyReasonHtml = e => {
   const label = e.qingyun==='未过审' ? '驳回原因' : '其他原因';
   return '<div class="cap-reason"><b>'+label+'：</b>'+esc(e.qingyunReason)+'</div>';
 };
+const clReasonHtml = e => {
+  if(e.chuangliang !== 'no' || !e.chuangliangReason) return '';
+  return '<div class="cap-reason cl"><b>未传创量原因：</b>'+esc(e.chuangliangReason)+'</div>';
+};
 
 function renderCapList(){
   const data = _capData;
@@ -1846,7 +1853,7 @@ function renderCapList(){
   if(capState.day) list = list.filter(x => x.day===capState.day);
   if(capState.qy) list = list.filter(x => (x.qingyun||'未标注')===capState.qy);
   if(capState.cl) list = list.filter(x => ((x.chuangliang==='yes')?'已传':'未传')===capState.cl);
-  if(q){ list = list.filter(x => (x.product+' '+(x.path||'')+' '+(x.qingyunReason||'')).toLowerCase().includes(q)); }
+  if(q){ list = list.filter(x => (x.product+' '+(x.path||'')+' '+(x.qingyunReason||'')+' '+(x.chuangliangReason||'')).toLowerCase().includes(q)); }
   const groups = {};
   list.forEach(e=>{ (groups[e.date] = groups[e.date]||[]).push(e); });
   const dates = Object.keys(groups).sort((a,b)=> b.localeCompare(a));
@@ -1870,6 +1877,7 @@ function renderCapList(){
       '<div class="cap-row"><div class="cap-nums"><span style="font-family:monospace;font-size:11.5px;color:var(--muted)">'+esc(e.path||'')+'</span></div></div>'+
       bdHtml +
       qyReasonHtml(e)+
+      clReasonHtml(e)+
       capFilesHtml(e)+
       '</div>';
   };
@@ -1931,11 +1939,11 @@ function renderCapList(){
 function capExportAuto(){
   const data = _capData;
   if(!data.entries || !data.entries.length){ alert('当前没有产能数据可导出'); return; }
-  const head = ['日期','产品','素材数','素材分类统计','素材文件列表','上传状态','青云过审','驳回/其他原因','是否上传创量','路径'];
+  const head = ['日期','产品','素材数','素材分类统计','素材文件列表','上传状态','青云过审','驳回/其他原因','是否上传创量','未传创量原因','路径'];
   const rows = data.entries.map(e=>{
     const bd = e.materialBreakdown || {};
     const bdTxt = Object.entries(bd).sort((a,b)=>b[1]-a[1]).map(([k,v])=>k+':'+v).join('; ');
-    return [e.date, e.product, e.materials!=null?e.materials:'', bdTxt, (e.materialFiles||[]).join('; '), e.uploaded?'已上传':'未上传', e.qingyun||'未标注', e.qingyunReason||'', e.chuangliang==='yes'?'已传':'未传', e.path||''];
+    return [e.date, e.product, e.materials!=null?e.materials:'', bdTxt, (e.materialFiles||[]).join('; '), e.uploaded?'已上传':'未上传', e.qingyun||'未标注', e.qingyunReason||'', e.chuangliang==='yes'?'已传':'未传', e.chuangliangReason||'', e.path||''];
   });
   const csv = [head].concat(rows).map(r=>r.map(c=>{ c=String(c); return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c; }).join(',')).join('\n');
   const md = '# 登记产能上传情况' + '\n\n' + head.join(' | ') + '\n' + rows.map(r=>r.join(' | ')).join('\n');
@@ -1959,6 +1967,9 @@ function openCapEdit(entry){
   reasonIn.value = entry.qingyunReason || '';
   reasonIn.disabled = !(qySel.value==='未过审' || qySel.value==='其他原因');
   document.getElementById('capEditChuangliang').value = entry.chuangliang==='yes' ? 'yes' : (entry.chuangliang==='no' ? 'no' : '');
+  const clReasonIn = document.getElementById('capEditClReason');
+  clReasonIn.value = entry.chuangliangReason || '';
+  clReasonIn.disabled = !(document.getElementById('capEditChuangliang').value === 'no');
   updateCapEditCmd();
   mask.style.display = 'flex';
 }
@@ -1999,10 +2010,17 @@ function updateCapEditCmd(){
     lines.push('Remove-Item (Join-Path $dir "青云未过审.txt") -ErrorAction SilentlyContinue');
     lines.push('Remove-Item (Join-Path $dir "青云其他.txt") -ErrorAction SilentlyContinue');
   }
+  const clReason = document.getElementById('capEditClReason').value.trim();
   if(cl==='yes'){
     lines.push('New-Item -ItemType File -Path (Join-Path $dir "已上传创量.txt") -Force | Out-Null');
+    lines.push('Remove-Item (Join-Path $dir "未传创量原因.txt") -ErrorAction SilentlyContinue');
   } else if(cl==='no'){
     lines.push('Remove-Item (Join-Path $dir "已上传创量.txt") -ErrorAction SilentlyContinue');
+    if(clReason){
+      lines.push('Set-Content -Path (Join-Path $dir "未传创量原因.txt") -Value "'+clReason.replace(/"/g,'""')+'"');
+    } else {
+      lines.push('Remove-Item (Join-Path $dir "未传创量原因.txt") -ErrorAction SilentlyContinue');
+    }
   }
   document.getElementById('capEditCmd').textContent = lines.join('\n');
 }
@@ -2024,8 +2042,15 @@ function saveCapEdit(){
     } else { delete o.qingyunReason; }
   }
   const cl = document.getElementById('capEditChuangliang').value;
-  if(cl==='yes') o.chuangliang = 'yes';
-  else if(cl==='no') o.chuangliang = 'no';
+  if(cl==='yes'){
+    o.chuangliang = 'yes';
+    delete o.chuangliangReason;
+  } else if(cl==='no'){
+    o.chuangliang = 'no';
+    const clReason = document.getElementById('capEditClReason').value.trim();
+    if(clReason) o.chuangliangReason = clReason;
+    else delete o.chuangliangReason;
+  }
   if(Object.keys(o).length){ ov[key] = o; } else { delete ov[key]; }
   saveCapOverrides(ov);
   renderCapacity(true);
@@ -2042,8 +2067,12 @@ function bindCapEdit(){
     updateCapEditCmd();
   });
   document.getElementById('capEditUploaded').addEventListener('change', updateCapEditCmd);
-  document.getElementById('capEditChuangliang').addEventListener('change', updateCapEditCmd);
+  document.getElementById('capEditChuangliang').addEventListener('change', e=>{
+    document.getElementById('capEditClReason').disabled = !(e.target.value==='no');
+    updateCapEditCmd();
+  });
   document.getElementById('capEditReason').addEventListener('input', updateCapEditCmd);
+  document.getElementById('capEditClReason').addEventListener('input', updateCapEditCmd);
   document.getElementById('capEditCopyCmd').addEventListener('click', ()=>{
     const text = document.getElementById('capEditCmd').textContent;
     if(!text){ alert('没有可复制的命令'); return; }
@@ -5020,6 +5049,10 @@ document.addEventListener('click', function(e){
           <option value="yes">已传创量</option>
           <option value="no">未传创量</option>
         </select>
+      </div>
+      <div class="cap-fld">
+        <label>未传创量原因（未传时填写）</label>
+        <input id="capEditClReason" type="text" placeholder="例如：素材待修改 / 账户余额不足 / 计划暂停">
       </div>
       <div class="cap-tip">
         ⚠️ <b>注意：</b>点击「保存到看板」只会存在当前浏览器里，刷新后仍有效；但每天 23:00 的自动扫描会按 <code>D:/625/京东</code> 里的标记文件重新覆盖。若想真正持久化，请保存后复制下方的 PowerShell 命令，在本地运行一次即可自动创建标记文件。

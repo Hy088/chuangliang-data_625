@@ -13,6 +13,8 @@ CHUANGLIANG = {'已上传创量.txt', 'chuangliang.txt'}
 REASON_FILES = {'驳回原因.txt', '驳回.txt', '原因.txt'}
 # 其他原因的具体内容（读文件内容）
 OTHER_REASON_FILES = {'其他原因.txt', '青云原因.txt'}
+# 未传创量原因（读文件内容）
+CL_REASON_FILES = {'未传创量原因.txt', '未上传创量原因.txt', 'chuangliang_reason.txt'}
 
 L = lambda s: s.lower()
 UPLOAD_L = {L(m) for m in UPLOAD_MARKERS}
@@ -20,7 +22,8 @@ QINGYUN_L = {L(k): v for k, v in QINGYUN.items()}
 CL_L = {L(m) for m in CHUANGLIANG}
 REASON_L = {L(m) for m in REASON_FILES}
 OTHER_L = {L(m) for m in OTHER_REASON_FILES}
-CONTROL_L = UPLOAD_L | set(QINGYUN_L) | CL_L | REASON_L | OTHER_L
+CL_REASON_L = {L(m) for m in CL_REASON_FILES}
+CONTROL_L = UPLOAD_L | set(QINGYUN_L) | CL_L | REASON_L | OTHER_L | CL_REASON_L
 
 
 def infer_year(month, day):
@@ -100,7 +103,13 @@ def _detect_markers(allpaths, names):
                 qingyun_reason = _read_reason(p)
                 break
     chuangliang = 'yes' if any(nl in CL_L for nl in ln) else 'no'
-    return marker, qingyun, qingyun_reason, chuangliang
+    chuangliang_reason = ''
+    if chuangliang == 'no':
+        for p, nl in zip(allpaths, ln):
+            if nl in CL_REASON_L:
+                chuangliang_reason = _read_reason(p)
+                break
+    return marker, qingyun, qingyun_reason, chuangliang, chuangliang_reason
 
 
 def scan():
@@ -143,7 +152,7 @@ def scan():
                     for sub in subdirs:
                         subpath = os.path.join(ppath, sub)
                         allpaths, names = _scan_product(subpath)
-                        marker, qingyun, qingyun_reason, chuangliang = _detect_markers(allpaths, names)
+                        marker, qingyun, qingyun_reason, chuangliang, chuangliang_reason = _detect_markers(allpaths, names)
                         ln = [L(n) for n in names]
                         material_files = [names[i] for i, nl_ in enumerate(ln) if nl_ not in CONTROL_L]
                         materials = len(material_files)
@@ -166,12 +175,13 @@ def scan():
                             'qingyun': qingyun,
                             'qingyunReason': qingyun_reason,
                             'chuangliang': chuangliang,
+                            'chuangliangReason': chuangliang_reason,
                             'path': subpath.replace('\\', '/')
                         })
                 else:
                     # 没有子文件夹：父分类本身作为一条产能记录
                     allpaths, names = _scan_product(ppath)
-                    marker, qingyun, qingyun_reason, chuangliang = _detect_markers(allpaths, names)
+                    marker, qingyun, qingyun_reason, chuangliang, chuangliang_reason = _detect_markers(allpaths, names)
                     ln = [L(n) for n in names]
                     material_files = [names[i] for i, nl_ in enumerate(ln) if nl_ not in CONTROL_L]
                     materials = len(material_files)
@@ -191,10 +201,11 @@ def scan():
                         'materialBreakdown': breakdown,
                         'uploaded': marker is not None,
                         'marker': marker,
-                        'qingyun': qingyun,
-                        'qingyunReason': qingyun_reason,
-                        'chuangliang': chuangliang,
-                        'path': ppath.replace('\\', '/')
+                            'qingyun': qingyun,
+                            'qingyunReason': qingyun_reason,
+                            'chuangliang': chuangliang,
+                            'chuangliangReason': chuangliang_reason,
+                            'path': ppath.replace('\\', '/')
                     })
     return entries
 
@@ -220,7 +231,7 @@ def main():
     data = {
         'generatedAt': datetime.datetime.now().replace(microsecond=0).isoformat(),
         'root': ROOT.replace('\\', '/'),
-        'markerFiles': sorted(UPLOAD_MARKERS | set(QINGYUN) | CHUANGLIANG | REASON_FILES | OTHER_REASON_FILES),
+        'markerFiles': sorted(UPLOAD_MARKERS | set(QINGYUN) | CHUANGLIANG | REASON_FILES | OTHER_REASON_FILES | CL_REASON_FILES),
         'summary': {
             'total': total,
             'uploaded': uploaded,
