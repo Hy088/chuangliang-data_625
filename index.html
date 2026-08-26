@@ -3082,8 +3082,18 @@ function bindNav(){
     else if(b.dataset.tab==='vparse'){ renderVParse(); }
     else if(b.dataset.tab==='me'){ renderMe(); }
     else if(b.dataset.tab==='capacity'){ renderCapacity(); }
+    try{ history.replaceState(null,'','#'+b.dataset.tab); }catch(e){}
   });
   $$('.subnav button[data-sub]').forEach(b=>b.onclick=()=>{ setSub(b.closest('.section').id, b.dataset.sub); });
+  // 支持通过 #capacity 等锚点直达对应板块（供桌面快捷方式一键打开「登记产能」）
+  const _capHash=(location.hash||'').replace(/^#/,'');
+  if(_capHash && document.getElementById(_capHash) && $$('nav button[data-tab="'+_capHash+'"]').length){
+    const _capTab=document.querySelector('nav button[data-tab="'+_capHash+'"]');
+    $$('nav button').forEach(x=>x.classList.remove('active')); _capTab.classList.add('active');
+    $$('.section').forEach(s=>s.classList.remove('active'));
+    $('#'+_capHash).classList.add('active');
+    if(_capHash==='capacity'){ renderCapacity(); }
+  }
 }
 function bindChips(container, set, cb){
   $$(container+' .chip[data-proj]').forEach(c=>{
