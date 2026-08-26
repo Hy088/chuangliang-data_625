@@ -211,7 +211,7 @@ def scan():
 
 
 def main():
-    entries = scan()
+    entries = [e for e in scan() if e['materials'] > 0]
     total = len(entries)
     uploaded = sum(1 for e in entries if e['uploaded'])
     notup = total - uploaded
