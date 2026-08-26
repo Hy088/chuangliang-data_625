@@ -1408,6 +1408,15 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .cap-nums span{color:var(--muted);font-weight:600}
 .cap-acts{display:flex;gap:6px}
 .cap-item .note{font-size:12px;color:var(--muted);margin-top:6px}
+.cap-toggle{cursor:pointer;user-select:none;transition:opacity .2s}
+.cap-toggle:hover{opacity:.7}
+.cap-files{margin-top:10px;padding:10px 12px;background:rgba(125,135,155,.08);border-radius:9px;display:none}
+.cap-files.open{display:block}
+.cap-files-title{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.cap-files-title .cap-meta{margin-left:auto}
+.cap-files ul{list-style:none;padding:0;margin:0;max-height:220px;overflow:auto}
+.cap-files li{font-size:11.5px;color:var(--muted);padding:4px 0;border-bottom:1px dashed var(--line);font-family:Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cap-files li:last-child{border-bottom:none}
 .cap-empty{padding:30px;text-align:center;color:var(--muted);font-size:13px}
 @media(max-width:760px){.cap-form{grid-template-columns:1fr 1fr}.cap-sum-head{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -1709,6 +1718,16 @@ function bindCapacity(){
   sec.querySelector('#capClFilter').addEventListener('change', e=>{ capState.cl=e.target.value; renderCapList(); });
   sec.querySelector('#capExportBtn').addEventListener('click', capExportAuto);
   sec.querySelector('#capList').addEventListener('click', e=>{
+    const toggle = e.target.closest('.cap-toggle');
+    if(toggle){
+      const item = toggle.closest('.cap-item');
+      const files = item && item.querySelector('.cap-files');
+      if(files){
+        const open = files.classList.toggle('open');
+        updateCapToggle(item, open);
+      }
+      return;
+    }
     const btn = e.target.closest('.cap-edit');
     if(!btn) return;
     const key = btn.dataset.key;
@@ -1828,14 +1847,38 @@ function renderCapList(){
   const itemHtml = e=>{
     const up = !!e.uploaded;
     const upBadge = up ? '<span class="cap-badge done">已上传</span>' : '<span class="cap-badge todo">未上传</span>';
-    const mat = (e.materials!=null) ? ('<span class="cap-meta">'+e.materials+' 素材</span>') : '';
+    const matCount = (e.materials!=null) ? e.materials+' 素材' : '';
+    const mat = matCount ? ('<span class="cap-meta cap-toggle cap-count" data-count-text="'+matCount+' ▼" title="点击展开/折叠素材文件">'+matCount+' ▼</span>') : '';
     const key = esc(e.path || (e.date+'/'+e.product));
     return '<div class="cap-item">'+
       '<div class="cap-item-top"><span class="cap-name">'+esc(e.product)+'</span>'+ upBadge + qyBadge(e) + clBadge(e) + mat +'<button class="cap-edit" data-key="'+key+'">✏️ 标注</button></div>'+
       '<div class="cap-row"><div class="cap-nums"><span style="font-family:monospace;font-size:11.5px;color:var(--muted)">'+esc(e.path||'')+'</span></div></div>'+
       qyReasonHtml(e)+
+      capFilesHtml(e)+
       '</div>';
   };
+
+  function capFilesHtml(e){
+    const files = e.materialFiles || [];
+    if(!files.length){ return ''; }
+    const li = files.slice(0, 50).map(f=>'<li>'+esc(f)+'</li>').join('');
+    const more = files.length>50 ? '<li style="color:var(--muted);font-style:italic">…还有 '+(files.length-50)+' 个素材未显示</li>' : '';
+    return '<div class="cap-files">'+
+      '<div class="cap-files-title"><span>📎 素材文件</span><span class="cap-toggle cap-meta" title="点击收起">收起 ▲</span></div>'+
+      '<ul>'+li+more+'</ul>'+
+      '</div>';
+  }
+
+  function updateCapToggle(item, open){
+    item.querySelectorAll('.cap-toggle').forEach(t=>{
+      if(t.classList.contains('cap-count')){
+        const base = t.dataset.countText || '';
+        t.textContent = open ? base.replace('▼','▲') : base;
+      } else {
+        t.textContent = open ? '收起 ▲' : '展开 ▼';
+      }
+    });
+  }
   let html = '';
   dates.forEach(d=>{
     const arr = groups[d];
@@ -1850,8 +1893,8 @@ function renderCapList(){
 function capExportAuto(){
   const data = _capData;
   if(!data.entries || !data.entries.length){ alert('当前没有产能数据可导出'); return; }
-  const head = ['日期','产品','素材数','上传状态','青云过审','驳回/其他原因','是否上传创量','路径'];
-  const rows = data.entries.map(e=>[e.date, e.product, e.materials!=null?e.materials:'', e.uploaded?'已上传':'未上传', e.qingyun||'未标注', e.qingyunReason||'', e.chuangliang==='yes'?'已传':'未传', e.path||'']);
+  const head = ['日期','产品','素材数','素材文件列表','上传状态','青云过审','驳回/其他原因','是否上传创量','路径'];
+  const rows = data.entries.map(e=>[e.date, e.product, e.materials!=null?e.materials:'', (e.materialFiles||[]).join('; '), e.uploaded?'已上传':'未上传', e.qingyun||'未标注', e.qingyunReason||'', e.chuangliang==='yes'?'已传':'未传', e.path||'']);
   const csv = [head].concat(rows).map(r=>r.map(c=>{ c=String(c); return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c; }).join(',')).join('\n');
   const md = '# 登记产能上传情况' + '\n\n' + head.join(' | ') + '\n' + rows.map(r=>r.join(' | ')).join('\n');
   const text = csv + '\n\n' + md;

@@ -104,14 +104,16 @@ def scan():
                             break
                 # 是否上传创量
                 chuangliang = 'yes' if any(nl in CL_L for nl in ln) else 'no'
-                # 素材数 = 非控制文件数量
-                materials = sum(1 for nl in ln if nl not in CONTROL_L)
+                # 素材 = 非控制文件
+                material_files = [names[i] for i, nl in enumerate(ln) if nl not in CONTROL_L]
+                materials = len(material_files)
                 entries.append({
                     'date': iso,
                     'month': mname,
                     'day': dname,
                     'product': pname,
                     'materials': materials,
+                    'materialFiles': material_files,
                     'uploaded': marker is not None,
                     'marker': marker,
                     'qingyun': qingyun,
