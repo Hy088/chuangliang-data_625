@@ -1338,8 +1338,8 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         </div>
         <div id="capList" class="cap-list"></div>
         <div class="cap-hint">
-          📌 <b>怎么标记（在 <code>D:/625/京东/月份/日期/产品名/</code> 文件夹里放标记文件，空文件即可，原因类写内容）：</b><br>
-          · <code>已上传.txt</code> = 已上传 ｜ <code>青云已过审.txt</code> = 青云已过审 ｜ <code>青云未过审.txt</code> + <code>驳回原因.txt</code>(写原因) = 未过审 ｜ <code>青云其他.txt</code> + <code>其他原因.txt</code>(写原因) = 其他原因 ｜ <code>已上传创量.txt</code> = 已传创量。<br>
+          📌 <b>目录结构：</b><code>D:/625/京东/月份/日期/父分类/子产品/素材文件</code>。扫描时会把每个<b>子产品</b>作为一条产能记录，并按素材文件名自动提取分类（如 <code>CH-SC-低活</code> → 低活，<code>信息流-小牛-积木</code> → 信息流-小牛）。<br>
+          <b>怎么标记：</b>在子产品文件夹里放标记文件（空文件即可，原因类写内容）：<code>已上传.txt</code> = 已上传 ｜ <code>青云已过审.txt</code> = 已过审 ｜ <code>青云未过审.txt</code> + <code>驳回原因.txt</code> = 未过审 ｜ <code>青云其他.txt</code> + <code>其他原因.txt</code> = 其他原因 ｜ <code>已上传创量.txt</code> = 已传创量。<br>
           每天 23:00 自动扫描（或点上方「↻ 立即刷新」）即生效。可用上方「月份 / 日期 / 青云 / 创量」下拉按层级快速筛选。
         </div>
       </div>
@@ -1418,6 +1418,12 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .cap-files li{font-size:11.5px;color:var(--muted);padding:4px 0;border-bottom:1px dashed var(--line);font-family:Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cap-files li:last-child{border-bottom:none}
 .cap-empty{padding:30px;text-align:center;color:var(--muted);font-size:13px}
+.cap-type-pill{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;padding:3px 9px;border-radius:20px;background:rgba(43,108,255,.1);color:var(--brand);border:1px solid rgba(43,108,255,.25)}
+.cap-type-pill b{font-weight:800;color:var(--ink)}
+.cap-type-pill.sm{font-size:11.5px;padding:2px 7px}
+.cap-breakdown{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.cap-files-group{margin-top:8px}
+.cap-files-group-title{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px}
 @media(max-width:760px){.cap-form{grid-template-columns:1fr 1fr}.cap-sum-head{grid-template-columns:repeat(2,1fr)}}
 </style>
 
@@ -1765,10 +1771,15 @@ async function renderCapacity(force){
   const qy = s.qingyun || {};
   const qyOk = qy['已过审']||0, qyRej = qy['未过审']||0, qyOth = qy['其他原因']||0, qyNone = qy['未标注']||0;
   const clYes = s.chuangliangYes||0;
+  const mt = s.materialTypes || {};
+  const mtHtml = Object.keys(mt).length
+    ? Object.entries(mt).sort((a,b)=>b[1]-a[1]).map(([k,v])=>'<span class="cap-type-pill">'+esc(k)+' <b>'+v+'</b></span>').join(' ')
+    : '<span class="cap-meta">暂无分类数据</span>';
   document.getElementById('capSubStats').innerHTML =
     '素材总数 <b>'+(s.materials!=null?s.materials:'–')+'</b> · 已上传 <b>'+(s.uploaded||0)+'</b> · 未上传 <b>'+(s.notUploaded||0)+'</b>' +
     '<br>青云过审：已过审 <b>'+qyOk+'</b> · 未过审 <b>'+qyRej+'</b> · 其他原因 <b>'+qyOth+'</b> · 未标注 <b>'+qyNone+'</b>' +
-    '<br>已传创量 <b>'+clYes+'</b> · 未传创量 <b>'+(total-clYes)+'</b>';
+    '<br>已传创量 <b>'+clYes+'</b> · 未传创量 <b>'+(total-clYes)+'</b>' +
+    '<br>素材分类统计：'+mtHtml;
   if(data.generatedAt){ document.getElementById('capUpdated').textContent = '最后同步：' + String(data.generatedAt).replace('T',' ').slice(0,16); }
   if(data.root){ document.getElementById('capRoot').textContent = data.root; }
   fillCapFilters();
@@ -1849,10 +1860,15 @@ function renderCapList(){
     const upBadge = up ? '<span class="cap-badge done">已上传</span>' : '<span class="cap-badge todo">未上传</span>';
     const matCount = (e.materials!=null) ? e.materials+' 素材' : '';
     const mat = matCount ? ('<span class="cap-meta cap-toggle cap-count" data-count-text="'+matCount+' ▼" title="点击展开/折叠素材文件">'+matCount+' ▼</span>') : '';
+    const bd = e.materialBreakdown || {};
+    const bdHtml = Object.keys(bd).length
+      ? '<div class="cap-breakdown">'+Object.entries(bd).sort((a,b)=>b[1]-a[1]).map(([k,v])=>'<span class="cap-type-pill sm" title="'+esc(k)+'">'+esc(k)+' <b>'+v+'</b></span>').join(' ')+'</div>'
+      : '';
     const key = esc(e.path || (e.date+'/'+e.product));
     return '<div class="cap-item">'+
       '<div class="cap-item-top"><span class="cap-name">'+esc(e.product)+'</span>'+ upBadge + qyBadge(e) + clBadge(e) + mat +'<button class="cap-edit" data-key="'+key+'">✏️ 标注</button></div>'+
       '<div class="cap-row"><div class="cap-nums"><span style="font-family:monospace;font-size:11.5px;color:var(--muted)">'+esc(e.path||'')+'</span></div></div>'+
+      bdHtml +
       qyReasonHtml(e)+
       capFilesHtml(e)+
       '</div>';
@@ -1861,12 +1877,34 @@ function renderCapList(){
   function capFilesHtml(e){
     const files = e.materialFiles || [];
     if(!files.length){ return ''; }
-    const li = files.slice(0, 50).map(f=>'<li>'+esc(f)+'</li>').join('');
-    const more = files.length>50 ? '<li style="color:var(--muted);font-style:italic">…还有 '+(files.length-50)+' 个素材未显示</li>' : '';
+    // 按分类分组
+    const groups = {};
+    files.forEach(f=>{
+      const cat = _classifyName(f);
+      (groups[cat] = groups[cat]||[]).push(f);
+    });
+    const cats = Object.keys(groups).sort();
+    let html = '';
+    cats.forEach(cat=>{
+      const arr = groups[cat];
+      const li = arr.slice(0, 30).map(f=>'<li>'+esc(f)+'</li>').join('');
+      const more = arr.length>30 ? '<li style="color:var(--muted);font-style:italic">…还有 '+(arr.length-30)+' 个素材未显示</li>' : '';
+      html += '<div class="cap-files-group"><div class="cap-files-group-title">'+esc(cat)+' <span class="cap-meta">'+arr.length+'</span></div><ul>'+li+more+'</ul></div>';
+    });
     return '<div class="cap-files">'+
-      '<div class="cap-files-title"><span>📎 素材文件</span><span class="cap-toggle cap-meta" title="点击收起">收起 ▲</span></div>'+
-      '<ul>'+li+more+'</ul>'+
+      '<div class="cap-files-title"><span>📎 素材文件（按分类分组）</span><span class="cap-toggle cap-meta" title="点击收起">收起 ▲</span></div>'+
+      html +
       '</div>';
+  }
+
+  function _classifyName(name){
+    const base = (name||'').replace(/\.[^.]+$/,'');
+    const parts = base.split('-').map(s=>s.trim()).filter(Boolean);
+    if(parts.length>=3 && parts[0].match(/^[a-zA-Z]+$/) && parts[1].match(/^[a-zA-Z]+$/)){
+      if(parts[0].toUpperCase().startsWith('CH')) return parts[2];
+      return parts[0]+'-'+parts[1];
+    }
+    return parts[0] || '其他';
   }
 
   function updateCapToggle(item, open){
@@ -1893,8 +1931,12 @@ function renderCapList(){
 function capExportAuto(){
   const data = _capData;
   if(!data.entries || !data.entries.length){ alert('当前没有产能数据可导出'); return; }
-  const head = ['日期','产品','素材数','素材文件列表','上传状态','青云过审','驳回/其他原因','是否上传创量','路径'];
-  const rows = data.entries.map(e=>[e.date, e.product, e.materials!=null?e.materials:'', (e.materialFiles||[]).join('; '), e.uploaded?'已上传':'未上传', e.qingyun||'未标注', e.qingyunReason||'', e.chuangliang==='yes'?'已传':'未传', e.path||'']);
+  const head = ['日期','产品','素材数','素材分类统计','素材文件列表','上传状态','青云过审','驳回/其他原因','是否上传创量','路径'];
+  const rows = data.entries.map(e=>{
+    const bd = e.materialBreakdown || {};
+    const bdTxt = Object.entries(bd).sort((a,b)=>b[1]-a[1]).map(([k,v])=>k+':'+v).join('; ');
+    return [e.date, e.product, e.materials!=null?e.materials:'', bdTxt, (e.materialFiles||[]).join('; '), e.uploaded?'已上传':'未上传', e.qingyun||'未标注', e.qingyunReason||'', e.chuangliang==='yes'?'已传':'未传', e.path||''];
+  });
   const csv = [head].concat(rows).map(r=>r.map(c=>{ c=String(c); return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c; }).join(',')).join('\n');
   const md = '# 登记产能上传情况' + '\n\n' + head.join(' | ') + '\n' + rows.map(r=>r.join(' | ')).join('\n');
   const text = csv + '\n\n' + md;
