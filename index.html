@@ -583,14 +583,6 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .cap-cls-bar i{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#58a6ff);border-radius:6px}
 .cap-cls-v{width:92px;flex:none;text-align:right;color:#c9d1e0;font-variant-numeric:tabular-nums}
 .cap-cls-tb{width:100%;border-collapse:collapse;font-size:13px}
-.cap-cat-tb{width:100%;border-collapse:collapse;font-size:13px;margin-top:2px}
-.cap-cat-tb th,.cap-cat-tb td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line,#20242e);vertical-align:middle}
-.cap-cat-tb th{color:#aeb6c8;font-weight:600;background:rgba(255,255,255,.02)}
-.cap-cat-tb .t-up{color:#3fb950;font-weight:600}
-.cap-cat-tb .t-no{color:#f85149;font-weight:600}
-.cap-cat-bar{display:inline-block;width:80px;height:8px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;vertical-align:middle;margin-right:6px}
-.cap-cat-bar i{display:block;height:100%}
-.cap-cat-sum td{border-top:2px solid var(--line,#2a2f3a);font-weight:700;background:rgba(255,255,255,.03)}
 .cap-cls-tb th,.cap-cls-tb td{padding:7px 9px;border:1px solid var(--line,#232733);text-align:center}
 .cap-cls-tb th{background:var(--panel2,#1b1f29);color:#aeb6c8;font-weight:600}
 .cap-cls-cta{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -1397,12 +1389,6 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
             <div id="capClsCross"></div>
           </div>
         </div>
-      <div class="cap-cls-grid">
-        <div class="cap-cls-box cap-cls-box-wide">
-          <div class="cap-cls-box-t">📊 按总类统计（哪个类别还没传）</div>
-          <div id="capCatStats"></div>
-        </div>
-      </div>
         <div class="cap-cls-cta">
           <button class="btn sm" id="capClsFilterBtn">🔍 仅看已上传产品</button>
           <span class="cap-meta" id="capClsUpCount"></span>
@@ -1421,6 +1407,12 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
           <span class="cap-quick-label">创量：</span>
           <span class="cap-chip" data-cl="已传">创量·已传</span>
           <span class="cap-chip" data-cl="未传">创量·未传</span>
+          <span style="width:1px;height:18px;background:var(--line);margin:0 4px"></span>
+          <span class="cap-quick-label">总类：</span>
+          <span class="cap-chip" data-cat="广义新">广义新</span>
+          <span class="cap-chip" data-cat="DHX">DHX</span>
+          <span class="cap-chip" data-cat="标点">标点</span>
+          <span class="cap-chip" data-cat="PRJ">PRJ</span>
         </div>
         <div class="cap-toolbar" id="capToolbar">
           <button class="btn sm" id="capSelectAll" title="选中当前筛选结果全部">☑ 全选当前</button>
@@ -1429,7 +1421,6 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
           <select id="capDayFilter" class="cap-sort" title="按日期筛选"><option value="">日期·全部</option></select>
           <select id="capQyFilter" class="cap-sort" title="按青云过审状态筛选"><option value="">青云·全部</option><option value="已过审">已过审</option><option value="未过审">未过审</option><option value="其他原因">其他原因</option><option value="未标注">未标注</option></select>
           <select id="capClFilter" class="cap-sort" title="按是否上传创量筛选"><option value="">创量·全部</option><option value="已传">已传创量</option><option value="未传">未传创量</option></select>
-          <select id="capCatFilter" class="cap-sort" title="按总类筛选"><option value="">总类·全部</option><option value="广义新">广义新</option><option value="DHX">DHX（低活）</option><option value="标点">标点（信息流）</option><option value="PRJ">PRJ（采销项目）</option><option value="其他">其他</option></select>
           <span class="cap-spacer"></span>
           <button class="btn sm" id="capExportBtn" title="复制为 CSV 到剪贴板">📋 导出</button>
         </div>
@@ -1844,7 +1835,6 @@ function bindCapacity(){
   sec.querySelector('#capSearch').addEventListener('input', e=>{ capState.q=e.target.value.trim().toLowerCase(); renderCapList(); });
   sec.querySelector('#capMonthFilter').addEventListener('change', e=>{ capState.month=e.target.value; updateCapDayOptions(); renderCapList(); renderCapUploadClassify(); });
   sec.querySelector('#capDayFilter').addEventListener('change', e=>{ capState.day=e.target.value; renderCapList(); renderCapUploadClassify(); });
-  sec.querySelector('#capCatFilter').addEventListener('change', e=>{ capState.cat=e.target.value; renderCapList(); renderCapCategoryStats(); });
   sec.querySelector('#capQyFilter').addEventListener('change', e=>{ capState.qy=e.target.value; updateCapQuickChips(); renderCapList(); });
   sec.querySelector('#capClFilter').addEventListener('change', e=>{ capState.cl=e.target.value; updateCapQuickChips(); renderCapList(); });
   sec.querySelector('#capExportBtn').addEventListener('click', capExportAuto);
@@ -1854,9 +1844,10 @@ function bindCapacity(){
   document.getElementById('capQuick').addEventListener('click', e=>{
     const chip = e.target.closest('.cap-chip');
     if(!chip) return;
-    if(chip.dataset.clear){ setCapQuick(null, null); return; }
-    if(chip.dataset.qy){ setCapQuick(chip.dataset.qy, null); }
-    else if(chip.dataset.cl){ setCapQuick(null, chip.dataset.cl); }
+    if(chip.dataset.clear){ setCapQuick(null, null, ''); return; }
+    if(chip.dataset.qy){ setCapQuick(chip.dataset.qy, null, capState.cat); }
+    else if(chip.dataset.cl){ setCapQuick(null, chip.dataset.cl, capState.cat); }
+    else if(chip.dataset.cat){ setCapQuick(capState.qy, capState.cl, chip.dataset.cat); }
   });
   // 全选当前筛选结果
   sec.querySelector('#capSelectAll').addEventListener('click', ()=>{
@@ -1895,9 +1886,10 @@ function bindCapacity(){
   });
 }
 
-function setCapQuick(qy, cl){
+function setCapQuick(qy, cl, cat){
   capState.qy = qy || '';
   capState.cl = cl || '';
+  if(cat !== undefined) capState.cat = cat || '';
   const qySel = document.getElementById('capQyFilter');
   const clSel = document.getElementById('capClFilter');
   if(qySel) qySel.value = capState.qy;
@@ -1910,6 +1902,7 @@ function updateCapQuickChips(){
     let on = false;
     if(c.dataset.qy && capState.qy && c.dataset.qy===capState.qy) on = true;
     if(c.dataset.cl && capState.cl && c.dataset.cl===capState.cl) on = true;
+    if(c.dataset.cat && capState.cat && c.dataset.cat===capState.cat) on = true;
     c.classList.toggle('on', on);
   });
 }
@@ -1965,7 +1958,6 @@ async function renderCapacity(force){
   fillCapFilters();
   renderCapList();
   renderCapUploadClassify();
-  renderCapCategoryStats();
 }
 
 function fillCapFilters(){
@@ -2080,37 +2072,6 @@ function renderCapUploadClassify(){
   html+='<tr><td><b>小计</b></td>'+qyKeys.map(qk=>'<td><b>'+src.filter(e=>(e.qingyun||'未标注')===qk).length+'</b></td>').join('')+'<td><b>'+n+'</b></td></tr>';
   html+='</tbody></table>';
   document.getElementById('capClsCross').innerHTML = html;
-}
-
-function renderCapCategoryStats(){
-  const box = document.getElementById('capCatStats');
-  if(!box) return;
-  let src = (_capData.entries||[]).slice();
-  if(capState.month) src = src.filter(e=>e.month===capState.month);
-  if(capState.day) src = src.filter(e=>e.day===capState.day);
-  // 按总类聚合（产品维度；跨类产品重复计入各总类）
-  const cats = {};
-  src.forEach(e=>{
-    const cs = (e.categories && e.categories.length) ? e.categories : ['其他'];
-    cs.forEach(c=>{
-      if(!cats[c]) cats[c] = {total:0, up:0};
-      cats[c].total++;
-      if(e.uploaded) cats[c].up++;
-    });
-  });
-  const order = ['广义新','DHX','标点','PRJ','其他'];
-  const keys = Object.keys(cats).sort((a,b)=> ((order.indexOf(a)+1)||99) - ((order.indexOf(b)+1)||99));
-  let html = '<table class="cap-cat-tb"><thead><tr><th>总类</th><th>产品数</th><th>已上传</th><th>未上传</th><th>上传率</th></tr></thead><tbody>';
-  keys.forEach(k=>{
-    const t=cats[k].total, u=cats[k].up, no=t-u, pct=t?Math.round(u/t*100):0;
-    const bar = '<span class="cap-cat-bar"><i style="width:'+pct+'%;background:'+(pct>=80?'#3fb950':pct>=50?'#d29922':'#f85149')+'"></i></span>';
-    html += '<tr><td><b>'+esc(k)+'</b></td><td>'+t+'</td><td><span class="t-up">'+u+'</span></td><td><span class="t-no">'+no+'</span></td><td>'+bar+' '+pct+'%</td></tr>';
-  });
-  const allTotal = src.length, allUp = src.filter(e=>e.uploaded).length, allPct = allTotal?Math.round(allUp/allTotal*100):0;
-  html += '<tr class="cap-cat-sum"><td><b>合计（去重产品）</b></td><td>'+allTotal+'</td><td><span class="t-up">'+allUp+'</span></td><td><span class="t-no">'+(allTotal-allUp)+'</span></td><td>'+allPct+'%</td></tr>';
-  html += '</tbody></table>';
-  html += '<div class="cap-meta" style="margin-top:6px">说明：产品若含多类素材会重复计入对应总类；「合计」按去重产品数统计。用上方「总类」下拉可只看某类。</div>';
-  box.innerHTML = html;
 }
 
 function renderCapList(){
