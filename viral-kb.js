@@ -20,6 +20,45 @@
   }
   function row(k, v) { return '<tr><td class="vp-k">' + esc(k) + '</td><td>' + (v === '' || v == null ? '<span class="muted">—</span>' : v) + '</td></tr>'; }
 
+  /* ---------- 与 vparse-deep.js 协作：兜底抽帧 ---------- */
+  // 用户可能直接点「深度分析」但没点「重新抽帧」，或抽帧状态丢失；这里自动兜底。
+  function ensureFrames(thenFn) {
+    if (window.VP && VP.frames && VP.frames.length) { thenFn(); return; }
+    if (!window.VP || !VP.video || !VP.video.duration) {
+      const out = $('vpViralOut');
+      if (out) {
+        out.innerHTML = '<div class="vp-warn">请先拖入一条视频，再点这里分析。</div>';
+        out.classList.remove('muted');
+      }
+      return;
+    }
+    const out = $('vpViralOut');
+    if (out) {
+      out.innerHTML = '<div class="vp-warn">视频已加载但尚未抽帧，正在自动抽帧…（约 3–8 秒）</div>';
+      out.classList.remove('muted');
+    }
+    try {
+      const n = Math.max(2, Math.min(30, +(document.getElementById('vpFrames')?.value || 8)));
+      if (typeof extractVParseFrames === 'function') extractVParseFrames(n);
+    } catch (e) {
+      if (out) out.innerHTML = '<div class="vp-warn">自动抽帧失败：' + esc(e.message) + '，请手动点「重新抽帧」。</div>';
+      return;
+    }
+    let ticks = 0;
+    const timer = setInterval(function () {
+      ticks++;
+      if (window.VP && VP.frames && VP.frames.length) {
+        clearInterval(timer);
+        thenFn();
+        return;
+      }
+      if (ticks > 40) {
+        clearInterval(timer);
+        if (out) out.innerHTML = '<div class="vp-warn">自动抽帧超时，请检查视频是否已正确加载，或手动点「重新抽帧」。</div>';
+      }
+    }, 500);
+  }
+
   /* ---------- 知识库：真实已发布爆款的实证规则 ---------- */
   const KB = {
     empirical: {
@@ -159,10 +198,28 @@
 
   /* ---------- 反推：从抽帧实测 + 深度分析推断爆款结构 ---------- */
   function gatherText() {
+    const info = gatherTextInfo();
+    return info.text;
+  }
+  function gatherTextInfo() {
     const deep = (window.VP && VP.deep) || {};
-    const ocr = (deep.ocr || []).filter(x => x.text).map(x => x.text).join('\n');
-    const whisper = deep.whisper || '';
-    return (ocr + '\n' + whisper).trim();
+    const rawOcr = (deep.ocr || []).filter(x => x.text).map(x => x.text);
+    // 过滤明显乱码：无中文字符且可打印字符比例过低的行
+    const cleanOcr = rawOcr.filter(t => {
+      if (!t) return false;
+      const chinese = (t.match(/[\u4e00-\u9fa5]/g) || []).length;
+      const printable = (t.match(/[\u4e00-\u9fa5a-zA-Z0-9\u3000-\u303F\uFF00-\uFFEF\s，。！？、：""''（）【】《》]/g) || []).length;
+      return chinese > 0 || (printable / Math.max(1, t.length)) > 0.6;
+    });
+    const whisper = String(deep.whisper || '');
+    const text = (cleanOcr.join('\n') + '\n' + whisper).trim();
+    let quality = 'none';
+    if (text.length > 5) quality = 'ok';
+    else if (cleanOcr.length || whisper.length) quality = 'poor';
+    let note = '';
+    if (!text && (rawOcr.length || whisper.length)) note = '本地 OCR / 语音识别质量较低（乱码/错字多），结构反推主要基于画面帧与时长节奏；如需精准口播复刻，建议手动粘贴文案。';
+    else if (!text) note = '尚未运行深度分析，无法读取字幕/口播；结构反推基于画面帧与时长节奏。';
+    return { text, quality, note, ocrCount: rawOcr.length, cleanCount: cleanOcr.length };
   }
 
   function inferHookType(text, hasStrongOpen) {
@@ -180,7 +237,8 @@
     const dur = meta.duration || 0;
     const deep = (window.VP && VP.deep) || {};
     const mat = (window.VP && VP.mat) || null;
-    const text = gatherText();
+    const ti = gatherTextInfo();
+    const text = ti.text;
     const hookType = inferHookType(text, a.hook);
     const shotLen = a.shotLen || (dur ? dur / ((a.changes || 0) + 1) : 0);
     const rhythm = shotLen ? (shotLen < 2.5 ? '快节奏/信息密' : shotLen < 4 ? '中节奏' : '慢节奏/留白多') : '—';
@@ -188,7 +246,7 @@
     const ctaKw = ['点击', '下单', '领', '抢', '购买', '戳', '左下', '链接', '下方'];
     const hasCta = !!kwHit(text, ctaKw) || (deep.audio && deep.audio.density > 0.5);
     const durTier = dur <= 15 ? '短(<15s)' : dur <= 25 ? '标准(15-25s)' : '长(>25s)';
-    return { dur, durTier, hookType, shotLen, rhythm, persons, hasCta, a, mat, text };
+    return { dur, durTier, hookType, shotLen, rhythm, persons, hasCta, a, mat, text, textInfo: ti };
   }
 
   function evalEmpirical(s) {
@@ -213,11 +271,12 @@
   function renderViralAnalyze() {
     const out = $('vpViralOut');
     if (!out) return;
-    if (!window.VP || !VP.frames || !VP.frames.length) {
-      out.innerHTML = '<div class="vp-warn">请先拖入视频并「重新抽帧」（或深度分析），再点「📊 反推爆款结构」。</div>';
-      out.classList.remove('muted');
-      return;
-    }
+    ensureFrames(function () {
+      doRenderViralAnalyze();
+    });
+  }
+  function doRenderViralAnalyze() {
+    const out = $('vpViralOut');
     const s = analyzeStructure();
     const checks = evalEmpirical(s);
     const mat = s.mat;
@@ -243,6 +302,11 @@
 
     // 节奏硬规则提示
     html += '<div class="vp-rep-blk"><div class="vp-rep-bh">🎚 节奏硬规则（直接套用）</div><div class="vp-rep-bd muted">' + esc(KB.rhythmRules) + '</div></div>';
+
+    // 识别质量提示
+    if (s.textInfo && s.textInfo.note) {
+      html += '<div class="vp-rep-blk"><div class="vp-rep-bh">📝 字幕/口播识别说明</div><div class="vp-warn-in">' + esc(s.textInfo.note) + '</div></div>';
+    }
 
     out.innerHTML = html;
     out.classList.remove('muted');
@@ -284,11 +348,12 @@
   function renderSameCat() {
     const out = $('vpViralOut');
     if (!out) return;
-    if (!window.VP || !VP.frames || !VP.frames.length) {
-      out.innerHTML = '<div class="vp-warn">请先拖入视频并「重新抽帧」，再点「🧬 生成同品类复刻」。</div>';
-      out.classList.remove('muted');
-      return;
-    }
+    ensureFrames(function () {
+      doRenderSameCat();
+    });
+  }
+  function doRenderSameCat() {
+    const out = $('vpViralOut');
     const sets = buildSameCatSets();
     const cat = sets.length ? sets[0].cat : '同类产品';
     const m = KB.sameCatMatrix;
