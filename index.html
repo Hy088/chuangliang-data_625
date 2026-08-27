@@ -1801,7 +1801,10 @@ function applyCapOverrides(data){
     const o = ov[key];
     if(!o) return e;
     const ne = {...e};
-    if(o.uploaded != null) ne.uploaded = o.uploaded;
+    if(o.uploaded != null){
+      // 只允许 localStorage 把「未上传」覆盖为「已上传」；文件层已上传时，不允许覆盖回未上传
+      if(!ne.uploaded && o.uploaded) ne.uploaded = true;
+    }
     if(o.qingyun != null) ne.qingyun = o.qingyun;
     if(o.qingyunReason != null) ne.qingyunReason = o.qingyunReason;
     if(o.chuangliang != null) ne.chuangliang = o.chuangliang;

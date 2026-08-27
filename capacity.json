@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-26T18:58:14",
+ "generatedAt": "2026-08-27T09:55:24",
  "root": "D:/625/京东",
  "markerFiles": [
   "chuangliang.txt",
@@ -22,15 +22,15 @@
   "驳回原因.txt"
  ],
  "summary": {
-  "total": 424,
-  "uploaded": 0,
-  "notUploaded": 424,
-  "rate": 0,
-  "materials": 6869,
+  "total": 425,
+  "uploaded": 317,
+  "notUploaded": 108,
+  "rate": 75,
+  "materials": 6899,
   "materialTypes": {
    "广义新": 2841,
    "低活": 2338,
-   "信息流-小牛": 1579,
+   "信息流-小牛": 1609,
    "采销项目": 83,
    "悬挂抽纸": 13,
    "DHX-蜜薯": 13,
@@ -41,7 +41,7 @@
    "已过审": 290,
    "未过审": 0,
    "其他原因": 0,
-   "未标注": 134
+   "未标注": 135
   },
   "chuangliangYes": 317
  },
@@ -349,8 +349,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -380,8 +380,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -579,8 +579,8 @@
    "materialBreakdown": {
     "低活": 19
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -615,8 +615,8 @@
    "materialBreakdown": {
     "广义新": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -722,8 +722,8 @@
    "materialBreakdown": {
     "低活": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -754,8 +754,8 @@
    "materialBreakdown": {
     "低活": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1158,8 +1158,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1220,8 +1220,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1257,8 +1257,8 @@
    "materialBreakdown": {
     "低活": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1292,8 +1292,8 @@
    "materialBreakdown": {
     "低活": 14
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1323,8 +1323,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1357,8 +1357,8 @@
    "materialBreakdown": {
     "广义新": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1391,8 +1391,8 @@
    "materialBreakdown": {
     "广义新": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1521,8 +1521,8 @@
    "materialBreakdown": {
     "低活": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1557,8 +1557,8 @@
    "materialBreakdown": {
     "低活": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1593,8 +1593,8 @@
    "materialBreakdown": {
     "采销项目": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1624,8 +1624,8 @@
    "materialBreakdown": {
     "采销项目": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1771,8 +1771,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1826,8 +1826,8 @@
    "materialBreakdown": {
     "低活": 34
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1857,8 +1857,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1896,8 +1896,8 @@
    "materialBreakdown": {
     "低活": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1939,8 +1939,8 @@
    "materialBreakdown": {
     "广义新": 22
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -1970,8 +1970,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2011,8 +2011,8 @@
    "materialBreakdown": {
     "广义新": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2046,8 +2046,8 @@
    "materialBreakdown": {
     "广义新": 14
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2087,8 +2087,8 @@
    "materialBreakdown": {
     "低活": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2128,8 +2128,8 @@
    "materialBreakdown": {
     "低活": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2164,8 +2164,8 @@
    "materialBreakdown": {
     "低活": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2202,8 +2202,8 @@
    "materialBreakdown": {
     "广义新": 17
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2241,8 +2241,8 @@
    "materialBreakdown": {
     "广义新": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2275,8 +2275,8 @@
    "materialBreakdown": {
     "广义新": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2352,8 +2352,8 @@
    "materialBreakdown": {
     "广义新": 56
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2452,8 +2452,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2489,8 +2489,8 @@
    "materialBreakdown": {
     "低活": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2532,8 +2532,8 @@
    "materialBreakdown": {
     "低活": 22
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2575,8 +2575,8 @@
    "materialBreakdown": {
     "低活": 22
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2627,8 +2627,8 @@
    "materialBreakdown": {
     "低活": 31
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2666,8 +2666,8 @@
    "materialBreakdown": {
     "广义新": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2711,8 +2711,8 @@
    "materialBreakdown": {
     "广义新": 24
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2746,8 +2746,8 @@
    "materialBreakdown": {
     "广义新": 14
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2788,8 +2788,8 @@
    "materialBreakdown": {
     "广义新": 21
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2824,8 +2824,8 @@
    "materialBreakdown": {
     "低活": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2872,8 +2872,8 @@
    "materialBreakdown": {
     "低活": 27
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2959,8 +2959,8 @@
    "materialBreakdown": {
     "低活": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -2996,8 +2996,8 @@
    "materialBreakdown": {
     "广义新": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3033,8 +3033,8 @@
    "materialBreakdown": {
     "广义新": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3072,8 +3072,8 @@
    "materialBreakdown": {
     "低活": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3120,8 +3120,8 @@
    "materialBreakdown": {
     "低活": 27
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3151,8 +3151,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3182,8 +3182,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3218,8 +3218,8 @@
    "materialBreakdown": {
     "广义新": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3260,8 +3260,8 @@
    "materialBreakdown": {
     "广义新": 21
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3299,8 +3299,8 @@
    "materialBreakdown": {
     "广义新": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3371,8 +3371,8 @@
    "materialBreakdown": {
     "低活": 17
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3405,8 +3405,8 @@
    "materialBreakdown": {
     "低活": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3442,8 +3442,8 @@
    "materialBreakdown": {
     "低活": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3474,8 +3474,8 @@
    "materialBreakdown": {
     "广义新": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3507,8 +3507,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3540,8 +3540,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3573,8 +3573,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3610,8 +3610,8 @@
    "materialBreakdown": {
     "广义新": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3710,8 +3710,8 @@
    "materialBreakdown": {
     "低活": 14
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3782,8 +3782,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3819,8 +3819,8 @@
    "materialBreakdown": {
     "低活": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3852,8 +3852,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3884,8 +3884,8 @@
    "materialBreakdown": {
     "广义新": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3915,8 +3915,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3948,8 +3948,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -3981,8 +3981,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4014,8 +4014,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4049,8 +4049,8 @@
    "materialBreakdown": {
     "低活": 14
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4140,8 +4140,8 @@
    "materialBreakdown": {
     "低活": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4174,8 +4174,8 @@
    "materialBreakdown": {
     "广义新": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4213,8 +4213,8 @@
    "materialBreakdown": {
     "低活": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4252,8 +4252,8 @@
    "materialBreakdown": {
     "低活": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4287,8 +4287,8 @@
    "materialBreakdown": {
     "低活": 14
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4320,8 +4320,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4351,8 +4351,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4396,8 +4396,8 @@
    "materialBreakdown": {
     "广义新": 24
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4427,8 +4427,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4460,8 +4460,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4493,8 +4493,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4525,8 +4525,8 @@
    "materialBreakdown": {
     "低活": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4558,8 +4558,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4600,8 +4600,8 @@
    "materialBreakdown": {
     "广义新": 21
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4631,8 +4631,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4751,8 +4751,8 @@
    "materialBreakdown": {
     "低活": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4902,8 +4902,8 @@
    "materialBreakdown": {
     "广义新": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4933,8 +4933,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -4974,8 +4974,8 @@
    "materialBreakdown": {
     "广义新": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5192,8 +5192,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5223,8 +5223,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5261,8 +5261,8 @@
    "materialBreakdown": {
     "广义新": 17
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5294,8 +5294,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5339,8 +5339,8 @@
    "materialBreakdown": {
     "广义新": 24
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5372,8 +5372,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5434,8 +5434,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5473,8 +5473,8 @@
    "materialBreakdown": {
     "广义新": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5540,8 +5540,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5574,8 +5574,8 @@
    "materialBreakdown": {
     "广义新": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5677,8 +5677,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5724,8 +5724,8 @@
    "materialBreakdown": {
     "广义新": 26
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5755,8 +5755,8 @@
    "materialBreakdown": {
     "采销项目": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5819,8 +5819,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5851,8 +5851,8 @@
    "materialBreakdown": {
     "广义新": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -5884,8 +5884,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6028,8 +6028,8 @@
    "materialBreakdown": {
     "广义新": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6061,8 +6061,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6100,8 +6100,8 @@
    "materialBreakdown": {
     "广义新": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6136,8 +6136,8 @@
    "materialBreakdown": {
     "广义新": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6178,8 +6178,8 @@
    "materialBreakdown": {
     "广义新": 21
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6218,8 +6218,8 @@
    "materialBreakdown": {
     "广义新": 19
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6251,8 +6251,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6289,8 +6289,8 @@
    "materialBreakdown": {
     "低活": 17
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6418,8 +6418,8 @@
    "materialBreakdown": {
     "广义新": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6454,8 +6454,8 @@
    "materialBreakdown": {
     "广义新": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6485,8 +6485,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6629,8 +6629,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6701,8 +6701,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6733,8 +6733,8 @@
    "materialBreakdown": {
     "低活": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6764,8 +6764,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6801,8 +6801,8 @@
    "materialBreakdown": {
     "广义新": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6853,8 +6853,8 @@
    "materialBreakdown": {
     "广义新": 31
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6884,8 +6884,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6915,8 +6915,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -6946,8 +6946,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7012,8 +7012,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7048,8 +7048,8 @@
    "materialBreakdown": {
     "采销项目": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7081,8 +7081,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7114,8 +7114,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7147,8 +7147,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7180,8 +7180,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7211,8 +7211,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7264,8 +7264,8 @@
    "materialBreakdown": {
     "低活": 32
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7297,8 +7297,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7328,8 +7328,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7359,8 +7359,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7390,8 +7390,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7425,8 +7425,8 @@
    "materialBreakdown": {
     "广义新": 14
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7456,8 +7456,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7491,8 +7491,8 @@
    "materialBreakdown": {
     "广义新": 14
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7523,8 +7523,8 @@
    "materialBreakdown": {
     "低活": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7561,8 +7561,8 @@
    "materialBreakdown": {
     "低活": 17
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7592,8 +7592,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7625,8 +7625,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7658,8 +7658,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7691,8 +7691,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7724,8 +7724,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7802,8 +7802,8 @@
    "materialBreakdown": {
     "低活": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7841,8 +7841,8 @@
    "materialBreakdown": {
     "低活": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7874,8 +7874,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7907,8 +7907,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7939,8 +7939,8 @@
    "materialBreakdown": {
     "广义新": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -7971,8 +7971,8 @@
    "materialBreakdown": {
     "广义新": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8002,8 +8002,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8049,8 +8049,8 @@
    "materialBreakdown": {
     "广义新": 26
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8082,8 +8082,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8115,8 +8115,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8154,8 +8154,8 @@
    "materialBreakdown": {
     "低活": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8186,8 +8186,8 @@
    "materialBreakdown": {
     "广义新": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8217,8 +8217,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8249,8 +8249,8 @@
    "materialBreakdown": {
     "广义新": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8280,8 +8280,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8313,8 +8313,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8349,8 +8349,8 @@
    "materialBreakdown": {
     "广义新": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8407,8 +8407,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8488,8 +8488,8 @@
    "materialBreakdown": {
     "广义新": 27
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8526,8 +8526,8 @@
    "materialBreakdown": {
     "广义新": 17
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8589,8 +8589,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8622,8 +8622,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8670,8 +8670,8 @@
    "materialBreakdown": {
     "广义新": 27
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8750,8 +8750,8 @@
    "materialBreakdown": {
     "信息流-小牛": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8781,8 +8781,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -8829,8 +8829,8 @@
    "materialBreakdown": {
     "信息流-小牛": 27
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9016,8 +9016,8 @@
    "materialBreakdown": {
     "信息流-小牛": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9091,8 +9091,8 @@
    "materialBreakdown": {
     "广义新": 21
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9124,8 +9124,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9277,8 +9277,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9302,8 +9302,8 @@
    "materialBreakdown": {
     "广义新": 4
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9333,8 +9333,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9358,8 +9358,8 @@
    "materialBreakdown": {
     "信息流-小牛": 4
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9389,8 +9389,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9421,8 +9421,8 @@
    "materialBreakdown": {
     "信息流-小牛": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9452,8 +9452,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9483,8 +9483,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9506,8 +9506,8 @@
    "materialBreakdown": {
     "信息流-小牛": 2
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9539,8 +9539,8 @@
    "materialBreakdown": {
     "信息流-小牛": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9564,8 +9564,8 @@
    "materialBreakdown": {
     "信息流-小牛": 4
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9603,8 +9603,8 @@
    "materialBreakdown": {
     "广义新": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9636,8 +9636,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9670,8 +9670,8 @@
    "materialBreakdown": {
     "低活": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9704,8 +9704,8 @@
    "materialBreakdown": {
     "低活": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9762,8 +9762,8 @@
    "materialBreakdown": {
     "信息流-小牛": 3
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9790,8 +9790,8 @@
    "materialBreakdown": {
     "信息流-小牛": 7
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9826,8 +9826,8 @@
    "materialBreakdown": {
     "信息流-小牛": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9857,8 +9857,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9881,8 +9881,8 @@
    "materialBreakdown": {
     "信息流-小牛": 3
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9909,8 +9909,8 @@
    "materialBreakdown": {
     "信息流-小牛": 7
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9940,8 +9940,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -9972,8 +9972,8 @@
    "materialBreakdown": {
     "广义新": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10013,8 +10013,8 @@
    "materialBreakdown": {
     "广义新": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10108,8 +10108,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10172,8 +10172,8 @@
    "materialBreakdown": {
     "信息流-小牛": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10238,8 +10238,8 @@
    "materialBreakdown": {
     "信息流-小牛": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10271,8 +10271,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10302,8 +10302,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10333,8 +10333,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10366,8 +10366,8 @@
    "materialBreakdown": {
     "信息流-小牛": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10399,8 +10399,8 @@
    "materialBreakdown": {
     "信息流-小牛": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10435,8 +10435,8 @@
    "materialBreakdown": {
     "信息流-小牛": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10470,8 +10470,8 @@
    "materialBreakdown": {
     "信息流-小牛": 14
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10503,8 +10503,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10534,8 +10534,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10596,8 +10596,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10635,8 +10635,8 @@
    "materialBreakdown": {
     "低活": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10667,8 +10667,8 @@
    "materialBreakdown": {
     "信息流-小牛": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10698,8 +10698,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10729,8 +10729,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10763,8 +10763,8 @@
    "materialBreakdown": {
     "信息流-小牛": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10839,8 +10839,8 @@
    "materialBreakdown": {
     "广义新": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10876,8 +10876,8 @@
    "materialBreakdown": {
     "广义新": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10909,8 +10909,8 @@
    "materialBreakdown": {
     "信息流-小牛": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10940,8 +10940,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -10973,8 +10973,8 @@
    "materialBreakdown": {
     "信息流-小牛": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11004,8 +11004,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11042,8 +11042,8 @@
    "materialBreakdown": {
     "低活": 17
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11080,8 +11080,8 @@
    "materialBreakdown": {
     "低活": 17
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11114,8 +11114,8 @@
    "materialBreakdown": {
     "低活": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11147,8 +11147,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11188,8 +11188,8 @@
    "materialBreakdown": {
     "广义新": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11219,8 +11219,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11250,8 +11250,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11281,8 +11281,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11312,8 +11312,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11343,8 +11343,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11374,8 +11374,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11405,8 +11405,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11468,8 +11468,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11510,8 +11510,8 @@
    "materialBreakdown": {
     "广义新": 21
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11541,8 +11541,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11594,8 +11594,8 @@
    "materialBreakdown": {
     "广义新": 32
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11627,8 +11627,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11658,8 +11658,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11694,8 +11694,8 @@
    "materialBreakdown": {
     "低活": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11727,8 +11727,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11764,8 +11764,8 @@
    "materialBreakdown": {
     "广义新": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11795,8 +11795,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11826,8 +11826,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11854,8 +11854,8 @@
    "materialBreakdown": {
     "信息流-小牛": 7
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11942,8 +11942,8 @@
    "materialBreakdown": {
     "信息流-小牛": 67
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -11973,8 +11973,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12142,8 +12142,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12167,8 +12167,8 @@
    "materialBreakdown": {
     "信息流-小牛": 4
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12198,8 +12198,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12223,8 +12223,8 @@
    "materialBreakdown": {
     "信息流-小牛": 4
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12251,8 +12251,8 @@
    "materialBreakdown": {
     "信息流-小牛": 7
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12282,8 +12282,8 @@
    "materialBreakdown": {
     "广义新": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12325,8 +12325,8 @@
    "materialBreakdown": {
     "广义新": 22
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12364,8 +12364,8 @@
    "materialBreakdown": {
     "广义新": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12395,8 +12395,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12433,8 +12433,8 @@
    "materialBreakdown": {
     "广义新": 17
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12468,8 +12468,8 @@
    "materialBreakdown": {
     "低活": 14
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12597,8 +12597,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12629,8 +12629,8 @@
    "materialBreakdown": {
     "低活": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12665,8 +12665,8 @@
    "materialBreakdown": {
     "低活": 15
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12717,8 +12717,8 @@
    "materialBreakdown": {
     "信息流-小牛": 31
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12754,8 +12754,8 @@
    "materialBreakdown": {
     "广义新": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12787,8 +12787,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12837,8 +12837,8 @@
    "materialBreakdown": {
     "低活": 29
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12876,8 +12876,8 @@
    "materialBreakdown": {
     "低活": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12931,8 +12931,8 @@
    "materialBreakdown": {
     "信息流-小牛": 34
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -12970,8 +12970,8 @@
    "materialBreakdown": {
     "广义新": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13011,8 +13011,8 @@
    "materialBreakdown": {
     "广义新": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13051,8 +13051,8 @@
    "materialBreakdown": {
     "广义新": 19
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13122,8 +13122,8 @@
    "materialBreakdown": {
     "信息流-小牛": 50
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13194,8 +13194,8 @@
    "materialBreakdown": {
     "信息流-小牛": 51
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13265,8 +13265,8 @@
    "materialBreakdown": {
     "信息流-小牛": 50
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13339,8 +13339,8 @@
    "materialBreakdown": {
     "信息流-小牛": 53
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13371,8 +13371,8 @@
    "materialBreakdown": {
     "广义新": 11
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13408,8 +13408,8 @@
    "materialBreakdown": {
     "广义新": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13459,8 +13459,8 @@
    "materialBreakdown": {
     "广义新": 30
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13503,8 +13503,8 @@
    "materialBreakdown": {
     "广义新": 23
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13541,8 +13541,8 @@
    "materialBreakdown": {
     "低活": 17
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13578,8 +13578,8 @@
    "materialBreakdown": {
     "广义新": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13615,8 +13615,8 @@
    "materialBreakdown": {
     "低活": 16
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13653,8 +13653,8 @@
    "materialBreakdown": {
     "低活": 17
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13687,8 +13687,8 @@
    "materialBreakdown": {
     "低活": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13727,8 +13727,8 @@
    "materialBreakdown": {
     "低活": 19
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13762,8 +13762,8 @@
    "materialBreakdown": {
     "信息流-小牛": 14
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13796,8 +13796,8 @@
    "materialBreakdown": {
     "广义新": 13
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "已过审",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13824,8 +13824,8 @@
    "materialBreakdown": {
     "信息流-小牛": 7
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13878,8 +13878,8 @@
    "materialBreakdown": {
     "信息流-小牛": 33
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -13946,8 +13946,8 @@
    "materialBreakdown": {
     "低活": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14019,8 +14019,8 @@
    "materialBreakdown": {
     "广义新": 20
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14103,8 +14103,8 @@
    "materialBreakdown": {
     "低活": 24
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14209,8 +14209,8 @@
    "materialBreakdown": {
     "低活": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14260,8 +14260,8 @@
    "materialBreakdown": {
     "信息流-小牛": 30
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14332,8 +14332,8 @@
    "materialBreakdown": {
     "广义新": 18
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14405,8 +14405,8 @@
    "materialBreakdown": {
     "信息流-小牛": 52
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14478,8 +14478,8 @@
    "materialBreakdown": {
     "信息流-小牛": 52
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14551,8 +14551,8 @@
    "materialBreakdown": {
     "信息流-小牛": 52
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14584,8 +14584,8 @@
    "materialBreakdown": {
     "信息流-小牛": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14682,8 +14682,8 @@
    "materialBreakdown": {
     "广义新": 28
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14715,8 +14715,8 @@
    "materialBreakdown": {
     "广义新": 12
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14765,8 +14765,8 @@
    "materialBreakdown": {
     "低活": 29
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14796,8 +14796,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14849,8 +14849,8 @@
    "materialBreakdown": {
     "广义新": 32
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14920,8 +14920,8 @@
    "materialBreakdown": {
     "信息流-小牛": 50
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -14951,8 +14951,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -15053,8 +15053,8 @@
    "materialBreakdown": {
     "信息流-小牛": 50
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -15084,8 +15084,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -15155,8 +15155,8 @@
    "materialBreakdown": {
     "信息流-小牛": 50
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -15226,8 +15226,8 @@
    "materialBreakdown": {
     "信息流-小牛": 50
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -15474,8 +15474,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -15539,8 +15539,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -15603,8 +15603,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -15665,8 +15665,8 @@
    "materialBreakdown": {
     "信息流-小牛": 10
    },
-   "uploaded": false,
-   "marker": null,
+   "uploaded": true,
+   "marker": "已上传.txt",
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "yes",
@@ -15703,6 +15703,57 @@
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
    "path": "D:/625/京东/8月/0826/dhx-手表"
+  },
+  {
+   "date": "2026-08-26",
+   "month": "8月",
+   "day": "0826",
+   "product": "商务选品-三方-拼豆",
+   "parent": "商务选品-三方-拼豆",
+   "subProduct": "",
+   "materials": 30,
+   "materialFiles": [
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-1.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-10.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-11.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-12.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-13.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-14.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-15.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-16.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-17.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-18.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-19.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-2.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-20.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-21.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-22.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-23.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-24.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-25.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-26.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-27.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-28.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-29.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-3.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-30.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-4.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-5.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-6.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-7.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-8.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-9.mp4"
+   ],
+   "materialBreakdown": {
+    "信息流-小牛": 30
+   },
+   "uploaded": false,
+   "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
+   "chuangliangReason": "",
+   "path": "D:/625/京东/8月/0826/商务选品-三方-拼豆"
   },
   {
    "date": "2026-08-26",
