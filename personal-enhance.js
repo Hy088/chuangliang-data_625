@@ -1123,13 +1123,16 @@
       upData = csvToObjects(res[2]);   // 当月按上传时间统计的素材清单
       detectMediaKeys();   // 探测素材预览/封面链接列
       var ds = {};
-      histData.forEach(function (h) { ds[h["日期"]] = 1; });
+      window.__meHistoryByDate = {};   // 暴露给主文件做日期锁定回溯
+      histData.forEach(function (h) { ds[h["日期"]] = 1; window.__meHistoryByDate[h["日期"]] = h; });
       matData.forEach(function (m) { if (m["日期"]) ds[m["日期"]] = 1; });
       dates = Object.keys(ds).sort();
-      if (dateAuto) currentDate = todayStr();   // 实时默认今天（刷新时若仍为自动模式则重新对齐今日）
+      var today = todayStr();
+      if (dateAuto) currentDate = today;   // 实时默认今天
       if (!currentDate || ds[currentDate] === undefined) {
-        currentDate = dates.length ? dates[dates.length - 1] : todayStr();
+        currentDate = dates.length ? dates[dates.length - 1] : today;
       }
+      window.LOCKED_ME_DATE = (currentDate === today) ? null : currentDate; // 同步锁定状态给主文件
       ready = true;
       buildDateSelect();
       renderPersonal();
@@ -1342,7 +1345,13 @@
 
     // 事件
     var sel = el("meDate");
-    if (sel) sel.onchange = function () { currentDate = sel.value; dateAuto = false; renderPersonal(); };
+    if (sel) sel.onchange = function () {
+      currentDate = sel.value; dateAuto = false;
+      var today = todayStr();
+      window.LOCKED_ME_DATE = (currentDate === today) ? null : currentDate;
+      renderPersonal();
+      if (window.renderMe) window.renderMe(); // 触发主文件 KPI 卡/达成率汇总按锁定日期回溯
+    };
     var rf = el("meRefresh");
     if (rf) rf.onclick = function () {
       rf.disabled = true; rf.textContent = "刷新中…";
