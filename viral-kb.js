@@ -14,6 +14,8 @@
     return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
   function fmtSec(s) { return (s == null || isNaN(s)) ? '0s' : (+s).toFixed(1) + 's'; }
+  // index.html 用 let VP=... 定义在当前脚本作用域，不会挂到 window.VP；优先读作用域内的 VP
+  function getVP() { return (typeof VP !== 'undefined' ? VP : (typeof window !== 'undefined' ? window.VP : null)) || null; }
   function kwHit(text, kws) {
     if (!text) return null;
     for (const k of kws) if (text.indexOf(k) >= 0) return k;
@@ -29,7 +31,7 @@
     out.classList.remove('muted');
   }
   function waitForVideoReady(cb, timeoutMs) {
-    const v = window.VP && VP.video;
+    const v = getVP() && getVP().video;
     if (!v) { cb(false); return; }
     if (v.readyState >= 1 && v.duration && !isNaN(v.duration)) { cb(true); return; }
     let done = false;
@@ -50,13 +52,14 @@
   }
   // needFrames=false：只要视频/元数据就绪即可（基础版）；true：必须已抽帧
   function ensureFrames(thenFn, needFrames) {
-    if (!needFrames && window.VP && VP.meta && VP.meta.duration) { thenFn(); return; }
-    if (window.VP && VP.frames && VP.frames.length) { thenFn(); return; }
-    if (!window.VP || !VP.video) {
+    const vp = getVP();
+    if (!needFrames && vp && vp.meta && vp.meta.duration) { thenFn(); return; }
+    if (vp && vp.frames && vp.frames.length) { thenFn(); return; }
+    if (!vp || !vp.video) {
       setOut('<div class="vp-warn">请先拖入一条视频，再点这里分析。</div>');
       return;
     }
-    if (!VP.video.duration || isNaN(VP.video.duration)) {
+    if (!vp.video.duration || isNaN(vp.video.duration)) {
       setOut('<div class="vp-warn">视频已拖入，正在读取元数据…（请稍候 1–3 秒）</div>');
       waitForVideoReady(function (ok) {
         if (!ok) { setOut('<div class="vp-warn">视频元数据读取失败或超时，请重新拖入视频。</div>'); return; }
@@ -73,7 +76,8 @@
     let ticks = 0;
     const timer = setInterval(function () {
       ticks++;
-      if (window.VP && VP.frames && VP.frames.length) { clearInterval(timer); thenFn(); return; }
+      const cur = getVP();
+      if (cur && cur.frames && cur.frames.length) { clearInterval(timer); thenFn(); return; }
       if (ticks > 12) { clearInterval(timer); thenFn(); return; } // 6s 后即便无帧也出基础版
     }, 500);
   }
@@ -214,7 +218,7 @@
 
   /* ---------- 文本采集（含 OCR 乱码容错） ---------- */
   function gatherTextInfo() {
-    const deep = (window.VP && VP.deep) || {};
+    const deep = (getVP() && getVP().deep) || {};
     const rawOcr = (deep.ocr || []).filter(x => x.text).map(x => x.text);
     const cleanOcr = rawOcr.filter(t => {
       if (!t) return false;
@@ -267,12 +271,12 @@
   }
 
   function buildShotTable() {
-    const frames = (window.VP && VP.frames) || [];
-    const meta = (window.VP && VP.meta) || {};
+    const frames = (getVP() && getVP().frames) || [];
+    const meta = (getVP() && getVP().meta) || {};
     const dur = meta.duration || 0;
     if (!frames.length) return null;
     const cuts = recomputeCuts(frames);
-    const deep = (window.VP && VP.deep) || {};
+    const deep = (getVP() && getVP().deep) || {};
     const ocrList = (deep.ocr || []).filter(x => x.t != null && x.text);
     const whisper = String(deep.whisper || '');
     // 把字幕/口播按段聚合
@@ -299,11 +303,11 @@
 
   /* ---------- 反推：从抽帧实测 + 深度分析推断爆款结构 ---------- */
   function analyzeStructure() {
-    const a = (window.VP && VP.analysis) || {};
-    const meta = (window.VP && VP.meta) || {};
+    const a = (getVP() && getVP().analysis) || {};
+    const meta = (getVP() && getVP().meta) || {};
     const dur = meta.duration || 0;
-    const deep = (window.VP && VP.deep) || {};
-    const mat = (window.VP && VP.mat) || null;
+    const deep = (getVP() && getVP().deep) || {};
+    const mat = (getVP() && getVP().mat) || null;
     const ti = gatherTextInfo();
     const text = ti.text;
     const hookType = inferHookType(text, a.hook);
@@ -383,7 +387,7 @@
     const checks = evalEmpirical(s);
     const dna = buildDna(s);
     const highlights = buildHighlights(s);
-    const meta = (window.VP && VP.meta) || {};
+    const meta = (getVP() && getVP().meta) || {};
     let html = '';
 
     // 一、原片信息
@@ -454,7 +458,7 @@
   /* ---------- 同品类复刻：骨架不变，套裂变矩阵生成多套 ---------- */
   function buildSameCatSets() {
     const s = analyzeStructure();
-    const cat = (s.mat && s.mat.cat) || (window.VP && VP.sid ? '当前素材' : '同类产品');
+    const cat = (s.mat && s.mat.cat) || (getVP() && getVP().sid ? '当前素材' : '同类产品');
     const skel = ['钩子', '开箱/产品亮相', '功能证明', '场景+CTA', '换人设证言', '品牌尾板'];
     return KB.sameCatSets.map((def, idx) => {
       const shots = skel.map(stage => ({ stage, content: (def.shots[stage] || '').replace(/\[品类\]/g, cat) }));
@@ -528,7 +532,8 @@
     const b1 = $('kbViralAnalyze'); if (b1) b1.onclick = renderViralAnalyze;
     const b2 = $('kbSameCat'); if (b2) b2.onclick = renderSameCat;
     const hint = $('kbViralHint');
-    if (hint && window.VP && ((VP.frames && VP.frames.length) || (VP.meta && VP.meta.duration))) hint.textContent = '视频已就绪，点「📊 反推爆款结构」直接出结果';
+    const vp0 = getVP();
+    if (hint && vp0 && ((vp0.frames && vp0.frames.length) || (vp0.meta && vp0.meta.duration))) hint.textContent = '视频已就绪，点「📊 反推爆款结构」直接出结果';
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initViralKB);
