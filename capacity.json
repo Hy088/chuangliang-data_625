@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-27T12:20:45",
+ "generatedAt": "2026-08-28T00:49:40",
  "root": "D:/625/京东",
  "markerFiles": [
   "chuangliang.txt",
@@ -22,26 +22,23 @@
   "驳回原因.txt"
  ],
  "summary": {
-  "total": 425,
+  "total": 435,
   "uploaded": 317,
-  "notUploaded": 108,
-  "rate": 75,
-  "materials": 6899,
+  "notUploaded": 118,
+  "rate": 73,
+  "materials": 7393,
   "materialTypes": {
-   "广义新": 2841,
-   "低活": 2338,
-   "信息流-小牛": 1609,
-   "采销项目": 83,
-   "悬挂抽纸": 13,
-   "DHX-蜜薯": 13,
-   "超级抢购 10114504740999 漫花": 1,
-   "3": 1
+   "广义新": 7133,
+   "DHX": 2409,
+   "标点": 1977,
+   "PRJ": 83,
+   "其他": 13
   },
   "qingyun": {
    "已过审": 317,
    "未过审": 0,
    "其他原因": 0,
-   "未标注": 108
+   "未标注": 118
   },
   "chuangliangYes": 317
  },
@@ -67,7 +64,7 @@
     "CH-SC-低活-10117596287241-超级抢购5元-厨具-无-剪辑-转化引导-厨具-20260512-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": false,
    "marker": null,
@@ -77,7 +74,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：1/10 素材已传创量，0 未传，9 疑似待复核",
    "path": "D:/625/京东/5月/0513/DHX/新建文件夹",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -101,7 +99,7 @@
     "CH-SC-低活-10117596287241-超级抢购5元-厨具-无-剪辑-转化引导-厨具-20260513-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": false,
    "marker": null,
@@ -111,7 +109,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
    "path": "D:/625/京东/5月/0513/DHX/混剪-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -139,7 +138,7 @@
     "CH-SC-低活-10195034167102-超级抢购5元-居家布艺-无-剪辑-转化引导-居家布艺-20260514-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 14
+    "广义新-DHX": 14
    },
    "uploaded": false,
    "marker": null,
@@ -149,7 +148,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/14 素材已传创量，14 未传，0 疑似待复核",
    "path": "D:/625/京东/5月/0514/DHX",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -207,7 +207,7 @@
     "CH-SC-低活-10186710590962-好价清单-生鲜-无-剪辑-转化引导-生鲜-20260518-无-625- 9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": false,
    "marker": null,
@@ -217,7 +217,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
    "path": "D:/625/京东/5月/0518/dhx/好价-苹果",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -254,7 +255,7 @@
     "CH-SC-低活-10204065203213-超级抢购5元-生活日用-无-剪辑-转化引导-生活日用-20260518-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 23
+    "广义新-DHX": 23
    },
    "uploaded": false,
    "marker": null,
@@ -264,7 +265,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：3/23 素材已传创量，0 未传，20 疑似待复核",
    "path": "D:/625/京东/5月/0518/dhx/打火机",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -300,7 +302,7 @@
     "CH-SC-低活-10168124017521-好价清单-家庭清洁-无-剪辑-转化引导-家庭清洁-20260518-无-625-外投-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 22
+    "广义新-DHX": 22
    },
    "uploaded": false,
    "marker": null,
@@ -310,7 +312,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/22 素材已传创量，22 未传，0 疑似待复核",
    "path": "D:/625/京东/5月/0518/dhx/洗脸巾-好价-尾帧",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -405,7 +408,7 @@
     "CH-SC-低活-10221819418627-外卖随心屯-本地生活-无-剪辑-转化引导-本地生活-20260521-无-625-19.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -415,7 +418,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/5月/0521/dhx/dhx-外卖-冻柠茶",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -522,7 +526,7 @@
     "DHX-蜜薯-福利价-前贴(1)-7+DHX-蜜薯-福利价-7+5月12日 (ai实拍合集)-32+5月12日 (ai实拍合集补)-3+新红狗.mp4"
    ],
    "materialBreakdown": {
-    "DHX-蜜薯": 13
+    "广义新-DHX": 13
    },
    "uploaded": false,
    "marker": null,
@@ -532,7 +536,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/13 素材已传创量，13 未传，0 疑似待复核",
    "path": "D:/625/京东/5月/0527/dhx/多的红薯",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -576,7 +581,7 @@
     "CH-SC-低活-10219841541026-超级抢购加补-厨具-无-剪辑-转化引导-厨具-20260602-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 30
+    "广义新-DHX": 30
    },
    "uploaded": false,
    "marker": null,
@@ -586,7 +591,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：19/30 素材已传创量，0 未传，11 疑似待复核",
    "path": "D:/625/京东/6月/0602/dhx/新建文件夹",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -774,7 +780,7 @@
     "CH-SC-低活-10219841541026-超级抢购加补-厨具-无-剪辑-转化引导-厨具-20260605-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 15
+    "广义新-DHX": 15
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -784,7 +790,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0605/dhx/切葱器",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -809,7 +816,7 @@
     "CH-SC-低活-10140917922437-超级抢购加补-家庭清洁-无-剪辑-转化引导-家庭清洁-20260605-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 11
+    "广义新-DHX": 11
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -819,7 +826,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0605/dhx/围裙",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -860,7 +868,7 @@
     "CH-SC-低活-10215767576641-超级抢购5元-生鲜-无-剪辑-转化引导-生鲜-20260605-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 27
+    "广义新-DHX": 27
    },
    "uploaded": false,
    "marker": null,
@@ -870,7 +878,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：26/27 素材已传创量，0 未传，1 疑似待复核",
    "path": "D:/625/京东/6月/0605/dhx/西瓜-超级抢购5元",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -1021,7 +1030,7 @@
     "CH-SC-低活-10206945433071-超级抢购加补-纸品-无-剪辑-转化引导-纸品-20260609-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 38
+    "广义新-DHX": 38
    },
    "uploaded": false,
    "marker": null,
@@ -1031,7 +1040,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/38 素材已传创量，38 未传，0 疑似待复核",
    "path": "D:/625/京东/6月/0609/日常/dhx",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -1243,7 +1253,7 @@
     "CH-SC-低活-10217490782713-超级抢购加补-粮油调味-无-剪辑-转化引导-粮油调味-2026011-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -1253,7 +1263,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0611/dhx/dhx-虾干不对版-传了",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -1277,7 +1288,7 @@
     "CH-SC-低活-10208893205284-限时抢购-家庭清洁-无-剪辑-转化引导-家庭清洁-20260611-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": false,
    "marker": null,
@@ -1287,7 +1298,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
    "path": "D:/625/京东/6月/0611/dhx/dhx-限时抢购-洗衣液(1)",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -1311,7 +1323,7 @@
     "CH-SC-低活-10224343296687-超级抢购加补-粮油调味-无-剪辑-转化引导-粮油调味-20260611-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -1321,7 +1333,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0611/dhx/小黄米-不对版",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -1351,7 +1364,7 @@
     "CH-SC-低活-10217613031260-好价清单-休闲食品-无-剪辑-转化引导-休闲食品-20260611-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 16
+    "广义新-DHX": 16
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -1361,7 +1374,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0611/dhx/榴莲冰粽-好价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -1389,7 +1403,7 @@
     "CH-SC-低活-10140207411553-超级抢购加补-文教文化用品-无-剪辑-转化引导-文教文化用品-20260611-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 14
+    "广义新-DHX": 14
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -1399,7 +1413,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0611/dhx/风扇-dhx",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -1568,7 +1583,7 @@
     "CH-SC-低活-10138569763179-超级抢购5元-厨具-无-剪辑-转化引导-厨具-20260612-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 13
+    "广义新-DHX": 13
    },
    "uploaded": false,
    "marker": null,
@@ -1578,7 +1593,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/13 素材已传创量，13 未传，0 疑似待复核",
    "path": "D:/625/京东/6月/0612/dhx/密封罐-超级抢购5元",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -1602,7 +1618,7 @@
     "CH-SC-低活-10222762338202-限时抢购-家庭清洁-大商超-剪辑-转化引导-家庭清洁-20260612-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": false,
    "marker": null,
@@ -1612,7 +1628,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
    "path": "D:/625/京东/6月/0612/dhx/广点通-清洁剂",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -1639,7 +1656,7 @@
     "CH-SC-低活-10177389271423-超级抢购加补-灯饰照明-无-剪辑-转化引导-灯饰照明-20260612-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 13
+    "广义新-DHX": 13
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -1649,7 +1666,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0612/dhx/手指灯-超级抢购加补1元",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -1678,7 +1696,7 @@
     "CH-SC-低活-10156925961082-超级抢购加补-家用电器-无-剪辑-转化引导-家用电器-20260604-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 15
+    "广义新-DHX": 15
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -1688,7 +1706,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0612/dhx/指甲钳",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -1968,7 +1987,7 @@
     "CH-SC-低活-10162692688878-超级抢购加补-家用电器-无-剪辑-转化引导-家用电器-20260615-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 34
+    "广义新-DHX": 34
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -1978,7 +1997,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0615/dhx/打火机-不对版-加布",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -2002,7 +2022,7 @@
     "CH-SC-低活-10155573475063-超级抢购加补-厨具-无-剪辑-转化引导-厨具-20260615-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -2012,7 +2032,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0615/dhx/杯子-不对版-加补",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -2044,7 +2065,7 @@
     "CH-SC-低活-10147800266661-超级抢购加补-家庭清洁-无-剪辑-转化引导-家庭清洁-20260615-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -2054,7 +2075,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0615/dhx/灭蚊灯",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -2250,7 +2272,7 @@
     "CH-SC-低活-10136559560331-超级抢购加补-厨具-无-剪辑-转化引导-厨具-20260616-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 20
+    "广义新-DHX": 20
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -2260,7 +2282,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0616/dhx/杯子-aigc-广点通-不对版",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -2294,7 +2317,7 @@
     "CH-SC-低活-10156925961082-超级抢购加补-家用电器-无-剪辑-转化引导-家用电器-20260616-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 20
+    "广义新-DHX": 20
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -2304,7 +2327,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0616/dhx/自动指甲钳",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -2333,7 +2357,7 @@
     "CH-SC-低活-10160529869429-超级抢购加补-厨具-无-剪辑-转化引导-厨具-20260616-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 15
+    "广义新-DHX": 15
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -2343,7 +2367,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0616/dhx/过滤筛-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -2571,7 +2596,7 @@
     "CH-SC-低活-10186710590960-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260616-无-625-8.mp4"
    ],
    "materialBreakdown": {
-    "低活": 14
+    "广义新-DHX": 14
    },
    "uploaded": false,
    "marker": null,
@@ -2581,7 +2606,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/14 素材已传创量，14 未传，0 疑似待复核",
    "path": "D:/625/京东/6月/0616/扒/dhx",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -2682,7 +2708,7 @@
     "CH-SC-低活-10139440032542-超级抢购加补-运动户外-无-剪辑-转化引导-运动户外-20260617-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 16
+    "广义新-DHX": 16
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -2692,7 +2718,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0617/dhx/10139440032542-支架",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -2728,7 +2755,7 @@
     "CH-SC-低活-10172627929072-超级抢购加补-家装建材-无-剪辑-转化引导-家装建材-20260617-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 22
+    "广义新-DHX": 22
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -2738,7 +2765,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0617/dhx/压蒜器-超级抢购加布",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -2774,7 +2802,7 @@
     "CH-SC-低活-10217740550325-超级抢购加补-箱包皮具-无-剪辑-转化引导-箱包皮具-20260617-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 22
+    "广义新-DHX": 22
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -2784,7 +2812,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0617/dhx/斜挎包-超级抢购加补",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -2829,7 +2858,7 @@
     "CH-SC-低活-10191234838090-超级抢购加补-纸品-无-剪辑-转化引导-纸品-20260617-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 31
+    "广义新-DHX": 31
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -2839,7 +2868,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0617/dhx/新相印-超级抢购加补",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -3041,7 +3071,7 @@
     "CH-SC-低活-10143318867797-超级抢购5元-厨具-无-剪辑-转化引导-厨具-20260618-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 15
+    "广义新-DHX": 15
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -3051,7 +3081,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0618/dhx/冰哥-超级抢购5元",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -3092,7 +3123,7 @@
     "CH-SC-低活-10168076305008-超级抢购加补-运动户外-无-剪辑-转化引导-运动户外-20260618-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 27
+    "广义新-DHX": 27
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -3102,7 +3133,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0618/dhx/夜灯-aigc-超级抢购加补",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -3146,7 +3178,7 @@
     "CH-SC-低活-10203815942375-超级抢购5元-手机通讯-无-剪辑-转化引导-手机通讯-20260618-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 30
+    "广义新-DHX": 30
    },
    "uploaded": false,
    "marker": null,
@@ -3156,7 +3188,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/30 素材已传创量，30 未传，0 疑似待复核",
    "path": "D:/625/京东/6月/0618/dhx/手机支架",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -3185,7 +3218,7 @@
     "CH-SC-低活-10147800266661-超级抢购加补-家庭清洁-无-剪辑-转化引导-家庭清洁-20260618-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 15
+    "广义新-DHX": 15
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -3195,7 +3228,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0618/dhx/驱蚊灯-1分钱aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -3307,7 +3341,7 @@
     "CH-SC-低活-10166301474829-超级抢购加补-厨具-无-剪辑-转化引导-厨具-20260623-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -3317,7 +3351,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0623/dhx/咸菜碗",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -3358,7 +3393,7 @@
     "CH-SC-低活-10081585918372-超级抢购-家庭清洁纸品-无-剪辑-转化引导-家庭清洁纸品-20260623-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 27
+    "广义新-DHX": 27
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -3368,7 +3403,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0623/dhx/抽纸-福利价aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -3392,7 +3428,7 @@
     "CH-SC-低活-10147800266661-超级抢购加补-家庭清洁-无-剪辑-转化引导-家庭清洁-20260623-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -3402,7 +3438,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0623/dhx/驱蚊灯-1分钱",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -3630,7 +3667,7 @@
     "CH-SC-低活-10223482211866-超级抢购-生活日用-无-剪辑-转化引导-生活日用-20260624-无-625-AIGC-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 17
+    "广义新-DHX": 17
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -3640,7 +3677,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0624/dhx/压蒜器-福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -3667,7 +3705,7 @@
     "CH-SC-低活-10145471007764-超级抢购通用-厨具-无-剪辑-转化引导-厨具-20260624-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 13
+    "广义新-DHX": 13
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -3677,7 +3715,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0624/dhx/咸菜碗1分钱",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -3707,7 +3746,7 @@
     "CH-SC-低活-10134479334759-超级抢购通用-钟表眼镜-无-剪辑-转化引导-钟表眼镜-20260624-无-625-AIGC-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 16
+    "广义新-DHX": 16
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -3717,7 +3756,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0624/dhx/手表1分钱",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -3999,7 +4039,7 @@
     "CH-SC-低活-10166301474829-超级抢购加补-厨具-无-剪辑-转化引导-厨具-20260625-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 14
+    "广义新-DHX": 14
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4009,7 +4049,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0625/dhx/咸菜碗-1分钱-广点通",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4043,7 +4084,7 @@
     "CH-SC-低活-10093106199290-超级抢购-纸品-无-剪辑-转化引导-纸品-20260625-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 20
+    "广义新-DHX": 20
    },
    "uploaded": false,
    "marker": null,
@@ -4053,7 +4094,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/20 素材已传创量，20 未传，0 疑似待复核",
    "path": "D:/625/京东/6月/0625/dhx/心相印福利价-超级抢购-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4077,7 +4119,7 @@
     "CH-SC-低活-10215767576641-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260625-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4087,7 +4129,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0625/dhx/西瓜福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4117,7 +4160,7 @@
     "CH-SC-低活-10156923061370-超级抢购通用-数码-无-剪辑-转化引导-数码-20260625-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 16
+    "广义新-DHX": 16
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4127,7 +4170,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0625/dhx/风扇-1分钱",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4330,7 +4374,7 @@
     "CH-SC-低活-10150446326220-好价清单-厨具-无-剪辑-转化引导-厨具-20260626-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4340,7 +4384,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0626/dhx/好价清单-福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4368,7 +4413,7 @@
     "CH-SC-低活-10140162082900-超级抢购加补-厨具-无-剪辑-转化引导-厨具-20260626-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 14
+    "广义新-DHX": 14
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4378,7 +4423,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0626/dhx/炒菜勺-1分钱",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4423,7 +4469,7 @@
     "CH-SC-低活-10220560400432-超级抢购加补-生活日用-无-剪辑-转化引导-生活日用-20260626-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 31
+    "广义新-DHX": 31
    },
    "uploaded": false,
    "marker": null,
@@ -4433,7 +4479,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：30/31 素材已传创量，0 未传，1 疑似待复核",
    "path": "D:/625/京东/6月/0626/dhx/置物架-福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4465,7 +4512,7 @@
     "CH-SC-低活-10113209119177-超级抢购-摩托车-无-剪辑-转化引导-摩托车-20260626-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4475,7 +4522,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0626/dhx/雨衣-aigc-福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4544,7 +4592,7 @@
     "CH-SC-低活-10121469593113-超级抢购加补-生活日用-无-剪辑-转化引导-生活日用-20260629-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4554,7 +4602,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0629/dhx/免手搓肥皂-1分钱",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4586,7 +4635,7 @@
     "CH-SC-低活-10118706992345-超级抢购加补-纸品-无-剪辑-转化引导-纸品-20260629-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4596,7 +4645,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0629/dhx/樱花抽纸-1分钱-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4624,7 +4674,7 @@
     "CH-SC-低活-10220560400432-超级抢购加补-生活日用-无-剪辑-转化引导-生活日用-20260629-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 14
+    "广义新-DHX": 14
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4634,7 +4684,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0629/dhx/腾讯-置物架-福利价-aigic",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4660,7 +4711,7 @@
     "CH-SC-低活-10156923061370-超级抢购加补-数码-无-剪辑-转化引导-数码-20260629-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4670,7 +4721,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0629/dhx/风扇-1分钱-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4694,7 +4746,7 @@
     "CH-SC-低活-10147800266661-超级抢购加补-家庭清洁-无-剪辑-转化引导-家庭清洁-20260629-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4704,7 +4756,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0629/dhx/驱蚊灯-腾讯-aigc-1分钱",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4812,7 +4865,7 @@
     "CH-SC-低活-10219841541026-超级抢购加补-厨具-无-剪辑-转化引导-厨具-20260630-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4822,7 +4875,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0630/dhx/切葱器-aig-1分钱-广点通",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4848,7 +4902,7 @@
     "CH-SC-低活-10112643484929-超级抢购加补-手机通讯-无-剪辑-转化引导-手机通讯-20260630-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4858,7 +4912,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0630/dhx/手机支架",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4883,7 +4938,7 @@
     "CH-SC-低活-10081585918372-超级抢购加补-纸品-无-剪辑-转化引导-纸品-20260630-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 11
+    "广义新-DHX": 11
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4893,7 +4948,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0630/dhx/抽纸-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -4919,7 +4975,7 @@
     "CH-SC-低活-10139440032542-超级抢购5元-运动户外-无-剪辑-转化引导-运动户外-20260630-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -4929,7 +4985,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/6月/0630/dhx/电动手机支架-福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -5085,7 +5142,7 @@
     "CH-SC-低活-10100644668875-超级抢购加补-汽车用品-无-剪辑-转化引导-汽车用品-20260701-无-625-aigc-7.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": false,
    "marker": null,
@@ -5095,7 +5152,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：17/18 素材已传创量，1 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0701/dhx/夏日坐垫-aigc-1分钱",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -5127,7 +5185,7 @@
     "CH-SC-低活-10154156974144-超级抢购-厨具-无-剪辑-转化引导-厨具-20260701-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -5137,7 +5195,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0701/dhx/多功能西瓜叉-福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -5173,7 +5232,7 @@
     "CH-SC-低活-10172627929072-超级抢购-家装建材-无-剪辑-转化引导-家装建材-20260702-无-625-aigc-5.mp4"
    ],
    "materialBreakdown": {
-    "低活": 22
+    "广义新-DHX": 22
    },
    "uploaded": false,
    "marker": null,
@@ -5183,7 +5242,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：19/22 素材已传创量，3 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0701/dhx/手动压蒜器-福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -5207,7 +5267,7 @@
     "CH-SC-低活-10136559560331-超级抢购-厨具-无-剪辑-转化引导-厨具-20260701-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": false,
    "marker": null,
@@ -5217,7 +5277,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：8/10 素材已传创量，2 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0701/dhx/杯子-福利价-1分钱-未传",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -5246,7 +5307,7 @@
     "CH-SC-低活-10155390468533-超级抢购加补-厨具-无-剪辑-转化引导-厨具-20260701-无-625-aigc-3.mp4"
    ],
    "materialBreakdown": {
-    "低活": 15
+    "广义新-DHX": 15
    },
    "uploaded": false,
    "marker": null,
@@ -5256,7 +5317,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/15 素材已传创量，15 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0701/dhx/油炸锅-1分钱-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -5604,7 +5666,7 @@
     "CH-SC-低活-10118706992345-超级抢购-纸品-无-剪辑-转化引导-纸品-20260702-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -5614,7 +5676,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0702/dhx/樱花抽纸-福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -5638,7 +5701,7 @@
     "CH-SC-低活-10081585918372-超级抢购-纸品-无-剪辑-转化引导-纸品-20260702-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -5648,7 +5711,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0702/dhx/洗脸巾-福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -5948,7 +6012,7 @@
     "CH-SC-低活-10223482211866-超级抢购-生活日用-无-剪辑-转化引导-生活日用-20260703-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 15
+    "广义新-DHX": 15
    },
    "uploaded": false,
    "marker": null,
@@ -5958,7 +6022,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：14/15 素材已传创量，0 未传，1 疑似待复核",
    "path": "D:/625/京东/7月/0703/dhx/压蒜器-0.9",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -5982,7 +6047,7 @@
     "CH-SC-低活-10156776256916-超级抢购-珠宝首饰-无-剪辑-转化引导-珠宝首饰-20260703-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -5992,7 +6057,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0703/dhx/四叶草-福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -6794,7 +6860,7 @@
     "CH-SC-低活-10140917922437-超级抢购-家庭清洁-无-剪辑-转化引导-家庭清洁-20260708-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 17
+    "广义新-DHX": 17
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -6804,7 +6870,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0708/dhx/围裙-傅立家-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -6841,7 +6908,7 @@
     "CH-SC-低活-10162692688878-超级抢购-家用电器-无-剪辑-转化引导-家用电器-20260708-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 23
+    "广义新-DHX": 23
    },
    "uploaded": false,
    "marker": null,
@@ -6851,7 +6918,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：13/23 素材已传创量，0 未传，10 疑似待复核",
    "path": "D:/625/京东/7月/0708/dhx/打火机-aigc-傅立家",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -6893,7 +6961,7 @@
     "CH-SC-低活-10113209119177-超级抢购-电动车-无-剪辑-转化引导-电动车-20260708-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 28
+    "广义新-DHX": 28
    },
    "uploaded": false,
    "marker": null,
@@ -6903,7 +6971,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：27/28 素材已传创量，0 未传，1 疑似待复核",
    "path": "D:/625/京东/7月/0708/dhx/雨衣-福利价-agc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -7084,8 +7153,7 @@
     "超级抢购 10114504740999 漫花.mp4"
    ],
    "materialBreakdown": {
-    "低活": 54,
-    "超级抢购 10114504740999 漫花": 1
+    "广义新-DHX": 55
    },
    "uploaded": false,
    "marker": null,
@@ -7096,7 +7164,7 @@
    "path": "D:/625/京东/7月/0708/扒改0706/dhx",
    "categories": [
     "DHX",
-    "其他"
+    "广义新"
    ]
   },
   {
@@ -7123,7 +7191,7 @@
     "CH-SC-低活-10187934206979-超级抢购-文教文化用品-无-剪辑-转化引导-文教文化用品-20260709-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 13
+    "广义新-DHX": 13
    },
    "uploaded": false,
    "marker": null,
@@ -7133,7 +7201,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/13 素材已传创量，13 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0709/dhx/sk园艺剪",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -7159,7 +7228,7 @@
     "CH-SC-低活-10140917922437-超级抢购-家庭清洁-无-剪辑-转化引导-家庭清洁-20260709-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -7169,7 +7238,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0709/dhx/围裙-aigc-福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -7201,7 +7271,7 @@
     "CH-SC-低活-10162692688878-超级抢购-家用电器-无-剪辑-转化引导-家用电器-20260709-无-625-aigc-5.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": false,
    "marker": null,
@@ -7211,7 +7281,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：15/18 素材已传创量，3 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0709/dhx/打火机",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -7237,7 +7308,7 @@
     "CH-SC-低活-10137455430983-超级抢购-纸品-无-剪辑-转化引导-纸品-20260709-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -7247,7 +7318,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0709/dhx/抽纸-福利价=aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -7272,7 +7344,7 @@
     "CH-SC-低活-10113209119177-超级抢购-电动车-无-剪辑-转化引导-电动车-20260709-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 11
+    "广义新-DHX": 11
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -7282,7 +7354,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0709/dhx/雨衣-福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -7503,7 +7576,7 @@
     "CH-SC-低活-10162692688878-超级抢购-家用电器-无-剪辑-转化引导-家用电器-20260710-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -7513,7 +7586,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0710/dhx/打火机",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -7539,7 +7613,7 @@
     "CH-SC-低活-10118706992345-超级抢购-纸品-无-剪辑-转化引导-纸品-20260710-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": false,
    "marker": null,
@@ -7549,7 +7623,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：10/12 素材已传创量，2 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0710/dhx/樱花",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -7575,7 +7650,7 @@
     "CH-SC-低活-10184888743389-超级抢购-纸品-无-剪辑-转化引导-纸品-20260710-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -7585,7 +7660,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0710/dhx/维达",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -7848,7 +7924,7 @@
     "CH-SC-低活-10081585918372-超级抢购-纸品-无-剪辑-转化引导-纸品-20260702-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 32
+    "广义新-DHX": 32
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -7858,7 +7934,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0713/dhx/抽纸-福利价-aigc-未传",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8131,7 +8208,7 @@
     "CH-SC-低活-10093106199290-超级抢购-纸品-无-剪辑-转化引导-纸品-20260714-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 11
+    "广义新-DHX": 11
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -8141,7 +8218,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0714/dhx/心相印抽纸-福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8172,7 +8250,7 @@
     "CH-SC-低活-10162692688878-超级抢购-家用电器-无-剪辑-转化引导-家用电器-20260714-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 17
+    "广义新-DHX": 17
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -8182,7 +8260,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0714/dhx/打火机-福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8206,7 +8285,7 @@
     "CH-SC-低活-100202275595-超级抢购-文教文化用品-无-剪辑-转化引导-文教文化用品-20260714-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -8216,7 +8295,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0714/dhx/美工刀",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8394,7 +8474,7 @@
     "CH-SC-低活-10130886489325-超级抢购-厨具-无-剪辑-转化引导-厨具-20260715-无-625-3.mp4"
    ],
    "materialBreakdown": {
-    "低活": 20
+    "广义新-DHX": 20
    },
    "uploaded": false,
    "marker": null,
@@ -8404,7 +8484,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：17/20 素材已传创量，3 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0715/dhx/保鲜袋",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8434,7 +8515,7 @@
     "CH-SC-低活-10140917922437-超级抢购-家庭清洁-无-剪辑-转化引导-家庭清洁-20260715-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 16
+    "广义新-DHX": 16
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -8444,7 +8525,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0715/dhx/围裙福利价-ai",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8476,7 +8558,7 @@
     "CH-SC-低活-10123044464041-超级抢购-玩具乐器-无-剪辑-转化引导-玩具乐器-20260715-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -8486,7 +8568,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0715/dhx/昆虫玩具-福利及啊-未审核",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8512,7 +8595,7 @@
     "CH-SC-低活-10120093290551-超级抢购-纸品-无-剪辑-转化引导-纸品-20260715-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -8522,7 +8605,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0715/dhx/纸巾-福利ai",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8548,7 +8632,7 @@
     "CH-SC-低活-10215767576641-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260715-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -8558,7 +8642,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0715/dhx/西瓜福利价-ai",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8738,7 +8823,7 @@
     "CH-SC-低活-10223570717754-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260716-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -8748,7 +8833,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0716/dhx/李子",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8774,7 +8860,7 @@
     "CH-SC-低活-10098882079537-超级抢购-厨具-无-剪辑-转化引导-厨具-20260716-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -8784,7 +8870,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0716/dhx/油壶-福利夹",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8816,7 +8903,7 @@
     "CH-SC-低活-10200755904098-超级抢购-汽车用品-无-剪辑-转化引导-汽车用品-20260716-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -8826,7 +8913,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0716/dhx/迷你拖把",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8954,7 +9042,7 @@
     "CH-SC-低活-10166301474826-超级抢购-厨具-无-剪辑-转化引导-厨具-20260717-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -8964,7 +9052,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0717/dhx/咸菜碗福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -8990,7 +9079,7 @@
     "CH-SC-低活-10215942866628-超级抢购-手机通讯-无-剪辑-转化引导-手机通讯-20260717-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -9000,7 +9089,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0717/dhx/骑行支架福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -9290,7 +9380,7 @@
     "CH-SC-低活-10217740550325-超级抢购-箱包皮具-无-剪辑-转化引导-箱包皮具-20260720-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -9300,7 +9390,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0720/dhx",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -9463,7 +9554,7 @@
     "信息流-小牛-刮水器-京东主体-代运营-新人1分钱-0720-10101434066164-历史爆品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 20
+    "广义新-标点": 20
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -9473,6 +9564,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0720/标点/刮水器-1分钱",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -9497,7 +9589,7 @@
     "信息流-小牛-打火机-京东主体-代运营-新人福利价-0720-10162692688878-625-设计自选-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -9507,6 +9599,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0720/标点/打火机-福利价-aigc",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -9548,7 +9641,7 @@
     "信息流-小牛-电煮锅-京东主体-代运营-新人福利价-0720-10115067968253-625-设计自选-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 27
+    "广义新-标点": 27
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -9558,6 +9651,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0720/标点/电煮锅-福利价-aigc",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -9582,7 +9676,7 @@
     "信息流-小牛-迷你音响-京东主体-代运营-新人1分钱起-0720-10112824783788-京东-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": false,
    "marker": null,
@@ -9592,6 +9686,7 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0720/标点/音响-1分钱起-",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -9629,7 +9724,7 @@
     "信息流-小牛-电煮锅-京东主体-代运营-新人福利价-0720-10112824783788-625-设计自选-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 23
+    "广义新-标点": 23
    },
    "uploaded": false,
    "marker": null,
@@ -9639,6 +9734,7 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/23 素材已传创量，23 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0720/标点/音响-福利价-aigc",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -9703,7 +9799,7 @@
     "信息流-小牛-百香果-京东主体-代运营-新人福利价-0721-10161286379662-深海货盘-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 50
+    "广义新-标点": 50
    },
    "uploaded": false,
    "marker": null,
@@ -9713,6 +9809,7 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/50 素材已传创量，50 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0721/标点/主体",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -9747,7 +9844,7 @@
     "信息流-小牛-车载支架-低活-代运营-福利价-0721-100091919404-深海货盘-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 20
+    "广义新-标点": 20
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -9757,6 +9854,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0721/标点/低活",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -9783,7 +9881,7 @@
     "CH-SC-低活-10222907944827-超级抢购-生活日用-无-剪辑-转化引导-生活日用-20260722-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": false,
    "marker": null,
@@ -9793,7 +9891,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/12 素材已传创量，12 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0722/dhx/沥水篮-0.9",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -9929,7 +10028,7 @@
     "信息流-小牛-厨房挂件-京东主体-代运营-新人福利价-0722-10162320955134-本东爆品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 41
+    "广义新-标点": 41
    },
    "uploaded": false,
    "marker": null,
@@ -9939,6 +10038,7 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/41 素材已传创量，41 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0722/标点/主体",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -9965,7 +10065,7 @@
     "信息流-小牛-洗衣粉-低活-代运营-福利价-0722-10174693254918-深海货盘-625-6.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 12
+    "广义新-标点": 12
    },
    "uploaded": false,
    "marker": null,
@@ -9975,6 +10075,7 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/12 素材已传创量，12 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0722/标点/低活",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -9993,7 +10094,7 @@
     "CH-SC-低活-10139440032542-超级抢购加补-运动户外-无-剪辑-转化引导-运动户外-20260723-无-625-4.mp4"
    ],
    "materialBreakdown": {
-    "低活": 4
+    "广义新-DHX": 4
    },
    "uploaded": false,
    "marker": null,
@@ -10003,7 +10104,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/4 素材已传创量，4 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0723/dhx/电动车支架福利加",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -10057,7 +10159,7 @@
     "CH-SC-广义新-10139440032542-新综合频道-运动户外-京喜拉新-剪辑-转化引导-运动户外-20260723-无-625-4.mp4"
    ],
    "materialBreakdown": {
-    "广义新": 4
+    "广义新-标点": 4
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10067,7 +10169,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0723/广义新/电动车支架标点(1)",
    "categories": [
-    "广义新"
+    "广义新",
+    "标点"
    ]
   },
   {
@@ -10091,7 +10194,7 @@
     "CH-SC-低活-100270871707-试用频道-个人护理-无-剪辑-转化引导-个人护理-20260722-个人护理-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10101,7 +10204,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0724/dhx/试用频道",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -10119,7 +10223,7 @@
     "信息流-小牛-保温饭盒-三方主体-代运营-新人福利价-0724-10125420247464-大盘扒改-625-4.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 4
+    "广义新-标点": 4
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10129,6 +10233,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0724/三方/保温盒",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10153,7 +10258,7 @@
     "信息流-小牛-卷纸-三方主体-代运营-新人福利价-0724-10112037969337 -历史爆品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10163,6 +10268,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0724/三方/卷纸-福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10188,7 +10294,7 @@
     "信息流-小牛-零食-三方主体-代运营-新人福利价-0724-100130639629 -历史爆品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 11
+    "广义新-标点": 11
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10198,6 +10304,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0724/三方/好丽友-福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10222,7 +10329,7 @@
     "信息流-小牛-平板支架-三方主体-代运营-新人福利价-0724-10191489644462 -历史爆品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10232,6 +10339,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0724/三方/平板支架-福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10256,7 +10364,7 @@
     "信息流-小牛-抽纸-三方主体-代运营-新人福利价-0724-10105196309536 -历史爆品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10266,6 +10374,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0724/三方/抽纸-福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10282,7 +10391,7 @@
     "信息流-小牛-拼豆-三方主体-代运营-新人福利价-0724-10191018980880-大盘扒改-625-2.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 2
+    "广义新-标点": 2
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10292,6 +10401,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0724/三方/拼豆",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10318,7 +10428,7 @@
     "信息流-小牛-无骨鸡爪-三方主体-代运营-新人福利价-0724-10181243448351-大盘扒改-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 12
+    "广义新-标点": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10328,6 +10438,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0724/三方/无骨鸡爪",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10346,7 +10457,7 @@
     "信息流-小牛-独头蒜-三方主体-代运营-新人福利价-0724-10209805116351-大盘扒改-625-4.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 4
+    "广义新-标点": 4
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10356,6 +10467,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0724/三方/蒜",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10424,7 +10536,7 @@
     "CH-SC-低活-10143318867797-超级抢购-厨具-无-剪辑-转化引导-厨具-20260727-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10434,7 +10546,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0727/dhx/冰格",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -10461,7 +10574,7 @@
     "CH-SC-低活-10142433952187-超级抢购-厨具-无-剪辑-转化引导-厨具-20260727-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 13
+    "广义新-DHX": 13
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10471,7 +10584,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0727/dhx/双耳碗-福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -10498,7 +10612,7 @@
     "CH-SC-低活-10103917299332-超级抢购-厨具-无-剪辑-转化引导-厨具-20260727-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 13
+    "广义新-DHX": 13
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10508,7 +10622,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0727/dhx/收纳罐-福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -10535,7 +10650,7 @@
     "CH-SC-低活-10081585918372-超级抢购-纸品-无-剪辑-转化引导-纸品-20260727-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 13
+    "广义新-DHX": 13
    },
    "uploaded": false,
    "marker": null,
@@ -10545,7 +10660,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/13 素材已传创量，13 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0727/dhx/纸品福利价-b不对版不传",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -10562,7 +10678,7 @@
     "信息流-小牛-黄冰糖-京东主体-代运营-新人1分钱起-0727-10170002210388-京东-625-3.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 3
+    "广义新-标点": 3
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10572,6 +10688,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0727/主体/冰糖-1分钱起",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10593,7 +10710,7 @@
     "信息流-小牛-黄冰糖-京东主体-代运营-新人福利价-0727-10170002210388-京东-625-7.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 7
+    "广义新-标点": 7
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10603,6 +10720,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0727/主体/冰糖-福利加",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10632,7 +10750,7 @@
     "信息流-小牛-泼油小锅-京东主体-代运营-新人福利价-0727-10112220437348 -设计自选-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 15
+    "广义新-标点": 15
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10642,6 +10760,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0727/主体/热油锅-福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10666,7 +10785,7 @@
     "信息流-小牛-玉米-京东主体-代运营-新人1分钱-0727-10128655448992-实时爆品表-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10676,6 +10795,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0727/主体/玉米-数字人-1分钱",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10693,7 +10813,7 @@
     "信息流-小牛-圆环衣架-京东主体-代运营-新人1分钱起-0727-10190005213468-京东-625-3.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 3
+    "广义新-标点": 3
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10703,6 +10823,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0727/主体/衣架-1分钱起",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10724,7 +10845,7 @@
     "信息流-小牛-圆环衣架-京东主体-代运营-新人福利价-0727-10190005213468-京东-625-7.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 7
+    "广义新-标点": 7
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10734,6 +10855,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0727/主体/衣架-福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -10871,7 +10993,7 @@
     "CH-SC-低活-10162320955134-超级抢购-厨房卫浴-无-剪辑-转化引导-厨房卫浴-20260728-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": false,
    "marker": null,
@@ -10881,7 +11003,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0728/dhx/厨房收纳-福利价-不对版数量不同",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -10905,7 +11028,7 @@
     "CH-SC-低活-10154095391500-超级抢购-手机通讯-无-剪辑-转化引导-手机通讯-20260728-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": false,
    "marker": null,
@@ -10915,7 +11038,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0728/dhx/数据线福利价-快手-又有0.9",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -10941,7 +11065,7 @@
     "CH-SC-低活-10178946597305-超级抢购-厨具-无-剪辑-转化引导-厨具-20260728-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -10951,7 +11075,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0728/dhx/烤盘福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -10975,7 +11100,7 @@
     "信息流-小牛-数据线-京东主体-代运营-新人福利价-0728-10191435582190-深海货盘-625-7.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": false,
    "marker": null,
@@ -10985,6 +11110,7 @@
    "chuangliangReason": "自动比对（2026-05至今）：5/10 素材已传创量，5 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0728/主体/充电线",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11011,7 +11137,7 @@
     "信息流-小牛-抽纸-京东主体-代运营-新人福利价-0728-10123194301043-设计自选-625-aigc-7.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 12
+    "广义新-标点": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11021,6 +11147,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0728/主体/抽纸福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11047,7 +11174,7 @@
     "信息流-小牛-漏斗-京东主体-代运营-新人福利价-0728-10185025201166-京东-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 12
+    "广义新-标点": 12
    },
    "uploaded": false,
    "marker": null,
@@ -11057,6 +11184,7 @@
    "chuangliangReason": "自动比对（2026-05至今）：6/12 素材已传创量，6 未传，0 疑似待复核",
    "path": "D:/625/京东/7月/0728/主体/漏斗",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11083,7 +11211,7 @@
     "信息流-小牛-西瓜-京东主体-代运营-新人福利价-0728-10215767576641-设计自选-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 12
+    "广义新-标点": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11093,6 +11221,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0728/主体/西瓜福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11187,7 +11316,7 @@
     "CH-SC-低活-10212147672624-超级抢购-电动车-无-剪辑-转化引导-电动车-20260729-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11197,7 +11326,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0729/dhx/过功能挂钩-非头条",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -11223,7 +11353,7 @@
     "信息流-小牛-懒人拖把-京东主体-代运营-新人福利价-0729-10101433845811-设计自选-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 12
+    "广义新-标点": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11233,6 +11363,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0729/主体/懒人拖把",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11259,7 +11390,7 @@
     "信息流-小牛-李子-京东主体-代运营-新人福利价-0729-10223570717754-设计自选-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 12
+    "广义新-标点": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11269,6 +11400,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0729/主体/李子-aigc",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11298,7 +11430,7 @@
     "信息流-小牛-追踪器-京东主体-代运营--0729-10165597855775-大盘跑量-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 15
+    "广义新-标点": 15
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11308,6 +11440,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0729/主体/追踪器-福利价-aigc",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11336,7 +11469,7 @@
     "信息流-小牛-黄心油桃-京东主体-代运营-新人福利价-0729-10220085996134 -深海货盘-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 14
+    "广义新-标点": 14
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11346,6 +11479,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0729/主体/黄油桃aigc",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11440,7 +11574,7 @@
     "CH-SC-低活-10219841541026-超级抢购-厨具-无-剪辑-转化引导-20260730-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": false,
    "marker": null,
@@ -11450,7 +11584,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：9/10 素材已传创量，0 未传，1 疑似待复核",
    "path": "D:/625/京东/7月/0730/dhx/切葱-福利价-aigc-",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -11474,7 +11609,7 @@
     "CH-SC-低活-10154095391500-超级抢购-手机通讯-无-剪辑-转化引导-手机通讯-20260730-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11484,7 +11619,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0730/dhx/数据线",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -11516,7 +11652,7 @@
     "CH-SC-低活-10203314269223-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260730-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11526,7 +11662,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0730/dhx/皮蛋-福利价-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -11551,7 +11688,7 @@
     "信息流-小牛-地漏-京东主体-代运营-新人福利价-0730-10148101118968 -深海货盘-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 11
+    "广义新-标点": 11
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11561,6 +11698,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0730/主体/地漏",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11585,7 +11723,7 @@
     "信息流-小牛-抽纸-京东主体-代运营-新人福利价-0730-10113742605853 -设计自选-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11595,6 +11733,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0730/主体/抽纸-福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11619,7 +11758,7 @@
     "信息流-小牛-浴帽-京东主体-代运营-新人福利价-0730-10150228680531-深海货盘-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11629,6 +11768,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0730/主体/泳帽",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11656,7 +11796,7 @@
     "信息流-小牛-雨伞-京东主体-代运营-新人福利价-0730-10130866966155-设计自选-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 13
+    "广义新-标点": 13
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11666,6 +11806,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0730/主体/雨伞",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11814,7 +11955,7 @@
     "信息流-小牛-哈密瓜-京东主体-代运营-新人福利价-0731-10205135301106-抖音-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 12
+    "广义新-标点": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11824,6 +11965,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0731/主体/哈密瓜",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11848,7 +11990,7 @@
     "信息流-小牛-折叠椅-京东主体-代运营-新人福利价-0731-10183713190151-设计自选-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11858,6 +12000,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0731/主体/折叠椅",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11884,7 +12027,7 @@
     "信息流-小牛-泥巴派-京东主体-代运营-新人福利价-0731-10148055003453-设计自选-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 12
+    "广义新-标点": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11894,6 +12037,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0731/主体/泥巴派",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11918,7 +12062,7 @@
     "信息流-小牛-饭盒-京东主体-代运营-超值惊爆价-0731-10169123650049-本东爆品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11928,6 +12072,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/7月/0731/主体/饭盒",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -11959,7 +12104,7 @@
     "CH-SC-低活-10081585918372-超级抢购-纸品-无-剪辑-转化引导-纸品-20260803-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 17
+    "广义新-DHX": 17
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -11969,7 +12114,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0803/dhx/手帕纸-aigc-数量不对",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12000,7 +12146,7 @@
     "CH-SC-低活-10081585918372-超级抢购-纸品-无-剪辑-转化引导-纸品-20260803-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 17
+    "广义新-DHX": 17
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12010,7 +12156,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0803/dhx/手帕纸-数量",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12037,7 +12184,7 @@
     "CH-SC-低活-10223570717754-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260803-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 13
+    "广义新-DHX": 13
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12047,7 +12194,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0803/dhx/李子",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12185,7 +12333,7 @@
     "信息流-小牛-红薯粉-京东主体-代运营-新人福利价-0803-10199807565163-京东-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12195,6 +12343,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0803/标点/红薯粉",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -12219,7 +12368,7 @@
     "信息流-小牛-餐具-京东主体-代运营-新人福利价-0803-10120927066267-本东爆品-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12229,6 +12378,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0803/标点/饺子盘",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -12253,7 +12403,7 @@
     "信息流-小牛-宝宝蕉-京东主体-代运营-新人福利价-0803-10151192121038-应季品-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12263,6 +12413,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0803/标点/香蕉",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -12287,7 +12438,7 @@
     "CH-SC-低活-10111392494770-超级抢购-收纳用品-无-剪辑-转化引导-收纳用品-20260804-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12297,7 +12448,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0804/dhx-未传/不锈钢锅架-福利价-过审",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12321,7 +12473,7 @@
     "CH-SC-低活-10100644668875-超级抢购-汽车用品-无-剪辑-转化引导-汽车用品-20260804-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12331,7 +12483,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0804/dhx-未传/夏日冰垫-福利价-ai-还没过-8月6号重新传",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12355,7 +12508,7 @@
     "CH-SC-低活-10193046394164-限时抢购-收纳用品-无-剪辑-转化引导-收纳用品-20260804-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12365,7 +12518,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0804/dhx-未传/收纳盒-限时抢购-ai-还没过",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12390,7 +12544,7 @@
     "CH-SC-低活-10140207411553-超级抢购-文教文化用品-无-剪辑-转化引导-文教文化用品-20260804-无-625-aigc-4.mp4"
    ],
    "materialBreakdown": {
-    "低活": 11
+    "广义新-DHX": 11
    },
    "uploaded": false,
    "marker": null,
@@ -12400,7 +12554,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：10/11 素材已传创量，1 未传，0 疑似待复核",
    "path": "D:/625/京东/8月/0804/dhx-未传/桌面风扇-ai-福利价-还没",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12424,7 +12579,7 @@
     "CH-SC-低活-10155573475063-超级抢购-厨具-无-剪辑-转化引导-厨具-20260804-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12434,7 +12589,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0804/dhx-未传/水杯-福利价-ai-过审",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12595,7 +12751,7 @@
     "CH-SC-低活-10111392494770-超级抢购-收纳用品-无-剪辑-转化引导-收纳用品-20260805-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12605,7 +12761,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0805/dhx/不锈钢架子-ai",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12629,7 +12786,7 @@
     "CH-SC-低活-10118706992348-超级抢购-纸品-无-剪辑-转化引导-纸品-20260805-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12639,7 +12796,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0805/dhx/樱花抽纸-福利价-ai",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12668,7 +12826,7 @@
     "CH-SC-低活-10168329751492-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260805-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 15
+    "广义新-DHX": 15
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12678,7 +12836,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0805/dhx/火龙果-福利价-ao",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12704,7 +12863,7 @@
     "CH-SC-低活-10124545001566-超级抢购-家庭清洁-无-剪辑-转化引导-家庭清洁-20260805-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12714,7 +12873,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0805/dhx/钢丝抹布-福利价-ai",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -12812,7 +12972,7 @@
     "信息流-小牛-维达纸巾-三方主体-代运营-新人福利价-0804-100166352003-实时爆品表-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12822,6 +12982,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0805/抽纸-福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -12843,7 +13004,7 @@
     "信息流-小牛-透明皂 -三方主体-代运营-新人福利价-0805-3207554-客户推品-625-7.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 7
+    "广义新-标点": 7
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12853,6 +13014,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0805/透明皂/8月5日",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -12934,7 +13096,7 @@
     "信息流-小牛-透明皂 -三方主体-代运营-新人福利价-0805-3207554-客户推品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 67
+    "广义新-标点": 67
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12944,6 +13106,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0805/透明皂/衍生",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -12968,7 +13131,7 @@
     "CH-SC-低活-10208833001175-超级抢购-家庭清洁-无-剪辑-转化引导-家庭清洁-20260806-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -12978,7 +13141,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0806/dhx/柔顺剂",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -13033,7 +13197,7 @@
     "信息流-小牛-维达纸巾-三方主体-代运营-新人福利价-0806-100166352003-大盘实时跑量-625-42.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 41
+    "广义新-标点": 41
    },
    "uploaded": false,
    "marker": null,
@@ -13043,6 +13207,7 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/41 素材已传创量，41 未传，0 疑似待复核",
    "path": "D:/625/京东/8月/0806/三方/维达",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -13112,7 +13277,7 @@
     "信息流-小牛-西瓜-三方主体-代运营-新人福利价-0806-10215767576641-历史爆品-625-33.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 55
+    "广义新-标点": 55
    },
    "uploaded": false,
    "marker": null,
@@ -13122,6 +13287,7 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/55 素材已传创量，55 未传，0 疑似待复核",
    "path": "D:/625/京东/8月/0806/三方/西瓜",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -13174,7 +13340,7 @@
     "信息流-小牛-陶瓷碗-三方主体-代运营-新人福利价-0806-10129451028601-客户推品-625-4.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 4
+    "广义新-标点": 4
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -13184,6 +13350,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0806/陶瓷碗",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -13208,7 +13375,7 @@
     "CH-SC-低活-10168329751492-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260807-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -13218,7 +13385,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0807/dhx/火龙果(1)",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -13236,7 +13404,7 @@
     "信息流-小牛-陶瓷碗-三方主体-代运营-新人福利价-0807-10129451028601-客户推品-625-4.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 4
+    "广义新-标点": 4
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -13246,6 +13414,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0807/三方/陶瓷碗",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -13267,7 +13436,7 @@
     "信息流-小牛-透明皂 -三方主体-代运营-新人福利价-0807-3207554-客户推品-625-7.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 7
+    "广义新-标点": 7
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -13277,6 +13446,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0807/三方/雕牌",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -13423,7 +13593,7 @@
     "CH-SC-低活-10115825582003-超级抢购-美妆护肤-无-剪辑-转化引导-美妆护肤-20260810-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -13433,7 +13603,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0810/dhx-防晒霜-ai福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -13581,7 +13752,7 @@
     "信息流-小牛-鱼饵料-三方主体-代运营-新人福利价-0811-10118724169579-内部实时跑量-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 55
+    "广义新-标点": 55
    },
    "uploaded": false,
    "marker": null,
@@ -13591,6 +13762,7 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/55 素材已传创量，55 未传，0 疑似待复核",
    "path": "D:/625/京东/8月/0810/标点/鱼饵",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -13606,7 +13778,7 @@
     "3.mp4"
    ],
    "materialBreakdown": {
-    "3": 1
+    "广义新-DHX": 1
    },
    "uploaded": false,
    "marker": null,
@@ -13616,7 +13788,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/1 素材已传创量，0 未传，1 疑似待复核",
    "path": "D:/625/京东/8月/0810/重新提审-dhx",
    "categories": [
-    "其他"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -13640,7 +13813,7 @@
     "CH-SC-低活-10166301474829-超级抢购-厨具-无-剪辑-转化引导-厨具-20260811-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -13650,7 +13823,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0811/dhx/咸菜碗",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -13675,7 +13849,7 @@
     "CH-SC-低活-10129451028601-超级抢购-厨具-无-剪辑-转化引导-厨具-20260811-无-625-aigc-5.mp4"
    ],
    "materialBreakdown": {
-    "低活": 11
+    "广义新-DHX": 11
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -13685,7 +13859,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0811/dhx/碗",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -13714,7 +13889,7 @@
     "CH-SC-低活-10230164670078-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260811-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 15
+    "广义新-DHX": 15
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -13724,7 +13899,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0811/dhx/鸭蛋-ai",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -13769,7 +13945,7 @@
     "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-0811-10201860864224-商务选品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 31
+    "广义新-标点": 31
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -13779,6 +13955,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0811/三方/火鸡面-商务测试",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -13898,7 +14075,7 @@
     "CH-SC-低活-10163212681383-超级抢购-水饮冲调-无-剪辑-转化引导-水饮冲调-20260812-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 29
+    "广义新-DHX": 29
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -13908,7 +14085,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0812/dhx/东方树叶",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -13940,7 +14118,7 @@
     "CH-SC-低活-10103917299332-超级抢购-厨具-无-剪辑-转化引导-厨具-20260812-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 18
+    "广义新-DHX": 18
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -13950,7 +14128,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0812/dhx/收纳罐-ai",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -13998,7 +14177,7 @@
     "信息流-小牛-饭盒-三方主体-代运营-新人福利价-0812-10125420247464-大盘实扒改-625-2.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 34
+    "广义新-标点": 34
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -14008,6 +14187,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0812/大盘扒改",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -14201,7 +14381,7 @@
     "信息流-小牛-炒冰机-三方主体-代运营-新人福利价-0813-10170365226885-大盘实时跑量-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 50
+    "广义新-标点": 50
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -14211,6 +14391,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0812/炒冰机-三方",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -14276,7 +14457,7 @@
     "信息流-小牛-围裙-三方主体-代运营-新人福利价-0813-10117891615029-大盘实时跑量-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 51
+    "广义新-标点": 51
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -14286,6 +14467,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0813/围裙-三方",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -14350,7 +14532,7 @@
     "信息流-小牛-搓澡巾-三方主体-代运营-新人福利价-0814-10215859319852-测试-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 50
+    "广义新-标点": 50
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -14360,6 +14542,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0813/搓澡皮子",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -14427,7 +14610,7 @@
     "信息流-小牛-五香花生-三方主体-代运营-新人福利价-0814-10150360358365-大盘实时跑量-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 53
+    "广义新-标点": 53
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -14437,6 +14620,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0813/花生-三方",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -14765,7 +14949,7 @@
     "CH-SC-低活-10212738281388-超级抢购-生活日用-无-剪辑-转化引导-生活日用-20260817-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 17
+    "广义新-DHX": 17
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -14775,7 +14959,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0817/dhx/洗漱杯",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -14802,7 +14987,7 @@
     "CH-SC-低活-10129473099022-超级抢购-休闲食品-无-剪辑-转化引导-休闲食品-20260817-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 13
+    "广义新-DHX": 13
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -14812,7 +14997,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0817/dhx/瓜子",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -14845,7 +15031,7 @@
     "CH-SC-低活-10217890160402-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260817-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 19
+    "广义新-DHX": 19
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -14855,7 +15041,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0817/dhx/鸡蛋",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -14883,7 +15070,7 @@
     "信息流-小牛-鼠标垫-三方主体-代运营-新人福利价-0817-10163823702584-大盘扒改-625-.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 14
+    "广义新-标点": 14
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -14893,6 +15080,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0817/三方",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -14951,7 +15139,7 @@
     "信息流-小牛-立白洗洁精-三方主体-代运营-新人福利价-0818-1119934-客户推品-625-7.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 7
+    "广义新-标点": 7
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -14961,6 +15149,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0818/1119934-立白洗洁精-0818-传",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -15008,7 +15197,7 @@
     "信息流-小牛-立白洗洁精-三方主体-代运营-新人福利价-0818-1119934-客供二创-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 33
+    "广义新-标点": 33
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -15018,6 +15207,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0818/三方衍生/洗洁精",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -15082,7 +15272,7 @@
     "CH-SC-低活-10164661322698-超级抢购-手机通讯-无-剪辑-转化引导-手机通讯-20260818-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 12
+    "广义新-DHX": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -15092,7 +15282,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0818/吸盘支架-dhx",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -15251,7 +15442,7 @@
     "CH-SC-低活-10120514417084-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260818-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 24
+    "广义新-DHX": 24
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -15261,7 +15452,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0818/红薯=dhx",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -15332,7 +15524,7 @@
     "CH-SC-低活-10217740550325-超级抢购-箱包皮具-无-剪辑-转化引导-箱包皮具-20260819-无-625-aigc-26.mp4"
    ],
    "materialBreakdown": {
-    "低活": 15
+    "广义新-DHX": 15
    },
    "uploaded": false,
    "marker": null,
@@ -15342,7 +15534,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/15 素材已传创量，15 未传，0 疑似待复核",
    "path": "D:/625/京东/8月/0819/dhx/包",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -15366,7 +15559,7 @@
     "CH-SC-低活-10150354075756-限时抢购-家庭清洁-无-剪辑-转化引导-家庭清洁-20260819-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -15376,7 +15569,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0819/dhx/珊瑚抹布-限时抢购福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -15420,7 +15614,7 @@
     "信息流-小牛-积木-三方主体-代运营-新人福利价-0819-10163090692102-商务选品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 30
+    "广义新-标点": 30
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -15430,6 +15624,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0819/三方/商务选品-",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -15574,7 +15769,7 @@
     "信息流-小牛-打火机-三方主体-代运营-新人福利价-0820-10162692688878-内部实时跑量-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 52
+    "广义新-标点": 52
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -15584,6 +15779,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0820/三方/打火机-有米云",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -15650,7 +15846,7 @@
     "信息流-小牛-花洒支架-三方主体-代运营-新人福利价-0820-10116091800772-内部实时跑量-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 52
+    "广义新-标点": 52
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -15660,6 +15856,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0820/三方/花洒架有米云",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -15726,7 +15923,7 @@
     "信息流-小牛-雨伞-三方主体-代运营-新人福利价-0820-10130866966155-内部实时跑量-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 52
+    "广义新-标点": 52
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -15736,6 +15933,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0820/三方/雨伞有米云",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -15762,7 +15960,7 @@
     "信息流-小牛-鱼饵料-三方主体-代运营-新人福利价-0820-10118724169579-内部实时跑量-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 12
+    "广义新-标点": 12
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -15772,6 +15970,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0820/三方/鱼饵-衍生",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -15814,7 +16013,7 @@
     "CH-SC-低活-10140917922437-超级抢购-家庭清洁-无-剪辑-转化引导-家庭清洁-20260820-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 28
+    "广义新-DHX": 28
    },
    "uploaded": false,
    "marker": null,
@@ -15824,7 +16023,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/28 素材已传创量，28 未传，0 疑似待复核",
    "path": "D:/625/京东/8月/0820/围裙-dhx-0825的时候传",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -15955,7 +16155,7 @@
     "CH-SC-低活-100218501679-商超一类货-水饮冲调-大商超-剪辑-转化引导-水饮冲调-20260821-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 29
+    "广义新-DHX": 29
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -15965,7 +16165,8 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0821/dhx-可乐",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -15989,7 +16190,7 @@
     "信息流-小牛-大米-三方主体-代运营-新人1分钱-0824-100178504977-大盘扒改品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -15999,6 +16200,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0821/大米-扒改三方-100178504977",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -16119,7 +16321,7 @@
     "信息流-小牛-旋转手机支架-三方主体-代运营-新人福利价-0821-10112643484929-内部实时跑量-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 50
+    "广义新-标点": 50
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -16129,6 +16331,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0821/手机支架-有米云",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -16153,7 +16356,7 @@
     "信息流-小牛-散热器-三方主体-代运营-新人福利价-0824-10215952093313-大盘扒改品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -16163,6 +16366,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0821/散热器-1-10215952093313",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -16261,7 +16465,7 @@
     "信息流-小牛-速干笔-三方主体-代运营-新人福利价-0821-100249259352-深海货盘-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 50
+    "广义新-标点": 50
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -16271,6 +16475,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0821/笔",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -16295,7 +16500,7 @@
     "信息流-小牛-茶语抽纸-三方主体-代运营-新人1分钱-0824-100123852301-大盘扒改品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -16305,6 +16510,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0821/茶语抽纸-100123852301",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -16369,7 +16575,7 @@
     "信息流-小牛-月饼模具-三方主体-代运营-新人福利价-0824-100285205477-趋势品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 50
+    "广义新-标点": 50
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -16379,6 +16585,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0824/三方月饼模具",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -16443,7 +16650,7 @@
     "信息流-小牛-乳酸菌-三方主体-代运营-新人福利价-0824-10223757184457-深海货盘-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 50
+    "广义新-标点": 50
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -16453,6 +16660,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0824/乳酸菌-三方",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -16482,7 +16690,7 @@
     "CH-SC-低活-10106691309653-超级抢购-生活日用-无-剪辑-转化引导-生活日用-20260824-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 15
+    "广义新-DHX": 15
    },
    "uploaded": false,
    "marker": null,
@@ -16492,7 +16700,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/15 素材已传创量，15 未传，0 疑似待复核",
    "path": "D:/625/京东/8月/0824/五面鞋刷dhx-福利价",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -16633,7 +16842,7 @@
     "CH-SC-低活-10168329751492-超级抢购-生鲜-无-剪辑-转化引导-生鲜-20260824-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": false,
    "marker": null,
@@ -16643,7 +16852,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
    "path": "D:/625/京东/8月/0824/火龙果-dhx-aigc",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -16712,7 +16922,7 @@
     "信息流-小牛-地漏芯-三方主体-代运营-新人1分钱起-260825-10198044249772-大盘扒改-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -16722,6 +16932,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0825/地漏芯-三方一分钱起",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -16783,7 +16994,7 @@
     "信息流-小牛-打火机-三方主体-代运营-新人福利价-260825-10162692688878-大盘扒改-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -16793,6 +17004,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0825/打火机-三方福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -16853,7 +17065,7 @@
     "信息流-小牛-沥水篮-三方主体-代运营-新人1分钱起-260825-10117594265253-大盘扒改-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -16863,6 +17075,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0825/沥水篮-1分钱起福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -16921,7 +17134,7 @@
     "信息流-小牛-雨伞-三方主体-代运营-新人福利价-260825-10113643996701-大盘扒改-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 10
+    "广义新-标点": 10
    },
    "uploaded": true,
    "marker": "已上传.txt",
@@ -16931,6 +17144,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0825/雨伞-第三方-福利价",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -16955,7 +17169,7 @@
     "CH-SC-低活-10232787350851-超级抢购-钟表眼镜-无-剪辑-转化引导-钟表眼镜-260826-无-625-aigc-9.mp4"
    ],
    "materialBreakdown": {
-    "低活": 10
+    "广义新-DHX": 10
    },
    "uploaded": false,
    "marker": null,
@@ -16965,7 +17179,8 @@
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
    "path": "D:/625/京东/8月/0826/dhx-手表",
    "categories": [
-    "DHX"
+    "DHX",
+    "广义新"
    ]
   },
   {
@@ -17009,7 +17224,7 @@
     "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260826-10198153252023-商务选品-625-9.mp4"
    ],
    "materialBreakdown": {
-    "信息流-小牛": 30
+    "广义新-标点": 30
    },
    "uploaded": false,
    "marker": null,
@@ -17019,6 +17234,7 @@
    "chuangliangReason": "",
    "path": "D:/625/京东/8月/0826/商务选品-三方-拼豆",
    "categories": [
+    "广义新",
     "标点"
    ]
   },
@@ -17076,14 +17292,8 @@
    "product": "广义新 / 手帕纸-1分钱起-广义新",
    "parent": "广义新",
    "subProduct": "手帕纸-1分钱起-广义新",
-   "materials": 18,
+   "materials": 12,
    "materialFiles": [
-    "CH-SC-广义新-100033499067 -新综合频道-纸品-大商超-剪辑-转化引导-纸品-260826-无-625-4.mp4",
-    "CH-SC-广义新-100033499067 -新综合频道-纸品-大商超-剪辑-转化引导-纸品-260826-无-625-5.mp4",
-    "CH-SC-广义新-100033499067 -新综合频道-纸品-大商超-剪辑-转化引导-纸品-260826-无-625-6.mp4",
-    "CH-SC-广义新-100033499067 -新综合频道-纸品-大商超-剪辑-转化引导-纸品-260826-无-625-7.mp4",
-    "CH-SC-广义新-100033499067 -新综合频道-纸品-大商超-剪辑-转化引导-纸品-260826-无-625-8.mp4",
-    "CH-SC-广义新-100033499067 -新综合频道-纸品-大商超-剪辑-转化引导-纸品-260826-无-625-9.mp4",
     "CH-SC-广义新-100033499067 -新综合频道-纸品-大商超-剪辑-转化引导-纸品-260826-无-625-1.mp4",
     "CH-SC-广义新-100033499067 -新综合频道-纸品-大商超-剪辑-转化引导-纸品-260826-无-625-10.mp4",
     "CH-SC-广义新-100033499067 -新综合频道-纸品-大商超-剪辑-转化引导-纸品-260826-无-625-11.mp4",
@@ -17098,14 +17308,14 @@
     "CH-SC-广义新-100033499067 -新综合频道-纸品-大商超-剪辑-转化引导-纸品-260826-无-625-9.mp4"
    ],
    "materialBreakdown": {
-    "广义新": 18
+    "广义新": 12
    },
    "uploaded": false,
    "marker": null,
    "qingyun": "",
    "qingyunReason": "",
    "chuangliang": "no",
-   "chuangliangReason": "自动比对（2026-05至今）：0/18 素材已传创量，18 未传，0 疑似待复核",
+   "chuangliangReason": "自动比对（2026-05至今）：13/13 素材已传创量，13未传，0 疑似待复核",
    "path": "D:/625/京东/8月/0826/广义新/手帕纸-1分钱起-广义新",
    "categories": [
     "广义新"
@@ -17145,6 +17355,752 @@
    "path": "D:/625/京东/8月/0826/广义新/樱花抽纸-1分钱-广义新",
    "categories": [
     "广义新"
+   ]
+  },
+  {
+   "date": "2026-08-27",
+   "month": "8月",
+   "day": "0827",
+   "product": "aigc",
+   "parent": "aigc",
+   "subProduct": "",
+   "materials": 116,
+   "materialFiles": [
+    "信息流-小牛-内衣收纳包-三方主体-代运营-新人福利价-260827-10221349782292-设计自选-625-1.mp4",
+    "信息流-小牛-内衣收纳包-三方主体-代运营-新人福利价-260827-10221349782292-设计自选-625-2.mp4",
+    "信息流-小牛-和面盆-三方主体-代运营-新人福利价-260827-10132714345496-设计自选-625-1.mp4",
+    "信息流-小牛-和面盆-三方主体-代运营-新人福利价-260827-10132714345496-设计自选-625-2.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-1.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-10.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-11.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-12.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-13.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-14.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-15.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-16.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-17.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-18.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-19.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-2.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-20.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-21.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-22.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-23.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-24.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-25.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-26.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-27.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-28.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-29.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-3.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-30.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-31.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-32.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-33.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-34.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-35.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-36.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-37.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-38.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-39.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-4.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-40.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-41.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-42.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-43.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-44.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-45.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-46.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-47.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-48.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-49.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-5.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-50.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-51.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-52.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-53.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-54.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-55.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-56.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-57.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-58.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-59.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-6.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-7.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-8.mp4",
+    "信息流-小牛-围裙-三方主体-代运营-新人福利价-260827-10117891615029-设计自选-625-9.mp4",
+    "信息流-小牛-小洗衣机-三方主体-代运营-新人福利价-260827-10143356064775-设计自选-625-1.mp4",
+    "信息流-小牛-小洗衣机-三方主体-代运营-新人福利价-260827-10143356064775-设计自选-625-2.mp4",
+    "信息流-小牛-手机支架-三方主体-代运营-新人福利价-260827-10158577240445-设计自选-625-1.mp4",
+    "信息流-小牛-手机支架-三方主体-代运营-新人福利价-260827-10158577240445-设计自选-625-2.mp4",
+    "信息流-小牛-手机支架-三方主体-代运营-新人福利价-260827-10158577240445-设计自选-625-3.mp4",
+    "信息流-小牛-手机支架-三方主体-代运营-新人福利价-260827-10158577240445-设计自选-625-4.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-1.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-10.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-11.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-12.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-13.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-14.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-15.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-16.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-17.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-18.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-19.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-2.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-20.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-21.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-22.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-23.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-24.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-25.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-26.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-27.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-28.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-29.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-3.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-30.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-31.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-4.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-5.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-6.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-7.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-8.mp4",
+    "信息流-小牛-火鸡面-三方主体-代运营-新人福利价-260827-10201860864224-设计自选-625-9.mp4",
+    "信息流-小牛-烤盘-三方主体-代运营-新人福利价-260827-10178946597305-设计自选-625-1.mp4",
+    "信息流-小牛-烤盘-三方主体-代运营-新人福利价-260827-10178946597305-设计自选-625-2.mp4",
+    "信息流-小牛-电脑支架-三方主体-代运营-新人福利价-260827-10191489644462-大盘实扒改-625-1.mp4",
+    "信息流-小牛-电脑支架-三方主体-代运营-新人福利价-260827-10191489644462-大盘实扒改-625-2.mp4",
+    "信息流-小牛-电脑支架-三方主体-代运营-新人福利价-260827-10191489644462-大盘实扒改-625-3.mp4",
+    "信息流-小牛-电脑支架-三方主体-代运营-新人福利价-260827-10191489644462-大盘实扒改-625-4.mp4",
+    "信息流-小牛-电脑支架-三方主体-代运营-新人福利价-260827-10191489644462-大盘实扒改-625-5.mp4",
+    "信息流-小牛-电脑支架-三方主体-代运营-新人福利价-260827-10191489644462-大盘实扒改-625-6.mp4",
+    "信息流-小牛-罐罐蛋糕-三方主体-代运营-新人福利价-260827-10175719416265-设计自选-625-1.mp4",
+    "信息流-小牛-罐罐蛋糕-三方主体-代运营-新人福利价-260827-10175719416265-设计自选-625-2.mp4",
+    "信息流-小牛-蒸蛋机-三方主体-代运营-新人福利价-260827-10166863565609-设计自选-625-1.mp4",
+    "信息流-小牛-蒸蛋机-三方主体-代运营-新人福利价-260827-10166863565609-设计自选-625-2.mp4",
+    "信息流-小牛-蒸蛋机-三方主体-代运营-新人福利价-260827-10166863565609-设计自选-625-3.mp4",
+    "信息流-小牛-蒸蛋机-三方主体-代运营-新人福利价-260827-10166863565609-设计自选-625-4.mp4",
+    "信息流-小牛-饭盒-三方主体-代运营-新人福利价-260827-10125420247464-设计自选-625-1.mp4",
+    "信息流-小牛-饭盒-三方主体-代运营-新人福利价-260827-10125420247464-设计自选-625-2.mp4"
+   ],
+   "materialBreakdown": {
+    "广义新-标点": 116
+   },
+   "uploaded": false,
+   "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
+   "chuangliangReason": "",
+   "path": "D:/625/京东/8月/0827/aigc",
+   "categories": [
+    "广义新",
+    "标点"
+   ]
+  },
+  {
+   "date": "2026-08-27",
+   "month": "8月",
+   "day": "0827",
+   "product": "二合一喷壶-广义新福利价",
+   "parent": "二合一喷壶-广义新福利价",
+   "subProduct": "",
+   "materials": 21,
+   "materialFiles": [
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-1.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-10.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-11.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-12.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-13.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-14.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-15.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-16.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-17.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-18.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-19.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-2.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-20.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-21.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-3.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-4.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-5.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-6.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-7.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-8.mp4",
+    "CH-SC-广义新-10128848312108-新综合频道-厨具-京喜拉新-剪辑-转化引导-厨具-260827-无-625-aigc-9.mp4"
+   ],
+   "materialBreakdown": {
+    "广义新": 21
+   },
+   "uploaded": false,
+   "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
+   "chuangliangReason": "",
+   "path": "D:/625/京东/8月/0827/二合一喷壶-广义新福利价",
+   "categories": [
+    "广义新"
+   ]
+  },
+  {
+   "date": "2026-08-27",
+   "month": "8月",
+   "day": "0827",
+   "product": "亲克柔-1分钱18卷",
+   "parent": "亲克柔-1分钱18卷",
+   "subProduct": "",
+   "materials": 16,
+   "materialFiles": [
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-1.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-10.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-11.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-12.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-13.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-14.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-15.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-16.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-2.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-3.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-4.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-5.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-6.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-7.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-8.mp4",
+    "CH-SC-广义新-10146456039187-新综合频道-纸品-京喜拉新-剪辑-转化引导-纸品-260827-无-625-aigc-9.mp4"
+   ],
+   "materialBreakdown": {
+    "广义新": 16
+   },
+   "uploaded": false,
+   "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
+   "chuangliangReason": "",
+   "path": "D:/625/京东/8月/0827/亲克柔-1分钱18卷",
+   "categories": [
+    "广义新"
+   ]
+  },
+  {
+   "date": "2026-08-27",
+   "month": "8月",
+   "day": "0827",
+   "product": "工具箱-三方-aigc-福利价-有加",
+   "parent": "工具箱-三方-aigc-福利价-有加",
+   "subProduct": "",
+   "materials": 50,
+   "materialFiles": [
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-1.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-10.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-11.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-12.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-13.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-14.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-15.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-16.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-17.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-18.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-19.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-2.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-20.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-21.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-22.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-23.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-24.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-25.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-26.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-27.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-28.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-29.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-3.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-30.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-31.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-32.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-33.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-34.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-35.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-36.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-37.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-38.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-39.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-4.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-40.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-41.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-42.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-43.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-44.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-45.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-46.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-47.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-48.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-49.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-5.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-50.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-6.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-7.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-8.mp4",
+    "信息流-小牛-工具箱-三方主体-代运营-新人福利价-260827-10114015186364-内部实时跑量-625-aigc-9.mp4"
+   ],
+   "materialBreakdown": {
+    "广义新-标点": 50
+   },
+   "uploaded": false,
+   "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
+   "chuangliangReason": "",
+   "path": "D:/625/京东/8月/0827/工具箱-三方-aigc-福利价-有加",
+   "categories": [
+    "广义新",
+    "标点"
+   ]
+  },
+  {
+   "date": "2026-08-27",
+   "month": "8月",
+   "day": "0827",
+   "product": "拼豆-福利价-三方aigc'",
+   "parent": "拼豆-福利价-三方aigc'",
+   "subProduct": "",
+   "materials": 45,
+   "materialFiles": [
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-1.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-10.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-11.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-12.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-13.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-14.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-15.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-16.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-17.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-18.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-19.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-2.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-20.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-21.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-22.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-23.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-24.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-25.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-26.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-27.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-28.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-29.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-3.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-30.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-31.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-32.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-33.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-34.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-35.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-36.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-37.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-38.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-39.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-4.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-40.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-41.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-42.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-43.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-44.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-45.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-5.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-6.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-7.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-8.mp4",
+    "信息流-小牛-拼豆-三方主体-代运营-新人福利价-260827-10198153252023-设计自选-625-aigc-9.mp4"
+   ],
+   "materialBreakdown": {
+    "广义新-标点": 45
+   },
+   "uploaded": false,
+   "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
+   "chuangliangReason": "",
+   "path": "D:/625/京东/8月/0827/拼豆-福利价-三方aigc'",
+   "categories": [
+    "广义新",
+    "标点"
+   ]
+  },
+  {
+   "date": "2026-08-27",
+   "month": "8月",
+   "day": "0827",
+   "product": "柚子-福利价dhx",
+   "parent": "柚子-福利价dhx",
+   "subProduct": "",
+   "materials": 42,
+   "materialFiles": [
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-1.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-10.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-11.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-12.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-13.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-14.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-15.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-16.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-17.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-18.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-19.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-2.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-20.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-21.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-22.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-23.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-24.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-25.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-26.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-27.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-28.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-29.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-3.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-30.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-31.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-32.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-33.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-34.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-35.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-36.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-37.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-38.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-39.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-4.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-40.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-41.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-42.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-5.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-6.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-7.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-8.mp4",
+    "CH-SC-低活-10231650045346-超级抢购-生鲜-无-剪辑-转化引导-生鲜-260827-无-625-aigc-9.mp4"
+   ],
+   "materialBreakdown": {
+    "广义新-DHX": 42
+   },
+   "uploaded": false,
+   "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
+   "chuangliangReason": "",
+   "path": "D:/625/京东/8月/0827/柚子-福利价dhx",
+   "categories": [
+    "DHX",
+    "广义新"
+   ]
+  },
+  {
+   "date": "2026-08-27",
+   "month": "8月",
+   "day": "0827",
+   "product": "樱花抽纸-广义新-1分钱",
+   "parent": "樱花抽纸-广义新-1分钱",
+   "subProduct": "",
+   "materials": 43,
+   "materialFiles": [
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-1.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-10.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-11.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-12.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-13.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-14.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-15.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-16.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-17.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-18.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-19.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-2.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-20.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-21.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-22.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-23.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-24.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-25.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-26.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-27.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-28.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-29.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-3.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-30.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-31.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-32.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-33.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-34.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-35.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-36.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-37.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-38.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-39.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-4.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-40.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-41.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-42.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-43.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-5.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-6.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-7.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-8.mp4",
+    "CH-SC-广义新-10118706992345-新综合频道-纸品 -京喜拉新-剪辑-转化引导-纸品 -260827-无-625-aigc-9.mp4"
+   ],
+   "materialBreakdown": {
+    "广义新": 43
+   },
+   "uploaded": false,
+   "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
+   "chuangliangReason": "",
+   "path": "D:/625/京东/8月/0827/樱花抽纸-广义新-1分钱",
+   "categories": [
+    "广义新"
+   ]
+  },
+  {
+   "date": "2026-08-27",
+   "month": "8月",
+   "day": "0827",
+   "product": "泡茶壶-aigc-福利价",
+   "parent": "泡茶壶-aigc-福利价",
+   "subProduct": "",
+   "materials": 87,
+   "materialFiles": [
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-1.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-10.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-11.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-12.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-13.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-14.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-15.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-16.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-17.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-18.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-19.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-2.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-20.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-21.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-22.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-23.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-24.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-25.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-26.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-27.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-28.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-29.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-3.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-30.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-31.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-32.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-33.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-34.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-35.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-36.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-37.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-38.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-39.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-4.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-40.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-41.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-42.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-43.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-44.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-45.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-46.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-47.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-48.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-49.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-5.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-50.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-51.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-52.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-53.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-54.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-55.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-56.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-57.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-58.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-59.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-6.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-60.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-61.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-62.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-63.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-64.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-65.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-66.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-67.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-68.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-69.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-7.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-70.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-71.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-72.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-73.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-74.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-75.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-76.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-77.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-78.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-79.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-8.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-80.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-81.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-82.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-83.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-84.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-85.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-86.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-87.mp4",
+    "信息流-小牛-飘逸杯-三方主体-代运营-新人福利价-260827-10110757613709-内部实时跑量-625-aigc-9.mp4"
+   ],
+   "materialBreakdown": {
+    "广义新-标点": 87
+   },
+   "uploaded": false,
+   "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
+   "chuangliangReason": "",
+   "path": "D:/625/京东/8月/0827/泡茶壶-aigc-福利价",
+   "categories": [
+    "广义新",
+    "标点"
+   ]
+  },
+  {
+   "date": "2026-08-27",
+   "month": "8月",
+   "day": "0827",
+   "product": "洗脸巾-三方-福利价-aigc",
+   "parent": "洗脸巾-三方-福利价-aigc",
+   "subProduct": "",
+   "materials": 66,
+   "materialFiles": [
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-1.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-10.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-11.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-12.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-13.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-14.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-15.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-16.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-17.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-18.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-19.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-2.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-20.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-21.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-22.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-23.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-24.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-25.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-26.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-27.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-28.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-29.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-3.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-30.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-31.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-32.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-33.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-34.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-35.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-36.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-37.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-38.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-39.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-4.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-40.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-41.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-42.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-43.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-44.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-45.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-46.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-47.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-48.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-49.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-5.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-50.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-51.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-52.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-53.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-54.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-55.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-56.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-57.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-58.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-59.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-6.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-60.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-61.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-62.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-63.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-64.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-65.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-66.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-7.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-8.mp4",
+    "信息流-小牛-洗脸巾-三方主体-代运营-新人福利价-260827-100114222349-内部实时跑量-625-aigc-9.mp4"
+   ],
+   "materialBreakdown": {
+    "广义新-标点": 66
+   },
+   "uploaded": false,
+   "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
+   "chuangliangReason": "",
+   "path": "D:/625/京东/8月/0827/洗脸巾-三方-福利价-aigc",
+   "categories": [
+    "广义新",
+    "标点"
+   ]
+  },
+  {
+   "date": "2026-08-27",
+   "month": "8月",
+   "day": "0827",
+   "product": "蒸汽眼罩-低至0.9元",
+   "parent": "蒸汽眼罩-低至0.9元",
+   "subProduct": "",
+   "materials": 14,
+   "materialFiles": [
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-1.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-10.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-11.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-12.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-13.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-14.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-2.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-3.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-4.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-5.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-6.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-7.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-8.mp4",
+    "CH-SC-低活-10200055196993-超级抢购-医疗保健-无-剪辑-转化引导-医疗保健-260827-无-625-aigc-9.mp4"
+   ],
+   "materialBreakdown": {
+    "低活": 14
+   },
+   "uploaded": false,
+   "marker": null,
+   "qingyun": "",
+   "qingyunReason": "",
+   "chuangliang": "no",
+   "chuangliangReason": "",
+   "path": "D:/625/京东/8月/0827/蒸汽眼罩-低至0.9元",
+   "categories": [
+    "DHX"
    ]
   }
  ]

@@ -44,18 +44,28 @@ def _read_reason(fullpath):
         return ''
 
 
-def _classify_filename(name):
-    """从素材文件名提取分类。
+def _classify_filename(name, path=''):
+    """从素材文件名+路径提取分类。
     规则：
-      - CH-SC-低活-...       -> 低活
-      - CH-PRJ-采销项目-...   -> 采销项目
-      - 信息流-小牛-积木-...  -> 信息流-小牛
+      - 路径含 dhx/DHX                       -> 广义新-DHX
+      - 路径含 标点 或 文件名以 信息流 开头     -> 广义新-标点
+      - CH-SC-低活-...                       -> 低活
+      - CH-PRJ-采销项目-...                   -> 采销项目
+      - 信息流-小牛-积木-...                  -> 信息流-小牛
       - 其他：取第一段（去掉首尾空格）
     """
+    path_lower = path.lower()
+    is_dhx = 'dhx' in path_lower
+    is_biaodian = '标点' in path
     base = os.path.splitext(name)[0]
     parts = [p.strip() for p in base.split('-') if p.strip()]
     if not parts:
         return '其他'
+    # dhx/标点 路径优先：也归入广义新
+    if is_dhx:
+        return '广义新-DHX'
+    if is_biaodian or (parts and str(parts[0]).startswith('信息流')):
+        return '广义新-标点'
     # 需要至少三段才存在"系列-分类"结构
     if len(parts) >= 3 and parts[0].isalpha() and parts[1].isalpha():
         series = parts[0].upper()
@@ -71,20 +81,29 @@ def _map_category(cat):
     """把素材分类名归并到总类：广义新 / DHX / 标点 / PRJ / 其他。
     规则（用户定义）：
       - 含「广义新」                  -> 广义新
-      - 「低活」或 以「DHX」开头        -> DHX
-      - 以「信息流」开头               -> 标点
+      - 路径含 dhx/DHX 或「低活」/DHX   -> DHX
+      - 路径含 标点 或「信息流」        -> 标点
       - 含「采销项目」或「PRJ」         -> PRJ
       - 其余                          -> 其他
+    返回列表，因为一类可同时属于多个总类（如 广义新-DHX -> [DHX, 广义新]）。
     """
-    if cat.startswith('信息流'):
-        return '标点'
-    if cat == '低活' or cat.startswith('DHX'):
-        return 'DHX'
+    mapped = []
     if '广义新' in cat:
-        return '广义新'
+        mapped.append('广义新')
+        if '-DHX' in cat.upper():
+            mapped.append('DHX')
+        if '-标点' in cat:
+            mapped.append('标点')
+        return mapped if mapped else ['广义新']
+    if cat == '低活' or cat.startswith('DHX'):
+        mapped.append('DHX')
+    if cat.startswith('信息流'):
+        mapped.append('标点')
     if '采销项目' in cat or 'PRJ' in cat.upper():
-        return 'PRJ'
-    return '其他'
+        mapped.append('PRJ')
+    if not mapped:
+        mapped.append('其他')
+    return mapped
 
 
 def _scan_product(ppath):
@@ -178,7 +197,7 @@ def scan():
                         materials = len(material_files)
                         breakdown = {}
                         for mf in material_files:
-                            cat = _classify_filename(mf)
+                            cat = _classify_filename(mf, subpath)
                             breakdown[cat] = breakdown.get(cat, 0) + 1
                         entries.append({
                             'date': iso,
@@ -207,7 +226,7 @@ def scan():
                     materials = len(material_files)
                     breakdown = {}
                     for mf in material_files:
-                        cat = _classify_filename(mf)
+                        cat = _classify_filename(mf, ppath)
                         breakdown[cat] = breakdown.get(cat, 0) + 1
                     entries.append({
                         'date': iso,
@@ -229,7 +248,11 @@ def scan():
                     })
     # 计算每个产品涉及的总类（用于看板总类筛选/统计）
     for e in entries:
-        e['categories'] = sorted(set(_map_category(c) for c in e.get('materialBreakdown', {}).keys()))
+        cats = set()
+        for c in e.get('materialBreakdown', {}).keys():
+            for mc in _map_category(c):
+                cats.add(mc)
+        e['categories'] = sorted(cats)
     return entries
 
 
@@ -245,11 +268,12 @@ def main():
     qy_none = total - qy_appr - qy_rej - qy_oth
     cl_yes = sum(1 for e in entries if e['chuangliang'] == 'yes')
 
-    # 全局素材分类汇总
+    # 全局素材分类汇总（按映射后的总类统计，dhx/标点同时计入广义新）
     type_totals = {}
     for e in entries:
         for cat, cnt in e.get('materialBreakdown', {}).items():
-            type_totals[cat] = type_totals.get(cat, 0) + cnt
+            for mc in _map_category(cat):
+                type_totals[mc] = type_totals.get(mc, 0) + cnt
 
     data = {
         'generatedAt': datetime.datetime.now().replace(microsecond=0).isoformat(),

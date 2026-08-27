@@ -4752,7 +4752,7 @@ function renderCapList(){
     // 按分类分组
     const groups = {};
     files.forEach(f=>{
-      const cat = _classifyName(f);
+      const cat = _classifyName(f, e.path);
       (groups[cat] = groups[cat]||[]).push(f);
     });
     const cats = Object.keys(groups).sort();
@@ -4769,9 +4769,15 @@ function renderCapList(){
       '</div>';
   }
 
-  function _classifyName(name){
+  function _classifyName(name, path){
+    const pathLower = (path||'').toLowerCase();
+    const isDhx = pathLower.includes('dhx');
+    const isBiaodian = (path||'').includes('标点');
     const base = (name||'').replace(/\.[^.]+$/,'');
     const parts = base.split('-').map(s=>s.trim()).filter(Boolean);
+    if(isDhx || isBiaodian || (parts.length && parts[0].startsWith('信息流'))){
+      return isDhx ? '广义新-DHX' : '广义新-标点';
+    }
     if(parts.length>=3 && parts[0].match(/^[a-zA-Z]+$/) && parts[1].match(/^[a-zA-Z]+$/)){
       if(parts[0].toUpperCase().startsWith('CH')) return parts[2];
       return parts[0]+'-'+parts[1];
