@@ -1,9 +1,10 @@
 /* ============================================================
  * viral-kb.js — 零 Key 爆款结构反推 · 同品类复刻引擎
- * 依赖：全局 VP（index.html 定义）、抽帧实测 VP.analysis、深度分析 VP.deep、报表 VP.mat
+ * 依赖：全局 VP（index.html 定义）、抽帧实测 VP.frames/VP.analysis、深度分析 VP.deep、报表 VP.mat
  * 设计：纯前端、无 API Key、可离线；把「真实已发布爆款」实证知识固化为规则引擎。
  * 与 vparse-deep.js 的「🚀一键复刻（需 AI Key）」互补：本文件不依赖任何联网/Key。
- * 知识来源：巨量千川 200+ 跑量视频实证 + 5 套真实拼接模板 + 同品类裂变矩阵
+ * 方法论来源：巨量千川 200+ 跑量视频实证 + 5 套真实拼接模板 + 同品类裂变矩阵
+ *             + video-viral-analyzer 技能报告模板（逐秒拆解 / 爆款DNA / 分镜亮点）
  * ============================================================ */
 (function () {
   'use strict';
@@ -20,8 +21,7 @@
   }
   function row(k, v) { return '<tr><td class="vp-k">' + esc(k) + '</td><td>' + (v === '' || v == null ? '<span class="muted">—</span>' : v) + '</td></tr>'; }
 
-  /* ---------- 与 vparse-deep.js 协作：兜底抽帧 ---------- */
-  // 用户可能直接点「深度分析」但没点「重新抽帧」，或抽帧状态丢失；这里自动兜底。
+  /* ---------- 兜底：只要视频已加载即可出结果，不卡抽帧 ---------- */
   function setOut(html) {
     const out = $('vpViralOut');
     if (!out) return;
@@ -34,71 +34,47 @@
     if (v.readyState >= 1 && v.duration && !isNaN(v.duration)) { cb(true); return; }
     let done = false;
     const timer = setTimeout(function () {
-      if (done) return;
-      done = true;
-      cleanup();
-      cb(false);
+      if (done) return; done = true; cleanup(); cb(false);
     }, timeoutMs || 15000);
-    function onReady() {
-      if (done) return;
-      done = true;
-      cleanup();
-      cb(true);
-    }
+    function onReady() { if (done) return; done = true; cleanup(); cb(true); }
+    function onErr() { if (done) return; done = true; cleanup(); cb(false); }
     function cleanup() {
       clearTimeout(timer);
       v.removeEventListener && v.removeEventListener('loadedmetadata', onReady);
       v.removeEventListener && v.removeEventListener('durationchange', onReady);
       v.removeEventListener && v.removeEventListener('error', onErr);
     }
-    function onErr() {
-      if (done) return;
-      done = true;
-      cleanup();
-      cb(false);
-    }
     v.addEventListener && v.addEventListener('loadedmetadata', onReady);
     v.addEventListener && v.addEventListener('durationchange', onReady);
     v.addEventListener && v.addEventListener('error', onErr);
   }
-  function ensureFrames(thenFn) {
+  // needFrames=false：只要视频/元数据就绪即可（基础版）；true：必须已抽帧
+  function ensureFrames(thenFn, needFrames) {
+    if (!needFrames && window.VP && VP.meta && VP.meta.duration) { thenFn(); return; }
     if (window.VP && VP.frames && VP.frames.length) { thenFn(); return; }
     if (!window.VP || !VP.video) {
       setOut('<div class="vp-warn">请先拖入一条视频，再点这里分析。</div>');
       return;
     }
-    // 视频对象已存在，等元数据（duration）就绪
     if (!VP.video.duration || isNaN(VP.video.duration)) {
       setOut('<div class="vp-warn">视频已拖入，正在读取元数据…（请稍候 1–3 秒）</div>');
       waitForVideoReady(function (ok) {
-        if (!ok) {
-          setOut('<div class="vp-warn">视频元数据读取失败或超时，请重新拖入视频，或检查文件是否能正常播放。</div>');
-          return;
-        }
-        ensureFrames(thenFn);
+        if (!ok) { setOut('<div class="vp-warn">视频元数据读取失败或超时，请重新拖入视频。</div>'); return; }
+        ensureFrames(thenFn, needFrames);
       }, 20000);
       return;
     }
-    setOut('<div class="vp-warn">视频已加载但尚未抽帧，正在自动抽帧…（约 3–8 秒）</div>');
+    // 有视频、有元数据：尝试自动抽帧（best effort），但基础版立即可出，逐秒表随后补
+    setOut('<div class="vp-warn">视频已加载，正在抽帧…（最多约 6 秒，若一直没有逐秒分镜可手动点「重新抽帧」）</div>');
     try {
       const n = Math.max(2, Math.min(30, +(document.getElementById('vpFrames')?.value || 8)));
       if (typeof extractVParseFrames === 'function') extractVParseFrames(n);
-    } catch (e) {
-      setOut('<div class="vp-warn">自动抽帧失败：' + esc(e.message) + '，请手动点「重新抽帧」。</div>');
-      return;
-    }
+    } catch (e) {}
     let ticks = 0;
     const timer = setInterval(function () {
       ticks++;
-      if (window.VP && VP.frames && VP.frames.length) {
-        clearInterval(timer);
-        thenFn();
-        return;
-      }
-      if (ticks > 60) {
-        clearInterval(timer);
-        setOut('<div class="vp-warn">自动抽帧超时，请检查视频是否已正确加载，或手动点「重新抽帧」。</div>');
-      }
+      if (window.VP && VP.frames && VP.frames.length) { clearInterval(timer); thenFn(); return; }
+      if (ticks > 12) { clearInterval(timer); thenFn(); return; } // 6s 后即便无帧也出基础版
     }, 500);
   }
 
@@ -113,7 +89,6 @@
       formBest: '原生混剪（真人演示 + 开箱 + 产品特写 + 证言）',
       rhythm: { shotLen: '1-2s', frontConflict: '高冲突画面放前 0.5s', ctaMin: 3, bgm: '20-30%' }
     },
-    // 6 类钩子 + 关键词命中规则
     hookTypes: ['痛点直击', '反常识', '提问悬念', '结果前置', '警示劝退', '强画面视觉'],
     hooksKw: {
       '提问悬念': ['？', '吗', '怎么', '为什么', '什么', '如何'],
@@ -122,22 +97,20 @@
       '反常识': ['没想到', '居然', '竟然', '反常识', '万万', '殊不知', '以为'],
       '痛点直击': ['烦', '累', '丑', '难', '崩', '烂', '土', '廉价', '假', '坑', '糟']
     },
-    // 5 套真实拼接模板（按秒级顺序，来自真实跑量视频归纳）
     spliceTemplates: {
       A: '带货好物：钩子→产品特写→使用演示B-roll→效果真人→对比收尾+CTA',
       B: '前后对比/蜕变：最强效果画面→场景证据→卖点3短词→反差收尾+CTA',
       C: '信任转化：钩子→权威背书+原相机对比→限时/0风险逼单',
       D: '反转剧情：视觉冲击→制造尴尬→转折→那句台词引爆→CTA',
-      E: '口播+B-roll混剪：黄金3秒→B-roll匹配口播→价值输出（可只换BGM/开头裂变多条）'
+      E: '口播+B-roll混剪：黄金3秒→B-roll匹配口播→价值输出'
     },
     rhythmRules: '单镜头 1–2s；高冲突画面放前 0.5s；CTA 至少 3 次（第 5s / 15s / 结尾）；BGM 压到 20–30%；分镜分层（主打→花絮→共创梗）做"嫁接"而非堆砌。',
-    // 同品类裂变矩阵：钩子 × 人设 × 场景 笛卡尔积可裂变成几十条
+    materialTypes: ['真人出镜/口播', '手部特写/产品特写', '开箱/拆包裹', '使用演示B-roll', '前后对比', '用户证言/晒单', '字幕卡/贴纸', 'CTA箭头/按钮', '品牌尾板'],
     sameCatMatrix: {
       hooks: ['价格福利', '场景痛点', '反转翻车', '测评开箱'],
       persons: ['女主种草', '男主户外', '学生党', '测评博主', '宝妈'],
       scenes: ['床头追剧', '直播', '车载', '厨房', '办公桌']
     },
-    // 同品类复刻 6 套变体（骨架不变，只换钩子/人设/场景/剪辑）
     sameCatSets: [
       {
         title: 'A · 原结构翻拍版', diff: '骨架 1:1 复刻，只换真人 + 换背景，用来验证品类跑量模型可复制。',
@@ -239,19 +212,14 @@
     ]
   };
 
-  /* ---------- 反推：从抽帧实测 + 深度分析推断爆款结构 ---------- */
-  function gatherText() {
-    const info = gatherTextInfo();
-    return info.text;
-  }
+  /* ---------- 文本采集（含 OCR 乱码容错） ---------- */
   function gatherTextInfo() {
     const deep = (window.VP && VP.deep) || {};
     const rawOcr = (deep.ocr || []).filter(x => x.text).map(x => x.text);
-    // 过滤明显乱码：无中文字符且可打印字符比例过低的行
     const cleanOcr = rawOcr.filter(t => {
       if (!t) return false;
-      const chinese = (t.match(/[\u4e00-\u9fa5]/g) || []).length;
-      const printable = (t.match(/[\u4e00-\u9fa5a-zA-Z0-9\u3000-\u303F\uFF00-\uFFEF\s，。！？、：""''（）【】《》]/g) || []).length;
+      const chinese = (t.match(/[一-龥]/g) || []).length;
+      const printable = (t.match(/[一-龥A-Za-z0-9　-〿＀-￯\s，。！？、：""''（）【】《》]/g) || []).length;
       return chinese > 0 || (printable / Math.max(1, t.length)) > 0.6;
     });
     const whisper = String(deep.whisper || '');
@@ -260,9 +228,9 @@
     if (text.length > 5) quality = 'ok';
     else if (cleanOcr.length || whisper.length) quality = 'poor';
     let note = '';
-    if (!text && (rawOcr.length || whisper.length)) note = '本地 OCR / 语音识别质量较低（乱码/错字多），结构反推主要基于画面帧与时长节奏；如需精准口播复刻，建议手动粘贴文案。';
-    else if (!text) note = '尚未运行深度分析，无法读取字幕/口播；结构反推基于画面帧与时长节奏。';
-    return { text, quality, note, ocrCount: rawOcr.length, cleanCount: cleanOcr.length };
+    if (!text && (rawOcr.length || whisper.length)) note = '本地 OCR / 语音识别质量较低（乱码/错字多），拆解主要基于画面帧与时长节奏；如需精准口播，建议手动粘贴文案到「文案口播分析」。';
+    else if (!text) note = '尚未运行深度分析，无法读取字幕/口播；结构拆解基于画面帧与时长节奏（仍可用）。';
+    return { text, quality, note, ocrCount: rawOcr.length, cleanCount: cleanOcr.length, ocr: cleanOcr, whisper };
   }
 
   function inferHookType(text, hasStrongOpen) {
@@ -274,6 +242,62 @@
     return hasStrongOpen ? '强画面视觉' : '—';
   }
 
+  /* ---------- 镜头切换重算 + 逐秒分镜表（零Key，基于抽帧实测） ---------- */
+  function recomputeCuts(frames) {
+    const idxs = [0];
+    for (let i = 1; i < frames.length; i++) {
+      const a = frames[i - 1].stats, b = frames[i].stats;
+      if (!a || !b) continue;
+      let d = 0;
+      if (a.lhn && b.lhn) { for (let k = 0; k < 16; k++) d += Math.abs(a.lhn[k] - b.lhn[k]); }
+      const cd = Math.abs((b.r || 0) - (a.r || 0)) + Math.abs((b.g || 0) - (a.g || 0)) + Math.abs((b.b || 0) - (a.b || 0));
+      if (d > 0.35 || cd > 90) idxs.push(i);
+    }
+    return idxs;
+  }
+
+  // 把分段映射到素材类型/作用（拼接阶段），结合时间 + OCR 价格词 + 亮度
+  function phaseOf(segIndex, totalSeg, t0, dur, segHasPrice, segHasPerson) {
+    if (segIndex === 0 || t0 <= 3) return { phase: '黄金3秒·钩子', mat: '真人出镜/口播 或 强画面钩子' };
+    const tailStart = dur > 0 ? dur - Math.max(3, dur * 0.12) : 1e9;
+    if (t0 >= tailStart) return { phase: 'CTA + 品牌尾板', mat: 'CTA箭头/按钮 · 品牌尾板' };
+    if (segHasPrice) return { phase: '产品亮相/价格锚', mat: '手部特写/产品特写 · 字幕卡/贴纸' };
+    if (segHasPerson) return { phase: '人设证言/场景演示', mat: '真人出镜/口播 · 使用演示B-roll' };
+    return { phase: '卖点/功能证明', mat: '产品特写 · 使用演示B-roll' };
+  }
+
+  function buildShotTable() {
+    const frames = (window.VP && VP.frames) || [];
+    const meta = (window.VP && VP.meta) || {};
+    const dur = meta.duration || 0;
+    if (!frames.length) return null;
+    const cuts = recomputeCuts(frames);
+    const deep = (window.VP && VP.deep) || {};
+    const ocrList = (deep.ocr || []).filter(x => x.t != null && x.text);
+    const whisper = String(deep.whisper || '');
+    // 把字幕/口播按段聚合
+    function textInRange(t0, t1) {
+      let s = [];
+      ocrList.forEach(o => { if (o.t >= t0 && o.t <= t1) s.push(o.text); });
+      return s.join(' ').trim();
+    }
+    const segs = [];
+    for (let s = 0; s < cuts.length; s++) {
+      const si = cuts[s];
+      const ei = (s + 1 < cuts.length) ? cuts[s + 1] - 1 : frames.length - 1;
+      const sf = frames[si], ef = frames[ei] || sf;
+      const t0 = sf.t;
+      const t1 = (ei > si) ? ef.t : t0 + (dur / Math.max(1, frames.length));
+      const segText = textInRange(t0, t1);
+      const hasPrice = /元|￥|¥|分钱|免费|薅|到手|低价|便宜|福利|0\.0|活动/.test(segText);
+      const hasPerson = false; // 人物检测需深度分析；缺省按画面结构推断
+      const ph = phaseOf(s, cuts.length, t0, dur, hasPrice, hasPerson);
+      segs.push({ t0, t1, phase: ph.phase, mat: ph.mat, text: segText, bright: sf.stats ? sf.stats.bright : null });
+    }
+    return segs;
+  }
+
+  /* ---------- 反推：从抽帧实测 + 深度分析推断爆款结构 ---------- */
   function analyzeStructure() {
     const a = (window.VP && VP.analysis) || {};
     const meta = (window.VP && VP.meta) || {};
@@ -289,7 +313,8 @@
     const ctaKw = ['点击', '下单', '领', '抢', '购买', '戳', '左下', '链接', '下方'];
     const hasCta = !!kwHit(text, ctaKw) || (deep.audio && deep.audio.density > 0.5);
     const durTier = dur <= 15 ? '短(<15s)' : dur <= 25 ? '标准(15-25s)' : '长(>25s)';
-    return { dur, durTier, hookType, shotLen, rhythm, persons, hasCta, a, mat, text, textInfo: ti };
+    const shots = buildShotTable();
+    return { dur, durTier, hookType, shotLen, rhythm, persons, hasCta, a, mat, text, textInfo: ti, shots };
   }
 
   function evalEmpirical(s) {
@@ -299,7 +324,7 @@
       if (s.dur <= 20) checks.push({ ok: true, t: '时长 ✅ ' + s.dur.toFixed(0) + 's 在实证最优 20s 内（200+ 跑量视频 67% 在 20s 内，均 ' + e.avgDur + 's）' });
       else if (s.dur <= 30) checks.push({ ok: 'warn', t: '时长 ⚠️ ' + s.dur.toFixed(0) + 's 偏长，实证显示 20s 内更易跑量，建议压缩低效镜头' });
       else checks.push({ ok: false, t: '时长 ❌ ' + s.dur.toFixed(0) + 's 过长，远超实证均 ' + e.avgDur + 's，完播压力大' });
-    } else checks.push({ ok: 'warn', t: '时长 ⚠️ 未获取到视频时长（先点「重新抽帧」）' });
+    } else checks.push({ ok: 'warn', t: '时长 ⚠️ 未获取到视频时长（先拖入视频）' });
     if (s.a.hook) checks.push({ ok: true, t: '前3秒 ✅ 有强画面切换（符合「77% 口播在讲商品、前3s 必现产品」规律）' });
     else checks.push({ ok: false, t: '前3秒 ❌ 偏平稳开场，实证 53% 跑量视频前3s 直接展示商品，建议前置产品/冲突' });
     if (s.persons >= 1) checks.push({ ok: true, t: '真人出镜 ✅ 检出出镜人物（82% 跑量视频有真人试穿/演示）' });
@@ -311,30 +336,101 @@
     return checks;
   }
 
+  // 分镜亮点（Why it works）——基于实证 + 画面统计推断
+  function buildHighlights(s) {
+    const e = KB.empirical;
+    const hl = [];
+    if (s.a.hook) hl.push('前3秒有强画面切换/钩子，第一时间阻止划走（符合「前3秒必现产品/强画面」跑量规律）。');
+    if (s.dur > 0 && s.dur <= 20) hl.push('时长 ' + s.dur.toFixed(0) + 's 落在 20s 内黄金区间，完播压力小、更易起量。');
+    if (s.a.shotLen && s.a.shotLen < 2.5) hl.push('单镜头约 ' + s.a.shotLen.toFixed(1) + 's，节奏快、信息密度高，利于前 3s 留存。');
+    if (s.persons >= 1) hl.push('有真人出镜/演示，信任感强（82% 跑量视频含真人试穿/演示）。');
+    if (s.hasCta) hl.push('存在明确 CTA 行动指令，转化链路闭合。');
+    if (s.shots && s.shots.length >= 4) hl.push('镜头切换点 ' + s.shots.length + ' 个，拼接层次丰富，避免单镜拖沓。');
+    if (s.textInfo && s.textInfo.cleanCount) hl.push('识别到 ' + s.textInfo.cleanCount + ' 条字幕/口播，可用于口播复刻（见下方爆款DNA）。');
+    if (!hl.length) hl.push('当前画面信号较弱，建议运行「🔍 深度分析」并手动补全口播，反推精度会显著提升。');
+    return hl;
+  }
+
+  // 爆款 DNA —— 提炼可复刻的"基因"
+  function buildDna(s) {
+    const e = KB.empirical;
+    const cat = (s.mat && s.mat.cat) || '同类产品';
+    const form = s.persons >= 1 ? (s.shots && s.shots.length > 5 ? '原生混剪（真人演示+开箱+特写+证言）' : '单人口播') : '纯 B-roll 混剪';
+    const person = s.persons >= 2 ? '双/多人设（种草+证言）' : (s.persons === 1 ? '单人设种草' : '无真人/素人设');
+    const sell = s.textInfo && s.textInfo.cleanCount ? '（结合识别口播提炼）' : '';
+    let spliceOrder = '钩子→开箱/产品亮相→功能证明→场景+CTA→证言→尾板';
+    if (s.shots && s.shots.length) spliceOrder = s.shots.map(x => x.phase).join(' → ');
+    return {
+      cat, hook: s.hookType, form, person,
+      durTier: s.durTier,
+      cta: s.hasCta ? '有（建议≥3次：第5s/15s/结尾）' : '缺失',
+      emotion: '平稳→上升→波动→峰值(倒数1/3)→收尾',
+      spliceOrder,
+      sellNote: sell
+    };
+  }
+
+  /* ---------- 渲染：反推爆款结构（引入 video-viral-analyzer 方法论） ---------- */
   function renderViralAnalyze() {
     const out = $('vpViralOut');
     if (!out) return;
-    ensureFrames(function () {
-      doRenderViralAnalyze();
-    });
+    ensureFrames(function () { doRenderViralAnalyze(); }, false);
   }
+
   function doRenderViralAnalyze() {
     const out = $('vpViralOut');
     const s = analyzeStructure();
     const checks = evalEmpirical(s);
-    const mat = s.mat;
+    const dna = buildDna(s);
+    const highlights = buildHighlights(s);
+    const meta = (window.VP && VP.meta) || {};
     let html = '';
-    html += '<div class="vp-rep-blk"><div class="vp-rep-bh">🧩 爆款结构反推 <span class="tag">零Key本地·基于抽帧实测</span></div><div class="vp-rep-bd">';
+
+    // 一、原片信息
+    html += '<div class="vp-rep-blk"><div class="vp-rep-bh">🎬 原片信息</div><div class="vp-rep-bd">';
     html += '<table class="vp-tbl"><tbody>';
-    html += row('时长档位', s.dur ? (s.dur.toFixed(1) + 's · ' + s.durTier) : '—');
-    html += row('前3秒钩子', s.hookType !== '—' ? s.hookType : (s.a.hook ? '强画面切换（未识别文字钩子）' : '平稳开场'));
+    html += row('时长 / 分辨率', (s.dur ? fmtSec(s.dur) : '—') + (meta.w ? ' · ' + meta.w + '×' + meta.h : ''));
+    html += row('品类（报表）', (s.mat && s.mat.cat) || '未匹配报表（可手动填）');
+    html += row('前3秒钩子类型', s.hookType !== '—' ? s.hookType : (s.a.hook ? '强画面切换（未识别文字钩子）' : '平稳开场'));
     html += row('镜头节奏', (s.shotLen ? s.shotLen.toFixed(1) + 's/镜 · ' : '') + s.rhythm);
     html += row('真人出镜', s.persons >= 1 ? ('有（单帧最多 ' + s.persons + ' 人）') : '无/弱');
     html += row('CTA', s.hasCta ? '有行动指令' : '缺失');
-    html += row('品类', (mat && mat.cat) || '—');
-    html += row('情绪曲线', '平稳→上升→波动→峰值(倒数1/3)→收尾');
     html += '</tbody></table></div></div>';
 
+    // 二、逐秒结构拆解表（skills: report_template §二）
+    html += '<div class="vp-rep-blk"><div class="vp-rep-bh">🧩 逐秒结构拆解 <span class="tag">零Key本地·基于抽帧实测</span></div><div class="vp-rep-bd">';
+    if (s.shots && s.shots.length) {
+      html += '<table class="vp-tbl vp-shot"><thead><tr><th>时间</th><th>素材类型</th><th>画面/作用</th><th>字幕/口播</th></tr></thead><tbody>';
+      s.shots.forEach(seg => {
+        const tr = fmtSec(seg.t0) + (seg.t1 > seg.t0 ? '–' + fmtSec(seg.t1) : '');
+        const sub = seg.text ? esc(seg.text) : '<span class="muted">—</span>';
+        html += '<tr><td class="vp-k">' + tr + '</td><td>' + esc(seg.mat) + '</td><td><b>' + esc(seg.phase) + '</b></td><td>' + sub + '</td></tr>';
+      });
+      html += '</tbody></table>';
+      html += '<div class="muted" style="margin-top:6px">拼接顺序：' + esc(s.shots.map(x => x.phase).join(' → ')) + '</div>';
+    } else {
+      html += '<div class="vp-warn-in">尚未抽到逐秒帧，先点「重新抽帧」即可解锁逐秒拆解表；下面仍给出基于时长/节奏的结构反推。</div>';
+    }
+    html += '</div></div>';
+
+    // 三、爆款 DNA
+    html += '<div class="vp-rep-blk"><div class="vp-rep-bh">🧬 爆款 DNA（可复刻基因）</div><div class="vp-rep-bd"><table class="vp-tbl"><tbody>';
+    html += row('钩子类型', dna.hook);
+    html += row('核心卖点', (dna.cat ? '品类「' + dna.cat + '」' : '') + ' · 强性价比/功能证明' + dna.sellNote);
+    html += row('形式', dna.form);
+    html += row('人设', dna.person);
+    html += row('时长档位', dna.durTier);
+    html += row('CTA', dna.cta);
+    html += row('情绪曲线', dna.emotion);
+    html += row('拼接顺序', esc(dna.spliceOrder));
+    html += '</tbody></table></div></div>';
+
+    // 四、分镜亮点 Why it works
+    html += '<div class="vp-rep-blk"><div class="vp-rep-bh">✨ 分镜亮点（Why it works）</div><div class="vp-rep-bd"><ul class="vp-ul">';
+    highlights.forEach(h => { html += '<li>' + esc(h) + '</li>'; });
+    html += '</ul></div></div>';
+
+    // 五、对照真实跑量基准
     html += '<div class="vp-rep-blk"><div class="vp-rep-bh">📏 对照真实跑量基准（' + esc(KB.empirical.label) + '）</div><div class="vp-rep-bd">';
     checks.forEach(c => {
       const cls = c.ok === true ? 'vp-ok' : c.ok === 'warn' ? 'vp-warn-in' : 'vp-bad';
@@ -343,18 +439,14 @@
     });
     html += '</div></div>';
 
-    // 节奏硬规则提示
+    // 六、节奏硬规则 + 识别质量说明
     html += '<div class="vp-rep-blk"><div class="vp-rep-bh">🎚 节奏硬规则（直接套用）</div><div class="vp-rep-bd muted">' + esc(KB.rhythmRules) + '</div></div>';
-
-    // 识别质量提示
     if (s.textInfo && s.textInfo.note) {
       html += '<div class="vp-rep-blk"><div class="vp-rep-bh">📝 字幕/口播识别说明</div><div class="vp-warn-in">' + esc(s.textInfo.note) + '</div></div>';
     }
 
     out.innerHTML = html;
     out.classList.remove('muted');
-
-    // 反推完，若已抽帧则提示可继续生成同品类复刻
     const hint = $('kbViralHint');
     if (hint) hint.textContent = '结构已反推 ✓ 点「🧬 生成同品类复刻」产出多套可拍/可生成方案';
   }
@@ -391,9 +483,7 @@
   function renderSameCat() {
     const out = $('vpViralOut');
     if (!out) return;
-    ensureFrames(function () {
-      doRenderSameCat();
-    });
+    ensureFrames(function () { doRenderSameCat(); }, false);
   }
   function doRenderSameCat() {
     const out = $('vpViralOut');
@@ -402,7 +492,7 @@
     const m = KB.sameCatMatrix;
     let html = '';
     html += '<div class="vp-rep-blk"><div class="vp-rep-bh">🧬 同品类复刻 · 锁死品类「' + esc(cat) + '」 <span class="tag">同骨架多张皮</span></div>';
-    html += '<div class="vp-rep-bd muted" style="margin-bottom:8px">核心原则：拼接骨架（钩子→开箱→功能特写→场景+CTA→证言→尾板）一字不改，只换钩子/人设/场景/剪辑四层血肉。钩子(' + m.hooks.length + ')×人设(' + m.persons.length + ')×场景(' + m.scenes.length + ') 笛卡尔积可裂变成几十条，且每条都挂在已验证骨架上，避免同质化抢量。</div>';
+    html += '<div class="vp-rep-bd muted" style="margin-bottom:8px">核心原则：拼接骨架（钩子→开箱→功能特写→场景+CTA→证言→尾板）一字不改，只换钩子/人设/场景/剪辑四层血肉。钩子(' + m.hooks.length + ')×人设(' + m.persons.length + ')×场景(' + m.scenes.length + ') 笛卡尔积可裂变成几十条，每条都挂在已验证骨架上，避免同质化抢量。</div>';
 
     sets.forEach(set => {
       const id = 'vpsc-' + set.idx;
@@ -438,12 +528,11 @@
     const b1 = $('kbViralAnalyze'); if (b1) b1.onclick = renderViralAnalyze;
     const b2 = $('kbSameCat'); if (b2) b2.onclick = renderSameCat;
     const hint = $('kbViralHint');
-    if (hint && window.VP && VP.frames && VP.frames.length) hint.textContent = '视频已抽帧，点「📊 反推爆款结构」直接出结果';
+    if (hint && window.VP && ((VP.frames && VP.frames.length) || (VP.meta && VP.meta.duration))) hint.textContent = '视频已就绪，点「📊 反推爆款结构」直接出结果';
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initViralKB);
   else initViralKB();
 
-  // 暴露便于调试
   window.ViralKB = { analyze: analyzeStructure, replicate: buildSameCatSets };
 })();
