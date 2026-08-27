@@ -22,26 +22,69 @@
 
   /* ---------- 与 vparse-deep.js 协作：兜底抽帧 ---------- */
   // 用户可能直接点「深度分析」但没点「重新抽帧」，或抽帧状态丢失；这里自动兜底。
+  function setOut(html) {
+    const out = $('vpViralOut');
+    if (!out) return;
+    out.innerHTML = html;
+    out.classList.remove('muted');
+  }
+  function waitForVideoReady(cb, timeoutMs) {
+    const v = window.VP && VP.video;
+    if (!v) { cb(false); return; }
+    if (v.readyState >= 1 && v.duration && !isNaN(v.duration)) { cb(true); return; }
+    let done = false;
+    const timer = setTimeout(function () {
+      if (done) return;
+      done = true;
+      cleanup();
+      cb(false);
+    }, timeoutMs || 15000);
+    function onReady() {
+      if (done) return;
+      done = true;
+      cleanup();
+      cb(true);
+    }
+    function cleanup() {
+      clearTimeout(timer);
+      v.removeEventListener && v.removeEventListener('loadedmetadata', onReady);
+      v.removeEventListener && v.removeEventListener('durationchange', onReady);
+      v.removeEventListener && v.removeEventListener('error', onErr);
+    }
+    function onErr() {
+      if (done) return;
+      done = true;
+      cleanup();
+      cb(false);
+    }
+    v.addEventListener && v.addEventListener('loadedmetadata', onReady);
+    v.addEventListener && v.addEventListener('durationchange', onReady);
+    v.addEventListener && v.addEventListener('error', onErr);
+  }
   function ensureFrames(thenFn) {
     if (window.VP && VP.frames && VP.frames.length) { thenFn(); return; }
-    if (!window.VP || !VP.video || !VP.video.duration) {
-      const out = $('vpViralOut');
-      if (out) {
-        out.innerHTML = '<div class="vp-warn">请先拖入一条视频，再点这里分析。</div>';
-        out.classList.remove('muted');
-      }
+    if (!window.VP || !VP.video) {
+      setOut('<div class="vp-warn">请先拖入一条视频，再点这里分析。</div>');
       return;
     }
-    const out = $('vpViralOut');
-    if (out) {
-      out.innerHTML = '<div class="vp-warn">视频已加载但尚未抽帧，正在自动抽帧…（约 3–8 秒）</div>';
-      out.classList.remove('muted');
+    // 视频对象已存在，等元数据（duration）就绪
+    if (!VP.video.duration || isNaN(VP.video.duration)) {
+      setOut('<div class="vp-warn">视频已拖入，正在读取元数据…（请稍候 1–3 秒）</div>');
+      waitForVideoReady(function (ok) {
+        if (!ok) {
+          setOut('<div class="vp-warn">视频元数据读取失败或超时，请重新拖入视频，或检查文件是否能正常播放。</div>');
+          return;
+        }
+        ensureFrames(thenFn);
+      }, 20000);
+      return;
     }
+    setOut('<div class="vp-warn">视频已加载但尚未抽帧，正在自动抽帧…（约 3–8 秒）</div>');
     try {
       const n = Math.max(2, Math.min(30, +(document.getElementById('vpFrames')?.value || 8)));
       if (typeof extractVParseFrames === 'function') extractVParseFrames(n);
     } catch (e) {
-      if (out) out.innerHTML = '<div class="vp-warn">自动抽帧失败：' + esc(e.message) + '，请手动点「重新抽帧」。</div>';
+      setOut('<div class="vp-warn">自动抽帧失败：' + esc(e.message) + '，请手动点「重新抽帧」。</div>');
       return;
     }
     let ticks = 0;
@@ -52,9 +95,9 @@
         thenFn();
         return;
       }
-      if (ticks > 40) {
+      if (ticks > 60) {
         clearInterval(timer);
-        if (out) out.innerHTML = '<div class="vp-warn">自动抽帧超时，请检查视频是否已正确加载，或手动点「重新抽帧」。</div>';
+        setOut('<div class="vp-warn">自动抽帧超时，请检查视频是否已正确加载，或手动点「重新抽帧」。</div>');
       }
     }, 500);
   }
