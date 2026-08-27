@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-27T09:55:24",
+ "generatedAt": "2026-08-27T10:57:38",
  "root": "D:/625/京东",
  "markerFiles": [
   "chuangliang.txt",
@@ -75,7 +75,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：1/10 素材已传创量，0 未传，9 疑似待复核",
-   "path": "D:/625/京东/5月/0513/DHX/新建文件夹"
+   "path": "D:/625/京东/5月/0513/DHX/新建文件夹",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-05-13",
@@ -106,7 +109,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/5月/0513/DHX/混剪-aigc"
+   "path": "D:/625/京东/5月/0513/DHX/混剪-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-05-14",
@@ -141,7 +147,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/14 素材已传创量，14 未传，0 疑似待复核",
-   "path": "D:/625/京东/5月/0514/DHX"
+   "path": "D:/625/京东/5月/0514/DHX",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-05-14",
@@ -172,7 +181,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：6/10 素材已传创量，0 未传，4 疑似待复核",
-   "path": "D:/625/京东/5月/0514/广一新"
+   "path": "D:/625/京东/5月/0514/广一新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-05-18",
@@ -203,7 +215,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/5月/0518/dhx/好价-苹果"
+   "path": "D:/625/京东/5月/0518/dhx/好价-苹果",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-05-18",
@@ -247,7 +262,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：3/23 素材已传创量，0 未传，20 疑似待复核",
-   "path": "D:/625/京东/5月/0518/dhx/打火机"
+   "path": "D:/625/京东/5月/0518/dhx/打火机",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-05-18",
@@ -290,7 +308,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/22 素材已传创量，22 未传，0 疑似待复核",
-   "path": "D:/625/京东/5月/0518/dhx/洗脸巾-好价-尾帧"
+   "path": "D:/625/京东/5月/0518/dhx/洗脸巾-好价-尾帧",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-05-19",
@@ -324,7 +345,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/13 素材已传创量，13 未传，0 疑似待复核",
-   "path": "D:/625/京东/5月/0519/广义新/不传-悬挂抽纸-"
+   "path": "D:/625/京东/5月/0519/广义新/不传-悬挂抽纸-",
+   "categories": [
+    "其他"
+   ]
   },
   {
    "date": "2026-05-19",
@@ -355,7 +379,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/5月/0519/广义新/牙刷-"
+   "path": "D:/625/京东/5月/0519/广义新/牙刷-",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-05-21",
@@ -386,7 +413,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/5月/0521/dhx/dhx-外卖-冻柠茶"
+   "path": "D:/625/京东/5月/0521/dhx/dhx-外卖-冻柠茶",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-05-25",
@@ -421,7 +451,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：1/14 素材已传创量，0 未传，13 疑似待复核",
-   "path": "D:/625/京东/5月/0525/广义新-/1分钱-切葱器-腾讯"
+   "path": "D:/625/京东/5月/0525/广义新-/1分钱-切葱器-腾讯",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-05-26",
@@ -460,7 +493,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/18 素材已传创量，18 未传，0 疑似待复核",
-   "path": "D:/625/京东/5月/0526/广义新/蚊香液"
+   "path": "D:/625/京东/5月/0526/广义新/蚊香液",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-05-27",
@@ -494,7 +530,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/13 素材已传创量，13 未传，0 疑似待复核",
-   "path": "D:/625/京东/5月/0527/dhx/多的红薯"
+   "path": "D:/625/京东/5月/0527/dhx/多的红薯",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-02",
@@ -545,7 +584,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：19/30 素材已传创量，0 未传，11 疑似待复核",
-   "path": "D:/625/京东/6月/0602/dhx/新建文件夹"
+   "path": "D:/625/京东/6月/0602/dhx/新建文件夹",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-03",
@@ -585,7 +627,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0603/hdx/清票抽纸"
+   "path": "D:/625/京东/6月/0603/hdx/清票抽纸",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-04",
@@ -621,7 +666,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0604/广义新/切葱器-1分钱 广点通"
+   "path": "D:/625/京东/6月/0604/广义新/切葱器-1分钱 广点通",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-04",
@@ -658,7 +706,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/16 素材已传创量，16 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0604/广义新/广点通-蚊"
+   "path": "D:/625/京东/6月/0604/广义新/广点通-蚊",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-04",
@@ -692,7 +743,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：2/13 素材已传创量，0 未传，11 疑似待复核",
-   "path": "D:/625/京东/6月/0604/话费券"
+   "path": "D:/625/京东/6月/0604/话费券",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-05",
@@ -728,7 +782,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0605/dhx/切葱器"
+   "path": "D:/625/京东/6月/0605/dhx/切葱器",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-05",
@@ -760,7 +817,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0605/dhx/围裙"
+   "path": "D:/625/京东/6月/0605/dhx/围裙",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-05",
@@ -808,7 +868,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：26/27 素材已传创量，0 未传，1 疑似待复核",
-   "path": "D:/625/京东/6月/0605/dhx/西瓜-超级抢购5元"
+   "path": "D:/625/京东/6月/0605/dhx/西瓜-超级抢购5元",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-05",
@@ -853,7 +916,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：23/24 素材已传创量，0 未传，1 疑似待复核",
-   "path": "D:/625/京东/6月/0605/广义新/切葱器-广点通"
+   "path": "D:/625/京东/6月/0605/广义新/切葱器-广点通",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-05",
@@ -901,7 +967,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：25/27 素材已传创量，0 未传，2 疑似待复核",
-   "path": "D:/625/京东/6月/0605/话费"
+   "path": "D:/625/京东/6月/0605/话费",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-09",
@@ -960,7 +1029,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/38 素材已传创量，38 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0609/日常/dhx"
+   "path": "D:/625/京东/6月/0609/日常/dhx",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-10",
@@ -996,7 +1068,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：2/15 素材已传创量，0 未传，13 疑似待复核",
-   "path": "D:/625/京东/6月/0610/广义新/切葱器（广点通）"
+   "path": "D:/625/京东/6月/0610/广义新/切葱器（广点通）",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-10",
@@ -1027,7 +1102,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0610/广义新/四合一-不对版"
+   "path": "D:/625/京东/6月/0610/广义新/四合一-不对版",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-10",
@@ -1059,7 +1137,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：10/11 素材已传创量，0 未传，1 疑似待复核",
-   "path": "D:/625/京东/6月/0610/广义新/广义新-收纳盒-不对版)"
+   "path": "D:/625/京东/6月/0610/广义新/广义新-收纳盒-不对版)",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-10",
@@ -1092,7 +1173,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：6/12 素材已传创量，0 未传，6 疑似待复核",
-   "path": "D:/625/京东/6月/0610/广义新/猪油罐-不对版"
+   "path": "D:/625/京东/6月/0610/广义新/猪油罐-不对版",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-10",
@@ -1133,7 +1217,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/20 素材已传创量，20 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0610/广义新/粉扑-不对版（广点通）"
+   "path": "D:/625/京东/6月/0610/广义新/粉扑-不对版（广点通）",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-11",
@@ -1164,7 +1251,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0611/dhx/dhx-虾干不对版-传了"
+   "path": "D:/625/京东/6月/0611/dhx/dhx-虾干不对版-传了",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-11",
@@ -1195,7 +1285,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0611/dhx/dhx-限时抢购-洗衣液(1)"
+   "path": "D:/625/京东/6月/0611/dhx/dhx-限时抢购-洗衣液(1)",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-11",
@@ -1226,7 +1319,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0611/dhx/小黄米-不对版"
+   "path": "D:/625/京东/6月/0611/dhx/小黄米-不对版",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-11",
@@ -1263,7 +1359,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0611/dhx/榴莲冰粽-好价"
+   "path": "D:/625/京东/6月/0611/dhx/榴莲冰粽-好价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-11",
@@ -1298,7 +1397,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0611/dhx/风扇-dhx"
+   "path": "D:/625/京东/6月/0611/dhx/风扇-dhx",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-11",
@@ -1329,7 +1431,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0611/广义新/制冰袋"
+   "path": "D:/625/京东/6月/0611/广义新/制冰袋",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-11",
@@ -1363,7 +1468,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0611/广义新/枣子"
+   "path": "D:/625/京东/6月/0611/广义新/枣子",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-11",
@@ -1397,7 +1505,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0611/广义新/粽子-不对版"
+   "path": "D:/625/京东/6月/0611/广义新/粽子-不对版",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-11",
@@ -1428,7 +1539,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0611/广义新/缝隙刷"
+   "path": "D:/625/京东/6月/0611/广义新/缝隙刷",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-12",
@@ -1462,7 +1576,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/13 素材已传创量，13 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0612/dhx/密封罐-超级抢购5元"
+   "path": "D:/625/京东/6月/0612/dhx/密封罐-超级抢购5元",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-12",
@@ -1493,7 +1610,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0612/dhx/广点通-清洁剂"
+   "path": "D:/625/京东/6月/0612/dhx/广点通-清洁剂",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-12",
@@ -1527,7 +1647,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0612/dhx/手指灯-超级抢购加补1元"
+   "path": "D:/625/京东/6月/0612/dhx/手指灯-超级抢购加补1元",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-12",
@@ -1563,7 +1686,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0612/dhx/指甲钳"
+   "path": "D:/625/京东/6月/0612/dhx/指甲钳",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-12",
@@ -1599,7 +1725,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0612/外卖/6月12日 (6)"
+   "path": "D:/625/京东/6月/0612/外卖/6月12日 (6)",
+   "categories": [
+    "PRJ"
+   ]
   },
   {
    "date": "2026-06-12",
@@ -1630,7 +1759,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0612/外卖/外卖-0612"
+   "path": "D:/625/京东/6月/0612/外卖/外卖-0612",
+   "categories": [
+    "PRJ"
+   ]
   },
   {
    "date": "2026-06-12",
@@ -1661,7 +1793,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：9/10 素材已传创量，0 未传，1 疑似待复核",
-   "path": "D:/625/京东/6月/0612/广义新/洗脸巾"
+   "path": "D:/625/京东/6月/0612/广义新/洗脸巾",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-12",
@@ -1709,7 +1844,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：2/27 素材已传创量，0 未传，25 疑似待复核",
-   "path": "D:/625/京东/6月/0612/广义新/西瓜"
+   "path": "D:/625/京东/6月/0612/广义新/西瓜",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-12",
@@ -1746,7 +1884,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：10/16 素材已传创量，0 未传，6 疑似待复核",
-   "path": "D:/625/京东/6月/0612/广义新/骑行支架"
+   "path": "D:/625/京东/6月/0612/广义新/骑行支架",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-12",
@@ -1777,7 +1918,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0612/广义新/鱼竿"
+   "path": "D:/625/京东/6月/0612/广义新/鱼竿",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-15",
@@ -1832,7 +1976,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0615/dhx/打火机-不对版-加布"
+   "path": "D:/625/京东/6月/0615/dhx/打火机-不对版-加布",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-15",
@@ -1863,7 +2010,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0615/dhx/杯子-不对版-加补"
+   "path": "D:/625/京东/6月/0615/dhx/杯子-不对版-加补",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-15",
@@ -1902,7 +2052,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0615/dhx/灭蚊灯"
+   "path": "D:/625/京东/6月/0615/dhx/灭蚊灯",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-15",
@@ -1945,7 +2098,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0615/广义新/垃圾袋-不对版-aigc"
+   "path": "D:/625/京东/6月/0615/广义新/垃圾袋-不对版-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-15",
@@ -1976,7 +2132,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0615/广义新/玻璃杯-不对版-aigc"
+   "path": "D:/625/京东/6月/0615/广义新/玻璃杯-不对版-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-15",
@@ -2017,7 +2176,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0615/广义新/粉扑-不对版-aigc-广点通"
+   "path": "D:/625/京东/6月/0615/广义新/粉扑-不对版-aigc-广点通",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-15",
@@ -2052,7 +2214,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0615/广义新/雨伞-不对版-aigc"
+   "path": "D:/625/京东/6月/0615/广义新/雨伞-不对版-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-16",
@@ -2093,7 +2258,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0616/dhx/杯子-aigc-广点通-不对版"
+   "path": "D:/625/京东/6月/0616/dhx/杯子-aigc-广点通-不对版",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-16",
@@ -2134,7 +2302,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0616/dhx/自动指甲钳"
+   "path": "D:/625/京东/6月/0616/dhx/自动指甲钳",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-16",
@@ -2170,7 +2341,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0616/dhx/过滤筛-aigc"
+   "path": "D:/625/京东/6月/0616/dhx/过滤筛-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-16",
@@ -2208,7 +2382,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0616/广义新/卷纸-aigc"
+   "path": "D:/625/京东/6月/0616/广义新/卷纸-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-16",
@@ -2247,7 +2424,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0616/广义新/大米-aigc"
+   "path": "D:/625/京东/6月/0616/广义新/大米-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-16",
@@ -2281,7 +2461,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0616/广义新/灭蚊灯"
+   "path": "D:/625/京东/6月/0616/广义新/灭蚊灯",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-16",
@@ -2358,7 +2541,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0616/广义新/电动车支架"
+   "path": "D:/625/京东/6月/0616/广义新/电动车支架",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-16",
@@ -2393,7 +2579,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/14 素材已传创量，14 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0616/扒/dhx"
+   "path": "D:/625/京东/6月/0616/扒/dhx",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-16",
@@ -2425,7 +2614,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/11 素材已传创量，11 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0616/扒/广义新"
+   "path": "D:/625/京东/6月/0616/扒/广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-16",
@@ -2458,7 +2650,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0616/话费券"
+   "path": "D:/625/京东/6月/0616/话费券",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-17",
@@ -2495,7 +2690,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0617/dhx/10139440032542-支架"
+   "path": "D:/625/京东/6月/0617/dhx/10139440032542-支架",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-17",
@@ -2538,7 +2736,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0617/dhx/压蒜器-超级抢购加布"
+   "path": "D:/625/京东/6月/0617/dhx/压蒜器-超级抢购加布",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-17",
@@ -2581,7 +2782,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0617/dhx/斜挎包-超级抢购加补"
+   "path": "D:/625/京东/6月/0617/dhx/斜挎包-超级抢购加补",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-17",
@@ -2633,7 +2837,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0617/dhx/新相印-超级抢购加补"
+   "path": "D:/625/京东/6月/0617/dhx/新相印-超级抢购加补",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-17",
@@ -2672,7 +2879,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0617/广义新/卷纸"
+   "path": "D:/625/京东/6月/0617/广义新/卷纸",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-17",
@@ -2717,7 +2927,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0617/广义新/广点通-玻璃盖"
+   "path": "D:/625/京东/6月/0617/广义新/广点通-玻璃盖",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-17",
@@ -2752,7 +2965,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0617/广义新/广点通-电动车支架"
+   "path": "D:/625/京东/6月/0617/广义新/广点通-电动车支架",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-17",
@@ -2794,7 +3010,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0617/广义新/樱花抽纸"
+   "path": "D:/625/京东/6月/0617/广义新/樱花抽纸",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-18",
@@ -2830,7 +3049,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0618/dhx/冰哥-超级抢购5元"
+   "path": "D:/625/京东/6月/0618/dhx/冰哥-超级抢购5元",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-18",
@@ -2878,7 +3100,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0618/dhx/夜灯-aigc-超级抢购加补"
+   "path": "D:/625/京东/6月/0618/dhx/夜灯-aigc-超级抢购加补",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-18",
@@ -2929,7 +3154,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/30 素材已传创量，30 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0618/dhx/手机支架"
+   "path": "D:/625/京东/6月/0618/dhx/手机支架",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-18",
@@ -2965,7 +3193,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0618/dhx/驱蚊灯-1分钱aigc"
+   "path": "D:/625/京东/6月/0618/dhx/驱蚊灯-1分钱aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-18",
@@ -3002,7 +3233,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0618/广义新/手表"
+   "path": "D:/625/京东/6月/0618/广义新/手表",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-18",
@@ -3039,7 +3273,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0618/广义新/除草"
+   "path": "D:/625/京东/6月/0618/广义新/除草",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-23",
@@ -3078,7 +3315,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0623/dhx/咸菜碗"
+   "path": "D:/625/京东/6月/0623/dhx/咸菜碗",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-23",
@@ -3126,7 +3366,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0623/dhx/抽纸-福利价aigc"
+   "path": "D:/625/京东/6月/0623/dhx/抽纸-福利价aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-23",
@@ -3157,7 +3400,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0623/dhx/驱蚊灯-1分钱"
+   "path": "D:/625/京东/6月/0623/dhx/驱蚊灯-1分钱",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-23",
@@ -3188,7 +3434,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0623/广义新/24合一螺丝刀-1分钱"
+   "path": "D:/625/京东/6月/0623/广义新/24合一螺丝刀-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-23",
@@ -3224,7 +3473,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0623/广义新/电煮锅-广点通-1分钱"
+   "path": "D:/625/京东/6月/0623/广义新/电煮锅-广点通-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-23",
@@ -3266,7 +3518,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0623/广义新/电蚊拍-福利价-aigc"
+   "path": "D:/625/京东/6月/0623/广义新/电蚊拍-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-23",
@@ -3305,7 +3560,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0623/广义新/蟠桃-福利价-aigc"
+   "path": "D:/625/京东/6月/0623/广义新/蟠桃-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-23",
@@ -3339,7 +3597,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：12/13 素材已传创量，0 未传，1 疑似待复核",
-   "path": "D:/625/京东/6月/0623/广义新/风扇-1分钱"
+   "path": "D:/625/京东/6月/0623/广义新/风扇-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-24",
@@ -3377,7 +3638,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0624/dhx/压蒜器-福利价-aigc"
+   "path": "D:/625/京东/6月/0624/dhx/压蒜器-福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-24",
@@ -3411,7 +3675,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0624/dhx/咸菜碗1分钱"
+   "path": "D:/625/京东/6月/0624/dhx/咸菜碗1分钱",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-24",
@@ -3448,7 +3715,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0624/dhx/手表1分钱"
+   "path": "D:/625/京东/6月/0624/dhx/手表1分钱",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-24",
@@ -3480,7 +3750,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0624/广义新/伞-1分钱"
+   "path": "D:/625/京东/6月/0624/广义新/伞-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-24",
@@ -3513,7 +3786,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0624/广义新/凳子支架-福利价-aigc"
+   "path": "D:/625/京东/6月/0624/广义新/凳子支架-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-24",
@@ -3546,7 +3822,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0624/广义新/手机支架-磁吸-1分钱"
+   "path": "D:/625/京东/6月/0624/广义新/手机支架-磁吸-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-24",
@@ -3579,7 +3858,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0624/广义新/火鸡面1分钱"
+   "path": "D:/625/京东/6月/0624/广义新/火鸡面1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-24",
@@ -3616,7 +3898,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0624/广义新/福利价-切葱器-aigc-广点通"
+   "path": "D:/625/京东/6月/0624/广义新/福利价-切葱器-aigc-广点通",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-24",
@@ -3650,7 +3935,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：9/13 素材已传创量，0 未传，4 疑似待复核",
-   "path": "D:/625/京东/6月/0624/广义新/驱蚊水-娇之物语-1分钱"
+   "path": "D:/625/京东/6月/0624/广义新/驱蚊水-娇之物语-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-24",
@@ -3681,7 +3969,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：7/10 素材已传创量，0 未传，3 疑似待复核",
-   "path": "D:/625/京东/6月/0624/广义新/驱蚊水-小浣熊-1分钱"
+   "path": "D:/625/京东/6月/0624/广义新/驱蚊水-小浣熊-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-25",
@@ -3716,7 +4007,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0625/dhx/咸菜碗-1分钱-广点通"
+   "path": "D:/625/京东/6月/0625/dhx/咸菜碗-1分钱-广点通",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-25",
@@ -3757,7 +4051,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/20 素材已传创量，20 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0625/dhx/心相印福利价-超级抢购-aigc"
+   "path": "D:/625/京东/6月/0625/dhx/心相印福利价-超级抢购-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-25",
@@ -3788,7 +4085,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0625/dhx/西瓜福利价-aigc"
+   "path": "D:/625/京东/6月/0625/dhx/西瓜福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-25",
@@ -3825,7 +4125,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0625/dhx/风扇-1分钱"
+   "path": "D:/625/京东/6月/0625/dhx/风扇-1分钱",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-25",
@@ -3858,7 +4161,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0625/广义新/折叠衣架-aigc-福利价"
+   "path": "D:/625/京东/6月/0625/广义新/折叠衣架-aigc-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-25",
@@ -3890,7 +4196,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0625/广义新/洗脸巾-1分钱-ai"
+   "path": "D:/625/京东/6月/0625/广义新/洗脸巾-1分钱-ai",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-25",
@@ -3921,7 +4230,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0625/广义新/热干面-aigc-福利价"
+   "path": "D:/625/京东/6月/0625/广义新/热干面-aigc-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-25",
@@ -3954,7 +4266,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0625/广义新/蓝牙耳机-ai"
+   "path": "D:/625/京东/6月/0625/广义新/蓝牙耳机-ai",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-25",
@@ -3987,7 +4302,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0625/广义新/风扇1分钱"
+   "path": "D:/625/京东/6月/0625/广义新/风扇1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-26",
@@ -4020,7 +4338,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0626/dhx/好价清单-福利价-aigc"
+   "path": "D:/625/京东/6月/0626/dhx/好价清单-福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-26",
@@ -4055,7 +4376,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0626/dhx/炒菜勺-1分钱"
+   "path": "D:/625/京东/6月/0626/dhx/炒菜勺-1分钱",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-26",
@@ -4107,7 +4431,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：30/31 素材已传创量，0 未传，1 疑似待复核",
-   "path": "D:/625/京东/6月/0626/dhx/置物架-福利价-aigc"
+   "path": "D:/625/京东/6月/0626/dhx/置物架-福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-26",
@@ -4146,7 +4473,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0626/dhx/雨衣-aigc-福利价"
+   "path": "D:/625/京东/6月/0626/dhx/雨衣-aigc-福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-26",
@@ -4180,7 +4510,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0626/话费券"
+   "path": "D:/625/京东/6月/0626/话费券",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-29",
@@ -4219,7 +4552,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0629/dhx/免手搓肥皂-1分钱"
+   "path": "D:/625/京东/6月/0629/dhx/免手搓肥皂-1分钱",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-29",
@@ -4258,7 +4594,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0629/dhx/樱花抽纸-1分钱-aigc"
+   "path": "D:/625/京东/6月/0629/dhx/樱花抽纸-1分钱-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-29",
@@ -4293,7 +4632,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0629/dhx/腾讯-置物架-福利价-aigic"
+   "path": "D:/625/京东/6月/0629/dhx/腾讯-置物架-福利价-aigic",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-29",
@@ -4326,7 +4668,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0629/dhx/风扇-1分钱-aigc"
+   "path": "D:/625/京东/6月/0629/dhx/风扇-1分钱-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-29",
@@ -4357,7 +4702,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0629/dhx/驱蚊灯-腾讯-aigc-1分钱"
+   "path": "D:/625/京东/6月/0629/dhx/驱蚊灯-腾讯-aigc-1分钱",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-29",
@@ -4402,7 +4750,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0629/广义新/话费"
+   "path": "D:/625/京东/6月/0629/广义新/话费",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-29",
@@ -4433,7 +4784,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0629/广义新/雨伞-福利aigc"
+   "path": "D:/625/京东/6月/0629/广义新/雨伞-福利aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-30",
@@ -4466,7 +4820,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0630/dhx/切葱器-aig-1分钱-广点通"
+   "path": "D:/625/京东/6月/0630/dhx/切葱器-aig-1分钱-广点通",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-30",
@@ -4499,7 +4856,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0630/dhx/手机支架"
+   "path": "D:/625/京东/6月/0630/dhx/手机支架",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-30",
@@ -4531,7 +4891,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0630/dhx/抽纸-aigc"
+   "path": "D:/625/京东/6月/0630/dhx/抽纸-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-30",
@@ -4564,7 +4927,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0630/dhx/电动手机支架-福利价-aigc"
+   "path": "D:/625/京东/6月/0630/dhx/电动手机支架-福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-06-30",
@@ -4606,7 +4972,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0630/广义新/万向轮-一分钱"
+   "path": "D:/625/京东/6月/0630/广义新/万向轮-一分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-30",
@@ -4637,7 +5006,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/6月/0630/广义新/电动车支架-福利价"
+   "path": "D:/625/京东/6月/0630/广义新/电动车支架-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-06-30",
@@ -4679,7 +5051,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/21 素材已传创量，21 未传，0 疑似待复核",
-   "path": "D:/625/京东/6月/0630/广义新/锅铲1分钱"
+   "path": "D:/625/京东/6月/0630/广义新/锅铲1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -4718,7 +5093,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：17/18 素材已传创量，1 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0701/dhx/夏日坐垫-aigc-1分钱"
+   "path": "D:/625/京东/7月/0701/dhx/夏日坐垫-aigc-1分钱",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -4757,7 +5135,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0701/dhx/多功能西瓜叉-福利价-aigc"
+   "path": "D:/625/京东/7月/0701/dhx/多功能西瓜叉-福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -4800,7 +5181,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：19/22 素材已传创量，3 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0701/dhx/手动压蒜器-福利价-aigc"
+   "path": "D:/625/京东/7月/0701/dhx/手动压蒜器-福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -4831,7 +5215,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：8/10 素材已传创量，2 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0701/dhx/杯子-福利价-1分钱-未传"
+   "path": "D:/625/京东/7月/0701/dhx/杯子-福利价-1分钱-未传",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -4867,7 +5254,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/15 素材已传创量，15 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0701/dhx/油炸锅-1分钱-aigc"
+   "path": "D:/625/京东/7月/0701/dhx/油炸锅-1分钱-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -4908,7 +5298,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0701/广义新/卷纸-1分钱-agic"
+   "path": "D:/625/京东/7月/0701/广义新/卷纸-1分钱-agic",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -4939,7 +5332,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0701/广义新/厨房抽纸-1分钱-aigc"
+   "path": "D:/625/京东/7月/0701/广义新/厨房抽纸-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -4980,7 +5376,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0701/广义新/手表-1分钱-aigc"
+   "path": "D:/625/京东/7月/0701/广义新/手表-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -5013,7 +5412,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/12 素材已传创量，12 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0701/广义新/打火机-aigc-福利价"
+   "path": "D:/625/京东/7月/0701/广义新/打火机-aigc-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -5070,7 +5472,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/36 素材已传创量，36 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0701/广义新/抽纸-三宝-1分钱-aigc"
+   "path": "D:/625/京东/7月/0701/广义新/抽纸-三宝-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -5101,7 +5506,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：8/10 素材已传创量，0 未传，2 疑似待复核",
-   "path": "D:/625/京东/7月/0701/广义新/蓝牙耳机-1分钱-aigc"
+   "path": "D:/625/京东/7月/0701/广义新/蓝牙耳机-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -5134,7 +5542,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/12 素材已传创量，12 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0701/广义新/过滤器-1分钱-aigc"
+   "path": "D:/625/京东/7月/0701/广义新/过滤器-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-01",
@@ -5165,7 +5576,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0701/广义新/钓鱼-aigc-1分钱"
+   "path": "D:/625/京东/7月/0701/广义新/钓鱼-aigc-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-02",
@@ -5198,7 +5612,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0702/dhx/樱花抽纸-福利价-aigc"
+   "path": "D:/625/京东/7月/0702/dhx/樱花抽纸-福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-02",
@@ -5229,7 +5646,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0702/dhx/洗脸巾-福利价-aigc"
+   "path": "D:/625/京东/7月/0702/dhx/洗脸巾-福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-02",
@@ -5267,7 +5687,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0702/广义新/冰格-福利价-爱歌词"
+   "path": "D:/625/京东/7月/0702/广义新/冰格-福利价-爱歌词",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-02",
@@ -5300,7 +5723,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0702/广义新/帆布袋-福利价-aigc"
+   "path": "D:/625/京东/7月/0702/广义新/帆布袋-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-02",
@@ -5345,7 +5771,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0702/广义新/手电筒-福利价-aigc"
+   "path": "D:/625/京东/7月/0702/广义新/手电筒-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-02",
@@ -5378,7 +5807,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0702/广义新/樱花纸巾-福利价-aigc"
+   "path": "D:/625/京东/7月/0702/广义新/樱花纸巾-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-02",
@@ -5409,7 +5841,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0702/广义新/碗-1分钱-aigc"
+   "path": "D:/625/京东/7月/0702/广义新/碗-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-02",
@@ -5440,7 +5875,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0702/广义新/茶具套装-1分钱-aigc"
+   "path": "D:/625/京东/7月/0702/广义新/茶具套装-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-02",
@@ -5479,7 +5917,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0702/广义新/雨伞-1分钱-aigc"
+   "path": "D:/625/京东/7月/0702/广义新/雨伞-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-03",
@@ -5515,7 +5956,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：14/15 素材已传创量，0 未传，1 疑似待复核",
-   "path": "D:/625/京东/7月/0703/dhx/压蒜器-0.9"
+   "path": "D:/625/京东/7月/0703/dhx/压蒜器-0.9",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-03",
@@ -5546,7 +5990,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0703/dhx/四叶草-福利价-aigc"
+   "path": "D:/625/京东/7月/0703/dhx/四叶草-福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-03",
@@ -5580,7 +6027,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0703/广义新-/手表-1分钱-aigc"
+   "path": "D:/625/京东/7月/0703/广义新-/手表-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-03",
@@ -5614,7 +6064,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/13 素材已传创量，13 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0703/广义新-/洗脸巾-1分钱-aigc--拒不对版"
+   "path": "D:/625/京东/7月/0703/广义新-/洗脸巾-1分钱-aigc--拒不对版",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-03",
@@ -5650,7 +6103,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/15 素材已传创量，15 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0703/广义新-/碗-1分钱-aigc-拒审"
+   "path": "D:/625/京东/7月/0703/广义新-/碗-1分钱-aigc-拒审",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-03",
@@ -5683,7 +6139,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0703/广义新-/纸巾-1分钱-aigc"
+   "path": "D:/625/京东/7月/0703/广义新-/纸巾-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-03",
@@ -5730,7 +6189,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0703/广义新-/骑行支架-1分钱-aigc"
+   "path": "D:/625/京东/7月/0703/广义新-/骑行支架-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-06",
@@ -5761,7 +6223,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0706/外卖-0612"
+   "path": "D:/625/京东/7月/0706/外卖-0612",
+   "categories": [
+    "PRJ"
+   ]
   },
   {
    "date": "2026-07-06",
@@ -5794,7 +6259,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：6/12 素材已传创量，4 未传，2 疑似待复核",
-   "path": "D:/625/京东/7月/0706/广义新/三花李-1分钱"
+   "path": "D:/625/京东/7月/0706/广义新/三花李-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-06",
@@ -5825,7 +6293,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0706/广义新/围裙-福利价"
+   "path": "D:/625/京东/7月/0706/广义新/围裙-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-06",
@@ -5857,7 +6328,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0706/广义新/帆布包"
+   "path": "D:/625/京东/7月/0706/广义新/帆布包",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-06",
@@ -5890,7 +6364,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0706/广义新/洗脸巾-1分钱"
+   "path": "D:/625/京东/7月/0706/广义新/洗脸巾-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-06",
@@ -5927,7 +6404,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/16 素材已传创量，16 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0706/广义新/电煮锅-1（对版被驳回）"
+   "path": "D:/625/京东/7月/0706/广义新/电煮锅-1（对版被驳回）",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-06",
@@ -5958,7 +6438,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：9/10 素材已传创量，0 未传，1 疑似待复核",
-   "path": "D:/625/京东/7月/0706/广义新/短袖-1分钱（一审）"
+   "path": "D:/625/京东/7月/0706/广义新/短袖-1分钱（一审）",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-06",
@@ -5995,7 +6478,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：10/16 素材已传创量，6 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0706/广义新/风扇-1分钱-ai"
+   "path": "D:/625/京东/7月/0706/广义新/风扇-1分钱-ai",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-07",
@@ -6034,7 +6520,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0707/广义新/不锈钢蒸盘-福利价"
+   "path": "D:/625/京东/7月/0707/广义新/不锈钢蒸盘-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-07",
@@ -6067,7 +6556,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0707/广义新/坐垫-1分钱-青云未过"
+   "path": "D:/625/京东/7月/0707/广义新/坐垫-1分钱-青云未过",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-07",
@@ -6106,7 +6598,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0707/广义新/樱花抽纸-福利价"
+   "path": "D:/625/京东/7月/0707/广义新/樱花抽纸-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-07",
@@ -6142,7 +6637,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0707/广义新/菜板夹-福利价"
+   "path": "D:/625/京东/7月/0707/广义新/菜板夹-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-07",
@@ -6184,7 +6682,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0707/广义新/风扇-1分钱-10155085148227"
+   "path": "D:/625/京东/7月/0707/广义新/风扇-1分钱-10155085148227",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-07",
@@ -6224,7 +6725,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0707/广义新/风扇-1分钱-10156923061370"
+   "path": "D:/625/京东/7月/0707/广义新/风扇-1分钱-10156923061370",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-07",
@@ -6257,7 +6761,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0707/广义新/驱蚊水-福利价"
+   "path": "D:/625/京东/7月/0707/广义新/驱蚊水-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-08",
@@ -6295,7 +6802,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0708/dhx/围裙-傅立家-aigc"
+   "path": "D:/625/京东/7月/0708/dhx/围裙-傅立家-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-08",
@@ -6339,7 +6849,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：13/23 素材已传创量，0 未传，10 疑似待复核",
-   "path": "D:/625/京东/7月/0708/dhx/打火机-aigc-傅立家"
+   "path": "D:/625/京东/7月/0708/dhx/打火机-aigc-傅立家",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-08",
@@ -6388,7 +6901,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：27/28 素材已传创量，0 未传，1 疑似待复核",
-   "path": "D:/625/京东/7月/0708/dhx/雨衣-福利价-agc"
+   "path": "D:/625/京东/7月/0708/dhx/雨衣-福利价-agc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-08",
@@ -6424,7 +6940,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0708/广义新/手表福利价-未审核"
+   "path": "D:/625/京东/7月/0708/广义新/手表福利价-未审核",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-08",
@@ -6460,7 +6979,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0708/广义新/电动车支架-福利价"
+   "path": "D:/625/京东/7月/0708/广义新/电动车支架-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-08",
@@ -6491,7 +7013,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0708/广义新/风扇-aigc-1分钱"
+   "path": "D:/625/京东/7月/0708/广义新/风扇-aigc-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-08",
@@ -6568,7 +7093,11 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/55 素材已传创量，55 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0708/扒改0706/dhx"
+   "path": "D:/625/京东/7月/0708/扒改0706/dhx",
+   "categories": [
+    "DHX",
+    "其他"
+   ]
   },
   {
    "date": "2026-07-09",
@@ -6602,7 +7131,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/13 素材已传创量，13 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0709/dhx/sk园艺剪"
+   "path": "D:/625/京东/7月/0709/dhx/sk园艺剪",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-09",
@@ -6635,7 +7167,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0709/dhx/围裙-aigc-福利价"
+   "path": "D:/625/京东/7月/0709/dhx/围裙-aigc-福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-09",
@@ -6674,7 +7209,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：15/18 素材已传创量，3 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0709/dhx/打火机"
+   "path": "D:/625/京东/7月/0709/dhx/打火机",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-09",
@@ -6707,7 +7245,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0709/dhx/抽纸-福利价=aigc"
+   "path": "D:/625/京东/7月/0709/dhx/抽纸-福利价=aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-09",
@@ -6739,7 +7280,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0709/dhx/雨衣-福利价"
+   "path": "D:/625/京东/7月/0709/dhx/雨衣-福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-09",
@@ -6770,7 +7314,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0709/广义新/加湿器-福利价"
+   "path": "D:/625/京东/7月/0709/广义新/加湿器-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-09",
@@ -6807,7 +7354,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0709/广义新/卷纸-福利价"
+   "path": "D:/625/京东/7月/0709/广义新/卷纸-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-09",
@@ -6859,7 +7409,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0709/广义新/大米-福利价"
+   "path": "D:/625/京东/7月/0709/广义新/大米-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-09",
@@ -6890,7 +7443,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0709/广义新/毛毯-福利价"
+   "path": "D:/625/京东/7月/0709/广义新/毛毯-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-09",
@@ -6921,7 +7477,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0709/广义新/蚊虫诱捕-1分钱"
+   "path": "D:/625/京东/7月/0709/广义新/蚊虫诱捕-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-10",
@@ -6952,7 +7511,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0710/dhx/打火机"
+   "path": "D:/625/京东/7月/0710/dhx/打火机",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-10",
@@ -6985,7 +7547,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：10/12 素材已传创量，2 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0710/dhx/樱花"
+   "path": "D:/625/京东/7月/0710/dhx/樱花",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-10",
@@ -7018,7 +7583,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0710/dhx/维达"
+   "path": "D:/625/京东/7月/0710/dhx/维达",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-10",
@@ -7054,7 +7622,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0710/外卖-0612"
+   "path": "D:/625/京东/7月/0710/外卖-0612",
+   "categories": [
+    "PRJ"
+   ]
   },
   {
    "date": "2026-07-10",
@@ -7087,7 +7658,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0710/广义新/围裙-aigc-福利价"
+   "path": "D:/625/京东/7月/0710/广义新/围裙-aigc-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-10",
@@ -7120,7 +7694,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0710/广义新/打火机"
+   "path": "D:/625/京东/7月/0710/广义新/打火机",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-10",
@@ -7153,7 +7730,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0710/广义新/抽纸-福利价-aigc"
+   "path": "D:/625/京东/7月/0710/广义新/抽纸-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-10",
@@ -7186,7 +7766,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0710/广义新/梳子-福利价-aigc"
+   "path": "D:/625/京东/7月/0710/广义新/梳子-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-10",
@@ -7217,7 +7800,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0710/广义新/风扇-1分钱-"
+   "path": "D:/625/京东/7月/0710/广义新/风扇-1分钱-",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-13",
@@ -7270,7 +7856,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0713/dhx/抽纸-福利价-aigc-未传"
+   "path": "D:/625/京东/7月/0713/dhx/抽纸-福利价-aigc-未传",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-13",
@@ -7303,7 +7892,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0713/广义新/一次性床单-1分钱"
+   "path": "D:/625/京东/7月/0713/广义新/一次性床单-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-13",
@@ -7334,7 +7926,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0713/广义新/大米-aigc-福利价"
+   "path": "D:/625/京东/7月/0713/广义新/大米-aigc-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-13",
@@ -7365,7 +7960,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0713/广义新/帆布包-1分钱-aigc"
+   "path": "D:/625/京东/7月/0713/广义新/帆布包-1分钱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-13",
@@ -7396,7 +7994,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0713/广义新/打火机-福利价"
+   "path": "D:/625/京东/7月/0713/广义新/打火机-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-13",
@@ -7431,7 +8032,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0713/广义新/文竹-1分钱"
+   "path": "D:/625/京东/7月/0713/广义新/文竹-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-13",
@@ -7462,7 +8066,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0713/广义新/洞洞鞋-aigc-福利价"
+   "path": "D:/625/京东/7月/0713/广义新/洞洞鞋-aigc-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-13",
@@ -7497,7 +8104,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0713/广义新/鲨鱼鞋-1分钱"
+   "path": "D:/625/京东/7月/0713/广义新/鲨鱼鞋-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-14",
@@ -7529,7 +8139,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0714/dhx/心相印抽纸-福利价"
+   "path": "D:/625/京东/7月/0714/dhx/心相印抽纸-福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-14",
@@ -7567,7 +8180,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0714/dhx/打火机-福利价-aigc"
+   "path": "D:/625/京东/7月/0714/dhx/打火机-福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-14",
@@ -7598,7 +8214,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0714/dhx/美工刀"
+   "path": "D:/625/京东/7月/0714/dhx/美工刀",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-14",
@@ -7631,7 +8250,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0714/广义新/卷纸1分钱"
+   "path": "D:/625/京东/7月/0714/广义新/卷纸1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-14",
@@ -7664,7 +8286,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0714/广义新/折叠风扇-1分钱-b组创意人"
+   "path": "D:/625/京东/7月/0714/广义新/折叠风扇-1分钱-b组创意人",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-14",
@@ -7697,7 +8322,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0714/广义新/电铁-福利价aigc"
+   "path": "D:/625/京东/7月/0714/广义新/电铁-福利价aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-14",
@@ -7730,7 +8358,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0714/广义新/电风扇-1分钱"
+   "path": "D:/625/京东/7月/0714/广义新/电风扇-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-15",
@@ -7771,7 +8402,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：17/20 素材已传创量，3 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0715/dhx/保鲜袋"
+   "path": "D:/625/京东/7月/0715/dhx/保鲜袋",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-15",
@@ -7808,7 +8442,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0715/dhx/围裙福利价-ai"
+   "path": "D:/625/京东/7月/0715/dhx/围裙福利价-ai",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-15",
@@ -7847,7 +8484,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0715/dhx/昆虫玩具-福利及啊-未审核"
+   "path": "D:/625/京东/7月/0715/dhx/昆虫玩具-福利及啊-未审核",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-15",
@@ -7880,7 +8520,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0715/dhx/纸巾-福利ai"
+   "path": "D:/625/京东/7月/0715/dhx/纸巾-福利ai",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-15",
@@ -7913,7 +8556,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0715/dhx/西瓜福利价-ai"
+   "path": "D:/625/京东/7月/0715/dhx/西瓜福利价-ai",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-15",
@@ -7945,7 +8591,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0715/广义新/伞-传"
+   "path": "D:/625/京东/7月/0715/广义新/伞-传",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-15",
@@ -7977,7 +8626,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0715/广义新/手电筒-1分钱"
+   "path": "D:/625/京东/7月/0715/广义新/手电筒-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-15",
@@ -8008,7 +8660,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0715/广义新/耳机1分钱"
+   "path": "D:/625/京东/7月/0715/广义新/耳机1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-15",
@@ -8055,7 +8710,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0715/话费"
+   "path": "D:/625/京东/7月/0715/话费",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-16",
@@ -8088,7 +8746,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0716/dhx/李子"
+   "path": "D:/625/京东/7月/0716/dhx/李子",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-16",
@@ -8121,7 +8782,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0716/dhx/油壶-福利夹"
+   "path": "D:/625/京东/7月/0716/dhx/油壶-福利夹",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-16",
@@ -8160,7 +8824,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0716/dhx/迷你拖把"
+   "path": "D:/625/京东/7月/0716/dhx/迷你拖把",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-16",
@@ -8192,7 +8859,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0716/广义新/不锈钢菜板"
+   "path": "D:/625/京东/7月/0716/广义新/不锈钢菜板",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-16",
@@ -8223,7 +8893,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0716/广义新/垃圾袋1分钱"
+   "path": "D:/625/京东/7月/0716/广义新/垃圾袋1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-16",
@@ -8255,7 +8928,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0716/广义新/防烫夹"
+   "path": "D:/625/京东/7月/0716/广义新/防烫夹",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-17",
@@ -8286,7 +8962,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0717/dhx/咸菜碗福利价"
+   "path": "D:/625/京东/7月/0717/dhx/咸菜碗福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-17",
@@ -8319,7 +8998,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0717/dhx/骑行支架福利价"
+   "path": "D:/625/京东/7月/0717/dhx/骑行支架福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-17",
@@ -8355,7 +9037,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0717/广义新/便当袋-福利价"
+   "path": "D:/625/京东/7月/0717/广义新/便当袋-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-17",
@@ -8382,7 +9067,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：4/6 素材已传创量，0 未传，2 疑似待复核",
-   "path": "D:/625/京东/7月/0717/广义新/卷纸"
+   "path": "D:/625/京东/7月/0717/广义新/卷纸",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-17",
@@ -8413,7 +9101,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0717/广义新/手提包-1分钱"
+   "path": "D:/625/京东/7月/0717/广义新/手提包-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-17",
@@ -8446,7 +9137,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/12 素材已传创量，12 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0717/广义新/手机支架-福利价"
+   "path": "D:/625/京东/7月/0717/广义新/手机支架-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-17",
@@ -8494,7 +9188,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0717/广义新/泼油锅-福利价"
+   "path": "D:/625/京东/7月/0717/广义新/泼油锅-福利价",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-17",
@@ -8532,7 +9229,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0717/广义新/遮阳挡-1分钱"
+   "path": "D:/625/京东/7月/0717/广义新/遮阳挡-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-17",
@@ -8564,7 +9264,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/11 素材已传创量，11 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0717/话费券"
+   "path": "D:/625/京东/7月/0717/话费券",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-20",
@@ -8595,7 +9298,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0720/dhx"
+   "path": "D:/625/京东/7月/0720/dhx",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-20",
@@ -8628,7 +9334,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0720/广义新/帆布袋"
+   "path": "D:/625/京东/7月/0720/广义新/帆布袋",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-20",
@@ -8676,7 +9385,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0720/广义新/电煮锅-福利价-aigc"
+   "path": "D:/625/京东/7月/0720/广义新/电煮锅-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-20",
@@ -8715,7 +9427,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/18 素材已传创量，18 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0720/广义新/风扇-福利价-aigc"
+   "path": "D:/625/京东/7月/0720/广义新/风扇-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-20",
@@ -8756,7 +9471,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0720/标点/刮水器-1分钱"
+   "path": "D:/625/京东/7月/0720/标点/刮水器-1分钱",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-20",
@@ -8787,7 +9505,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0720/标点/打火机-福利价-aigc"
+   "path": "D:/625/京东/7月/0720/标点/打火机-福利价-aigc",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-20",
@@ -8835,7 +9556,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0720/标点/电煮锅-福利价-aigc"
+   "path": "D:/625/京东/7月/0720/标点/电煮锅-福利价-aigc",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-20",
@@ -8866,7 +9590,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0720/标点/音响-1分钱起-"
+   "path": "D:/625/京东/7月/0720/标点/音响-1分钱起-",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-20",
@@ -8910,7 +9637,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/23 素材已传创量，23 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0720/标点/音响-福利价-aigc"
+   "path": "D:/625/京东/7月/0720/标点/音响-福利价-aigc",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-21",
@@ -8981,7 +9711,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/50 素材已传创量，50 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0721/标点/主体"
+   "path": "D:/625/京东/7月/0721/标点/主体",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-21",
@@ -9022,7 +9755,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0721/标点/低活"
+   "path": "D:/625/京东/7月/0721/标点/低活",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-22",
@@ -9055,7 +9791,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/12 素材已传创量，12 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0722/dhx/沥水篮-0.9"
+   "path": "D:/625/京东/7月/0722/dhx/沥水篮-0.9",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-22",
@@ -9097,7 +9836,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0722/广义新/蒜-1分钱"
+   "path": "D:/625/京东/7月/0722/广义新/蒜-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-22",
@@ -9130,7 +9872,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0722/广义新/音响-1"
+   "path": "D:/625/京东/7月/0722/广义新/音响-1",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-22",
@@ -9192,7 +9937,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/41 素材已传创量，41 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0722/标点/主体"
+   "path": "D:/625/京东/7月/0722/标点/主体",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-22",
@@ -9225,7 +9973,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/12 素材已传创量，12 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0722/标点/低活"
+   "path": "D:/625/京东/7月/0722/标点/低活",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-23",
@@ -9250,7 +10001,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/4 素材已传创量，4 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0723/dhx/电动车支架福利加"
+   "path": "D:/625/京东/7月/0723/dhx/电动车支架福利加",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-23",
@@ -9283,7 +10037,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0723/广义新/夏季凝胶坐垫-福利aigc-快手"
+   "path": "D:/625/京东/7月/0723/广义新/夏季凝胶坐垫-福利aigc-快手",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-23",
@@ -9308,7 +10065,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0723/广义新/电动车支架标点(1)"
+   "path": "D:/625/京东/7月/0723/广义新/电动车支架标点(1)",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-24",
@@ -9339,7 +10099,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0724/dhx/试用频道"
+   "path": "D:/625/京东/7月/0724/dhx/试用频道",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-24",
@@ -9364,7 +10127,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0724/三方/保温盒"
+   "path": "D:/625/京东/7月/0724/三方/保温盒",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-24",
@@ -9395,7 +10161,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0724/三方/卷纸-福利价"
+   "path": "D:/625/京东/7月/0724/三方/卷纸-福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-24",
@@ -9427,7 +10196,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0724/三方/好丽友-福利价"
+   "path": "D:/625/京东/7月/0724/三方/好丽友-福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-24",
@@ -9458,7 +10230,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0724/三方/平板支架-福利价"
+   "path": "D:/625/京东/7月/0724/三方/平板支架-福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-24",
@@ -9489,7 +10264,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0724/三方/抽纸-福利价"
+   "path": "D:/625/京东/7月/0724/三方/抽纸-福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-24",
@@ -9512,7 +10290,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0724/三方/拼豆"
+   "path": "D:/625/京东/7月/0724/三方/拼豆",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-24",
@@ -9545,7 +10326,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0724/三方/无骨鸡爪"
+   "path": "D:/625/京东/7月/0724/三方/无骨鸡爪",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-24",
@@ -9570,7 +10354,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0724/三方/蒜"
+   "path": "D:/625/京东/7月/0724/三方/蒜",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-24",
@@ -9609,7 +10396,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0724/广义新"
+   "path": "D:/625/京东/7月/0724/广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9642,7 +10432,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/dhx/冰格"
+   "path": "D:/625/京东/7月/0727/dhx/冰格",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9676,7 +10469,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/dhx/双耳碗-福利价"
+   "path": "D:/625/京东/7月/0727/dhx/双耳碗-福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9710,7 +10506,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/dhx/收纳罐-福利价"
+   "path": "D:/625/京东/7月/0727/dhx/收纳罐-福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9744,7 +10543,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/13 素材已传创量，13 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0727/dhx/纸品福利价-b不对版不传"
+   "path": "D:/625/京东/7月/0727/dhx/纸品福利价-b不对版不传",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9768,7 +10570,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/主体/冰糖-1分钱起"
+   "path": "D:/625/京东/7月/0727/主体/冰糖-1分钱起",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9796,7 +10601,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/主体/冰糖-福利加"
+   "path": "D:/625/京东/7月/0727/主体/冰糖-福利加",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9832,7 +10640,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/主体/热油锅-福利价"
+   "path": "D:/625/京东/7月/0727/主体/热油锅-福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9863,7 +10674,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/主体/玉米-数字人-1分钱"
+   "path": "D:/625/京东/7月/0727/主体/玉米-数字人-1分钱",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9887,7 +10701,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/主体/衣架-1分钱起"
+   "path": "D:/625/京东/7月/0727/主体/衣架-1分钱起",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9915,7 +10732,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/主体/衣架-福利价"
+   "path": "D:/625/京东/7月/0727/主体/衣架-福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9946,7 +10766,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/广义新/收纳箱-aigc"
+   "path": "D:/625/京东/7月/0727/广义新/收纳箱-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -9978,7 +10801,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/广义新/福利价-aigc-鸡爪"
+   "path": "D:/625/京东/7月/0727/广义新/福利价-aigc-鸡爪",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-27",
@@ -10019,7 +10845,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0727/广义新/茶-aigc"
+   "path": "D:/625/京东/7月/0727/广义新/茶-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-28",
@@ -10050,7 +10879,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0728/dhx/厨房收纳-福利价-不对版数量不同"
+   "path": "D:/625/京东/7月/0728/dhx/厨房收纳-福利价-不对版数量不同",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-28",
@@ -10081,7 +10913,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0728/dhx/数据线福利价-快手-又有0.9"
+   "path": "D:/625/京东/7月/0728/dhx/数据线福利价-快手-又有0.9",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-28",
@@ -10114,7 +10949,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0728/dhx/烤盘福利价"
+   "path": "D:/625/京东/7月/0728/dhx/烤盘福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-28",
@@ -10145,7 +10983,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：5/10 素材已传创量，5 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0728/主体/充电线"
+   "path": "D:/625/京东/7月/0728/主体/充电线",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-28",
@@ -10178,7 +11019,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0728/主体/抽纸福利价"
+   "path": "D:/625/京东/7月/0728/主体/抽纸福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-28",
@@ -10211,7 +11055,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：6/12 素材已传创量，6 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0728/主体/漏斗"
+   "path": "D:/625/京东/7月/0728/主体/漏斗",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-28",
@@ -10244,7 +11091,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0728/主体/西瓜福利价"
+   "path": "D:/625/京东/7月/0728/主体/西瓜福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-28",
@@ -10277,7 +11127,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0728/广义新/卷纸"
+   "path": "D:/625/京东/7月/0728/广义新/卷纸",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-28",
@@ -10308,7 +11161,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0728/广义新/地漏-1分钱"
+   "path": "D:/625/京东/7月/0728/广义新/地漏-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-29",
@@ -10339,7 +11195,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0729/dhx/过功能挂钩-非头条"
+   "path": "D:/625/京东/7月/0729/dhx/过功能挂钩-非头条",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-29",
@@ -10372,7 +11231,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0729/主体/懒人拖把"
+   "path": "D:/625/京东/7月/0729/主体/懒人拖把",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-29",
@@ -10405,7 +11267,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0729/主体/李子-aigc"
+   "path": "D:/625/京东/7月/0729/主体/李子-aigc",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-29",
@@ -10441,7 +11306,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0729/主体/追踪器-福利价-aigc"
+   "path": "D:/625/京东/7月/0729/主体/追踪器-福利价-aigc",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-29",
@@ -10476,7 +11344,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0729/主体/黄油桃aigc"
+   "path": "D:/625/京东/7月/0729/主体/黄油桃aigc",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-29",
@@ -10509,7 +11380,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0729/广义新/手电筒"
+   "path": "D:/625/京东/7月/0729/广义新/手电筒",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-29",
@@ -10540,7 +11414,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0729/广义新/香梨-1分钱"
+   "path": "D:/625/京东/7月/0729/广义新/香梨-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-30",
@@ -10571,7 +11448,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：9/10 素材已传创量，0 未传，1 疑似待复核",
-   "path": "D:/625/京东/7月/0730/dhx/切葱-福利价-aigc-"
+   "path": "D:/625/京东/7月/0730/dhx/切葱-福利价-aigc-",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-30",
@@ -10602,7 +11482,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0730/dhx/数据线"
+   "path": "D:/625/京东/7月/0730/dhx/数据线",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-30",
@@ -10641,7 +11524,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0730/dhx/皮蛋-福利价-aigc"
+   "path": "D:/625/京东/7月/0730/dhx/皮蛋-福利价-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-07-30",
@@ -10673,7 +11559,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0730/主体/地漏"
+   "path": "D:/625/京东/7月/0730/主体/地漏",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-30",
@@ -10704,7 +11593,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0730/主体/抽纸-福利价"
+   "path": "D:/625/京东/7月/0730/主体/抽纸-福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-30",
@@ -10735,7 +11627,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0730/主体/泳帽"
+   "path": "D:/625/京东/7月/0730/主体/泳帽",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-30",
@@ -10769,7 +11664,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0730/主体/雨伞"
+   "path": "D:/625/京东/7月/0730/主体/雨伞",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-30",
@@ -10804,7 +11702,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/14 素材已传创量，14 未传，0 疑似待复核",
-   "path": "D:/625/京东/7月/0730/广义新/-李子1分钱-先不传"
+   "path": "D:/625/京东/7月/0730/广义新/-李子1分钱-先不传",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-30",
@@ -10845,7 +11746,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0730/广义新/切葱器-福利价-aigc"
+   "path": "D:/625/京东/7月/0730/广义新/切葱器-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-30",
@@ -10882,7 +11786,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0730/广义新/平底锅-1分钱"
+   "path": "D:/625/京东/7月/0730/广义新/平底锅-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-07-31",
@@ -10915,7 +11822,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0731/主体/哈密瓜"
+   "path": "D:/625/京东/7月/0731/主体/哈密瓜",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-31",
@@ -10946,7 +11856,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0731/主体/折叠椅"
+   "path": "D:/625/京东/7月/0731/主体/折叠椅",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-31",
@@ -10979,7 +11892,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0731/主体/泥巴派"
+   "path": "D:/625/京东/7月/0731/主体/泥巴派",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-07-31",
@@ -11010,7 +11926,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/7月/0731/主体/饭盒"
+   "path": "D:/625/京东/7月/0731/主体/饭盒",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-03",
@@ -11048,7 +11967,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0803/dhx/手帕纸-aigc-数量不对"
+   "path": "D:/625/京东/8月/0803/dhx/手帕纸-aigc-数量不对",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-03",
@@ -11086,7 +12008,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0803/dhx/手帕纸-数量"
+   "path": "D:/625/京东/8月/0803/dhx/手帕纸-数量",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-03",
@@ -11120,7 +12045,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0803/dhx/李子"
+   "path": "D:/625/京东/8月/0803/dhx/李子",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-03",
@@ -11153,7 +12081,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0803/广义新/卷纸1分钱"
+   "path": "D:/625/京东/8月/0803/广义新/卷纸1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-03",
@@ -11194,7 +12125,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0803/广义新/手表-福利价-aigc"
+   "path": "D:/625/京东/8月/0803/广义新/手表-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-03",
@@ -11225,7 +12159,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0803/广义新/泼油锅-福利价-aigc"
+   "path": "D:/625/京东/8月/0803/广义新/泼油锅-福利价-aigc",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-03",
@@ -11256,7 +12193,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0803/标点/红薯粉"
+   "path": "D:/625/京东/8月/0803/标点/红薯粉",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-03",
@@ -11287,7 +12227,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0803/标点/饺子盘"
+   "path": "D:/625/京东/8月/0803/标点/饺子盘",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-03",
@@ -11318,7 +12261,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0803/标点/香蕉"
+   "path": "D:/625/京东/8月/0803/标点/香蕉",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-04",
@@ -11349,7 +12295,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0804/dhx-未传/不锈钢锅架-福利价-过审"
+   "path": "D:/625/京东/8月/0804/dhx-未传/不锈钢锅架-福利价-过审",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-04",
@@ -11380,7 +12329,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0804/dhx-未传/夏日冰垫-福利价-ai-还没过-8月6号重新传"
+   "path": "D:/625/京东/8月/0804/dhx-未传/夏日冰垫-福利价-ai-还没过-8月6号重新传",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-04",
@@ -11411,7 +12363,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0804/dhx-未传/收纳盒-限时抢购-ai-还没过"
+   "path": "D:/625/京东/8月/0804/dhx-未传/收纳盒-限时抢购-ai-还没过",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-04",
@@ -11443,7 +12398,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：10/11 素材已传创量，1 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0804/dhx-未传/桌面风扇-ai-福利价-还没"
+   "path": "D:/625/京东/8月/0804/dhx-未传/桌面风扇-ai-福利价-还没",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-04",
@@ -11474,7 +12432,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0804/dhx-未传/水杯-福利价-ai-过审"
+   "path": "D:/625/京东/8月/0804/dhx-未传/水杯-福利价-ai-过审",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-04",
@@ -11516,7 +12477,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0804/广义新/卷纸1分钱"
+   "path": "D:/625/京东/8月/0804/广义新/卷纸1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-04",
@@ -11547,7 +12511,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0804/广义新/广义新坐垫1分钱拼接坐垫"
+   "path": "D:/625/京东/8月/0804/广义新/广义新坐垫1分钱拼接坐垫",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-04",
@@ -11600,7 +12567,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0804/广义新/香梨-1分钱"
+   "path": "D:/625/京东/8月/0804/广义新/香梨-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-05",
@@ -11633,7 +12603,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0805/dhx/不锈钢架子-ai"
+   "path": "D:/625/京东/8月/0805/dhx/不锈钢架子-ai",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-05",
@@ -11664,7 +12637,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0805/dhx/樱花抽纸-福利价-ai"
+   "path": "D:/625/京东/8月/0805/dhx/樱花抽纸-福利价-ai",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-05",
@@ -11700,7 +12676,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0805/dhx/火龙果-福利价-ao"
+   "path": "D:/625/京东/8月/0805/dhx/火龙果-福利价-ao",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-05",
@@ -11733,7 +12712,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0805/dhx/钢丝抹布-福利价-ai"
+   "path": "D:/625/京东/8月/0805/dhx/钢丝抹布-福利价-ai",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-05",
@@ -11770,7 +12752,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0805/广义新/坐垫套-1分钱"
+   "path": "D:/625/京东/8月/0805/广义新/坐垫套-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-05",
@@ -11801,7 +12786,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0805/广义新/矿泉水-福利价=aj"
+   "path": "D:/625/京东/8月/0805/广义新/矿泉水-福利价=aj",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-05",
@@ -11832,7 +12820,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0805/抽纸-福利价"
+   "path": "D:/625/京东/8月/0805/抽纸-福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-05",
@@ -11860,7 +12851,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0805/透明皂/8月5日"
+   "path": "D:/625/京东/8月/0805/透明皂/8月5日",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-05",
@@ -11948,7 +12942,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0805/透明皂/衍生"
+   "path": "D:/625/京东/8月/0805/透明皂/衍生",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-06",
@@ -11979,7 +12976,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0806/dhx/柔顺剂"
+   "path": "D:/625/京东/8月/0806/dhx/柔顺剂",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-06",
@@ -12041,7 +13041,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/41 素材已传创量，41 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0806/三方/维达"
+   "path": "D:/625/京东/8月/0806/三方/维达",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-06",
@@ -12117,7 +13120,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/55 素材已传创量，55 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0806/三方/西瓜"
+   "path": "D:/625/京东/8月/0806/三方/西瓜",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-06",
@@ -12148,7 +13154,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0806/广义新/牛排脆"
+   "path": "D:/625/京东/8月/0806/广义新/牛排脆",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-06",
@@ -12173,7 +13182,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0806/陶瓷碗"
+   "path": "D:/625/京东/8月/0806/陶瓷碗",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-07",
@@ -12204,7 +13216,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0807/dhx/火龙果(1)"
+   "path": "D:/625/京东/8月/0807/dhx/火龙果(1)",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-07",
@@ -12229,7 +13244,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0807/三方/陶瓷碗"
+   "path": "D:/625/京东/8月/0807/三方/陶瓷碗",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-07",
@@ -12257,7 +13275,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0807/三方/雕牌"
+   "path": "D:/625/京东/8月/0807/三方/雕牌",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-07",
@@ -12288,7 +13309,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0807/广义新/卷纸"
+   "path": "D:/625/京东/8月/0807/广义新/卷纸",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-07",
@@ -12331,7 +13355,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0807/广义新/大坐垫-传"
+   "path": "D:/625/京东/8月/0807/广义新/大坐垫-传",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-07",
@@ -12370,7 +13397,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0807/广义新/小的坐垫-传"
+   "path": "D:/625/京东/8月/0807/广义新/小的坐垫-传",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-10",
@@ -12401,7 +13431,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0810/dhx-防晒霜-ai福利价"
+   "path": "D:/625/京东/8月/0810/dhx-防晒霜-ai福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-10",
@@ -12439,7 +13472,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0810/卷纸(1)-G改"
+   "path": "D:/625/京东/8月/0810/卷纸(1)-G改",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-10",
@@ -12474,7 +13510,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0810/外卖"
+   "path": "D:/625/京东/8月/0810/外卖",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-10",
@@ -12550,7 +13589,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/55 素材已传创量，55 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0810/标点/鱼饵"
+   "path": "D:/625/京东/8月/0810/标点/鱼饵",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-10",
@@ -12572,7 +13614,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/1 素材已传创量，0 未传，1 疑似待复核",
-   "path": "D:/625/京东/8月/0810/重新提审-dhx"
+   "path": "D:/625/京东/8月/0810/重新提审-dhx",
+   "categories": [
+    "其他"
+   ]
   },
   {
    "date": "2026-08-11",
@@ -12603,7 +13648,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0811/dhx/咸菜碗"
+   "path": "D:/625/京东/8月/0811/dhx/咸菜碗",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-11",
@@ -12635,7 +13683,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0811/dhx/碗"
+   "path": "D:/625/京东/8月/0811/dhx/碗",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-11",
@@ -12671,7 +13722,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0811/dhx/鸭蛋-ai"
+   "path": "D:/625/京东/8月/0811/dhx/鸭蛋-ai",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-11",
@@ -12723,7 +13777,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0811/三方/火鸡面-商务测试"
+   "path": "D:/625/京东/8月/0811/三方/火鸡面-商务测试",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-11",
@@ -12760,7 +13817,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0811/广义新/散热器"
+   "path": "D:/625/京东/8月/0811/广义新/散热器",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-11",
@@ -12793,7 +13853,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0811/广义新/洗脸巾"
+   "path": "D:/625/京东/8月/0811/广义新/洗脸巾",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-12",
@@ -12843,7 +13906,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0812/dhx/东方树叶"
+   "path": "D:/625/京东/8月/0812/dhx/东方树叶",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-12",
@@ -12882,7 +13948,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0812/dhx/收纳罐-ai"
+   "path": "D:/625/京东/8月/0812/dhx/收纳罐-ai",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-12",
@@ -12937,7 +14006,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0812/大盘扒改"
+   "path": "D:/625/京东/8月/0812/大盘扒改",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-12",
@@ -12976,7 +14048,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0812/广义新/地漏"
+   "path": "D:/625/京东/8月/0812/广义新/地漏",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-12",
@@ -13017,7 +14092,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0812/广义新/收纳盒"
+   "path": "D:/625/京东/8月/0812/广义新/收纳盒",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-12",
@@ -13057,7 +14135,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0812/广义新/黄桃-1分钱"
+   "path": "D:/625/京东/8月/0812/广义新/黄桃-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-12",
@@ -13128,7 +14209,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0812/炒冰机-三方"
+   "path": "D:/625/京东/8月/0812/炒冰机-三方",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-13",
@@ -13200,7 +14284,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0813/围裙-三方"
+   "path": "D:/625/京东/8月/0813/围裙-三方",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-13",
@@ -13271,7 +14358,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0813/搓澡皮子"
+   "path": "D:/625/京东/8月/0813/搓澡皮子",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-13",
@@ -13345,7 +14435,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0813/花生-三方"
+   "path": "D:/625/京东/8月/0813/花生-三方",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-14",
@@ -13377,7 +14470,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0814/0813-卷纸 -"
+   "path": "D:/625/京东/8月/0814/0813-卷纸 -",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-14",
@@ -13414,7 +14510,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0814/0814-卷纸"
+   "path": "D:/625/京东/8月/0814/0814-卷纸",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-14",
@@ -13465,7 +14564,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0814/凳子-广点通-1分钱起-传创量"
+   "path": "D:/625/京东/8月/0814/凳子-广点通-1分钱起-传创量",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-14",
@@ -13509,7 +14611,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0814/围裙-广义新"
+   "path": "D:/625/京东/8月/0814/围裙-广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-14",
@@ -13547,7 +14652,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0814/抽纸-0.9"
+   "path": "D:/625/京东/8月/0814/抽纸-0.9",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-14",
@@ -13584,7 +14692,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0814/油桃-广义新"
+   "path": "D:/625/京东/8月/0814/油桃-广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-14",
@@ -13621,7 +14732,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0814/洗衣液"
+   "path": "D:/625/京东/8月/0814/洗衣液",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-17",
@@ -13659,7 +14773,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0817/dhx/洗漱杯"
+   "path": "D:/625/京东/8月/0817/dhx/洗漱杯",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-17",
@@ -13693,7 +14810,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0817/dhx/瓜子"
+   "path": "D:/625/京东/8月/0817/dhx/瓜子",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-17",
@@ -13733,7 +14853,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0817/dhx/鸡蛋"
+   "path": "D:/625/京东/8月/0817/dhx/鸡蛋",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-17",
@@ -13768,7 +14891,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0817/三方"
+   "path": "D:/625/京东/8月/0817/三方",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-17",
@@ -13802,7 +14928,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0817/广义新/大米三段式-广义新"
+   "path": "D:/625/京东/8月/0817/广义新/大米三段式-广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-18",
@@ -13830,7 +14959,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0818/1119934-立白洗洁精-0818-传"
+   "path": "D:/625/京东/8月/0818/1119934-立白洗洁精-0818-传",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-18",
@@ -13884,7 +15016,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0818/三方衍生/洗洁精"
+   "path": "D:/625/京东/8月/0818/三方衍生/洗洁精",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-18",
@@ -13919,7 +15054,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/14 素材已传创量，14 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0818/可口可乐"
+   "path": "D:/625/京东/8月/0818/可口可乐",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-18",
@@ -13952,7 +15090,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0818/吸盘支架-dhx"
+   "path": "D:/625/京东/8月/0818/吸盘支架-dhx",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-18",
@@ -13984,7 +15125,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/11 素材已传创量，11 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0818/外卖福利价-8越21青云"
+   "path": "D:/625/京东/8月/0818/外卖福利价-8越21青云",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-18",
@@ -14025,7 +15169,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0818/斜挎包-广义新"
+   "path": "D:/625/京东/8月/0818/斜挎包-广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-18",
@@ -14064,7 +15211,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/18 素材已传创量，18 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0818/百事可乐-传"
+   "path": "D:/625/京东/8月/0818/百事可乐-传",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-18",
@@ -14109,7 +15259,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0818/红薯=dhx"
+   "path": "D:/625/京东/8月/0818/红薯=dhx",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-18",
@@ -14148,7 +15301,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：16/18 素材已传创量，0 未传，2 疑似待复核",
-   "path": "D:/625/京东/8月/0818/限时抢购=钢丝毛巾"
+   "path": "D:/625/京东/8月/0818/限时抢购=钢丝毛巾",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-19",
@@ -14184,7 +15340,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/15 素材已传创量，15 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0819/dhx/包"
+   "path": "D:/625/京东/8月/0819/dhx/包",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-19",
@@ -14215,7 +15374,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0819/dhx/珊瑚抹布-限时抢购福利价"
+   "path": "D:/625/京东/8月/0819/dhx/珊瑚抹布-限时抢购福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-19",
@@ -14266,7 +15428,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0819/三方/商务选品-"
+   "path": "D:/625/京东/8月/0819/三方/商务选品-",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-19",
@@ -14299,7 +15464,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/12 素材已传创量，12 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0819/广义新/心相印手帕纸-被驳回"
+   "path": "D:/625/京东/8月/0819/广义新/心相印手帕纸-被驳回",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-19",
@@ -14338,7 +15506,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0819/广义新/茶具"
+   "path": "D:/625/京东/8月/0819/广义新/茶具",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-20",
@@ -14411,7 +15582,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0820/三方/打火机-有米云"
+   "path": "D:/625/京东/8月/0820/三方/打火机-有米云",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-20",
@@ -14484,7 +15658,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0820/三方/花洒架有米云"
+   "path": "D:/625/京东/8月/0820/三方/花洒架有米云",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-20",
@@ -14557,7 +15734,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0820/三方/雨伞有米云"
+   "path": "D:/625/京东/8月/0820/三方/雨伞有米云",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-20",
@@ -14590,7 +15770,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0820/三方/鱼饵-衍生"
+   "path": "D:/625/京东/8月/0820/三方/鱼饵-衍生",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-20",
@@ -14639,7 +15822,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/28 素材已传创量，28 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0820/围裙-dhx-0825的时候传"
+   "path": "D:/625/京东/8月/0820/围裙-dhx-0825的时候传",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-20",
@@ -14688,7 +15874,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0820/牛油火锅-广义新"
+   "path": "D:/625/京东/8月/0820/牛油火锅-广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-20",
@@ -14721,7 +15910,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0820/雀巢-1分钱起"
+   "path": "D:/625/京东/8月/0820/雀巢-1分钱起",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-21",
@@ -14771,7 +15963,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0821/dhx-可乐"
+   "path": "D:/625/京东/8月/0821/dhx-可乐",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-21",
@@ -14802,7 +15997,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0821/大米-扒改三方-100178504977"
+   "path": "D:/625/京东/8月/0821/大米-扒改三方-100178504977",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-21",
@@ -14855,7 +16053,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0821/广义新-卷纸-1分钱"
+   "path": "D:/625/京东/8月/0821/广义新-卷纸-1分钱",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-21",
@@ -14926,7 +16127,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0821/手机支架-有米云"
+   "path": "D:/625/京东/8月/0821/手机支架-有米云",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-21",
@@ -14957,7 +16161,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0821/散热器-1-10215952093313"
+   "path": "D:/625/京东/8月/0821/散热器-1-10215952093313",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-21",
@@ -14988,7 +16195,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0821/洗手液-福利价"
+   "path": "D:/625/京东/8月/0821/洗手液-福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-21",
@@ -15059,7 +16269,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0821/笔"
+   "path": "D:/625/京东/8月/0821/笔",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-21",
@@ -15090,7 +16303,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0821/茶语抽纸-100123852301"
+   "path": "D:/625/京东/8月/0821/茶语抽纸-100123852301",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-24",
@@ -15161,7 +16377,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0824/三方月饼模具"
+   "path": "D:/625/京东/8月/0824/三方月饼模具",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-24",
@@ -15232,7 +16451,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0824/乳酸菌-三方"
+   "path": "D:/625/京东/8月/0824/乳酸菌-三方",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-24",
@@ -15268,7 +16490,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/15 素材已传创量，15 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0824/五面鞋刷dhx-福利价"
+   "path": "D:/625/京东/8月/0824/五面鞋刷dhx-福利价",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-24",
@@ -15301,7 +16526,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/12 素材已传创量，12 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0824/帆布袋-福利价-广义新"
+   "path": "D:/625/京东/8月/0824/帆布袋-福利价-广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-24",
@@ -15340,7 +16568,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/18 素材已传创量，18 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0824/折叠衣架-福利价-广义新"
+   "path": "D:/625/京东/8月/0824/折叠衣架-福利价-广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-24",
@@ -15376,7 +16607,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/15 素材已传创量，15 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0824/料理盆-一分钱起-广义新"
+   "path": "D:/625/京东/8月/0824/料理盆-一分钱起-广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-24",
@@ -15407,7 +16641,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0824/火龙果-dhx-aigc"
+   "path": "D:/625/京东/8月/0824/火龙果-dhx-aigc",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-25",
@@ -15449,7 +16686,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/21 素材已传创量，21 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0825/加长水勺-福利价-广义新"
+   "path": "D:/625/京东/8月/0825/加长水勺-福利价-广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-25",
@@ -15480,7 +16720,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0825/地漏芯-三方一分钱起"
+   "path": "D:/625/京东/8月/0825/地漏芯-三方一分钱起",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-25",
@@ -15514,7 +16757,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/13 素材已传创量，13 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0825/外卖一分购"
+   "path": "D:/625/京东/8月/0825/外卖一分购",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-25",
@@ -15545,7 +16791,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0825/打火机-三方福利价"
+   "path": "D:/625/京东/8月/0825/打火机-三方福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-25",
@@ -15578,7 +16827,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/12 素材已传创量，12 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0825/料理盆-广义新-1分钱起"
+   "path": "D:/625/京东/8月/0825/料理盆-广义新-1分钱起",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-25",
@@ -15609,7 +16861,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0825/沥水篮-1分钱起福利价"
+   "path": "D:/625/京东/8月/0825/沥水篮-1分钱起福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-25",
@@ -15640,7 +16895,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0825/采销项目"
+   "path": "D:/625/京东/8月/0825/采销项目",
+   "categories": [
+    "PRJ"
+   ]
   },
   {
    "date": "2026-08-25",
@@ -15671,7 +16929,10 @@
    "qingyunReason": "",
    "chuangliang": "yes",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0825/雨伞-第三方-福利价"
+   "path": "D:/625/京东/8月/0825/雨伞-第三方-福利价",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-26",
@@ -15702,7 +16963,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/10 素材已传创量，10 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0826/dhx-手表"
+   "path": "D:/625/京东/8月/0826/dhx-手表",
+   "categories": [
+    "DHX"
+   ]
   },
   {
    "date": "2026-08-26",
@@ -15753,7 +17017,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0826/商务选品-三方-拼豆"
+   "path": "D:/625/京东/8月/0826/商务选品-三方-拼豆",
+   "categories": [
+    "标点"
+   ]
   },
   {
    "date": "2026-08-26",
@@ -15797,7 +17064,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "",
-   "path": "D:/625/京东/8月/0826/外卖"
+   "path": "D:/625/京东/8月/0826/外卖",
+   "categories": [
+    "PRJ"
+   ]
   },
   {
    "date": "2026-08-26",
@@ -15836,7 +17106,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/18 素材已传创量，18 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0826/广义新/手帕纸-1分钱起-广义新"
+   "path": "D:/625/京东/8月/0826/广义新/手帕纸-1分钱起-广义新",
+   "categories": [
+    "广义新"
+   ]
   },
   {
    "date": "2026-08-26",
@@ -15869,7 +17142,10 @@
    "qingyunReason": "",
    "chuangliang": "no",
    "chuangliangReason": "自动比对（2026-05至今）：0/12 素材已传创量，12 未传，0 疑似待复核",
-   "path": "D:/625/京东/8月/0826/广义新/樱花抽纸-1分钱-广义新"
+   "path": "D:/625/京东/8月/0826/广义新/樱花抽纸-1分钱-广义新",
+   "categories": [
+    "广义新"
+   ]
   }
  ]
 }

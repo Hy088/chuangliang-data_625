@@ -67,6 +67,26 @@ def _classify_filename(name):
     return parts[0]
 
 
+def _map_category(cat):
+    """把素材分类名归并到总类：广义新 / DHX / 标点 / PRJ / 其他。
+    规则（用户定义）：
+      - 含「广义新」                  -> 广义新
+      - 「低活」或 以「DHX」开头        -> DHX
+      - 以「信息流」开头               -> 标点
+      - 含「采销项目」或「PRJ」         -> PRJ
+      - 其余                          -> 其他
+    """
+    if cat.startswith('信息流'):
+        return '标点'
+    if cat == '低活' or cat.startswith('DHX'):
+        return 'DHX'
+    if '广义新' in cat:
+        return '广义新'
+    if '采销项目' in cat or 'PRJ' in cat.upper():
+        return 'PRJ'
+    return '其他'
+
+
 def _scan_product(ppath):
     """扫描一个产品文件夹，返回 (文件全路径列表, 文件名列表, 控制文件状态)。"""
     allpaths = []
@@ -207,6 +227,9 @@ def scan():
                             'chuangliangReason': chuangliang_reason,
                             'path': ppath.replace('\\', '/')
                     })
+    # 计算每个产品涉及的总类（用于看板总类筛选/统计）
+    for e in entries:
+        e['categories'] = sorted(set(_map_category(c) for c in e.get('materialBreakdown', {}).keys()))
     return entries
 
 
