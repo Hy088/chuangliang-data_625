@@ -475,9 +475,17 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .period-picker__input.active .ppi-arrow{transform:rotate(180deg)}
 .period-picker__dropdown{position:fixed;top:auto;right:auto;z-index:2000;background:#fff;border:1px solid #e4e7ed;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.18);display:flex;overflow:hidden;min-width:560px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .2s,transform .2s,visibility .2s}
 .period-picker__dropdown.open{opacity:1;visibility:visible;transform:translateY(0)}
-.ppd-shortcuts{width:96px;background:#f5f7fa;border-right:1px solid #e4e7ed;padding:8px 0;display:flex;flex-direction:column}
+.ppd-shortcuts{width:150px;background:#f5f7fa;border-right:1px solid #e4e7ed;padding:8px 0;display:flex;flex-direction:column;overflow:hidden}
 .ppd-shortcut{padding:9px 16px;font-size:13px;color:#606266;cursor:pointer;transition:.18s}
 .ppd-shortcut:hover{color:#5b4bdb;background:#ebeef5}
+.ppd-weeks{margin-top:8px;padding-top:8px;border-top:1px solid #e4e7ed;display:flex;flex-direction:column;gap:6px;flex:1;min-height:0}
+.ppd-weeks-title{padding:0 16px;font-size:12px;font-weight:700;color:#909399}
+.ppd-weeks-list{display:flex;flex-direction:column;gap:5px;padding:0 10px;overflow:auto}
+.ppd-week-btn{padding:7px 10px;border-radius:6px;border:1px solid transparent;background:#fff;color:#606266;font-size:12px;font-weight:600;cursor:pointer;transition:.18s;text-align:left;white-space:nowrap}
+.ppd-week-btn:hover{color:#5b4bdb;background:#f2f3ff;border-color:#dcdfe6}
+.ppd-week-btn.active{background:#5b4bdb;color:#fff;border-color:#5b4bdb;box-shadow:0 2px 8px rgba(91,75,219,.30)}
+.ppd-week-btn.all{font-weight:700}
+.ppd-week-empty{padding:8px 16px;font-size:12px;color:#c0c4cc}
 .ppd-body{flex:1;display:flex;gap:16px;padding:16px 18px}
 .ppd-year-col{flex:1;display:flex;flex-direction:column;gap:10px;min-width:180px}
 .ppd-year-hd{display:flex;align-items:center;justify-content:space-between;height:28px}
@@ -828,6 +836,10 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
           <div class="ppd-shortcut" data-type="current">本月</div>
           <div class="ppd-shortcut" data-type="prev">上月</div>
           <div class="ppd-shortcut" data-type="last3">近三个月</div>
+          <div class="ppd-weeks" id="ppdWeeks">
+            <div class="ppd-weeks-title" id="ppdWeeksTitle">分周</div>
+            <div class="ppd-weeks-list" id="ppdWeeksList"></div>
+          </div>
         </div>
         <div class="ppd-body">
           <div class="ppd-year-col">
@@ -1995,7 +2007,7 @@ function positionDropdown(){
   d.style.top=top+'px';
   d.style.right=right+'px';
 }
-function openPanel(){ PANEL_OPEN=true; const d=$('#periodDropdown'); if(d) d.classList.add('open'); const i=$('#periodInput'); if(i) i.classList.add('active'); renderMonthGrid(); positionDropdown(); }
+function openPanel(){ PANEL_OPEN=true; const d=$('#periodDropdown'); if(d) d.classList.add('open'); const i=$('#periodInput'); if(i) i.classList.add('active'); renderMonthGrid(); renderWeekList(); positionDropdown(); }
 function closePanel(){ PANEL_OPEN=false; const d=$('#periodDropdown'); if(d) d.classList.remove('open'); const i=$('#periodInput'); if(i) i.classList.remove('active'); }
 function togglePanel(){ if(PANEL_OPEN) closePanel(); else openPanel(); }
 function refreshPicker(){
@@ -2021,11 +2033,15 @@ function renderMonthGrid(){
     }
     grid.innerHTML=html;
     grid.querySelectorAll('.ppd-month-cell').forEach(btn=>{
-      btn.onclick=()=>{
+      btn.onclick=(e)=>{
+        e.stopPropagation();
         if(btn.disabled) return;
         const ym=btn.dataset.month;
-        applySelection(ym);
-        closePanel();
+        CUR_MONTH=ym;
+        CUR_YEAR_LEFT=+ym.split('-')[0];
+        renderMonthGrid();
+        renderWeekList();
+        updateInputText();
       };
     });
   };
@@ -2033,6 +2049,38 @@ function renderMonthGrid(){
   if(yr) yr.textContent=(CUR_YEAR_LEFT+1)+' 年';
   renderYear(gridL, CUR_YEAR_LEFT);
   renderYear(gridR, CUR_YEAR_LEFT+1);
+}
+function formatPeriodShort(p){
+  const [s,e]=(p||'').split(' ~ ');
+  if(!s || !e) return p;
+  return s.slice(5).replace('-','.')+' ~ '+e.slice(5).replace('-','.');
+}
+function renderWeekList(){
+  const wrap=$('#ppdWeeksList'), title=$('#ppdWeeksTitle'); if(!wrap) return;
+  const months=getMonthsWithData();
+  let ym=CUR_MONTH;
+  if(!ym && months.length) ym=months[months.length-1];
+  if(!ym){ wrap.innerHTML='<div class="ppd-week-empty">无数据</div>'; if(title) title.textContent='分周'; return; }
+  const ps=getPeriodsByMonth(ym).map(p=>p.period);
+  if(title) title.textContent='分周 · '+ym.replace('-','年')+'月';
+  let html=`<button class="ppd-week-btn all ${CUR_PERIOD?'':'active'}" data-period="">全月</button>`;
+  ps.forEach(p=>{ html+=`<button class="ppd-week-btn ${CUR_PERIOD===p?'active':''}" data-period="${p}">${formatPeriodShort(p)}</button>`; });
+  wrap.innerHTML=html;
+  wrap.querySelectorAll('.ppd-week-btn').forEach(btn=>{
+    btn.onclick=(e)=>{
+      e.stopPropagation();
+      const period=btn.dataset.period;
+      CUR_MONTH=ym;
+      if(period){
+        PERIOD_MODE='period';
+        rebuildView(period);
+      }else{
+        if(PERIOD_MODE==='month') rebuildMonthView(CUR_MONTH);
+        else { const latest=ps[ps.length-1]; rebuildView(latest||null); }
+      }
+      closePanel();
+    };
+  });
 }
 function renderSubChips(){
   const wrap=$('#periodSubChips'); if(!wrap) return;
@@ -4158,7 +4206,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260828m';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260828n';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -5687,7 +5735,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260828m"></script>
+<script src="personal-enhance.js?v=20260828n"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 
