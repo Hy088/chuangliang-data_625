@@ -824,7 +824,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       <div class="pp-tabs">
         <button class="tab-btn" data-mode="day" disabled title="暂无日粒度数据">分日</button>
         <button class="tab-btn" data-mode="daySum" disabled title="暂无日粒度数据">日汇总</button>
-        <button class="tab-btn on" data-mode="period">分月</button>
+        <button class="tab-btn on" data-mode="period">分周</button>
         <button class="tab-btn" data-mode="month">月汇总</button>
       </div>
       <div class="period-picker__input" id="periodInput">
@@ -1916,7 +1916,8 @@ function buildMonthData(ym){
     materials:{cols:DATA_FULL.materials.cols, rows:materialsForMonth(ym)},
     suggestions:computeSuggestions(cats), insights:computeInsights(cats),
     periodData:DATA.periodData,
-    periodMats:DATA_FULL.periodMats
+    periodMats:DATA_FULL.periodMats,
+    typeShare:DATA_FULL.typeShare || []
   };
 }
 function materialsForMonth(ym){
@@ -1961,7 +1962,8 @@ function rebuildView(pf){
         materials: {cols: DATA_FULL.materials.cols, rows: materialsForPeriod(CUR_PERIOD)},
         suggestions: computeSuggestions(cats), insights: computeInsights(cats),
         periodData: DATA.periodData,
-        periodMats: DATA_FULL.periodMats
+        periodMats: DATA_FULL.periodMats,
+        typeShare: DATA_FULL.typeShare || []
       };
     }
   }
@@ -4209,7 +4211,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260828o';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260828p';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -4258,7 +4260,7 @@ async function loadSeedData(){
     DATA_FULL=obj; DATA=DATA_FULL; CUR_PERIOD=null; rebuildIdMap();
     // 注意：此时 materials 尚未加载，不保存 runtime，避免 IndexedDB 记住半成品（有 meta 但 materials 为空）
     console.log('[seed] 已从 period-meta.json 载入, periods=', obj.meta.periods);
-    setTimeout(loadMaterialsAsync, 2500); // 素材明细（约34MB）延迟到首屏渲染完成后再异步拉取，避免与首屏抢带宽
+    setTimeout(()=>{ console.log('[materials] timer fired'); loadMaterialsAsync(); }, 2500); // 素材明细（约34MB）延迟到首屏渲染完成后再异步拉取，避免与首屏抢带宽
     return;
   }catch(e){ console.warn('[seed] period-meta.json 加载失败，回退 period-data.json', e); }
   // 兜底：直接加载完整 period-data.json（较慢但保底，内含全部素材）
@@ -4270,15 +4272,16 @@ async function loadSeedData(){
   }catch(e2){ console.warn('[seed] 载入失败', e2); throw e2; }
 }
 // 素材明细体积大（约34MB/13万行），后台异步加载；加载完成后仅刷新素材相关视图，绝不阻塞首屏
-async function loadMaterialsAsync(){
+async function loadMaterialsAsync(retry=0){
+  console.log('[materials] loadMaterialsAsync start, retry=', retry);
   try{
     const ov=document.getElementById('loadOverlay');
     if(ov && !ov.classList.contains('hidden')){ const e=document.getElementById('loadMsg'); if(e) e.textContent='数据已加载，正在后台拉取素材明细（约34MB）...'; }
     const ctrl=new AbortController();
-    const to=setTimeout(()=>ctrl.abort(), 120000); // 35MB 文件在弱网下可能需要更久，放宽到 120 秒
-    const m=await fetchJSONRetry('period-materials.json', {signal:ctrl.signal});
+    const to=setTimeout(()=>ctrl.abort(), 180000); // 网络慢时给 180 秒
+    const m=await fetchJSONRetry('period-materials.json', {signal:ctrl.signal, cache:'no-cache'});
     clearTimeout(to);
-    if(!DATA_FULL) return;
+    if(!DATA_FULL){ console.warn('[materials] DATA_FULL missing'); return; }
     DATA_FULL.materials = { cols: m.cols||[], rows: m.rows||[] };
     rebuildIdMap();
     // 保持当前周期/月份视图，避免覆盖已筛选的 DATA
@@ -4289,7 +4292,16 @@ async function loadMaterialsAsync(){
     }catch(e){ console.error('[materials] 加载后重渲染失败', e); }
     console.log('[seed] 素材明细已异步载入, rows=', m.rows?m.rows.length:0);
     saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e)); // 完整数据才保存
-  }catch(e){ console.warn('[materials] 异步加载失败（素材标签页将暂为空，可刷新重试）', e); }
+  }catch(e){
+    console.warn('[materials] 异步加载失败（素材标签页将暂为空，可刷新重试）', e);
+    if(retry < 2){
+      console.log('[materials] 3秒后第'+(retry+2)+'次重试...');
+      setTimeout(()=>loadMaterialsAsync(retry+1), 3000);
+    }else{
+      console.log('[materials] 自动重试结束，将在用户首次点击/滚动时再次尝试');
+      window.__materialsFailed = true;
+    }
+  }
 }
 function withTimeout(promise, ms, label){
   return new Promise((res,rej)=>{
@@ -4393,6 +4405,16 @@ function updateStateBanner(){
 
   try{ updateStateBanner(); }catch(e){}
   setTimeout(()=>{ hideLoadOverlay(); clearTimeout(hardHide); }, 200);
+  // 素材明细自动加载失败后，首次用户交互再次尝试
+  const retryOnce=(e)=>{
+    if(window.__materialsFailed && !window.__materialsRetrying){
+      window.__materialsRetrying=true;
+      console.log('[materials] 用户交互触发重试');
+      loadMaterialsAsync();
+    }
+  };
+  document.addEventListener('click', retryOnce, {once:true});
+  document.addEventListener('scroll', retryOnce, {once:true});
 })();
 
 // ========== 数据分区：折叠 / 快速跳转 ==========
@@ -5738,7 +5760,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260828o"></script>
+<script src="personal-enhance.js?v=20260828p"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 
