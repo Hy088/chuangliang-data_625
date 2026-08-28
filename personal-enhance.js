@@ -5,11 +5,11 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260828h";
-  var MAT_URL  = "./me-materials.csv?v=20260828h";
+  var HIST_URL = "./me-history.csv?v=20260829a";
+  var MAT_URL  = "./me-materials.csv?v=20260829a";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
-  var UPLOAD_URL = "./me-uploads.csv?v=20260828h";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260829a";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -1478,22 +1478,9 @@
     try { if (window.meStop) window.meStop(); } catch (e) {}
   }
 
-  /* ---------- 暴露给 index.html：按素材ID在个人日报 me-materials.csv 中查最新明细 ---------- */
+  /* ---------- 暴露给 index.html：按素材ID在个人日报 me-materials.csv 中聚合整体累计 ---------- */
   window.lookupMeMat = function (sid) {
-    if (!sid || !matData || !matData.length) return null;
-    var s = String(sid).trim();
-    var hits = [];
-    for (var i = 0; i < matData.length; i++) {
-      var r = matData[i];
-      if (String(r["素材ID"] || "").trim() === s) hits.push(r);
-    }
-    if (!hits.length) return null;
-    // 日期降序，返回最近一条明细
-    hits.sort(function (a, b) {
-      var da = a["日期"] || "", db = b["日期"] || "";
-      return db.localeCompare(da);
-    });
-    return hits[0];
+    return aggregateMatById(sid);
   };
 
   /* ---------- 初始化 ---------- */

@@ -1,5 +1,17 @@
 [
   {
+    "ver": "v20260829a",
+    "date": "2026-08-29",
+    "type": "fix",
+    "summary": "补齐视频解析所有关联路径的累计口径，并强制刷新 CSV/JS 缓存",
+    "details": [
+      "lookupMeMat() 也改为返回 aggregateMatById(sid) 的整体累计行，覆盖「关联素材」搜索面板/自动匹配路径",
+      "associateFromRank() 继续用 aggregateMatById(sid) 覆盖排行榜/月度 Top 点击路径",
+      "强制 bump me-history.csv / me-materials.csv / me-uploads.csv 的 ?v= 到 20260829a，避免浏览器缓存旧 CSV",
+      "bump personal-enhance.js?v= 与 SEED_VER => 20260829a"
+    ]
+  },
+  {
     "ver": "v20260828t",
     "date": "2026-08-28",
     "type": "fix",
