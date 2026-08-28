@@ -7,7 +7,7 @@
   - period-meta.json       (轻量体, 不含 materials)
 逻辑忠实移植自 index.html 的 rowChannel / decode / _metrics / accumulate / aggregateViews。
 """
-import csv, glob, os, json, re, shutil
+import csv, glob, os, json, re, shutil, gzip
 
 REPO = r"C:/Users/EDY/chuangliang_data"
 SRC  = r"F:\Workbuddy.renwu\WorkBuddy_数据"
@@ -237,9 +237,7 @@ def main():
     new_weeks = [w for w in weeks if w not in existing_periods]
     print('found week labels:', list(weeks.keys()))
     print('NEW weeks to sync:', new_weeks)
-    if not new_weeks:
-        print('NOTHING TO DO.')
-        return
+    # 即使没有新周期，也重新写出输出文件（确保 .gz 等衍生文件存在）
 
     # 3) 备份
     for fn in ['period-materials.json', 'period-data.json', 'period-meta.json']:
@@ -306,11 +304,28 @@ def main():
     meta['typeShare'] = typeShare
     print('typeShare:', typeShare)
 
-    # 8) 写回
-    json.dump(pm, open(os.path.join(REPO, 'period-materials.json'), 'w', encoding='utf-8'), ensure_ascii=False)
-    json.dump(pd, open(os.path.join(REPO, 'period-data.json'), 'w', encoding='utf-8'), ensure_ascii=False)
+    # 8) 写回（GitHub Pages 单文件限 100MB；materials 超限时用 .gz 前端解压）
+    def write_json(path, obj):
+        txt = json.dumps(obj, ensure_ascii=False)
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(txt)
+        gz_path = path + '.gz'
+        with gzip.open(gz_path, 'wt', encoding='utf-8', compresslevel=9) as f:
+            f.write(txt)
+        return len(txt.encode('utf-8'))
+
+    # period-data 不含 materials（素材走独立 period-materials.json.gz）
+    pd['materials'] = {'cols': pm['cols'], 'rows': []}
+    write_json(os.path.join(REPO, 'period-data.json'), pd)
+
+    # period-materials 完整版生成 .gz 用于线上；原始 json 留在本地但可 gitignore 忽略
+    write_json(os.path.join(REPO, 'period-materials.json'), pm)
+
+    # period-meta 保持轻量普通 JSON
     json.dump(meta, open(os.path.join(REPO, 'period-meta.json'), 'w', encoding='utf-8'), ensure_ascii=False)
     print('DONE. new periods:', new_weeks)
+    print('period-data.json size:', round(os.path.getsize(os.path.join(REPO, 'period-data.json'))/1024/1024, 2), 'MB')
+    print('period-materials.json.gz size:', round(os.path.getsize(os.path.join(REPO, 'period-materials.json.gz'))/1024/1024, 2), 'MB')
 
 
 if __name__ == '__main__':

@@ -3874,25 +3874,43 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260812a';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260828i';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
-// 带重试的 JSON 拉取：先走版本化 URL 利用缓存；若返回空/截断/解析失败，则用时间戳 URL 强制回源
+// 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
+// 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
 async function fetchJSONRetry(base, opt={}){
-  const tryFetch = async (url) => {
+  const tryPlain = async (url) => {
     const r = await fetch(url, opt);
     if(!r.ok) throw new Error('HTTP '+r.status);
-    const len = r.headers.get('content-length');
     const txt = await r.text();
     if(!txt || !txt.trim()) throw new Error('empty body');
     // 极小体积（<100B）极可能是 CDN 空缓存或 404 页面
     if(txt.length < 100) throw new Error('body too small: '+txt.length);
     return JSON.parse(txt);
   };
+  const tryGz = async (url) => {
+    if(typeof DecompressionStream === 'undefined') throw new Error('no DecompressionStream');
+    const r = await fetch(url, opt);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const ds = new DecompressionStream('gzip');
+    const stream = r.body.pipeThrough(ds);
+    const txt = await new Response(stream).text();
+    if(!txt || !txt.trim()) throw new Error('empty body');
+    if(txt.length < 100) throw new Error('body too small: '+txt.length);
+    return JSON.parse(txt);
+  };
+  // 1) 优先 .gz
   try{
-    return await tryFetch(base + '?v=' + SEED_VER);
+    return await tryGz(base + '.gz?v=' + SEED_VER);
+  }catch(e){
+    console.warn('[fetchJSONRetry] .gz 失败，回退普通 JSON', base, e.message);
+  }
+  // 2) 普通 JSON
+  try{
+    return await tryPlain(base + '?v=' + SEED_VER);
   }catch(e){
     console.warn('[fetchJSONRetry] 版本化 URL 失败，用时间戳回源重试', base, e.message);
-    return await tryFetch(base + '?_=' + Date.now());
+    return await tryPlain(base + '?_=' + Date.now());
   }
 }
 
@@ -5374,7 +5392,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260828h"></script>
+<script src="personal-enhance.js?v=20260828i"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 

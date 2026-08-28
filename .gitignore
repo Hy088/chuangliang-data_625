@@ -6,6 +6,9 @@ _exports/
 # 本地测试日志
 _serve_*.log
 
+# 超大素材明细：线上走 .gz（前端自动解压），原始 JSON 留在本地
+period-materials.json
+
 # 即梦浏览器自动化：Cookie 与下载产物（含账号态，勿提交）
 jimeng-cookie.json
 jimeng-output/
