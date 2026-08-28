@@ -19,3 +19,6 @@ __pycache__/
 # 即梦浏览器自动化：Cookie 与下载产物（含账号态，勿提交）
 jimeng-cookie.json
 jimeng-output/
+
+# 周期报表自动导出：创量账号凭据（含密码，绝不提交）
+period-export.config.json

@@ -12,10 +12,15 @@
   2. 确认文件名里的日期区间正确（脚本按文件名识别周期，不读文件内容判断）
 
 用法：
-  python import_period.py              # 增量同步 + 刷新版本 + 提交推送
+  python import_period.py              # 抓下载文件夹 → 增量合并 → 刷版本 → 提交推送
   python import_period.py --force      # 全量重建所有周期（慢，约 1 分钟）
   python import_period.py --only="2026-08-16 ~ 2026-08-22"   # 只重建指定周期
   python import_period.py --no-push    # 只本地生成，不提交推送
+  python import_period.py --no-pull    # 不从下载文件夹抓取，只处理源文件夹里已有的
+  python import_period.py --days=0     # 抓取时不限制文件新旧（默认只抓近 14 天的）
+  python import_period.py --replace="2026-08-16 ~ 2026-08-22"   # 用下载里的替换源文件夹旧分片
+
+安全说明：抓取时若某周期在源文件夹已存在，默认跳过，避免同一周期多份分片被重复累加。
 
 注意：周期看板数据与「个人数据（李虹玉账号）」是两条完全独立的数据源，
       本脚本只处理周期数据，不会碰 me-*.csv 及任何个人数据文件。
@@ -25,7 +30,9 @@ from datetime import datetime
 
 REPO = os.path.dirname(os.path.abspath(__file__))
 SRC = r"F:\Workbuddy.renwu\WorkBuddy_数据"
+DOWNLOADS = os.path.join(os.path.expanduser("~"), "Downloads")
 OFFLINE = r"C:\Users\EDY\Desktop\数据看板离线包"
+PERIOD_RE = re.compile(r"(\d{4}-\d{2}-\d{2})-(\d{4}-\d{2}-\d{2})_")
 
 PY = sys.executable
 
@@ -35,18 +42,90 @@ def log(*a):
 
 
 # ---------- 1) 先看看源文件夹里有什么 ----------
-def scan_source():
-    if not os.path.isdir(SRC):
-        log("!! 源文件夹不存在:", SRC)
-        return {}
+def scan_weeks(folder):
+    """扫描文件夹里创量素材报表 CSV，按文件名里的日期区间分组"""
     weeks = {}
-    for fn in os.listdir(SRC):
-        m = re.search(r"(\d{4}-\d{2}-\d{2})-(\d{4}-\d{2}-\d{2})_", fn)
-        if not m or not fn.startswith("素材报表-不限_"):
+    if not os.path.isdir(folder):
+        return weeks
+    for fn in os.listdir(folder):
+        if not fn.lower().endswith(".csv"):
+            continue
+        if "素材报表" not in fn:
+            continue
+        m = PERIOD_RE.search(fn)
+        if not m:
             continue
         label = f"{m.group(1)} ~ {m.group(2)}"
         weeks.setdefault(label, []).append(fn)
     return {k: sorted(v) for k, v in sorted(weeks.items())}
+
+
+def scan_source():
+    if not os.path.isdir(SRC):
+        log("!! 源文件夹不存在:", SRC)
+        return {}
+    return scan_weeks(SRC)
+
+
+def auto_pull_downloads(replace_periods=(), max_days=14):
+    """从「下载」文件夹自动抓取新导出的周期报表 CSV 到源文件夹。
+
+    安全规则（重要，避免重复计数导致数据翻倍）：
+      1. 该周期在源文件夹里已存在 → 默认跳过（下载里的多半是被重新导出取代的旧分片）
+      2. 确需替换旧分片 → 用 --replace="周期标签"，旧分片先移入 _trash 再拷新的
+      3. 只抓最近 max_days 天内修改过的文件（--days=0 表示不限）
+    """
+    if not os.path.isdir(DOWNLOADS):
+        log("  (跳过抓取：下载文件夹不存在)", DOWNLOADS)
+        return 0
+    found = scan_weeks(DOWNLOADS)
+    if not found:
+        log("  下载文件夹里没有找到「素材报表」CSV")
+        return 0
+    src = scan_weeks(SRC)
+
+    cutoff = None
+    if max_days and max_days > 0:
+        cutoff = datetime.now().timestamp() - max_days * 86400
+
+    copied = 0
+    for label, fns in found.items():
+        # 安全闸：该周期源文件夹里已有 → 默认跳过（下载里的常是被重导取代的旧分片）
+        if label in src and label not in replace_periods:
+            log(f"  跳过 [{label}]：源文件夹已有该周期（{len(src[label])} 个分片）。"
+                f'确需替换请加 --replace="{label}"')
+            continue
+        if label in replace_periods and label in src:
+            trash = os.path.join(SRC, "_trash", datetime.now().strftime("%Y%m%d_%H%M%S"))
+            os.makedirs(trash, exist_ok=True)
+            for old in src[label]:
+                shutil.move(os.path.join(SRC, old), os.path.join(trash, old))
+            log(f"  旧分片已移入 _trash：{len(src[label])} 个")
+
+        for fn in fns:
+            spath = os.path.join(DOWNLOADS, fn)
+            try:
+                st = os.stat(spath)
+                ssize = st.st_size
+            except Exception:
+                continue
+            if cutoff and st.st_mtime < cutoff:
+                log(f"  跳过（{max_days} 天前的旧文件）: {fn}")
+                continue
+            dpath = os.path.join(SRC, fn)
+            if os.path.exists(dpath):
+                try:
+                    if os.path.getsize(dpath) == ssize:
+                        continue          # 已复制过
+                except Exception:
+                    pass
+                # 同名但大小不同 → 加后缀避免覆盖
+                base, ext = os.path.splitext(fn)
+                dpath = os.path.join(SRC, f"{base}__dup{ext}")
+            shutil.copy2(spath, dpath)
+            copied += 1
+            log(f"  抓取 [{label}] {fn}  ({round(ssize/1024/1024,1)} MB)")
+    return copied
 
 
 def current_periods():
@@ -113,7 +192,21 @@ def sync_offline():
 def main():
     args = sys.argv[1:]
     do_push = "--no-push" not in args
+    do_pull = "--no-pull" not in args
     extra = [a for a in args if a in ("--force", "-f") or a.startswith("--only=")]
+    replace = [a[len('--replace='):].strip() for a in args if a.startswith("--replace=")]
+    days = 14
+    for a in args:
+        if a.startswith("--days="):
+            try:
+                days = int(a[len('--days='):])
+            except Exception:
+                pass
+
+    # 0) 先从「下载」文件夹抓新 CSV
+    if do_pull:
+        log("扫描下载文件夹…")
+        auto_pull_downloads(replace_periods=replace, max_days=days)
 
     src_weeks = scan_source()
     cur = current_periods()
