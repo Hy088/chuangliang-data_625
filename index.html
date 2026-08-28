@@ -459,9 +459,12 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .import-btn{position:relative;z-index:99992;pointer-events:auto !important}
 /* 周期选择器：常驻页头，跨标签页生效 */
 .hd-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
-.per-sel{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap}
-.per-sel select{padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:13px;font-weight:600;cursor:pointer;max-width:280px}
-.per-sel select:focus{outline:none;border-color:var(--brand)}
+.per-sel{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.85);font-weight:700;white-space:nowrap}
+.per-chips{display:flex;align-items:center;gap:5px;flex-wrap:wrap;max-width:640px}
+.per-chip{padding:5px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.14);color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:.18s;white-space:nowrap;line-height:1.35;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.per-chip:hover{background:rgba(255,255,255,.28)}
+.per-chip.on{background:#fff;color:#5b4bdb;border-color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.per-chip.all{font-weight:700}
 .ext-list{margin:6px 0 0;padding-left:20px;line-height:1.9;color:var(--ink)}
 .ext-list li{margin:2px 0}
 .ext-list b{color:var(--brand)}
@@ -778,9 +781,10 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="sub" id="hdrsub"></div>
   </div>
   <div class="hd-right">
-    <label class="per-sel">周期：
-      <select id="periodSel" title="切换查看的周期，所有标签页同步更新"></select>
-    </label>
+    <div class="per-sel">
+      <span>周期</span>
+      <div class="per-chips" id="periodChips" title="切换查看的周期，所有标签页同步更新"></div>
+    </div>
     <span class="ver-badge" id="curVer" title="当前版本">—</span>
     <button class="import-btn" id="openImport" title="导入新的素材周期数据报表">⤓ 导入新周期</button>
     <button class="log-btn" id="openChangelog" title="查看版本更新日志">📋 更新日志</button>
@@ -1799,17 +1803,25 @@ function rebuildView(pf){
   }
   DATA = nd;
   const pjtag = $('#ov-period-filter'); if(pjtag) pjtag.textContent = CUR_PERIOD ? ('周期：'+CUR_PERIOD) : '';
+  refreshPeriodChips();
   renderAll();
+}
+function refreshPeriodChips(){
+  const wrap = $('#periodChips'); if(!wrap) return;
+  wrap.querySelectorAll('.per-chip').forEach(btn=>{
+    btn.classList.toggle('on', (btn.dataset.period||'') === (CUR_PERIOD||''));
+  });
 }
 // 初始化页头周期选择器
 function initPeriodSel(){
-  const sel = $('#periodSel'); if(!sel) return;
+  const wrap = $('#periodChips'); if(!wrap) return;
   const periods = (DATA_FULL.periodData||[]).map(p=>p.period);
-  let html = '<option value="">全部周期（合并）</option>';
-  periods.forEach(p=>{ html += `<option value="${p}">${p}</option>`; });
-  sel.innerHTML = html;
-  sel.value = CUR_PERIOD || '';
-  sel.onchange = ()=> rebuildView(sel.value);
+  let html = `<button class="per-chip all ${CUR_PERIOD?'':'on'}" data-period="">全部周期</button>`;
+  periods.forEach(p=>{ html += `<button class="per-chip ${CUR_PERIOD===p?'on':''}" data-period="${p}">${p}</button>`; });
+  wrap.innerHTML = html;
+  wrap.querySelectorAll('.per-chip').forEach(btn=>{
+    btn.onclick = ()=> rebuildView(btn.dataset.period);
+  });
 }
 const PROJ_COLOR = {'广义新':'#7c5cff','低活':'#3b82f6','标点':'#06b6d4'};
 const PROJ_LIST = ['广义新','低活','标点'];
@@ -3874,7 +3886,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260828i';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260828j';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -4010,6 +4022,7 @@ function updateStateBanner(){
   // 2) 先渲染（让看板立即出现，哪怕本地缓存还没合并）
   try{ bindAll(); }catch(e){ console.error('bindAll 失败', e); }
   try{ bindChangelogUI(); }catch(e){ console.error('bindChangelogUI 失败', e); }
+  try{ const v=document.getElementById('curVer'); if(v && typeof SEED_VER!=='undefined') v.textContent='v'+SEED_VER; }catch(e){}
   try{ bindCustom(); }catch(e){ console.error('bindCustom 失败', e); }
   const _pd0=(DATA_FULL.periodData||[]);
   if(!CUR_PERIOD && _pd0.length){ CUR_PERIOD = _pd0[_pd0.length-1].period; }
@@ -5392,7 +5405,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260828i"></script>
+<script src="personal-enhance.js?v=20260828j"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 
