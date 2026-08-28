@@ -745,6 +745,10 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .cap-type-pill b{font-weight:800;color:var(--ink)}
 
 .cap-type-pill.sm{font-size:11.5px;padding:2px 7px}
+.cap-type-pill.clickable{cursor:pointer;transition:background .15s,border-color .15s}
+.cap-type-pill.clickable:hover{background:rgba(43,108,255,.2);border-color:rgba(43,108,255,.45)}
+.cap-type-pill.clickable.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.cap-type-pill.clickable.active b{color:#fff}
 
 .cap-breakdown{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
 
@@ -4526,7 +4530,18 @@ function bindCapacity(){
   sec.querySelector('#capDayFilter').addEventListener('change', e=>{ capState.day=e.target.value; renderCapList(); });
   sec.querySelector('#capQyFilter').addEventListener('change', e=>{ capState.qy=e.target.value; updateCapQuickChips(); renderCapList(); });
   sec.querySelector('#capClFilter').addEventListener('change', e=>{ capState.cl=e.target.value; updateCapQuickChips(); renderCapList(); });
-  sec.querySelector('#capCatFilter').addEventListener('change', e=>{ capState.cat=e.target.value; renderCapList(); });
+  sec.querySelector('#capCatFilter').addEventListener('change', e=>{ capState.cat=e.target.value; updateCapCatPillsActive(); renderCapList(); });
+  // 顶部素材分类统计 pill 点击直接筛选
+  document.getElementById('capSubStats').addEventListener('click', e=>{
+    const pill = e.target.closest('.cap-type-pill.clickable');
+    if(!pill) return;
+    const cat = pill.dataset.cat;
+    const sel = document.getElementById('capCatFilter');
+    capState.cat = (capState.cat===cat && sel) ? '' : cat;
+    if(sel) sel.value = capState.cat;
+    updateCapCatPillsActive();
+    renderCapList();
+  });
   sec.querySelector('#capExportBtn').addEventListener('click', capExportAuto);
   // 快捷筛选 chips
   document.getElementById('capQuick').addEventListener('click', e=>{
@@ -4592,6 +4607,11 @@ function updateCapQuickChips(){
   });
 }
 
+function updateCapCatPillsActive(){
+  document.querySelectorAll('#capSubStats .cap-type-pill.clickable').forEach(p=>{
+    p.classList.toggle('active', p.dataset.cat===capState.cat);
+  });
+}
 function updateCapSelUI(){
   const n = capSel.size;
   const bar = document.getElementById('capBatchBar');
@@ -4631,7 +4651,7 @@ async function renderCapacity(force){
   const clYes = s.chuangliangYes||0;
   const mt = s.materialTypes || {};
   const mtHtml = Object.keys(mt).length
-    ? Object.entries(mt).sort((a,b)=>b[1]-a[1]).map(([k,v])=>'<span class="cap-type-pill">'+esc(k)+' <b>'+v+'</b></span>').join(' ')
+    ? Object.entries(mt).sort((a,b)=>b[1]-a[1]).map(([k,v])=>'<span class="cap-type-pill clickable" data-cat="'+esc(k)+'" title="点击筛选 '+esc(k)+'">'+esc(k)+' <b>'+v+'</b></span>').join(' ')
     : '<span class="cap-meta">暂无分类数据</span>';
   document.getElementById('capSubStats').innerHTML =
     '素材总数 <b>'+(s.materials!=null?s.materials:'–')+'</b> · 已上传 <b>'+(s.uploaded||0)+'</b> · 未上传 <b>'+(s.notUploaded||0)+'</b>' +
