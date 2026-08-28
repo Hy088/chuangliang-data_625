@@ -457,27 +457,42 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 #importMask{z-index:99990 !important}
 #importMask .modal{z-index:99991}
 .import-btn{position:relative;z-index:99992;pointer-events:auto !important}
-/* 周期/月份选择器：常驻页头，跨标签页生效 */
+/* 周期/月份选择器：Element UI 风格下拉日期选择器 */
 .hd-right{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;justify-content:flex-end}
 .hd-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.period-panel{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);max-width:430px}
-.pp-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.pp-tabs{display:flex;gap:3px;background:rgba(0,0,0,.10);padding:3px;border-radius:8px}
-.pp-tabs .tab-btn{border:none;background:transparent;color:rgba(255,255,255,.85);padding:5px 13px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:.18s;white-space:nowrap}
-.pp-tabs .tab-btn:hover{color:#fff}
-.pp-tabs .tab-btn.on{background:#fff;color:#5b4bdb;box-shadow:0 2px 8px rgba(0,0,0,.12)}
-.year-switcher{display:flex;align-items:center;gap:6px;color:#fff;font-size:13px;font-weight:700}
-.year-nav{width:22px;height:22px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);color:#fff;font-size:14px;line-height:1;cursor:pointer;transition:.18s;display:inline-flex;align-items:center;justify-content:center}
-.year-nav:hover{background:#fff;color:#5b4bdb;border-color:#fff}
-.month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.month-cell{padding:6px 0;border-radius:8px;border:1px solid transparent;background:rgba(255,255,255,.10);color:rgba(255,255,255,.92);font-size:12px;font-weight:600;cursor:pointer;transition:.18s;text-align:center}
-.month-cell:hover{background:rgba(255,255,255,.24)}
-.month-cell.active{background:#fff;color:#5b4bdb;border-color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18)}
-.month-cell.empty{background:transparent;color:rgba(255,255,255,.32);cursor:default}
-.month-cell.empty:hover{background:transparent}
-.period-sub-chips{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:2px;min-height:24px}
-.per-chip{padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.40);background:rgba(255,255,255,.14);color:#fff;font-size:11px;font-weight:600;cursor:pointer;transition:.18s;white-space:nowrap;line-height:1.35;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
-.per-chip:hover{background:rgba(255,255,255,.28)}
+.period-picker{position:relative;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(255,255,255,.65);border-radius:12px;padding:5px 6px;box-shadow:0 4px 16px rgba(0,0,0,.10)}
+.pp-tabs{display:flex;gap:3px;background:#f3f4f6;padding:3px;border-radius:8px}
+.pp-tabs .tab-btn{border:none;background:transparent;color:#606266;padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;transition:.18s;white-space:nowrap}
+.pp-tabs .tab-btn:hover{color:#5b4bdb}
+.pp-tabs .tab-btn.on{background:#5b4bdb;color:#fff;box-shadow:0 2px 8px rgba(91,75,219,.30)}
+.pp-tabs .tab-btn:disabled{background:transparent !important;color:#a8abb2 !important;cursor:not-allowed;box-shadow:none}
+.period-picker__input{display:flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid #dcdfe6;border-radius:8px;background:#fff;cursor:pointer;transition:.18s;font-size:13px;color:#606266;min-width:180px;user-select:none}
+.period-picker__input:hover{border-color:#c0c4cc}
+.period-picker__input.active{border-color:#5b4bdb}
+.ppi-icon{font-size:14px;color:#909399}
+.ppi-text{flex:1;font-weight:600;color:#303133;white-space:nowrap}
+.ppi-arrow{font-size:10px;color:#909399;transition:.2s}
+.period-picker__input.active .ppi-arrow{transform:rotate(180deg)}
+.period-picker__dropdown{position:absolute;top:calc(100% + 8px);right:0;z-index:2000;background:#fff;border:1px solid #e4e7ed;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.18);display:flex;overflow:hidden;min-width:560px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .2s,transform .2s,visibility .2s}
+.period-picker__dropdown.open{opacity:1;visibility:visible;transform:translateY(0)}
+.ppd-shortcuts{width:96px;background:#f5f7fa;border-right:1px solid #e4e7ed;padding:8px 0;display:flex;flex-direction:column}
+.ppd-shortcut{padding:9px 16px;font-size:13px;color:#606266;cursor:pointer;transition:.18s}
+.ppd-shortcut:hover{color:#5b4bdb;background:#ebeef5}
+.ppd-body{flex:1;display:flex;gap:16px;padding:16px 18px}
+.ppd-year-col{flex:1;display:flex;flex-direction:column;gap:10px;min-width:180px}
+.ppd-year-hd{display:flex;align-items:center;justify-content:space-between;height:28px}
+.ppd-year-label{font-size:16px;font-weight:700;color:#303133}
+.ppd-year-nav{width:26px;height:26px;border:1px solid #dcdfe6;border-radius:50%;background:#fff;color:#606266;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:.18s}
+.ppd-year-nav:hover{color:#5b4bdb;border-color:#5b4bdb}
+.ppd-month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ppd-month-cell{padding:9px 0;border-radius:6px;border:1px solid transparent;background:#fff;color:#606266;font-size:13px;font-weight:600;cursor:pointer;transition:.18s;text-align:center;min-width:48px}
+.ppd-month-cell:hover{color:#5b4bdb;background:#f2f3ff}
+.ppd-month-cell.active{background:#5b4bdb;color:#fff;box-shadow:0 2px 8px rgba(91,75,219,.30)}
+.ppd-month-cell.empty{color:#c0c4cc;background:#f5f7fa;cursor:not-allowed}
+.ppd-month-cell.empty:hover{color:#c0c4cc;background:#f5f7fa}
+.period-sub-chips{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:6px;min-height:26px}
+.per-chip{padding:5px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.18);color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:.18s;white-space:nowrap;line-height:1.35;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(8px)}
+.per-chip:hover{background:rgba(255,255,255,.32)}
 .per-chip.on{background:#fff;color:#5b4bdb;border-color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18)}
 .per-chip.all{font-weight:700}
 .ext-list{margin:6px 0 0;padding-left:20px;line-height:1.9;color:var(--ink)}
@@ -796,21 +811,44 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="sub" id="hdrsub"></div>
   </div>
   <div class="hd-right">
-    <div class="period-panel" id="periodPanel">
-      <div class="pp-head">
-        <div class="pp-tabs">
-          <button class="tab-btn on" data-mode="period">分周期</button>
-          <button class="tab-btn" data-mode="month">月汇总</button>
+    <div class="period-picker" id="periodPicker">
+      <div class="pp-tabs">
+        <button class="tab-btn" data-mode="day" disabled title="暂无日粒度数据">分日</button>
+        <button class="tab-btn" data-mode="daySum" disabled title="暂无日粒度数据">日汇总</button>
+        <button class="tab-btn on" data-mode="period">分月</button>
+        <button class="tab-btn" data-mode="month">月汇总</button>
+      </div>
+      <div class="period-picker__input" id="periodInput">
+        <span class="ppi-icon">📅</span>
+        <span class="ppi-text" id="periodInputText">选择月份</span>
+        <span class="ppi-arrow">▼</span>
+      </div>
+      <div class="period-picker__dropdown" id="periodDropdown">
+        <div class="ppd-shortcuts">
+          <div class="ppd-shortcut" data-type="current">本月</div>
+          <div class="ppd-shortcut" data-type="prev">上月</div>
+          <div class="ppd-shortcut" data-type="last3">近三个月</div>
         </div>
-        <div class="year-switcher">
-          <button class="year-nav" id="yearPrev" title="上一年">‹</button>
-          <span id="yearLabel">2026 年</span>
-          <button class="year-nav" id="yearNext" title="下一年">›</button>
+        <div class="ppd-body">
+          <div class="ppd-year-col">
+            <div class="ppd-year-hd">
+              <button class="ppd-year-nav" id="yearPrev" title="上一年">‹</button>
+              <span class="ppd-year-label" id="yearLabelLeft">2026 年</span>
+            </div>
+            <div class="ppd-month-grid" id="monthGridLeft"></div>
+          </div>
+          <div class="ppd-year-col">
+            <div class="ppd-year-hd">
+              <span class="ppd-year-label" id="yearLabelRight">2027 年</span>
+              <button class="ppd-year-nav" id="yearNext" title="下一年">›</button>
+            </div>
+            <div class="ppd-month-grid" id="monthGridRight"></div>
+          </div>
         </div>
       </div>
-      <div class="month-grid" id="monthGrid"></div>
-      <div class="period-sub-chips" id="periodSubChips" title="当前月份下的周期"></div>
     </div>
+    <div class="period-sub-chips" id="periodSubChips" title="当前月份下的周期"></div>
+
     <div class="hd-actions">
       <span class="ver-badge" id="curVer" title="当前版本">—</span>
       <button class="import-btn" id="openImport" title="导入新的素材周期数据报表">⤓ 导入新周期</button>
@@ -1795,9 +1833,10 @@ function rebuildIdMap(){
 rebuildIdMap();
 
 // ========== 周期 / 月份选择器 ==========
-let CUR_MONTH = null;      // '2026-08'
-let CUR_YEAR = 2026;       // 月份面板当前展示年份
-let PERIOD_MODE = 'period'; // 'period'=分周期, 'month'=月汇总
+let CUR_MONTH = null;            // '2026-08'
+let CUR_YEAR_LEFT = 2026;        // 左侧面板年份（右侧面板 = 左 + 1）
+let PERIOD_MODE = 'period';      // 'period'=分月（按周期显示）, 'month'=月汇总
+let PANEL_OPEN = false;          // 下拉面板是否展开
 
 function parsePeriodDate(p){ const s=(p||'').split(' ~ ')[0]; return {start:s, month:s?s.slice(0,7):null}; }
 function getMonthsWithData(){
@@ -1806,6 +1845,12 @@ function getMonthsWithData(){
   return Array.from(s).sort();
 }
 function getPeriodsByMonth(ym){ return (DATA_FULL.periodData||[]).filter(p=>parsePeriodDate(p.period).month===ym); }
+function getLatestMonth(){ const m=getMonthsWithData(); return m.length? m[m.length-1] : null; }
+function getPrevMonth(ym){
+  const [y,mm]=ym.split('-').map(Number);
+  const d=new Date(y, mm-2, 1);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+}
 function round2(n){ return Math.round((n+Number.EPSILON)*100)/100; }
 function mergeDim(list, keys){
   const d={};
@@ -1907,7 +1952,7 @@ function rebuildView(pf){
   }
   DATA = nd;
   const pjtag = $('#ov-period-filter'); if(pjtag) pjtag.textContent = CUR_PERIOD ? ('周期：'+CUR_PERIOD) : '';
-  refreshMonthPanel();
+  refreshPicker();
   renderAll();
 }
 function rebuildMonthView(ym){
@@ -1920,37 +1965,61 @@ function rebuildMonthView(ym){
     DATA = buildMonthData(CUR_MONTH);
   }
   const pjtag = $('#ov-period-filter'); if(pjtag) pjtag.textContent = CUR_MONTH ? ('月份：'+CUR_MONTH.replace('-','年')+'月') : '';
-  refreshMonthPanel();
+  refreshPicker();
   renderAll();
 }
-function refreshMonthPanel(){
+function applySelection(ym){
+  CUR_MONTH = ym || CUR_MONTH;
+  if(!CUR_MONTH) return;
+  if(PERIOD_MODE==='month'){ rebuildMonthView(CUR_MONTH); }
+  else { const ps=getPeriodsByMonth(CUR_MONTH); rebuildView(ps.length?ps[ps.length-1].period:null); }
+}
+function updateInputText(){
+  const el=$('#periodInputText'); if(!el) return;
+  if(!CUR_MONTH){ el.textContent='选择月份'; return; }
+  const label=CUR_MONTH.replace('-','-');
+  if(PERIOD_MODE==='month'){ el.textContent=label; }
+  else if(PERIOD_MODE==='period' && CUR_PERIOD){ el.textContent=CUR_PERIOD; }
+  else { el.textContent=label; }
+}
+function openPanel(){ PANEL_OPEN=true; const d=$('#periodDropdown'); if(d) d.classList.add('open'); const i=$('#periodInput'); if(i) i.classList.add('active'); renderMonthGrid(); }
+function closePanel(){ PANEL_OPEN=false; const d=$('#periodDropdown'); if(d) d.classList.remove('open'); const i=$('#periodInput'); if(i) i.classList.remove('active'); }
+function togglePanel(){ if(PANEL_OPEN) closePanel(); else openPanel(); }
+function refreshPicker(){
   if(CUR_PERIOD && !CUR_MONTH) CUR_MONTH = parsePeriodDate(CUR_PERIOD).month;
   renderMonthGrid();
   renderSubChips();
+  updateInputText();
   const tabs=$$('.pp-tabs .tab-btn');
   tabs.forEach(b=>b.classList.toggle('on', b.dataset.mode===PERIOD_MODE));
 }
 function renderMonthGrid(){
-  const grid=$('#monthGrid'); if(!grid) return;
+  const gridL=$('#monthGridLeft'), gridR=$('#monthGridRight'), yl=$('#yearLabelLeft'), yr=$('#yearLabelRight');
+  if(!gridL || !gridR) return;
   const months=getMonthsWithData();
-  let html='';
-  for(let m=1;m<=12;m++){
-    const ym=`${CUR_YEAR}-${String(m).padStart(2,'0')}`;
-    const has=months.includes(ym);
-    const active=CUR_MONTH===ym;
-    const cls=`month-cell ${active?'active':''} ${has?'':'empty'}`;
-    html+=`<button class="${cls}" data-month="${ym}" ${has?'':'disabled'}>${m}月</button>`;
-  }
-  grid.innerHTML=html;
-  grid.querySelectorAll('.month-cell').forEach(btn=>{
-    btn.onclick=()=>{
-      if(btn.disabled) return;
-      const ym=btn.dataset.month;
-      CUR_MONTH=ym;
-      if(PERIOD_MODE==='month') rebuildMonthView(ym);
-      else { const ps=getPeriodsByMonth(ym); rebuildView(ps.length?ps[ps.length-1].period:null); }
-    };
-  });
+  const renderYear=(grid, year)=>{
+    let html='';
+    for(let m=1;m<=12;m++){
+      const ym=`${year}-${String(m).padStart(2,'0')}`;
+      const has=months.includes(ym);
+      const active=CUR_MONTH===ym;
+      const cls=`ppd-month-cell ${active?'active':''} ${has?'':'empty'}`;
+      html+=`<button class="${cls}" data-month="${ym}" ${has?'':'disabled'}>${m}月</button>`;
+    }
+    grid.innerHTML=html;
+    grid.querySelectorAll('.ppd-month-cell').forEach(btn=>{
+      btn.onclick=()=>{
+        if(btn.disabled) return;
+        const ym=btn.dataset.month;
+        applySelection(ym);
+        closePanel();
+      };
+    });
+  };
+  if(yl) yl.textContent=CUR_YEAR_LEFT+' 年';
+  if(yr) yr.textContent=(CUR_YEAR_LEFT+1)+' 年';
+  renderYear(gridL, CUR_YEAR_LEFT);
+  renderYear(gridR, CUR_YEAR_LEFT+1);
 }
 function renderSubChips(){
   const wrap=$('#periodSubChips'); if(!wrap) return;
@@ -1961,26 +2030,53 @@ function renderSubChips(){
   wrap.innerHTML=html;
   wrap.querySelectorAll('.per-chip').forEach(btn=>{ btn.onclick=()=>rebuildView(btn.dataset.period); });
 }
-// 初始化页头周期选择器
 function initPeriodSel(){
   const months=getMonthsWithData();
-  if(months.length){
-    if(!CUR_MONTH) CUR_MONTH=months[months.length-1];
-    CUR_YEAR=+(CUR_MONTH.split('-')[0]);
-  }
-  const tabs=$$('.pp-tabs .tab-btn');
-  tabs.forEach(btn=>{
-    btn.onclick=()=>{
-      PERIOD_MODE=btn.dataset.mode;
-      if(PERIOD_MODE==='month') rebuildMonthView(CUR_MONTH);
-      else { const ps=getPeriodsByMonth(CUR_MONTH); rebuildView(ps.length?ps[ps.length-1].period:null); }
+  if(months.length && !CUR_MONTH){ CUR_MONTH=months[months.length-1]; }
+  if(CUR_MONTH){ CUR_YEAR_LEFT=+(CUR_MONTH.split('-')[0]); }
+  const input=$('#periodInput'); if(input) input.onclick=togglePanel;
+  const yp=$('#yearPrev'), yn=$('#yearNext');
+  if(yp) yp.onclick=(e)=>{ e.stopPropagation(); CUR_YEAR_LEFT--; renderMonthGrid(); };
+  if(yn) yn.onclick=(e)=>{ e.stopPropagation(); CUR_YEAR_LEFT++; renderMonthGrid(); };
+  // 点击面板外部关闭
+  document.addEventListener('click', e=>{
+    const picker=$('#periodPicker');
+    if(picker && !picker.contains(e.target)) closePanel();
+  });
+  // 快捷项
+  $$('.ppd-shortcut').forEach(el=>{
+    el.onclick=(e)=>{
+      e.stopPropagation();
+      const type=el.dataset.type;
+      const months=getMonthsWithData();
+      if(!months.length) return;
+      if(type==='current'){
+        const last=months[months.length-1];
+        CUR_YEAR_LEFT=+last.split('-')[0];
+        applySelection(last);
+      }else if(type==='prev'){
+        if(!CUR_MONTH) CUR_MONTH=months[months.length-1];
+        const prev=getPrevMonth(CUR_MONTH);
+        CUR_YEAR_LEFT=+prev.split('-')[0];
+        applySelection(prev);
+      }else if(type==='last3'){
+        PERIOD_MODE='month';
+        const last=months[months.length-1];
+        CUR_YEAR_LEFT=+last.split('-')[0];
+        applySelection(last);
+      }
+      closePanel();
     };
   });
-  const yp=$('#yearPrev'), yn=$('#yearNext'), yl=$('#yearLabel');
-  if(yp) yp.onclick=()=>{ CUR_YEAR--; if(yl) yl.textContent=CUR_YEAR+' 年'; renderMonthGrid(); };
-  if(yn) yn.onclick=()=>{ CUR_YEAR++; if(yl) yl.textContent=CUR_YEAR+' 年'; renderMonthGrid(); };
-  if(yl) yl.textContent=CUR_YEAR+' 年';
-  refreshMonthPanel();
+  // Tab 切换
+  $$('.pp-tabs .tab-btn').forEach(btn=>{
+    btn.onclick=()=>{
+      if(btn.disabled) return;
+      PERIOD_MODE=btn.dataset.mode;
+      applySelection();
+    };
+  });
+  refreshPicker();
 }
 const PROJ_COLOR = {'广义新':'#7c5cff','低活':'#3b82f6','标点':'#06b6d4'};
 const PROJ_LIST = ['广义新','低活','标点'];
@@ -4045,7 +4141,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260828k';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260828l';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -5574,7 +5670,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260828j"></script>
+<script src="personal-enhance.js?v=20260828l"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 
