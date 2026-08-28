@@ -5,11 +5,11 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260829c";
-  var MAT_URL  = "./me-materials.csv?v=20260829c";
+  var HIST_URL = "./me-history.csv?v=20260829d";
+  var MAT_URL  = "./me-materials.csv?v=20260829d";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
-  var UPLOAD_URL = "./me-uploads.csv?v=20260829c";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260829d";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -189,14 +189,15 @@
     return cand ? cand.slice(0, 4) + "-" + cand.slice(4, 6) : "";
   }
 
-  // AIGC 素材判定：以【素材标签】列为准（用户 2026-08-09 约定，见项目记忆）
+  // AIGC 素材判定：以【素材标签】列为准（用户 2026-08-09 约定，2026-08-29 修正 -kl 拼写）
   // 9 个 AIGC 标签（OR 并集，命中其一即为 AIGC）：
   //   平台一组AIGC / 平台一组AIGC-sd / 京东本部-模型-seedance2.0 / 平台一组AIGC-wx /
-  //   京东本部-工具-万相 / 平台一组AIGC-k / 京东本部-工具-可灵 / 平台一组AIGC-c空镜 / 京东本部-工作流-comfyui
+  //   京东本部-工具-万相 / 平台一组AIGC-kl / 京东本部-工具-可灵 / 平台一组AIGC-c空镜 / 京东本部-工作流-comfyui
+  // ⚠️ 注意「平台一组AIGC-kl」结尾是 kl 不是 k（2026-08-29 核对 me-uploads.csv 实际标签确认，数据里有 53 条）
   // me-materials.csv / me-uploads.csv 的【素材标签】列来自创量【内容】->导出素材信息 xlsx（逗号分隔多标签）。
-  // 判定逻辑：按逗号切出每个标签 token，与 9 个 AIGC 标签做【精确】匹配（避免 "平台一组AIGC" 误命中 "平台一组AIGC-sd"）；
+  // 判定逻辑：按分隔符切出每个标签 token，与 9 个 AIGC 标签做【精确】匹配（避免 "平台一组AIGC" 误命中 "平台一组AIGC-sd"）；
   //           仅当某行确实无【素材标签】数据（如源未覆盖的素材）时回退素材名片段，避免漏计。
-  var AIGC_TAGS = ["平台一组AIGC","平台一组AIGC-sd","京东本部-模型-seedance2.0","平台一组AIGC-wx","京东本部-工具-万相","平台一组AIGC-k","京东本部-工具-可灵","平台一组AIGC-c空镜","京东本部-工作流-comfyui"];
+  var AIGC_TAGS = ["平台一组AIGC","平台一组AIGC-sd","京东本部-模型-seedance2.0","平台一组AIGC-wx","京东本部-工具-万相","平台一组AIGC-kl","京东本部-工具-可灵","平台一组AIGC-c空镜","京东本部-工作流-comfyui"];
   var AI_TAG_KEYWORDS = ["aigc","seedance","万相","可灵","空镜","comfyui"];
   // tag: 素材标签列原值（| 或逗号分隔多标签，2026-08-28 起数据源统一为 | 分隔以加速 CSV 解析）；name: 素材名（仅当无素材标签时兜底）
   function isAiMaterial(tag, name) {
@@ -1045,6 +1046,70 @@
     if (gran !== "total") arr.sort(function (a, b) { return a.key < b.key ? -1 : 1; });
     return arr;
   }
+
+  /* ---------- 常规素材 vs AIGC 素材 对比（同一日期区间）----------
+   * 素材量用 me-uploads.csv（上传时间口径）；投放表现用 me-materials.csv（日报口径）。
+   * 两边都按 isAiMaterial(素材标签) 的 9 个 AIGC 标签拆分。                */
+  function upAiCompare() {
+    var upN = { all: 0, ai: 0, norm: 0 };
+    upFiltered().forEach(function (m) {
+      upN.all++;
+      if (isAiMaterial(m["素材标签"], m["素材名"])) upN.ai++; else upN.norm++;
+    });
+    var mk = function () { return { cost: 0, imp: 0, clk: 0, cv: 0, ids: {} }; };
+    var ai = mk(), norm = mk();
+    matData.forEach(function (r) {
+      var d = (r["日期"] || "").slice(0, 10);
+      if (!d) return;
+      if (upStart && d < upStart) return;
+      if (upEnd && d > upEnd) return;
+      var b = isAiMaterial(r["素材标签"], r["素材名"]) ? ai : norm;
+      b.cost += num(r["消耗"]);
+      b.imp  += num(r["展示数"]);
+      b.clk  += num(r["点击数"]);
+      b.cv   += num(r["转化数"]);
+      var sid = r["素材ID"] || "";
+      if (sid) b.ids[sid] = 1;
+    });
+    var fin = function (b) {
+      b.n = Object.keys(b.ids).length;
+      b.ctr = b.imp ? b.clk / b.imp * 100 : 0;
+      b.cvr = b.clk ? b.cv / b.clk * 100 : 0;
+      b.cpa = b.cv ? b.cost / b.cv : 0;
+      delete b.ids;
+      return b;
+    };
+    return { up: upN, ai: fin(ai), norm: fin(norm) };
+  }
+  // 渲染「常规 vs AIGC」对比表；lowerBetter=1 时，AIGC 数值更低算更好（如 CPA）
+  function upCompareHtml() {
+    var c = upAiCompare();
+    var defs = [
+      { k: "素材量（上传口径）", nv: c.up.norm, av: c.up.ai, dec: 0, lower: 0 },
+      { k: "在投素材数（日报去重）", nv: c.norm.n, av: c.ai.n, dec: 0, lower: 0 },
+      { k: "消耗（元）", nv: c.norm.cost, av: c.ai.cost, dec: 0, lower: 0 },
+      { k: "展示数", nv: c.norm.imp, av: c.ai.imp, dec: 0, lower: 0 },
+      { k: "点击数", nv: c.norm.clk, av: c.ai.clk, dec: 0, lower: 0 },
+      { k: "转化数", nv: c.norm.cv, av: c.ai.cv, dec: 0, lower: 0 },
+      { k: "CTR（%）", nv: c.norm.ctr, av: c.ai.ctr, dec: 2, lower: 0 },
+      { k: "CVR（%）", nv: c.norm.cvr, av: c.ai.cvr, dec: 2, lower: 0 },
+      { k: "CPA（元）", nv: c.norm.cpa, av: c.ai.cpa, dec: 2, lower: 1 }
+    ];
+    var fmt = function (v, dec) { return dec === 0 ? fmtNum(v) : (Number(v) || 0).toFixed(dec); };
+    var trs = defs.map(function (d) {
+      var delta = "—", cls = "";
+      if (d.nv) {
+        var p = (d.av - d.nv) / Math.abs(d.nv) * 100;
+        delta = (p >= 0 ? "+" : "") + p.toFixed(1) + "%";
+        var better = d.lower ? (p < 0) : (p > 0);
+        if (Math.abs(p) >= 0.05) cls = better ? " style='color:#1f8a70;font-weight:700'" : " style='color:#c0392b;font-weight:700'";
+      }
+      return "<tr><td class='l'>" + esc(d.k) + "</td><td>" + fmt(d.nv, d.dec) + "</td><td>" + fmt(d.av, d.dec) + "</td><td" + cls + ">" + delta + "</td></tr>";
+    }).join("");
+    return "<div class='me-up-tbl-hd'>⚖️ 常规素材 vs AIGC 素材（同一日期区间）</div>" +
+      "<table class='me-rank-tbl me-up-tbl'><thead><tr><th class='l'>指标</th><th>常规</th><th>AIGC</th><th>AIGC 相对常规</th></tr></thead><tbody>" + trs + "</tbody></table>" +
+      "<div class='me-up-note' style='margin-top:6px'>对比口径：素材量按<strong>上传时间</strong>（me-uploads.csv）；消耗/展示/点击/转化按<strong>日报日期</strong>（me-materials.csv）。AIGC = 素材标签命中 9 个 AIGC 标签之一：平台一组AIGC、平台一组AIGC-sd、平台一组AIGC-kl、平台一组AIGC-wx、平台一组AIGC-c空镜、京东本部-模型-seedance2.0、京东本部-工具-万相、京东本部-工具-可灵、京东本部-工作流-comfyui。绿色=AIGC 更优，红色=常规更优（CPA 越低越好）。</div>";
+  }
   function upRenderView() {
     var body = el("meUploadBody"); if (!body) return;
     if (!upData.length) { body.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#9aa4b2">暂无素材明细数据（me-uploads.csv 未加载）</div>'; return; }
@@ -1118,9 +1183,11 @@
       table = "<div class='empty' style='padding:24px;text-align:center;color:#9aa4b2;background:#fbfcff;border:1px dashed #e0e6ef;border-radius:10px;margin-top:12px'>该范围内暂无素材</div>";
     }
 
-    var note = "<div class='me-up-note'>统计口径：数据来源 me-uploads.csv —— 由创量【内容】页「高级筛选(上传时间) → 导出 → 导出素材信息」<strong>逐月导出的平台原始清单</strong>合并而成，「上传时间」为创量后台<strong>真实上传时间戳（精确到秒）</strong>，非任何推算值。按素材ID去重、仅统计上传人含「李虹玉」的素材。素材名命中 AIGC 标签片段(aigc/可灵/sd2.0/空镜/seedance/万相/comfyui)记为 AIGC 素材。日=按上传日期、周=ISO自然周、月=按上传月份汇总产出；日均产出=区间素材量÷区间跨度天数。</div>";
+    var note = "<div class='me-up-note'>统计口径：数据来源 me-uploads.csv —— 由创量【内容】页「高级筛选(上传时间) → 导出 → 导出素材信息」<strong>逐月导出的平台原始清单</strong>合并而成，「上传时间」为创量后台<strong>真实上传时间戳（精确到秒）</strong>，非任何推算值。按素材ID去重、仅统计上传人含「李虹玉」的素材。AIGC 由【素材标签】列命中 9 个 AIGC 标签判定。日=按上传日期、周=ISO自然周、月=按上传月份汇总产出；日均产出=区间素材量÷区间跨度天数。</div>";
 
-    body.innerHTML = bar + tiles + table + note;
+    var cmp = upCompareHtml();
+
+    body.innerHTML = bar + tiles + cmp + table + note;
 
     // 事件绑定
     var apply = el("upApply"); if (apply) apply.onclick = function () {
