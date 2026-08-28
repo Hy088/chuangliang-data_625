@@ -502,7 +502,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .ppd-year-col{flex:1;display:flex;flex-direction:column;gap:10px;min-width:180px}
 .ppd-weeks{width:100%;border-top:1px solid #e4e7ed;padding-top:12px;display:flex;flex-direction:column;gap:10px}
 .ppd-weeks-title{font-size:13px;font-weight:700;color:#909399}
-.ppd-weeks-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:8px}
+.ppd-weeks-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:8px;max-height:180px;overflow:auto;padding-right:4px}
 .ppd-week-btn{padding:7px 10px;border-radius:6px;border:1px solid transparent;background:#fff;color:#606266;font-size:12px;font-weight:600;cursor:pointer;transition:.18s;text-align:center;white-space:nowrap}
 .ppd-week-btn:hover{color:#5b4bdb;background:#f2f3ff;border-color:#dcdfe6}
 .ppd-week-btn.active{background:#5b4bdb;color:#fff;border-color:#5b4bdb;box-shadow:0 2px 8px rgba(91,75,219,.30)}
@@ -841,10 +841,9 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
   <div class="hd-right">
     <div class="period-picker" id="periodPicker">
       <div class="pp-tabs">
-        <button class="tab-btn" data-mode="day" disabled title="暂无日粒度数据">分日</button>
-        <button class="tab-btn" data-mode="daySum" disabled title="暂无日粒度数据">日汇总</button>
-        <button class="tab-btn on" data-mode="period">分周</button>
-        <button class="tab-btn" data-mode="month">月汇总</button>
+        <button class="tab-btn" data-mode="day" title="按日粒度查看">日汇总</button>
+        <button class="tab-btn on" data-mode="period" title="按自然周（周日~周六）查看">周汇总</button>
+        <button class="tab-btn" data-mode="month" title="按自然月查看">月汇总</button>
       </div>
       <div class="period-picker__input" id="periodInput">
         <span class="ppi-icon">📅</span>
@@ -1886,8 +1885,9 @@ rebuildIdMap();
 
 // ========== 周期 / 月份选择器 ==========
 let CUR_MONTH = null;            // '2026-08'
+let CUR_DAY = null;             // '2026-08-23'（仅日汇总模式使用）
 let CUR_YEAR_LEFT = 2026;        // 左侧面板年份（右侧面板 = 左 + 1）
-let PERIOD_MODE = 'period';      // 'period'=分月（按周期显示）, 'month'=月汇总
+let PERIOD_MODE = 'period';      // 'day'=日汇总, 'period'=周汇总, 'month'=月汇总
 let PANEL_OPEN = false;          // 下拉面板是否展开
 
 function parsePeriodDate(p){ const s=(p||'').split(' ~ ')[0]; return {start:s, month:s?s.slice(0,7):null}; }
@@ -1897,6 +1897,7 @@ function getMonthsWithData(){
   return Array.from(s).sort();
 }
 function getPeriodsByMonth(ym){ return (DATA_FULL.periodData||[]).filter(p=>parsePeriodDate(p.period).month===ym); }
+function getDaysByMonth(ym){ return (DATA_FULL.dailyData||[]).filter(d=>d.date.startsWith(ym+'-')).map(d=>d.date); }
 function getLatestMonth(){ const m=getMonthsWithData(); return m.length? m[m.length-1] : null; }
 function getPrevMonth(ym){
   const [y,mm]=ym.split('-').map(Number);
@@ -2021,6 +2022,7 @@ function rebuildView(pf){
 function rebuildMonthView(ym){
   CUR_MONTH = ym || null;
   CUR_PERIOD = null;
+  CUR_DAY = null;
   if(!CUR_MONTH){
     DATA = Object.assign({}, DATA_FULL);
     DATA.materials = {cols: DATA_FULL.materials.cols, rows: materialsForPeriod(null)};
@@ -2031,10 +2033,48 @@ function rebuildMonthView(ym){
   refreshPicker();
   renderAll();
 }
+function rebuildDayView(date){
+  CUR_DAY = date || null;
+  CUR_PERIOD = null;
+  if(!CUR_DAY){
+    DATA = Object.assign({}, DATA_FULL);
+    DATA.materials = {cols: DATA_FULL.materials.cols, rows: []};
+  } else {
+    const day=(DATA_FULL.dailyData||[]).find(d=>d.date===CUR_DAY);
+    if(!day){
+      DATA = Object.assign({}, DATA_FULL);
+      DATA.materials = {cols: DATA_FULL.materials.cols, rows: []};
+    } else {
+      DATA = {
+        meta: Object.assign({}, DATA_FULL.meta, {period:CUR_DAY+'（日汇总）', periods:[CUR_DAY]}),
+        overall: day.overall,
+        projects: day.projects || [],
+        categories: [],        // 日汇总模式暂不展示分类明细
+        placements: [],
+        optimizers: [],
+        editors: [],
+        tags: [],
+        materials: {cols: DATA_FULL.materials.cols, rows: []},
+        suggestions: {},
+        insights: [],
+        periodData: DATA_FULL.periodData,
+        periodMats: DATA_FULL.periodMats,
+        typeShare: DATA_FULL.typeShare || []
+      };
+    }
+  }
+  const pjtag = $('#ov-period-filter'); if(pjtag) pjtag.textContent = CUR_DAY ? ('日期：'+CUR_DAY) : '';
+  refreshPicker();
+  renderAll();
+}
 function applySelection(ym){
   CUR_MONTH = ym || CUR_MONTH;
   if(!CUR_MONTH) return;
   if(PERIOD_MODE==='month'){ rebuildMonthView(CUR_MONTH); }
+  else if(PERIOD_MODE==='day'){
+    const ds=getDaysByMonth(CUR_MONTH);
+    rebuildDayView(ds.length?ds[ds.length-1]:null);
+  }
   else { const ps=getPeriodsByMonth(CUR_MONTH); rebuildView(ps.length?ps[ps.length-1].period:null); }
 }
 function updateInputText(){
@@ -2042,6 +2082,7 @@ function updateInputText(){
   if(!CUR_MONTH){ el.textContent='选择月份'; return; }
   const label=CUR_MONTH.replace('-','-');
   if(PERIOD_MODE==='month'){ el.textContent=label; }
+  else if(PERIOD_MODE==='day' && CUR_DAY){ el.textContent=CUR_DAY; }
   else if(PERIOD_MODE==='period' && CUR_PERIOD){ el.textContent=CUR_PERIOD; }
   else { el.textContent=label; }
 }
@@ -2107,13 +2148,14 @@ function formatPeriodShort(p){
   return s.slice(5).replace('-','.')+' ~ '+e.slice(5).replace('-','.');
 }
 function renderWeekList(){
+  if(PERIOD_MODE==='day') return renderDayList();
   const wrap=$('#ppdWeeksList'), title=$('#ppdWeeksTitle'); if(!wrap) return;
   const months=getMonthsWithData();
   let ym=CUR_MONTH;
   if(!ym && months.length) ym=months[months.length-1];
-  if(!ym){ wrap.innerHTML='<div class="ppd-week-empty">无数据</div>'; if(title) title.textContent='分周'; return; }
+  if(!ym){ wrap.innerHTML='<div class="ppd-week-empty">无数据</div>'; if(title) title.textContent='周汇总'; return; }
   const ps=getPeriodsByMonth(ym).map(p=>p.period);
-  if(title) title.textContent='分周 · '+ym.replace('-','年')+'月';
+  if(title) title.textContent='周汇总 · '+ym.replace('-','年')+'月';
   let html=`<button class="ppd-week-btn all ${CUR_PERIOD?'':'active'}" data-period="">全月</button>`;
   ps.forEach(p=>{ html+=`<button class="ppd-week-btn ${CUR_PERIOD===p?'active':''}" data-period="${p}">${formatPeriodShort(p)}</button>`; });
   wrap.innerHTML=html;
@@ -2129,6 +2171,32 @@ function renderWeekList(){
         if(PERIOD_MODE==='month') rebuildMonthView(CUR_MONTH);
         else { const latest=ps[ps.length-1]; rebuildView(latest||null); }
       }
+      closePanel();
+    };
+  });
+}
+function renderDayList(){
+  const wrap=$('#ppdWeeksList'), title=$('#ppdWeeksTitle'); if(!wrap) return;
+  const months=getMonthsWithData();
+  let ym=CUR_MONTH;
+  if(!ym && months.length) ym=months[months.length-1];
+  if(!ym){ wrap.innerHTML='<div class="ppd-week-empty">无日数据</div>'; if(title) title.textContent='日汇总'; return; }
+  const ds=getDaysByMonth(ym);
+  if(title) title.textContent='日汇总 · '+ym.replace('-','年')+'月 ('+ds.length+' 天)';
+  if(!ds.length){ wrap.innerHTML='<div class="ppd-week-empty">该月无日数据</div>'; return; }
+  // 用 mm.dd 简短显示
+  let html='';
+  ds.forEach(d=>{
+    const on = CUR_DAY===d;
+    html+=`<button class="ppd-week-btn ${on?'active':''}" data-day="${d}">${d.slice(5).replace('-','.')}</button>`;
+  });
+  wrap.innerHTML=html;
+  wrap.querySelectorAll('.ppd-week-btn').forEach(btn=>{
+    btn.onclick=(e)=>{
+      e.stopPropagation();
+      const d=btn.dataset.day;
+      CUR_MONTH=ym;
+      rebuildDayView(d);
       closePanel();
     };
   });
@@ -2397,8 +2465,9 @@ function decKey(kind, a, b){ return kind==='cat' ? `cat|${a}|${b}` : `mat|${a}|$
 function renderProjSummary(){
   // 素材明细(35MB)可能尚未加载/加载失败，但核心指标/项目对比/类型占比均来自轻量 period-meta.json，应独立渲染，不受大文件阻塞
   const hasMat = !!(DATA && DATA.materials && DATA.materials.rows && DATA.materials.rows.length);
+  const hasOverall = !!(DATA && DATA.overall && (DATA.overall.cost || DATA.overall.n || DATA.overall.clk));
   const emptyBanner = $('#proj-empty');
-  if(emptyBanner) emptyBanner.style.display = hasMat ? 'none' : 'block';
+  if(emptyBanner) emptyBanner.style.display = (hasMat || hasOverall) ? 'none' : 'block';
   $('#ov-period-filter').textContent = DATA.meta.period;
   $('#cmpToggle').classList.toggle('on', state.compare);
   const o = DATA.overall;
@@ -4358,7 +4427,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260829l';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260829m';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -4440,6 +4509,7 @@ async function loadPeriodMaterials(period, retry=0){
     rebuildIdMap();
     try{
       if(CUR_MONTH && PERIOD_MODE==='month') rebuildMonthView(CUR_MONTH);
+      else if(CUR_DAY && PERIOD_MODE==='day') rebuildDayView(CUR_DAY);
       else if(CUR_PERIOD===period) rebuildView(CUR_PERIOD);
     }catch(e){ console.error('[materials] 加载后重渲染失败', e); }
     console.log('[seed] 素材明细已异步载入', period, 'rows=', m.rows?m.rows.length:0);
@@ -4581,6 +4651,7 @@ function updateStateBanner(){
   if(CUR_PERIOD && !CUR_MONTH) CUR_MONTH = parsePeriodDate(CUR_PERIOD).month;
   try{ initPeriodSel(); }catch(e){ console.error('initPeriodSel 失败', e); }
   if(CUR_PERIOD && PERIOD_MODE==='period') rebuildView(CUR_PERIOD);
+  else if(CUR_DAY && PERIOD_MODE==='day') rebuildDayView(CUR_DAY);
   else if(CUR_MONTH && PERIOD_MODE==='month') rebuildMonthView(CUR_MONTH);
   else renderAll();
   try{ const t=loadTheme(); if(t) applyThemeVars(t); }catch(e){}
@@ -5970,7 +6041,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260829l"></script>
+<script src="personal-enhance.js?v=20260829m"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 

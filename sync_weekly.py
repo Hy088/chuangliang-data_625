@@ -171,6 +171,59 @@ def build_week(week_files, period):
     return mrows, views
 
 
+def build_daily(files_by_date):
+    """files_by_date: {date_str: [files]} → [{date, overall, projects}]。
+
+    按天聚合（overall + per-project），给看板「日汇总」模式用。
+    每行 CSV 读一遍，内存友好；用「总计」行做整体数据校准（如果存在）。
+    """
+    out = []
+    for date in sorted(files_by_date.keys()):
+        fl = sorted(files_by_date[date])
+        # 第一遍：从「总计」行取整体数；如不存在则用明细累加
+        tot_cost = tot_imp = tot_clk = tot_cv = 0.0
+        proj = {p: {'proj': p, 'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0, 'n': 0} for p in PROJ_LIST}
+        n = 0
+        for f in fl:
+            with open(f, encoding='utf-8-sig', newline='') as fh:
+                rd = csv.DictReader(fh)
+                for r in rd:
+                    t = (r.get('时间') or '').strip()
+                    if t == '总计':
+                        tot_cost = max(tot_cost, fnum(r.get('消耗')))
+                        tot_imp = max(tot_imp, fnum(r.get('展示数')))
+                        tot_clk = max(tot_clk, fnum(r.get('点击数')))
+                        tot_cv = max(tot_cv, fnum(r.get('转化数')))
+                        continue
+                    sid = (r.get('素材ID') or '').strip()
+                    if sid in ('', '--'):
+                        continue
+                    plan = (r.get('创量项目') or '').strip()
+                    name = (r.get('素材名') or '').strip()
+                    ch = rowChannel(plan, name) or '广义新'
+                    cost = fnum(r.get('消耗'))
+                    imp = fnum(r.get('展示数'))
+                    clk = fnum(r.get('点击数'))
+                    cv = fnum(r.get('转化数'))
+                    n += 1
+                    if ch not in proj:
+                        proj[ch] = {'proj': ch, 'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0, 'n': 0}
+                    o = proj[ch]
+                    o['cost'] += cost; o['imp'] += imp; o['clk'] += clk; o['cv'] += cv; o['n'] += 1
+        # 优先用「总计」行的整体数（如有）；否则用明细累加
+        if tot_cost == 0 and tot_imp == 0 and tot_clk == 0 and tot_cv == 0:
+            tot_cost = sum(proj[p]['cost'] for p in proj)
+            tot_imp = sum(proj[p]['imp'] for p in proj)
+            tot_clk = sum(proj[p]['clk'] for p in proj)
+            tot_cv = sum(proj[p]['cv'] for p in proj)
+        out.append({
+            'date': date,
+            'overall': metrics({'cost': tot_cost, 'imp': tot_imp, 'clk': tot_clk, 'cv': tot_cv, 'n': n}),
+            'projects': [{**{'proj': p}, **metrics(proj[p])} for p in PROJ_LIST if proj[p]['n'] > 0]
+        })
+    return out
+
+
 def _d(s):
     y, m, dd = map(int, s.split('-'))
     return date(y, m, dd)
@@ -390,7 +443,15 @@ def main():
         new_weeks = [w for w in src_weeks if w not in existing_periods]
     print('found week labels:', src_weeks)
     print('weeks to build:', new_weeks)
-    # 即使没有新周期，也重新写出输出文件（确保 .gz 等衍生文件存在）
+
+    # 2.5) 收集本次要重建的日报（用于后续 dailyData 增量合并）
+    new_daily_files = {}   # date -> [files]
+    for w in new_weeks:
+        for f in weeks[w]:
+            m = re.search(r'(\d{4}-\d{2}-\d{2})-(\d{4}-\d{2}-\d{2})_', os.path.basename(f))
+            if m and m.group(1) == m.group(2):
+                new_daily_files.setdefault(m.group(1), []).append(f)
+    # 即使没有新周，也重新写出输出文件（确保 .gz 等衍生文件存在）
 
     # 3) 备份（只有文件存在才备份）
     for fn in ['period-materials.json', 'period-data.json', 'period-meta.json']:
@@ -447,6 +508,19 @@ def main():
     pm['rows'].extend(all_mrows)
     pd['materials']['rows'].extend(all_mrows)
     print(f"period-materials rows: {old_mcount} -> {len(pm['rows'])} (+{len(all_mrows)})")
+
+    # 6) 日汇总聚合（按天，用于看板「日汇总」模式）
+    new_daily = build_daily(new_daily_files) if new_daily_files else []
+    new_dates = {d['date'] for d in new_daily}
+
+    def merge_daily(obj):
+        old = obj.get('dailyData', []) or []
+        keep = [d for d in old if d['date'] not in new_dates]
+        obj['dailyData'] = sorted(keep + new_daily, key=lambda x: x['date'])
+        return obj
+    merge_daily(meta)
+    merge_daily(pd)
+    print(f"dailyData: {len(new_daily)} 天新/重算, 保留 {len(meta['dailyData']) - len(new_daily)} 天旧")
 
     # 6) 合并聚合（meta + data 都要）
     def merge_aggregates(obj):
