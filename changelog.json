@@ -1,5 +1,16 @@
 [
   {
+    "ver": "v20260828s",
+    "date": "2026-08-28",
+    "type": "fix",
+    "summary": "修复视频解析从排行榜/个人数据关联时 CVR 显示错误",
+    "details": [
+      "`assocMatFromRow` 中 CVR 原计算为 cv/clk（原始比例），与 CTR（已乘 100 的百分比）不一致，导致显示为 0.00538%",
+      "修正为 cv/clk*100，与 _metrics / fmtPct 的百分比口径保持一致",
+      "bump SEED_VER => 20260828s"
+    ]
+  },
+  {
     "ver": "v20260828r",
     "date": "2026-08-28",
     "type": "fix",

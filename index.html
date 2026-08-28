@@ -3505,7 +3505,7 @@ async function assocMatFromRow(row){
   const cv   = +row['转化数'] || +row.cv || 0;
   const cpaRaw = +row['转化成本'] || +row.cpa || 0;
   const ctrRaw = parseFloat(String(row['CTR']!=null?row['CTR']:(row.ctr!=null?row.ctr:'')).replace('%',''))||0;
-  const cvr = clk>0 ? cv/clk : 0;
+  const cvr = clk>0 ? cv/clk*100 : 0;
   const me = _metrics({cost,imp,clk,cv,n:0});
   const agg = (lookupVParseMat(sid)||{}).row || {};
   VP.mat = Object.assign({}, agg, {
@@ -4220,7 +4220,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260828r';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260828s';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
