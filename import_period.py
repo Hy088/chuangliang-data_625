@@ -31,8 +31,13 @@ from datetime import datetime
 REPO = os.path.dirname(os.path.abspath(__file__))
 SRC = r"F:\Workbuddy.renwu\WorkBuddy_数据"
 DOWNLOADS = os.path.join(os.path.expanduser("~"), "Downloads")
+DESKTOP = os.path.join(os.path.expanduser("~"), "Desktop")
+PULL_DIRS = [DOWNLOADS, DESKTOP]
 OFFLINE = r"C:\Users\EDY\Desktop\数据看板离线包"
-PERIOD_RE = re.compile(r"(\d{4}-\d{2}-\d{2})-(\d{4}-\d{2}-\d{2})_")
+# 宽松匹配：素材报表-不限_2026-08-23-2026-08-29_xxx.csv 也能认，
+# 用户手动改名成 素材报表_2026-08-23-2026-08-29.csv 同样认
+PERIOD_RE = re.compile(r"(\d{4}-\d{2}-\d{2})\s*[-~]\s*(\d{4}-\d{2}-\d{2})")
+SKIP_EXT = (".crdownload", ".part", ".tmp", ".zip")
 
 PY = sys.executable
 
@@ -48,7 +53,10 @@ def scan_weeks(folder):
     if not os.path.isdir(folder):
         return weeks
     for fn in os.listdir(folder):
-        if not fn.lower().endswith(".csv"):
+        low = fn.lower()
+        if not low.endswith(".csv"):
+            continue
+        if any(low.endswith(e) for e in SKIP_EXT):
             continue
         if "素材报表" not in fn:
             continue
@@ -67,20 +75,26 @@ def scan_source():
     return scan_weeks(SRC)
 
 
-def auto_pull_downloads(replace_periods=(), max_days=14):
-    """从「下载」文件夹自动抓取新导出的周期报表 CSV 到源文件夹。
+def auto_pull_downloads(replace_periods=(), max_days=14, dirs=None):
+    """从「下载」「桌面」自动抓取新导出的周期报表 CSV 到源文件夹。
 
     安全规则（重要，避免重复计数导致数据翻倍）：
       1. 该周期在源文件夹里已存在 → 默认跳过（下载里的多半是被重新导出取代的旧分片）
       2. 确需替换旧分片 → 用 --replace="周期标签"，旧分片先移入 _trash 再拷新的
       3. 只抓最近 max_days 天内修改过的文件（--days=0 表示不限）
+      4. 跳过未下载完的 .crdownload / .part
     """
-    if not os.path.isdir(DOWNLOADS):
-        log("  (跳过抓取：下载文件夹不存在)", DOWNLOADS)
+    dirs = dirs or [d for d in PULL_DIRS if os.path.isdir(d)]
+    if not dirs:
+        log("  (跳过抓取：下载/桌面文件夹都不存在)")
         return 0
-    found = scan_weeks(DOWNLOADS)
+    log("  扫描:", ", ".join(dirs))
+    found = {}
+    for d in dirs:
+        for label, fns in scan_weeks(d).items():
+            found.setdefault(label, []).extend((d, fn) for fn in fns)
     if not found:
-        log("  下载文件夹里没有找到「素材报表」CSV")
+        log("  没有找到「素材报表」CSV")
         return 0
     src = scan_weeks(SRC)
 
@@ -102,8 +116,8 @@ def auto_pull_downloads(replace_periods=(), max_days=14):
                 shutil.move(os.path.join(SRC, old), os.path.join(trash, old))
             log(f"  旧分片已移入 _trash：{len(src[label])} 个")
 
-        for fn in fns:
-            spath = os.path.join(DOWNLOADS, fn)
+        for folder, fn in fns:
+            spath = os.path.join(folder, fn)
             try:
                 st = os.stat(spath)
                 ssize = st.st_size
@@ -216,7 +230,13 @@ def main():
     if missing:
         log(">> 待导入的新周期:", missing)
     elif not extra:
-        log(">> 没有发现新周期（如需强制重建请加 --force）")
+        log(">> 没有发现新周期。")
+        log("   手动补周期的做法：创量导出后把 CSV 丢进下面任一位置，再重跑本脚本")
+        log("     · " + DOWNLOADS)
+        log("     · " + DESKTOP)
+        log("     · " + SRC + "   ← 也可以直接放这里")
+        log("   文件名保持创量原样即可（素材报表-不限_开始-结束_xxx.csv）。")
+        log("   如需强制重建所有周期：python import_period.py --force")
 
     # 1) 跑聚合
     cmd = [PY, "-u", os.path.join(REPO, "sync_weekly.py")] + (extra or [])
