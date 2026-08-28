@@ -25,7 +25,7 @@
 注意：周期看板数据与「个人数据（李虹玉账号）」是两条完全独立的数据源，
       本脚本只处理周期数据，不会碰 me-*.csv 及任何个人数据文件。
 """
-import os, re, sys, subprocess, shutil
+import os, re, sys, subprocess, shutil, glob
 from datetime import datetime
 
 REPO = os.path.dirname(os.path.abspath(__file__))
@@ -216,15 +216,39 @@ def bump_all_versions():
 
 
 # ---------- 3) 同步离线包 ----------
+# 离线上所需的「页面与脚本」清单：与仓库保持完全一致（index.html 必须整体覆盖，
+# 不能只 bump 版本号 —— 曾因只改版本号导致离线包停留在旧版结构、新 JS 读旧数据而崩溃）
+OFFLINE_WEB = ["index.html", "personal-enhance.js", "vparse-deep.js", "seedance-gen.js",
+               "viral-kb.js", "chart.umd.js", "cases.json", "changelog.json", "capacity.json"]
+# 离线的周期数据：meta/data 全量 + 每周期 .gz 分片（前端按需加载）
+OFFLINE_PERIOD = ["period-meta.json", "period-data.json", "period-data.json.gz"]
+SYNC_PERIOD_MAT = True   # 同步 period-materials-*.json.gz 分片
+
+
 def sync_offline():
     if not os.path.isdir(OFFLINE):
         log("  (跳过离线包，目录不存在)")
         return
-    for fn in ["personal-enhance.js", "changelog.json"]:
+    # 3.1) 页面与脚本
+    for fn in OFFLINE_WEB:
         s = os.path.join(REPO, fn)
         if os.path.exists(s):
             shutil.copy2(s, os.path.join(OFFLINE, fn))
             log("  离线包已同步:", fn)
+    # 3.2) 周期数据
+    for fn in OFFLINE_PERIOD:
+        s = os.path.join(REPO, fn)
+        if os.path.exists(s):
+            shutil.copy2(s, os.path.join(OFFLINE, fn))
+            log("  离线包已同步:", fn)
+    if SYNC_PERIOD_MAT:
+        for f in glob.glob(os.path.join(REPO, "period-materials-*.json.gz")):
+            shutil.copy2(f, os.path.join(OFFLINE, os.path.basename(f)))
+        log("  离线包已同步: period-materials-*.json.gz 分片")
+    # 3.3) 个人数据 CSV（李虹玉自动化产出的）
+    for f in glob.glob(os.path.join(REPO, "me-*.csv")):
+        shutil.copy2(f, os.path.join(OFFLINE, os.path.basename(f)))
+    log("  离线包已同步: me-*.csv")
 
 
 # ---------- main ----------

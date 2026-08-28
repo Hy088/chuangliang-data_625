@@ -1,5 +1,18 @@
 [
   {
+    "ver": "v20260829n",
+    "date": "2026-08-29",
+    "type": "fix",
+    "summary": "修复离线包「新 JS + 旧数据」错配导致的看板崩溃",
+    "details": [
+      "现象：桌面「数据看板离线包」打开后持续崩溃/图表异常",
+      "根因：离线包的 index.html 停留在旧版结构（无周期选择器、无日/周/月汇总），但 personal-enhance.js 和周期数据已更新，新旧结构错配；且离线包缺失 period-materials-*.json.gz 分片（新前端按需加载）",
+      "修复：① 离线包 index.html 整体覆盖为仓库最新版；② 补齐 period-meta/period-data(+gz)/period-materials.json 与 9 个周期 .gz 分片；③ import_period.py 的离线包同步逻辑重写：从「只同步 2 个文件」改为全量同步（页面脚本清单 + 周期数据 + 个人 CSV），杜绝复发",
+      "已验证：离线包本地服务打开，三模式正常切换，周汇总/日汇总数据与线上一致，0 JS 报错",
+      "bump 缓存版本到 20260829n"
+    ]
+  },
+  {
     "ver": "v20260829m",
     "date": "2026-08-29",
     "type": "feat",
