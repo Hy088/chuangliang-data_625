@@ -1,5 +1,16 @@
 [
   {
+    "ver": "v20260828t",
+    "date": "2026-08-28",
+    "type": "fix",
+    "summary": "视频解析关联素材时使用整体累计消耗，而非单日消耗",
+    "details": [
+      "personal-enhance.js 的 associateFromRank 改为先按素材ID聚合 me-materials.csv 全部历史明细",
+      "关联到视频解析时带入累计消耗/展示/点击/转化，而不是当前选中日期当天的数值",
+      "bump personal-enhance.js?v= 与 SEED_VER => 20260828t"
+    ]
+  },
+  {
     "ver": "v20260828s",
     "date": "2026-08-28",
     "type": "fix",

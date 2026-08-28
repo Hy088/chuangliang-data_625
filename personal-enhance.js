@@ -276,26 +276,44 @@
     t.textContent = msg; t.style.opacity = "1";
     clearTimeout(t._tm); t._tm = setTimeout(function () { t.style.opacity = "0"; }, 2800);
   }
-  // 从排行榜点整行/素材ID → 自动关联到视频解析
-  // arg 可为「素材ID 字符串」或「当日明细行对象（带消耗/展示/点击/转化/CTR 等）」
+  // 按素材ID聚合全部历史明细，用于视频解析时带入「整体累计」而非单日
+  function aggregateMatById(sid) {
+    if (!sid) return null;
+    var agg = null;
+    matData.forEach(function (m) {
+      if ((m["素材ID"] || "") !== sid) return;
+      if (!agg) {
+        agg = {
+          "素材ID": sid,
+          "素材名": m["素材名"] || "",
+          "消耗": 0, "展示数": 0, "点击数": 0, "转化数": 0, "转化成本": 0
+        };
+      }
+      agg["消耗"] += num(m["消耗"]);
+      agg["展示数"] += num(m["展示数"]);
+      agg["点击数"] += num(m["点击数"]);
+      agg["转化数"] += num(m["转化数"]);
+    });
+    if (agg) {
+      agg["CTR"] = agg["展示数"] > 0 ? agg["点击数"] / agg["展示数"] * 100 : 0;
+      agg["转化成本"] = agg["转化数"] > 0 ? agg["消耗"] / agg["转化数"] : 0;
+    }
+    return agg;
+  }
+  // 从排行榜点整行/素材ID → 自动关联到视频解析（使用整体累计，不再用单日）
   function associateFromRank(arg) {
-    var row = null, sid = "";
+    var sid = "";
     if (typeof arg === "object" && arg) {
-      row = arg;
       sid = arg["素材ID"] || arg.id || "";
     } else if (typeof arg === "string") {
       sid = arg;
-      if (meRankRows.length) {
-        for (var i = 0; i < meRankRows.length; i++) {
-          if ((meRankRows[i]["素材ID"] || "") === sid) { row = meRankRows[i]; break; }
-        }
-      }
     }
     var nav = document.querySelector('nav button[data-tab="vparse"]');
     if (nav) nav.click();
-    if (row && typeof window.assocMatFromRow === "function") {
-      try { window.assocMatFromRow(row); } catch (e) { if (sid && window.assocMat) window.assocMat(sid); }
-      meToast("已关联素材 " + (sid || "?") + " → 视频解析（已带入当日明细）");
+    var agg = sid ? aggregateMatById(sid) : null;
+    if (agg && typeof window.assocMatFromRow === "function") {
+      try { window.assocMatFromRow(agg); } catch (e) { if (sid && window.assocMat) window.assocMat(sid); }
+      meToast("已关联素材 " + sid + " → 视频解析（已带入整体累计明细）");
       return;
     }
     if (sid && typeof window.assocMat === "function") { try { window.assocMat(sid); } catch (e) {} }
