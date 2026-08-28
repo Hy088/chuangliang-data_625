@@ -457,11 +457,26 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 #importMask{z-index:99990 !important}
 #importMask .modal{z-index:99991}
 .import-btn{position:relative;z-index:99992;pointer-events:auto !important}
-/* 周期选择器：常驻页头，跨标签页生效 */
-.hd-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
-.per-sel{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.85);font-weight:700;white-space:nowrap}
-.per-chips{display:flex;align-items:center;gap:5px;flex-wrap:wrap;max-width:640px}
-.per-chip{padding:5px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.42);background:rgba(255,255,255,.14);color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:.18s;white-space:nowrap;line-height:1.35;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+/* 周期/月份选择器：常驻页头，跨标签页生效 */
+.hd-right{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;justify-content:flex-end}
+.hd-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.period-panel{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);max-width:430px}
+.pp-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pp-tabs{display:flex;gap:3px;background:rgba(0,0,0,.10);padding:3px;border-radius:8px}
+.pp-tabs .tab-btn{border:none;background:transparent;color:rgba(255,255,255,.85);padding:5px 13px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:.18s;white-space:nowrap}
+.pp-tabs .tab-btn:hover{color:#fff}
+.pp-tabs .tab-btn.on{background:#fff;color:#5b4bdb;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.year-switcher{display:flex;align-items:center;gap:6px;color:#fff;font-size:13px;font-weight:700}
+.year-nav{width:22px;height:22px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);color:#fff;font-size:14px;line-height:1;cursor:pointer;transition:.18s;display:inline-flex;align-items:center;justify-content:center}
+.year-nav:hover{background:#fff;color:#5b4bdb;border-color:#fff}
+.month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.month-cell{padding:6px 0;border-radius:8px;border:1px solid transparent;background:rgba(255,255,255,.10);color:rgba(255,255,255,.92);font-size:12px;font-weight:600;cursor:pointer;transition:.18s;text-align:center}
+.month-cell:hover{background:rgba(255,255,255,.24)}
+.month-cell.active{background:#fff;color:#5b4bdb;border-color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.month-cell.empty{background:transparent;color:rgba(255,255,255,.32);cursor:default}
+.month-cell.empty:hover{background:transparent}
+.period-sub-chips{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:2px;min-height:24px}
+.per-chip{padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.40);background:rgba(255,255,255,.14);color:#fff;font-size:11px;font-weight:600;cursor:pointer;transition:.18s;white-space:nowrap;line-height:1.35;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .per-chip:hover{background:rgba(255,255,255,.28)}
 .per-chip.on{background:#fff;color:#5b4bdb;border-color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18)}
 .per-chip.all{font-weight:700}
@@ -781,13 +796,26 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="sub" id="hdrsub"></div>
   </div>
   <div class="hd-right">
-    <div class="per-sel">
-      <span>周期</span>
-      <div class="per-chips" id="periodChips" title="切换查看的周期，所有标签页同步更新"></div>
+    <div class="period-panel" id="periodPanel">
+      <div class="pp-head">
+        <div class="pp-tabs">
+          <button class="tab-btn on" data-mode="period">分周期</button>
+          <button class="tab-btn" data-mode="month">月汇总</button>
+        </div>
+        <div class="year-switcher">
+          <button class="year-nav" id="yearPrev" title="上一年">‹</button>
+          <span id="yearLabel">2026 年</span>
+          <button class="year-nav" id="yearNext" title="下一年">›</button>
+        </div>
+      </div>
+      <div class="month-grid" id="monthGrid"></div>
+      <div class="period-sub-chips" id="periodSubChips" title="当前月份下的周期"></div>
     </div>
-    <span class="ver-badge" id="curVer" title="当前版本">—</span>
-    <button class="import-btn" id="openImport" title="导入新的素材周期数据报表">⤓ 导入新周期</button>
-    <button class="log-btn" id="openChangelog" title="查看版本更新日志">📋 更新日志</button>
+    <div class="hd-actions">
+      <span class="ver-badge" id="curVer" title="当前版本">—</span>
+      <button class="import-btn" id="openImport" title="导入新的素材周期数据报表">⤓ 导入新周期</button>
+      <button class="log-btn" id="openChangelog" title="查看版本更新日志">📋 更新日志</button>
+    </div>
   </div>
 </header>
 <nav>
@@ -1765,6 +1793,81 @@ function rebuildIdMap(){
       cat:r[ci('cat')], chan:r[ci('chan')], mtype:r[ci('mtype')], tags:r[ci('tags')]}; });
 }
 rebuildIdMap();
+
+// ========== 周期 / 月份选择器 ==========
+let CUR_MONTH = null;      // '2026-08'
+let CUR_YEAR = 2026;       // 月份面板当前展示年份
+let PERIOD_MODE = 'period'; // 'period'=分周期, 'month'=月汇总
+
+function parsePeriodDate(p){ const s=(p||'').split(' ~ ')[0]; return {start:s, month:s?s.slice(0,7):null}; }
+function getMonthsWithData(){
+  const s=new Set();
+  (DATA_FULL.periodData||[]).forEach(p=>{ const m=parsePeriodDate(p.period).month; if(m) s.add(m); });
+  return Array.from(s).sort();
+}
+function getPeriodsByMonth(ym){ return (DATA_FULL.periodData||[]).filter(p=>parsePeriodDate(p.period).month===ym); }
+function round2(n){ return Math.round((n+Number.EPSILON)*100)/100; }
+function mergeDim(list, keys){
+  const d={};
+  list.forEach(rec=>{
+    const k=keys.map(kk=>rec[kk]).join('|');
+    if(!d[k]){ d[k]=Object.assign({}, rec); }
+    else { const o=d[k]; o.cost+=rec.cost; o.imp+=rec.imp; o.clk+=rec.clk; o.cv+=rec.cv; o.n+=rec.n; }
+  });
+  return Object.values(d).map(o=>{
+    o.cost=round2(o.cost); o.imp=Math.round(o.imp); o.clk=Math.round(o.clk); o.cv=Math.round(o.cv); o.n=Math.round(o.n);
+    o.cpa=o.cv?round2(o.cost/o.cv):0; o.cvr=o.clk?round2(o.cv/o.clk*100):0; o.ctr=o.imp?round2(o.clk/o.imp*100):0;
+    return o;
+  });
+}
+function buildMonthData(ym){
+  const periods=getPeriodsByMonth(ym);
+  const cats=mergeDim(periods.flatMap(p=>p.categories||[]), ['proj','cat']);
+  const projMap={};
+  periods.forEach(p=>{
+    (p.projects||[]).forEach(r=>{
+      if(!projMap[r.proj]) projMap[r.proj]=Object.assign({}, r);
+      else { const o=projMap[r.proj]; o.cost+=r.cost; o.imp+=r.imp; o.clk+=r.clk; o.cv+=r.cv; o.n+=r.n; }
+    });
+  });
+  const projects=Object.values(projMap).map(o=>{
+    o.cost=round2(o.cost); o.imp=Math.round(o.imp); o.clk=Math.round(o.clk); o.cv=Math.round(o.cv); o.n=Math.round(o.n);
+    o.cpa=o.cv?round2(o.cost/o.cv):0; o.cvr=o.clk?round2(o.cv/o.clk*100):0; o.ctr=o.imp?round2(o.clk/o.imp*100):0;
+    return o;
+  });
+  const overallArr=periods.map(p=>p.overall);
+  const overall={
+    cost:round2(overallArr.reduce((a,b)=>a+b.cost,0)),
+    imp:Math.round(overallArr.reduce((a,b)=>a+b.imp,0)),
+    clk:Math.round(overallArr.reduce((a,b)=>a+b.clk,0)),
+    cv:Math.round(overallArr.reduce((a,b)=>a+b.cv,0)),
+    n:Math.round(overallArr.reduce((a,b)=>a+b.n,0))
+  };
+  overall.cpa=overall.cv?round2(overall.cost/overall.cv):0;
+  overall.cvr=overall.clk?round2(overall.cv/overall.clk*100):0;
+  overall.ctr=overall.imp?round2(overall.clk/overall.imp*100):0;
+  return {
+    meta:Object.assign({}, DATA_FULL.meta, {period:ym+'（月汇总）', periods:periods.map(p=>p.period)}),
+    overall, projects, categories: cats,
+    placements:mergeDim(periods.flatMap(p=>p.placements||[]), ['proj','chan']),
+    optimizers:mergeDim(periods.flatMap(p=>p.optimizers||[]), ['proj','opt']),
+    editors:mergeDim(periods.flatMap(p=>p.editors||[]), ['proj','edit']),
+    tags:mergeDim(periods.flatMap(p=>p.tags||[]), ['proj','tag']),
+    materials:{cols:DATA_FULL.materials.cols, rows:materialsForMonth(ym)},
+    suggestions:computeSuggestions(cats), insights:computeInsights(cats),
+    periodData:DATA.periodData,
+    periodMats:DATA_FULL.periodMats
+  };
+}
+function materialsForMonth(ym){
+  const cols=DATA_FULL.materials.cols||[];
+  const pi=cols.indexOf('period');
+  if(pi<0) return (DATA_FULL.materials && DATA_FULL.materials.rows) || [];
+  return (DATA_FULL.materials.rows||[]).filter(r=>{
+    const v=(r[pi]||'');
+    return v.startsWith(ym+'-') || v.startsWith(ym+' ~');
+  });
+}
 // 取指定周期的素材明细行（null=全部合并）。优先用紧凑 periodMats 重建，缺数据则退回合并行
 function materialsForPeriod(pf){
   if(pf && DATA.periodMats && DATA.periodMats[pf] && DATA.periodMats[pf].length){
@@ -1781,6 +1884,7 @@ function materialsForPeriod(pf){
 // 切换周期：重建 DATA 并刷新全部视图（周期对比页始终显示完整多周期数据）
 function rebuildView(pf){
   CUR_PERIOD = pf || null;
+  if(CUR_PERIOD) CUR_MONTH = parsePeriodDate(CUR_PERIOD).month;
   let nd;
   if(!CUR_PERIOD){
     nd = Object.assign({}, DATA_FULL);
@@ -1803,25 +1907,80 @@ function rebuildView(pf){
   }
   DATA = nd;
   const pjtag = $('#ov-period-filter'); if(pjtag) pjtag.textContent = CUR_PERIOD ? ('周期：'+CUR_PERIOD) : '';
-  refreshPeriodChips();
+  refreshMonthPanel();
   renderAll();
 }
-function refreshPeriodChips(){
-  const wrap = $('#periodChips'); if(!wrap) return;
-  wrap.querySelectorAll('.per-chip').forEach(btn=>{
-    btn.classList.toggle('on', (btn.dataset.period||'') === (CUR_PERIOD||''));
+function rebuildMonthView(ym){
+  CUR_MONTH = ym || null;
+  CUR_PERIOD = null;
+  if(!CUR_MONTH){
+    DATA = Object.assign({}, DATA_FULL);
+    DATA.materials = {cols: DATA_FULL.materials.cols, rows: materialsForPeriod(null)};
+  } else {
+    DATA = buildMonthData(CUR_MONTH);
+  }
+  const pjtag = $('#ov-period-filter'); if(pjtag) pjtag.textContent = CUR_MONTH ? ('月份：'+CUR_MONTH.replace('-','年')+'月') : '';
+  refreshMonthPanel();
+  renderAll();
+}
+function refreshMonthPanel(){
+  if(CUR_PERIOD && !CUR_MONTH) CUR_MONTH = parsePeriodDate(CUR_PERIOD).month;
+  renderMonthGrid();
+  renderSubChips();
+  const tabs=$$('.pp-tabs .tab-btn');
+  tabs.forEach(b=>b.classList.toggle('on', b.dataset.mode===PERIOD_MODE));
+}
+function renderMonthGrid(){
+  const grid=$('#monthGrid'); if(!grid) return;
+  const months=getMonthsWithData();
+  let html='';
+  for(let m=1;m<=12;m++){
+    const ym=`${CUR_YEAR}-${String(m).padStart(2,'0')}`;
+    const has=months.includes(ym);
+    const active=CUR_MONTH===ym;
+    const cls=`month-cell ${active?'active':''} ${has?'':'empty'}`;
+    html+=`<button class="${cls}" data-month="${ym}" ${has?'':'disabled'}>${m}月</button>`;
+  }
+  grid.innerHTML=html;
+  grid.querySelectorAll('.month-cell').forEach(btn=>{
+    btn.onclick=()=>{
+      if(btn.disabled) return;
+      const ym=btn.dataset.month;
+      CUR_MONTH=ym;
+      if(PERIOD_MODE==='month') rebuildMonthView(ym);
+      else { const ps=getPeriodsByMonth(ym); rebuildView(ps.length?ps[ps.length-1].period:null); }
+    };
   });
+}
+function renderSubChips(){
+  const wrap=$('#periodSubChips'); if(!wrap) return;
+  if(PERIOD_MODE!=='period' || !CUR_MONTH){ wrap.innerHTML=''; return; }
+  const ps=getPeriodsByMonth(CUR_MONTH).map(p=>p.period);
+  let html=`<button class="per-chip all ${CUR_PERIOD?'':'on'}" data-period="">全月</button>`;
+  ps.forEach(p=>{ html+=`<button class="per-chip ${CUR_PERIOD===p?'on':''}" data-period="${p}">${p}</button>`; });
+  wrap.innerHTML=html;
+  wrap.querySelectorAll('.per-chip').forEach(btn=>{ btn.onclick=()=>rebuildView(btn.dataset.period); });
 }
 // 初始化页头周期选择器
 function initPeriodSel(){
-  const wrap = $('#periodChips'); if(!wrap) return;
-  const periods = (DATA_FULL.periodData||[]).map(p=>p.period);
-  let html = `<button class="per-chip all ${CUR_PERIOD?'':'on'}" data-period="">全部周期</button>`;
-  periods.forEach(p=>{ html += `<button class="per-chip ${CUR_PERIOD===p?'on':''}" data-period="${p}">${p}</button>`; });
-  wrap.innerHTML = html;
-  wrap.querySelectorAll('.per-chip').forEach(btn=>{
-    btn.onclick = ()=> rebuildView(btn.dataset.period);
+  const months=getMonthsWithData();
+  if(months.length){
+    if(!CUR_MONTH) CUR_MONTH=months[months.length-1];
+    CUR_YEAR=+(CUR_MONTH.split('-')[0]);
+  }
+  const tabs=$$('.pp-tabs .tab-btn');
+  tabs.forEach(btn=>{
+    btn.onclick=()=>{
+      PERIOD_MODE=btn.dataset.mode;
+      if(PERIOD_MODE==='month') rebuildMonthView(CUR_MONTH);
+      else { const ps=getPeriodsByMonth(CUR_MONTH); rebuildView(ps.length?ps[ps.length-1].period:null); }
+    };
   });
+  const yp=$('#yearPrev'), yn=$('#yearNext'), yl=$('#yearLabel');
+  if(yp) yp.onclick=()=>{ CUR_YEAR--; if(yl) yl.textContent=CUR_YEAR+' 年'; renderMonthGrid(); };
+  if(yn) yn.onclick=()=>{ CUR_YEAR++; if(yl) yl.textContent=CUR_YEAR+' 年'; renderMonthGrid(); };
+  if(yl) yl.textContent=CUR_YEAR+' 年';
+  refreshMonthPanel();
 }
 const PROJ_COLOR = {'广义新':'#7c5cff','低活':'#3b82f6','标点':'#06b6d4'};
 const PROJ_LIST = ['广义新','低活','标点'];
@@ -3886,7 +4045,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260828j';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260828k';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -3911,11 +4070,13 @@ async function fetchJSONRetry(base, opt={}){
     if(txt.length < 100) throw new Error('body too small: '+txt.length);
     return JSON.parse(txt);
   };
-  // 1) 优先 .gz
-  try{
-    return await tryGz(base + '.gz?v=' + SEED_VER);
-  }catch(e){
-    console.warn('[fetchJSONRetry] .gz 失败，回退普通 JSON', base, e.message);
+  // 1) 优先 .gz（小文件可跳过）
+  if(!opt.noGz){
+    try{
+      return await tryGz(base + '.gz?v=' + SEED_VER);
+    }catch(e){
+      console.warn('[fetchJSONRetry] .gz 失败，回退普通 JSON', base, e.message);
+    }
   }
   // 2) 普通 JSON
   try{
@@ -3929,7 +4090,7 @@ async function fetchJSONRetry(base, opt={}){
 async function loadSeedData(){
   // 优先加载轻量元数据（KPI/结构，约 1.6MB），保证看板秒开，不卡在 34MB 素材下载上
   try{
-    const obj=await fetchJSONRetry('period-meta.json');
+    const obj=await fetchJSONRetry('period-meta.json', {noGz:true});
     DATA_FULL=obj; DATA=DATA_FULL; CUR_PERIOD=null; rebuildIdMap();
     // 注意：此时 materials 尚未加载，不保存 runtime，避免 IndexedDB 记住半成品（有 meta 但 materials 为空）
     console.log('[seed] 已从 period-meta.json 载入, periods=', obj.meta.periods);
@@ -3955,8 +4116,13 @@ async function loadMaterialsAsync(){
     clearTimeout(to);
     if(!DATA_FULL) return;
     DATA_FULL.materials = { cols: m.cols||[], rows: m.rows||[] };
-    DATA=DATA_FULL; rebuildIdMap();
-    try{ renderAll(); }catch(e){ console.error('[materials] 加载后重渲染失败', e); }
+    rebuildIdMap();
+    // 保持当前周期/月份视图，避免覆盖已筛选的 DATA
+    try{
+      if(CUR_MONTH && PERIOD_MODE==='month') rebuildMonthView(CUR_MONTH);
+      else if(CUR_PERIOD) rebuildView(CUR_PERIOD);
+      else { DATA=Object.assign({}, DATA_FULL); DATA.materials={cols:DATA_FULL.materials.cols, rows:materialsForPeriod(null)}; renderAll(); }
+    }catch(e){ console.error('[materials] 加载后重渲染失败', e); }
     console.log('[seed] 素材明细已异步载入, rows=', m.rows?m.rows.length:0);
     saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e)); // 完整数据才保存
   }catch(e){ console.warn('[materials] 异步加载失败（素材标签页将暂为空，可刷新重试）', e); }
@@ -4026,8 +4192,11 @@ function updateStateBanner(){
   try{ bindCustom(); }catch(e){ console.error('bindCustom 失败', e); }
   const _pd0=(DATA_FULL.periodData||[]);
   if(!CUR_PERIOD && _pd0.length){ CUR_PERIOD = _pd0[_pd0.length-1].period; }
+  if(CUR_PERIOD && !CUR_MONTH) CUR_MONTH = parsePeriodDate(CUR_PERIOD).month;
   try{ initPeriodSel(); }catch(e){ console.error('initPeriodSel 失败', e); }
-  if(CUR_PERIOD) rebuildView(CUR_PERIOD); else renderAll();
+  if(CUR_PERIOD && PERIOD_MODE==='period') rebuildView(CUR_PERIOD);
+  else if(CUR_MONTH && PERIOD_MODE==='month') rebuildMonthView(CUR_MONTH);
+  else renderAll();
   try{ const t=loadTheme(); if(t) applyThemeVars(t); }catch(e){}
   try{ bindGroups(); }catch(e){ console.error('bindGroups 失败', e); }
   try{ applyLayout(); }catch(e){}

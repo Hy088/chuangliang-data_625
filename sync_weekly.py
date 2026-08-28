@@ -8,12 +8,13 @@
 逻辑忠实移植自 index.html 的 rowChannel / decode / _metrics / accumulate / aggregateViews。
 """
 import csv, glob, os, json, re, shutil, gzip
+from datetime import datetime
 
 REPO = r"C:/Users/EDY/chuangliang_data"
 SRC  = r"F:\Workbuddy.renwu\WorkBuddy_数据"
 PROJ_LIST = ['广义新', '低活', '标点']
 CH_BROAD  = ['有PIN专项', 'SG专项', 'HL专项', '下载激活专项', '广义新']
-MCOLS = ['id','name','opt','edit','proj','cat','chan','cost','imp','clk','cv','cpa','cvr','ctr','mtype','tags']
+MCOLS = ['id','name','opt','edit','proj','cat','chan','cost','imp','clk','cv','cpa','cvr','ctr','mtype','tags','period']
 
 # ---------- 数字解析 ----------
 def fnum(x):
@@ -73,7 +74,7 @@ def metrics(d):
     }
 
 # ---------- 单周聚合 ----------
-def build_week(week_files):
+def build_week(week_files, period):
     mat = {}        # key proj|id -> dict
     dims = {'cat': {}, 'plc': {}, 'opt': {}, 'edt': {}, 'tagg': {}, 'tot': {}}
     overall = {'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0, 'n': 0}
@@ -126,7 +127,7 @@ def build_week(week_files):
         me = metrics(m)
         mrows.append([m['id'], m['name'], m['opt'], m['edit'], m['proj'], m['cat'], m['chan'],
                       me['cost'], me['imp'], me['clk'], me['cv'], me['cpa'], me['cvr'], me['ctr'],
-                      m['mtype'], ','.join(sorted(m['tags']))])
+                      m['mtype'], '|'.join(sorted(m['tags'])), period])
 
     # 维度视图
     def agg_list(dim, dims_keys):
@@ -219,9 +220,22 @@ def compute_insights(categories):
     return insights
 
 
+def empty_meta():
+    return {'meta': {'periods': [], 'projects': []}, 'overall': {}, 'projects': [], 'categories': [],
+            'placements': [], 'optimizers': [], 'editors': [], 'tags': [], 'typeShare': []}
+
+def empty_pm():
+    return {'cols': MCOLS, 'rows': []}
+
+def empty_pd():
+    return {'meta': {'periods': [], 'projects': []}, 'overall': {}, 'projects': [], 'categories': [],
+            'placements': [], 'optimizers': [], 'editors': [], 'tags': [],
+            'materials': {'cols': MCOLS, 'rows': []}, 'suggestions': [], 'insights': [], 'periodData': []}
+
 def main():
     # 1) 现有 meta，确定已有哪些周期
-    meta = json.load(open(os.path.join(REPO, 'period-meta.json'), encoding='utf-8'))
+    meta_path = os.path.join(REPO, 'period-meta.json')
+    meta = json.load(open(meta_path, encoding='utf-8')) if os.path.exists(meta_path) else empty_meta()
     existing_periods = list(meta.get('meta', {}).get('periods', []))
     print('existing periods:', existing_periods)
 
@@ -239,22 +253,29 @@ def main():
     print('NEW weeks to sync:', new_weeks)
     # 即使没有新周期，也重新写出输出文件（确保 .gz 等衍生文件存在）
 
-    # 3) 备份
+    # 3) 备份（只有文件存在才备份）
     for fn in ['period-materials.json', 'period-data.json', 'period-meta.json']:
-        shutil.copy2(os.path.join(REPO, fn), os.path.join(REPO, fn + '.syncbak'))
+        p = os.path.join(REPO, fn)
+        if os.path.exists(p):
+            shutil.copy2(p, os.path.join(REPO, fn + '.syncbak'))
 
     # 4) 解析新周
     all_mrows = []
     new_periodData = []
-    for w in new_weeks:
-        mrows, views = build_week(sorted(weeks[w]))
+    for w in sorted(new_weeks):
+        mrows, views = build_week(sorted(weeks[w]), w)
         all_mrows.extend(mrows)
         new_periodData.append({'period': w, **views})
         print(f"  week {w}: materials={len(mrows)} overall_cost={views['overall']['cost']:.2f}")
 
     # 5) 合并素材行
-    pm = json.load(open(os.path.join(REPO, 'period-materials.json'), encoding='utf-8'))
-    pd = json.load(open(os.path.join(REPO, 'period-data.json'), encoding='utf-8'))
+    pm_path = os.path.join(REPO, 'period-materials.json')
+    pd_path = os.path.join(REPO, 'period-data.json')
+    pm = json.load(open(pm_path, encoding='utf-8')) if os.path.exists(pm_path) else empty_pm()
+    pd = json.load(open(pd_path, encoding='utf-8')) if os.path.exists(pd_path) else empty_pd()
+    # 确保列定义与最新 MCOLS 一致
+    pm['cols'] = MCOLS
+    pd['materials']['cols'] = MCOLS
     old_mcount = len(pm['rows'])
     pm['rows'].extend(all_mrows)
     pd['materials']['rows'].extend(all_mrows)
@@ -272,9 +293,14 @@ def main():
         obj['optimizers'] = merge_dim(obj.get('optimizers', []), [p for v in new_periodData for p in v['optimizers']], lambda d: d['proj'] + '|' + d['opt'])
         obj['editors'] = merge_dim(obj.get('editors', []), [p for v in new_periodData for p in v['editors']], lambda d: d['proj'] + '|' + d['edit'])
         obj['tags'] = merge_dim(obj.get('tags', []), [p for v in new_periodData for p in v['tags']], lambda d: d['proj'] + '|' + d['tag'])
-        # meta.periods
+        # meta.periods / projects / generated（前端多处读取 DATA.meta.projects / period / generated）
         mp = obj.setdefault('meta', {})
         mp['periods'] = (mp.get('periods', []) or []) + new_weeks
+        mp['projects'] = [p['proj'] for p in obj.get('projects', [])]
+        mp['generated'] = datetime.now().strftime('%Y-%m-%d %H:%M')
+        # 默认 period 显示最近一个周期；前端切换后会覆盖
+        if mp.get('periods'):
+            mp['period'] = mp['periods'][-1]
         # suggestions / insights 基于合并后的 categories 重算
         obj['suggestions'] = compute_suggestions(obj['categories'])
         obj['insights'] = compute_insights(obj['categories'])
