@@ -347,6 +347,18 @@ def main():
     # period-materials 完整版生成 .gz 用于线上；原始 json 留在本地但可 gitignore 忽略
     write_json(os.path.join(REPO, 'period-materials.json'), pm)
 
+    # 按周期拆分为小 .gz，前端按需加载当前周期，避免一次拉取 19MB
+    ci_period = {c: i for i, c in enumerate(pm['cols'])}['period']
+    by_period = {}
+    for r in pm['rows']:
+        p = r[ci_period]
+        by_period.setdefault(p, []).append(r)
+    for p, rows in sorted(by_period.items()):
+        slug = re.sub(r'[^0-9]', '', p)
+        ppath = os.path.join(REPO, f'period-materials-{slug}.json')
+        write_json(ppath, {'cols': pm['cols'], 'rows': rows})
+        print(f'  period-materials-{slug}.json.gz: {len(rows)} rows, {round(os.path.getsize(ppath+".gz")/1024/1024,2)} MB')
+
     # period-meta 保持轻量普通 JSON
     json.dump(meta, open(os.path.join(REPO, 'period-meta.json'), 'w', encoding='utf-8'), ensure_ascii=False)
     print('DONE. new periods:', new_weeks)

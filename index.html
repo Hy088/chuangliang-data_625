@@ -1906,6 +1906,11 @@ function buildMonthData(ym){
   overall.cpa=overall.cv?round2(overall.cost/overall.cv):0;
   overall.cvr=overall.clk?round2(overall.cv/overall.clk*100):0;
   overall.ctr=overall.imp?round2(overall.clk/overall.imp*100):0;
+  // 月汇总时按需加载该月各周期素材（优先加载最后一个周期）
+  const lastPeriod = periods.length ? periods[periods.length-1].period : null;
+  if(lastPeriod && !(DATA_FULL._periodMaterials && DATA_FULL._periodMaterials[lastPeriod] && DATA_FULL._periodMaterials[lastPeriod].length)){
+    setTimeout(()=>loadPeriodMaterials(lastPeriod), 80);
+  }
   return {
     meta:Object.assign({}, DATA_FULL.meta, {period:ym+'（月汇总）', periods:periods.map(p=>p.period)}),
     overall, projects, categories: cats,
@@ -1931,16 +1936,16 @@ function materialsForMonth(ym){
 }
 // 取指定周期的素材明细行（null=全部合并）。优先用紧凑 periodMats 重建，缺数据则退回合并行
 function materialsForPeriod(pf){
-  if(pf && DATA.periodMats && DATA.periodMats[pf] && DATA.periodMats[pf].length){
-    return DATA.periodMats[pf].map(b=>{
-      const id=b[0], meta=IDMAP[id]||{};
-      const cost=b[1], imp=b[2], clk=b[3], cv=b[4];
-      const me=_metrics({cost,imp,clk,cv,n:0});
-      return [id, meta.name||'', meta.opt||'', meta.edit||'', meta.proj||'', meta.cat||'', meta.chan||'',
-              me.cost, me.imp, me.clk, me.cv, me.cpa, me.cvr, me.ctr, meta.mtype||'', meta.tags||''];
-    });
+  // 优先使用已按需加载的周期素材文件
+  if(DATA_FULL && DATA_FULL._periodMaterials && pf && DATA_FULL._periodMaterials[pf] && DATA_FULL._periodMaterials[pf].length){
+    return DATA_FULL._periodMaterials[pf];
   }
-  return (DATA_FULL.materials && DATA_FULL.materials.rows) || [];
+  const rows = (DATA_FULL.materials && DATA_FULL.materials.rows) || [];
+  if(!pf) return rows;
+  const cols = DATA_FULL.materials.cols || [];
+  const pi = cols.indexOf('period');
+  if(pi < 0) return rows;
+  return rows.filter(r=>r[pi]===pf);
 }
 // 切换周期：重建 DATA 并刷新全部视图（周期对比页始终显示完整多周期数据）
 function rebuildView(pf){
@@ -1969,6 +1974,10 @@ function rebuildView(pf){
   }
   DATA = nd;
   const pjtag = $('#ov-period-filter'); if(pjtag) pjtag.textContent = CUR_PERIOD ? ('周期：'+CUR_PERIOD) : '';
+  // 如果切换到尚未加载素材的周期，按需加载
+  if(CUR_PERIOD && !(DATA_FULL._periodMaterials && DATA_FULL._periodMaterials[CUR_PERIOD] && DATA_FULL._periodMaterials[CUR_PERIOD].length)){
+    setTimeout(()=>loadPeriodMaterials(CUR_PERIOD), 80);
+  }
   refreshPicker();
   renderAll();
 }
@@ -4211,7 +4220,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260828p';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260828r';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -4272,34 +4281,96 @@ async function loadSeedData(){
   }catch(e2){ console.warn('[seed] 载入失败', e2); throw e2; }
 }
 // 素材明细体积大（约34MB/13万行），后台异步加载；加载完成后仅刷新素材相关视图，绝不阻塞首屏
+function periodSlug(p){ return (p||'').replace(/[^0-9]/g,''); }
+async function loadPeriodMaterials(period, retry=0){
+  if(!period) return loadMaterialsAsync(retry);
+  console.log('[materials] loadPeriodMaterials', period, 'retry=', retry);
+  try{
+    const slug=periodSlug(period);
+    const ctrl=new AbortController();
+    const to=setTimeout(()=>ctrl.abort(), 120000);
+    const m=await fetchJSONRetry(`period-materials-${slug}.json`, {signal:ctrl.signal, cache:'no-cache'});
+    clearTimeout(to);
+    if(!DATA_FULL){ console.warn('[materials] DATA_FULL missing'); return; }
+    if(!DATA_FULL._periodMaterials) DATA_FULL._periodMaterials={};
+    DATA_FULL._periodMaterials[period]=m.rows||[];
+    // 合并所有已加载周期的素材行
+    const cols=m.cols||[];
+    const allRows=[];
+    Object.values(DATA_FULL._periodMaterials).forEach(rows=>allRows.push(...rows));
+    DATA_FULL.materials={cols:cols, rows:allRows};
+    rebuildIdMap();
+    try{
+      if(CUR_MONTH && PERIOD_MODE==='month') rebuildMonthView(CUR_MONTH);
+      else if(CUR_PERIOD===period) rebuildView(CUR_PERIOD);
+    }catch(e){ console.error('[materials] 加载后重渲染失败', e); }
+    console.log('[seed] 素材明细已异步载入', period, 'rows=', m.rows?m.rows.length:0);
+    saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e));
+    window.__materialsFailed=false;
+  }catch(e){
+    console.warn('[materials] 周期素材加载失败', period, e.message);
+    if(retry < 2){
+      console.log('[materials] 3秒后第'+(retry+2)+'次重试...');
+      setTimeout(()=>loadPeriodMaterials(period, retry+1), 3000);
+    }else{
+      console.log('[materials] 自动重试结束，将在用户首次交互时再次尝试');
+      window.__materialsFailed=true;
+    }
+  }
+}
+// 无当前周期（全部合并视图）：并行加载全部周期的小文件并合并，避免拉取 19MB 全量文件（线上 Pages 已不再托管）
+async function loadAllPeriodMaterials(retry=0){
+  const periods=(DATA_FULL&&DATA_FULL.meta&&DATA_FULL.meta.periods)||[];
+  if(!periods.length){ console.log('[materials] 无周期列表，改为加载全量文件兜底'); return loadMaterialsFull(retry); }
+  console.log('[materials] 并行加载全部', periods.length, '个周期素材小文件');
+  if(!DATA_FULL._periodMaterials) DATA_FULL._periodMaterials={};
+  await Promise.all(periods.map(p=>loadPeriodMaterials(p, retry).catch(e=>console.warn('[materials] 周期加载失败', p, e.message))));
+  const allRows=[];
+  Object.values(DATA_FULL._periodMaterials).forEach(r=>allRows.push(...r));
+  DATA_FULL.materials={cols:DATA_FULL.materials.cols||[], rows:allRows};
+  rebuildIdMap();
+  DATA=Object.assign({}, DATA_FULL);
+  DATA.materials={cols:DATA_FULL.materials.cols, rows: materialsForPeriod(null)};
+  renderAll();
+  saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e));
+  window.__materialsFailed=false;
+  console.log('[seed] 全周期素材已合并载入, total rows=', allRows.length);
+}
 async function loadMaterialsAsync(retry=0){
   console.log('[materials] loadMaterialsAsync start, retry=', retry);
+  // 有当前周期时，只加载当前周期的小文件（2-4MB），避免拉取 19MB 全量文件
+  if(CUR_PERIOD){ return loadPeriodMaterials(CUR_PERIOD, retry); }
+  // 无当前周期：并行加载全部周期小文件并合并（线上 Pages 已不再托管 19MB 全量文件，必须走周期拆分）
+  return loadAllPeriodMaterials(retry);
+}
+// 全量文件兜底（仅当 meta 无 periods 列表或周期文件全部失败时调用）
+async function loadMaterialsFull(retry=0){
   try{
     const ov=document.getElementById('loadOverlay');
     if(ov && !ov.classList.contains('hidden')){ const e=document.getElementById('loadMsg'); if(e) e.textContent='数据已加载，正在后台拉取素材明细（约34MB）...'; }
     const ctrl=new AbortController();
-    const to=setTimeout(()=>ctrl.abort(), 180000); // 网络慢时给 180 秒
+    const to=setTimeout(()=>ctrl.abort(), 180000);
     const m=await fetchJSONRetry('period-materials.json', {signal:ctrl.signal, cache:'no-cache'});
     clearTimeout(to);
     if(!DATA_FULL){ console.warn('[materials] DATA_FULL missing'); return; }
-    DATA_FULL.materials = { cols: m.cols||[], rows: m.rows||[] };
+    DATA_FULL.materials={cols:m.cols||[], rows:m.rows||[]};
     rebuildIdMap();
-    // 保持当前周期/月份视图，避免覆盖已筛选的 DATA
     try{
       if(CUR_MONTH && PERIOD_MODE==='month') rebuildMonthView(CUR_MONTH);
       else if(CUR_PERIOD) rebuildView(CUR_PERIOD);
       else { DATA=Object.assign({}, DATA_FULL); DATA.materials={cols:DATA_FULL.materials.cols, rows:materialsForPeriod(null)}; renderAll(); }
     }catch(e){ console.error('[materials] 加载后重渲染失败', e); }
     console.log('[seed] 素材明细已异步载入, rows=', m.rows?m.rows.length:0);
-    saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e)); // 完整数据才保存
+    saveRuntimeState().catch(e=>console.warn('[seed] 保存本地缓存失败', e));
+    window.__materialsFailed=false;
   }catch(e){
-    console.warn('[materials] 异步加载失败（素材标签页将暂为空，可刷新重试）', e);
+    console.warn('[materials] 全量素材加载失败', e);
     if(retry < 2){
       console.log('[materials] 3秒后第'+(retry+2)+'次重试...');
-      setTimeout(()=>loadMaterialsAsync(retry+1), 3000);
+      setTimeout(()=>loadMaterialsFull(retry+1), 3000);
     }else{
-      console.log('[materials] 自动重试结束，将在用户首次点击/滚动时再次尝试');
-      window.__materialsFailed = true;
+      console.log('[materials] 自动重试结束，将在用户首次交互时再次尝试');
+      window.__materialsFailed=true;
     }
   }
 }
@@ -4410,7 +4481,7 @@ function updateStateBanner(){
     if(window.__materialsFailed && !window.__materialsRetrying){
       window.__materialsRetrying=true;
       console.log('[materials] 用户交互触发重试');
-      loadMaterialsAsync();
+      if(CUR_PERIOD) loadPeriodMaterials(CUR_PERIOD); else loadMaterialsAsync();
     }
   };
   document.addEventListener('click', retryOnce, {once:true});
@@ -5760,7 +5831,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260828p"></script>
+<script src="personal-enhance.js?v=20260828q"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 
