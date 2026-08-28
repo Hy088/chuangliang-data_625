@@ -1750,6 +1750,9 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
             <option value="dense">紧凑</option>
           </select>
         </div>
+        <div class="fld">导航板块排序（按住拖动调整前后顺序）
+          <div id="navSortList" class="nav-sort"></div>
+        </div>
         <div class="note" id="layoutTip">提示：开启编辑模式后，把鼠标移到卡片右上角会出现 ⠿ 拖拽手柄与「隐藏」按钮。拖拽可调整同板块内的顺序，隐藏的卡片可随时恢复。布局与配色都会自动保存。</div>
         <button class="btn" id="resetLayoutBtn">重置布局</button>
       </div>
@@ -1806,6 +1809,15 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:8px}
 .color-grid label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:4px}
 .color-grid input[type=color]{width:100%;height:34px;border:1px solid var(--line);border-radius:8px;background:none;cursor:pointer;padding:2px}
+.nav-sort{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.nav-sort-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);cursor:grab;user-select:none;transition:transform .14s, box-shadow .14s, border-color .14s}
+.nav-sort-item:hover{border-color:var(--brand);box-shadow:0 3px 10px rgba(109,94,252,.14);transform:translateY(-1px)}
+.nav-sort-item:active{cursor:grabbing}
+.nav-sort-item.dragging{opacity:.45;border-color:var(--brand2);transform:scale(.98)}
+.nav-sort-item.over{border-color:var(--brand);border-style:dashed;background:var(--bluebg)}
+.nav-sort-item .grip{font-size:15px;font-weight:900;color:var(--muted);letter-spacing:-1px}
+.nav-sort-item .nm{font-size:13.5px;font-weight:600;color:var(--ink)}
+.nav-sort-item .ix{margin-left:auto;font-size:11px;color:var(--muted);background:var(--graybg);padding:2px 8px;border-radius:10px}
 /* ========== 个人数据 ========== */
 .me-status{font-size:12px;font-weight:700;color:var(--gray)}
 .me-status.ok{color:var(--green)}
@@ -4071,7 +4083,7 @@ const THEMES={
   orange:{brand:'#f97316',brand2:'#e0533d',bg:'#fff7f2',panel:'#ffffff',ink:'#2a2018',line:'#f0e2d8',muted:'#9a7b66',grad:'linear-gradient(120deg,#ea580c,#f97316)'},
   green:{brand:'#10b981',brand2:'#06b6d4',bg:'#eefaf5',panel:'#ffffff',ink:'#143028',line:'#dcf0e8',muted:'#5d8475',grad:'linear-gradient(120deg,#059669,#10b981)'}
 };
-const THEME_KEY='matopt_theme_v1', LAYOUT_KEY='matopt_layout_v1', DENSE_KEY='matopt_dense_v1', EDIT_KEY='matopt_edit_v1';
+const THEME_KEY='matopt_theme_v1', LAYOUT_KEY='matopt_layout_v1', DENSE_KEY='matopt_dense_v1', EDIT_KEY='matopt_edit_v1', NAV_KEY='matopt_nav_order_v1';
 function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
 function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
@@ -4110,6 +4122,36 @@ function startEditObserver(){
   _editObs=new MutationObserver(()=>{ if(EDIT_MODE) attachEditHandles(); });
   _editObs.observe(document.body, {childList:true, subtree:true});
 }
+/* ---------- 导航板块排序（用户可自定义 tab 顺序） ---------- */
+function navTabs(){ return [...$$('nav button[data-tab]')]; }
+function saveNavOrder(){ const ids=navTabs().map(b=>b.dataset.tab);
+  try{ localStorage.setItem(NAV_KEY, JSON.stringify(ids)); }catch(e){} }
+function applyNavOrder(){ let ids=null; try{ ids=JSON.parse(localStorage.getItem(NAV_KEY)); }catch(e){} if(!ids||!ids.length) return;
+  const nav=document.querySelector('nav'); if(!nav) return;
+  const map={}; navTabs().forEach(b=>map[b.dataset.tab]=b);
+  // 按保存顺序重排，未知 id 忽略（兼容后续新增/删除 tab）
+  ids.forEach(id=>{ if(map[id]) nav.appendChild(map[id]); });
+}
+let _nsDrag=null;
+function renderNavSort(){
+  const box=document.getElementById('navSortList'); if(!box) return;
+  const items=navTabs();
+  box.innerHTML=items.map((b,i)=>"<div class='nav-sort-item' draggable='true' data-tab='"+b.dataset.tab+"'>"+
+    "<span class='grip'>⠿</span><span class='nm'>"+b.textContent.trim()+"</span><span class='ix'>"+(i+1)+"</span></div>").join('');
+  [...box.children].forEach(el=>{
+    el.addEventListener('dragstart',e=>{ _nsDrag=el; el.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; try{e.dataTransfer.setData('text/plain','');}catch(_){}});
+    el.addEventListener('dragend',()=>{ el.classList.remove('dragging'); _nsDrag=null; [...box.children].forEach(x=>x.classList.remove('over'));
+      // 同步到真实导航栏
+      const box=document.getElementById('navSortList'); const nav=document.querySelector('nav'); if(!box||!nav) return;
+      const map={}; navTabs().forEach(b=>map[b.dataset.tab]=b);
+      [...box.children].forEach(x=>{ const t=map[x.dataset.tab]; if(t) nav.appendChild(t); });
+      saveNavOrder(); renderNavSort(); });
+    el.addEventListener('dragover',e=>{ e.preventDefault(); if(!_nsDrag||_nsDrag===el) return;
+      const r=el.getBoundingClientRect(); const after=(e.clientY-r.top)>r.height/2;
+      [...box.children].forEach(x=>x.classList.remove('over')); el.classList.add('over');
+      if(after) el.parentNode.insertBefore(_nsDrag, el.nextSibling); else el.parentNode.insertBefore(_nsDrag, el); });
+  });
+}
 function saveLayout(){ const layout={}, hidden=[];
   $$('.section, #rank, #dim, #catdir, .dgrp-bd').forEach(sec=>{ const id=sec.id; if(!id) return; layout[id]=[...sec.querySelectorAll(':scope > .card')].map(c=>c.id).filter(Boolean); });
   movableCards().forEach(c=>{ if(c.classList.contains('hide')&&c.id) hidden.push(c.id); });
@@ -4128,7 +4170,7 @@ function syncColorInputs(v){ if(!v) return; const map={brand:'c_brand',brand2:'c
 function toHex(c){ if(!c) return '#000000'; c=c.trim(); if(c[0]==='#') return c; const m=c.match(/\d+/g); if(m&&m.length>=3){ return '#'+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,'0')).join(''); } return '#6d5efc'; }
 function bindCustom(){
   const mask=$('#customMask');
-  $('#openCustom').onclick=()=>{ syncColorInputs(curThemeVars()); mask.style.display='flex'; };
+  $('#openCustom').onclick=()=>{ syncColorInputs(curThemeVars()); renderNavSort(); mask.style.display='flex'; };
   $('#customX').onclick=()=>{ mask.style.display='none'; };
   mask.addEventListener('click',e=>{ if(e.target===mask) mask.style.display='none'; });
   $$('#customMask .subnav button[data-ctab]').forEach(b=>b.onclick=()=>{ $$('#customMask .subnav button[data-ctab]').forEach(x=>x.classList.toggle('on',x===b));
@@ -4147,7 +4189,7 @@ function bindCustom(){
   // 布局：编辑模式
   const chk=$('#editLayoutChk'); if(lsGet(EDIT_KEY)==='1'){ chk.checked=true; enterEditMode(); }
   chk.onchange=()=>{ if(chk.checked){ enterEditMode(); lsSet(EDIT_KEY,'1'); mask.style.display='none'; } else { exitEditMode(); lsDel(EDIT_KEY); } };
-  $('#resetLayoutBtn').onclick=()=>{ lsDel(LAYOUT_KEY); applyLayoutReset(); };
+  $('#resetLayoutBtn').onclick=()=>{ lsDel(LAYOUT_KEY); lsDel(NAV_KEY); applyLayoutReset(); };
   // 密度
   const sel=$('#densitySel'); if(lsGet(DENSE_KEY)==='dense'){ sel.value='dense'; document.querySelector('.wrap').classList.add('dense'); }
   sel.onchange=()=>{ const on=sel.value==='dense'; document.querySelector('.wrap').classList.toggle('dense',on); lsSet(DENSE_KEY,on?'dense':'comfort'); };
@@ -4220,7 +4262,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260829h';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260829i';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -4433,6 +4475,7 @@ function updateStateBanner(){
   }catch(e){ console.warn('[init] period-data.json 加载失败，将尝试本地缓存', e); }
 
   // 2) 先渲染（让看板立即出现，哪怕本地缓存还没合并）
+  try{ applyNavOrder(); }catch(e){ console.error('applyNavOrder 失败', e); }
   try{ bindAll(); }catch(e){ console.error('bindAll 失败', e); }
   try{ bindChangelogUI(); }catch(e){ console.error('bindChangelogUI 失败', e); }
   try{ const v=document.getElementById('curVer'); if(v && typeof SEED_VER!=='undefined') v.textContent='v'+SEED_VER; }catch(e){}
@@ -5831,7 +5874,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260829h"></script>
+<script src="personal-enhance.js?v=20260829i"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 

@@ -5,11 +5,11 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260829h";
-  var MAT_URL  = "./me-materials.csv?v=20260829h";
+  var HIST_URL = "./me-history.csv?v=20260829i";
+  var MAT_URL  = "./me-materials.csv?v=20260829i";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
-  var UPLOAD_URL = "./me-uploads.csv?v=20260829h";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260829i";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -1185,7 +1185,6 @@
     }
 
     var rows = upFiltered();
-    var groups = upGroups(rows, upGran);
 
     // 区间汇总
     var total = 0, ai = 0;
@@ -1199,8 +1198,6 @@
       spanDays = Math.max(1, Math.round((z - a) / 86400000) + 1);
     }
     var avg = spanDays ? total / spanDays : 0;
-
-    var granTxt = { day: "日产出汇总", week: "周产出汇总", month: "月产出汇总", total: "总总素材汇总" }[upGran] || "汇总";
 
     // 工具栏：日期范围 + 粒度切换
     var granBtns = ["day","week","month","total"].map(function (g) {
@@ -1228,29 +1225,13 @@
       "<div class='me-up-tile forecast'><div class='lab'>总产出</div><div class='big'>" + fmtNum(total) + "</div><div class='sub'>素材ID去重 · 上传时间口径</div></div>" +
       "</div>";
 
-    // 明细表
-    var table = "";
-    if (groups.length) {
-      var maxV = 1; groups.forEach(function (g) { if (g.total > maxV) maxV = g.total; });
-      var rowsHtml = groups.map(function (g) {
-        var w = Math.max(2, Math.round(g.total / maxV * 100));
-        return "<tr><td class='l'>" + esc(g.label) + "</td><td>" + fmtNum(g.total) + "</td><td>" + fmtNum(g.ai) + "</td><td>" + (g.ratio * 100).toFixed(1) + "%" +
-          "<td class='bar'><div style='height:6px;background:#eef2f7;border-radius:3px;overflow:hidden'><i style='display:block;height:100%;width:" + w + "%;background:linear-gradient(90deg,#4a7bff,#7a5cff)'></i></div></td></tr>";
-      }).join("");
-      var totalRow = (upGran !== "total")
-        ? "<tr class='me-up-sum'><td class='l'>合计</td><td>" + fmtNum(total) + "</td><td>" + fmtNum(ai) + "</td><td>" + (ratio * 100).toFixed(1) + "%</td><td></td></tr>"
-        : "";
-      table = "<div class='me-up-tbl-hd'>" + granTxt + "</div>" +
-        "<table class='me-rank-tbl me-up-tbl'><thead><tr><th class='l'>期次</th><th>素材量</th><th>AI素材</th><th>AIGC占比</th><th class='bar-h'></th></tr></thead><tbody>" + rowsHtml + totalRow + "</tbody></table>";
-    } else {
-      table = "<div class='empty' style='padding:24px;text-align:center;color:#9aa4b2;background:#fbfcff;border:1px dashed #e0e6ef;border-radius:10px;margin-top:12px'>该范围内暂无素材</div>";
-    }
+    // 原「期次明细表」已移除（用户 2026-08-29 要求）：其数据已由对比看板顶部的「总素材量汇总 · 核心」条承接
 
     var note = "<div class='me-up-note'>统计口径：数据来源 me-uploads.csv —— 由创量【内容】页「高级筛选(上传时间) → 导出 → 导出素材信息」<strong>逐月导出的平台原始清单</strong>合并而成，「上传时间」为创量后台<strong>真实上传时间戳（精确到秒）</strong>，非任何推算值。按素材ID去重、仅统计上传人含「李虹玉」的素材。AIGC 由【素材标签】列命中 9 个 AIGC 标签判定。日=按上传日期、周=ISO自然周、月=按上传月份汇总产出；日均产出=区间素材量÷区间跨度天数。</div>";
 
     var cmp = upCompareHtml();
-
-    body.innerHTML = bar + tiles + cmp + table + note;
+    // 底部旧的「总素材量汇总」期次明细表已移除：该数据由对比看板顶部「总素材量汇总 · 核心」条承接
+    body.innerHTML = bar + tiles + cmp + note;
 
     // 事件绑定
     var apply = el("upApply"); if (apply) apply.onclick = function () {
