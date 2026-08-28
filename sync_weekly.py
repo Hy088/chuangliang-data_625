@@ -8,7 +8,10 @@
 逻辑忠实移植自 index.html 的 rowChannel / decode / _metrics / accumulate / aggregateViews。
 """
 import csv, glob, os, json, re, shutil, gzip, sys
-from datetime import datetime
+from datetime import datetime, date, timedelta
+
+# 日报导出里「素材预览」等列可能很长，放开 csv 单字段上限，避免 csv.Error: field larger than field limit
+csv.field_size_limit(10 ** 9)
 
 # --force：忽略已有 period-meta/period-materials/period-data，从源 CSV 全量重建所有周期
 FORCE = ('--force' in sys.argv) or ('-f' in sys.argv)
@@ -168,6 +171,69 @@ def build_week(week_files, period):
     return mrows, views
 
 
+def _d(s):
+    y, m, dd = map(int, s.split('-'))
+    return date(y, m, dd)
+
+
+def group_days_into_weeks(days):
+    """把一批单日日期按「周日 ~ 周六」归成周期桶。
+
+    看板的周期约定是 周日~周六 7 天一档。最早那天所在的周如果不足一周，
+    就从最早那天起算（这样首个周期会是 07-01~07-04 这种不完整的桶，
+    与历史数据一致）。返回 {(start_str, end_str): [day_str, ...]}
+    """
+    if not days:
+        return {}
+    ds = sorted(_d(x) for x in days)
+    anchor = ds[0]
+
+    def bucket_start(d):
+        days_since_sun = (d.weekday() + 1) % 7      # 周日->0, 周一->1 ... 周六->6
+        s = d - timedelta(days=days_since_sun)
+        return s if s >= anchor else anchor
+
+    def bucket_end(s):
+        days_to_sat = 6 - ((s.weekday() + 1) % 7)
+        return s + timedelta(days=days_to_sat)
+
+    out = {}
+    for d in ds:
+        s, e = bucket_start(d), bucket_end(bucket_start(d))
+        out.setdefault((s.isoformat(), e.isoformat()), []).append(d.isoformat())
+    return out
+
+
+def period_missing_days(label, files):
+    """算某个周期桶里还缺哪几天（兼容日报与周报两种文件形态）"""
+    m = re.search(r'(\d{4}-\d{2}-\d{2})\s*~\s*(\d{4}-\d{2}-\d{2})', label)
+    if not m:
+        return []
+    have = set()
+    for f in files:
+        mm = re.search(r'(\d{4}-\d{2}-\d{2})-(\d{4}-\d{2}-\d{2})_', os.path.basename(f))
+        if not mm:
+            continue
+        s, e = _d(mm.group(1)), _d(mm.group(2))
+        cur = s
+        while cur <= e:
+            have.add(cur.isoformat())
+            cur += timedelta(days=1)
+    return _missing_days(m.group(1), m.group(2), have)
+
+
+def _missing_days(start, end, have):
+    """列出某周期桶里还缺哪几天（例如最后一个周期还没过完）"""
+    s, e = _d(start), _d(end)
+    have = set(have)
+    miss, cur = [], s
+    while cur <= e:
+        if cur.isoformat() not in have:
+            miss.append(cur.isoformat())
+        cur += timedelta(days=1)
+    return miss
+
+
 def _dim_rollup(pdata, key, keyfn):
     """把多个周期的同名维度表重新累加成一张总表（用于 --force --only= 部分重建）"""
     acc = []
@@ -279,15 +345,44 @@ def main():
         existing_periods = list(meta.get('meta', {}).get('periods', []))
     print('existing periods:', existing_periods)
 
-    # 2) 扫描源文件夹，找新周
+    # 2) 扫描源文件夹。支持两种形态：
+    #    a) 周报文件：素材报表-不限_2026-08-16-2026-08-22_xxx.csv（一个文件就是一个周期）
+    #    b) 日报文件：素材报表-不限_2026-07-01-2026-07-01_xxx.csv（一天一个文件，
+    #       需按「周日~周六」自动归桶成一个周期，否则看板会切出几十个"周期"）
     files = glob.glob(os.path.join(SRC, '素材报表-不限_*.csv'))
-    weeks = {}  # label -> [files]
+    daily = {}    # 'YYYY-MM-DD' -> [files]
+    multi = {}    # ('YYYY-MM-DD','YYYY-MM-DD') -> [files]
     for f in files:
         m = re.search(r'(\d{4}-\d{2}-\d{2})-(\d{4}-\d{2}-\d{2})_', os.path.basename(f))
         if not m:
             continue
-        label = f"{m.group(1)} ~ {m.group(2)}"
-        weeks.setdefault(label, []).append(f)
+        s, e = m.group(1), m.group(2)
+        if s == e:
+            daily.setdefault(s, []).append(f)
+        else:
+            multi.setdefault((s, e), []).append(f)
+
+    weeks = {}    # label -> [files]
+    if daily:
+        buckets = group_days_into_weeks(sorted(daily.keys()))
+        for (s, e), ds in buckets.items():
+            fl = []
+            for d in ds:
+                fl.extend(daily[d])
+            weeks[f"{s} ~ {e}"] = sorted(fl)
+        print('daily files detected:', len(daily), 'days ->', len(buckets), 'week buckets')
+        for (s, e), ds in sorted(buckets.items()):
+            missing = _missing_days(s, e, ds)
+            flag = ('  ⚠ 缺 ' + ','.join(missing)) if missing else ''
+            print(f"    {s} ~ {e}: {len(ds)} 天{flag}")
+    for (s, e), fl in multi.items():
+        label = f"{s} ~ {e}"
+        weeks.setdefault(label, [])
+        for x in fl:
+            if x not in weeks[label]:
+                weeks[label].append(x)
+        if daily:
+            print('  (混合形态) 多日文件另立周期:', label)
     src_weeks = sorted(weeks.keys())
     if FORCE:
         new_weeks = [w for w in src_weeks if (not ONLY or w in ONLY)]
@@ -309,8 +404,14 @@ def main():
     for w in sorted(new_weeks):
         mrows, views = build_week(sorted(weeks[w]), w)
         all_mrows.extend(mrows)
-        new_periodData.append({'period': w, **views})
-        print(f"  week {w}: materials={len(mrows)} overall_cost={views['overall']['cost']:.2f}")
+        miss = period_missing_days(w, weeks[w])
+        rec = {'period': w, **views}
+        if miss:
+            rec['incomplete'] = True
+            rec['missing_days'] = miss
+        new_periodData.append(rec)
+        print(f"  week {w}: materials={len(mrows)} overall_cost={views['overall']['cost']:.2f}"
+              + (f"  ⚠ 缺 {','.join(miss)}" if miss else ""))
 
     # 5) 合并素材行
     pm_path = os.path.join(REPO, 'period-materials.json')
