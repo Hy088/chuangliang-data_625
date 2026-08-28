@@ -48,10 +48,20 @@ def log(*a):
 
 # ---------- 1) 先看看源文件夹里有什么 ----------
 def scan_weeks(folder):
-    """扫描文件夹里创量素材报表 CSV，按文件名里的日期区间分组"""
+    """扫描文件夹里创量素材报表 CSV，按「周日~周六 周期桶」分组。
+
+    与 sync_weekly.py 的归桶逻辑保持一致：
+      - 周报文件（一个文件一个周期）→ 直接成一个桶
+      - 日报文件（一天一个文件）→ 自动按 周日~周六 归桶，避免 59 个"伪周期"
+    """
+    try:
+        from sync_weekly import group_days_into_weeks
+    except Exception:
+        group_days_into_weeks = None
     weeks = {}
     if not os.path.isdir(folder):
         return weeks
+    singles, multies = {}, {}
     for fn in os.listdir(folder):
         low = fn.lower()
         if not low.endswith(".csv"):
@@ -63,8 +73,23 @@ def scan_weeks(folder):
         m = PERIOD_RE.search(fn)
         if not m:
             continue
-        label = f"{m.group(1)} ~ {m.group(2)}"
-        weeks.setdefault(label, []).append(fn)
+        s, e = m.group(1), m.group(2)
+        if s == e:
+            singles.setdefault(s, []).append(fn)
+        else:
+            multies.setdefault((s, e), []).append(fn)
+    if singles and group_days_into_weeks:
+        buckets = group_days_into_weeks(sorted(singles.keys()))
+        for (s, e), ds in buckets.items():
+            fl = []
+            for d in ds:
+                fl.extend(singles[d])
+            weeks[f"{s} ~ {e}"] = sorted(fl)
+    else:
+        for d, fl in singles.items():
+            weeks[f"{d} ~ {d}"] = sorted(fl)
+    for (s, e), fl in multies.items():
+        weeks.setdefault(f"{s} ~ {e}", []).extend(sorted(fl))
     return {k: sorted(v) for k, v in sorted(weeks.items())}
 
 
