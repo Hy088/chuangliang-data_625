@@ -1459,14 +1459,22 @@
   };
 
   /* ---------- 初始化 ---------- */
+  function maybeLoad() {
+    var me = el("me");
+    if (me && me.classList.contains("active")) loadData();
+  }
   function init() {
     hookDashboard();
     injectUI();
-    loadData();
-    setInterval(function () { loadData(); }, 5 * 60 * 1000);
+    maybeLoad();
+    setInterval(function () {
+      var me = el("me");
+      if (me && me.classList.contains("active")) loadData();
+    }, 5 * 60 * 1000);
     var rb = el("meRefresh");
     if (rb) rb.onclick = function () { loadData(null, true); };
   }
+  window.loadMeEnhData = function (cb, force) { loadData(cb, force); };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
