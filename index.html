@@ -473,7 +473,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
 .ppi-text{flex:1;font-weight:600;color:#303133;white-space:nowrap}
 .ppi-arrow{font-size:10px;color:#909399;transition:.2s}
 .period-picker__input.active .ppi-arrow{transform:rotate(180deg)}
-.period-picker__dropdown{position:absolute;top:calc(100% + 8px);right:0;z-index:2000;background:#fff;border:1px solid #e4e7ed;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.18);display:flex;overflow:hidden;min-width:560px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .2s,transform .2s,visibility .2s}
+.period-picker__dropdown{position:fixed;top:auto;right:auto;z-index:2000;background:#fff;border:1px solid #e4e7ed;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,.18);display:flex;overflow:hidden;min-width:560px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .2s,transform .2s,visibility .2s}
 .period-picker__dropdown.open{opacity:1;visibility:visible;transform:translateY(0)}
 .ppd-shortcuts{width:96px;background:#f5f7fa;border-right:1px solid #e4e7ed;padding:8px 0;display:flex;flex-direction:column}
 .ppd-shortcut{padding:9px 16px;font-size:13px;color:#606266;cursor:pointer;transition:.18s}
@@ -1982,7 +1982,20 @@ function updateInputText(){
   else if(PERIOD_MODE==='period' && CUR_PERIOD){ el.textContent=CUR_PERIOD; }
   else { el.textContent=label; }
 }
-function openPanel(){ PANEL_OPEN=true; const d=$('#periodDropdown'); if(d) d.classList.add('open'); const i=$('#periodInput'); if(i) i.classList.add('active'); renderMonthGrid(); }
+function positionDropdown(){
+  const d=$('#periodDropdown'), input=$('#periodInput'), nav=document.querySelector('nav');
+  if(!d || !input) return;
+  const ir=input.getBoundingClientRect();
+  let top=ir.bottom + 8;
+  if(nav){
+    const nr=nav.getBoundingClientRect();
+    top = Math.max(top, nr.bottom + 8);
+  }
+  const right=Math.max(8, window.innerWidth - ir.right);
+  d.style.top=top+'px';
+  d.style.right=right+'px';
+}
+function openPanel(){ PANEL_OPEN=true; const d=$('#periodDropdown'); if(d) d.classList.add('open'); const i=$('#periodInput'); if(i) i.classList.add('active'); renderMonthGrid(); positionDropdown(); }
 function closePanel(){ PANEL_OPEN=false; const d=$('#periodDropdown'); if(d) d.classList.remove('open'); const i=$('#periodInput'); if(i) i.classList.remove('active'); }
 function togglePanel(){ if(PANEL_OPEN) closePanel(); else openPanel(); }
 function refreshPicker(){
@@ -2043,6 +2056,10 @@ function initPeriodSel(){
     const picker=$('#periodPicker');
     if(picker && !picker.contains(e.target)) closePanel();
   });
+  // 窗口大小变化时重新定位；滚动时关闭避免错位
+  let ppResizeTimer;
+  window.addEventListener('resize', ()=>{ clearTimeout(ppResizeTimer); ppResizeTimer=setTimeout(()=>{ if(PANEL_OPEN) positionDropdown(); }, 80); });
+  window.addEventListener('scroll', ()=>{ if(PANEL_OPEN) closePanel(); }, {passive:true});
   // 快捷项
   $$('.ppd-shortcut').forEach(el=>{
     el.onclick=(e)=>{
@@ -4141,7 +4158,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260828l';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260828m';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -5670,7 +5687,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260828l"></script>
+<script src="personal-enhance.js?v=20260828m"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 
