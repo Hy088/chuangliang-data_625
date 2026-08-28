@@ -1559,6 +1559,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
           <select id="capDayFilter" class="cap-sort" title="按日期筛选"><option value="">日期·全部</option></select>
           <select id="capQyFilter" class="cap-sort" title="按青云过审状态筛选"><option value="">青云·全部</option><option value="已过审">已过审</option><option value="未过审">未过审</option><option value="其他原因">其他原因</option><option value="未标注">未标注</option></select>
           <select id="capClFilter" class="cap-sort" title="按是否上传创量筛选"><option value="">创量·全部</option><option value="已传">已传创量</option><option value="未传">未传创量</option></select>
+          <select id="capCatFilter" class="cap-sort" title="按素材分类筛选"><option value="">分类·全部</option><option value="广义新">广义新</option><option value="DHX">DHX</option><option value="标点">标点</option><option value="PRJ">PRJ</option><option value="其他">其他</option></select>
           <span class="cap-spacer"></span>
           <button class="btn sm" id="capExportBtn" title="复制为 CSV 到剪贴板">📋 导出</button>
         </div>
@@ -4485,7 +4486,7 @@ document.addEventListener('click', function(e){
 // ========== 登记产能上传情况（自动读取本地路径扫描结果 capacity.json） ==========
 let _capBound = false;
 let _capData = { entries: [], summary: null };
-const capState = { q:'', month:'', day:'', qy:'', cl:'' };
+const capState = { q:'', month:'', day:'', qy:'', cl:'', cat:'' };
 const capSel = new Set();  // 多选标注：选中的 key 集合
 const CAP_OVERRIDE_KEY = 'matopt_capacity_overrides_v1';
 function loadCapOverrides(){ try{ const v = localStorage.getItem(CAP_OVERRIDE_KEY); return v ? JSON.parse(v) : {}; }catch(e){ return {}; } }
@@ -4525,6 +4526,7 @@ function bindCapacity(){
   sec.querySelector('#capDayFilter').addEventListener('change', e=>{ capState.day=e.target.value; renderCapList(); });
   sec.querySelector('#capQyFilter').addEventListener('change', e=>{ capState.qy=e.target.value; updateCapQuickChips(); renderCapList(); });
   sec.querySelector('#capClFilter').addEventListener('change', e=>{ capState.cl=e.target.value; updateCapQuickChips(); renderCapList(); });
+  sec.querySelector('#capCatFilter').addEventListener('change', e=>{ capState.cat=e.target.value; renderCapList(); });
   sec.querySelector('#capExportBtn').addEventListener('click', capExportAuto);
   // 快捷筛选 chips
   document.getElementById('capQuick').addEventListener('click', e=>{
@@ -4706,6 +4708,7 @@ function getCapFiltered(){
   if(capState.day) list = list.filter(x => x.day===capState.day);
   if(capState.qy) list = list.filter(x => (x.qingyun||'未标注')===capState.qy);
   if(capState.cl) list = list.filter(x => ((x.chuangliang==='yes')?'已传':'未传')===capState.cl);
+  if(capState.cat) list = list.filter(x => (x.categories||[]).includes(capState.cat));
   if(q){ list = list.filter(x => (x.product+' '+(x.path||'')+' '+(x.qingyunReason||'')+' '+(x.chuangliangReason||'')).toLowerCase().includes(q)); }
   list.forEach(e=>{ e._key = e.path || (e.date+'/'+e.product); });
   return list;
@@ -5459,6 +5462,61 @@ bindCapacity();
       <button class="btn sm" id="capEditCopyCmd">📋 复制命令</button>
       <button class="btn sm" id="capEditCancel">取消</button>
       <button class="btn primary sm" id="capEditSave">保存到看板</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 产能批量标注弹窗 ========== -->
+<div class="modal-mask" id="capBatchMask" style="display:none">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-hd"><h3 id="capBatchTitle">🏷 批量标注</h3><button class="modal-x" id="capBatchClose">✕</button></div>
+    <div class="modal-bd">
+      <div class="cap-tip">
+        已选中 <b id="capBatchNum">0</b> 条产品。下方选择要批量设置的字段，留空「不修改」则保持原值。
+      </div>
+      <div class="cap-fld">
+        <label>上传状态</label>
+        <select id="capBatchUploaded">
+          <option value="">不修改</option>
+          <option value="yes">已上传</option>
+          <option value="no">未上传</option>
+        </select>
+      </div>
+      <div class="cap-fld">
+        <label>青云过审状态</label>
+        <select id="capBatchQingyun">
+          <option value="">不修改</option>
+          <option value="已过审">已过审</option>
+          <option value="未过审">未过审</option>
+          <option value="其他原因">其他原因</option>
+          <option value="未标注">未标注</option>
+        </select>
+      </div>
+      <div class="cap-fld">
+        <label>原因（未过审/其他原因时填写）</label>
+        <input id="capBatchReason" type="text" placeholder="例如：画面不清晰 / 涉及竞品" disabled>
+      </div>
+      <div class="cap-fld">
+        <label>是否上传创量</label>
+        <select id="capBatchChuangliang">
+          <option value="">不修改</option>
+          <option value="yes">已传创量</option>
+          <option value="no">未传创量</option>
+        </select>
+      </div>
+      <div class="cap-fld">
+        <label>未传创量原因（未传时填写）</label>
+        <input id="capBatchClReason" type="text" placeholder="例如：素材待修改 / 账户余额不足 / 计划暂停" disabled>
+      </div>
+      <div class="cap-tip">
+        ⚠️ <b>注意：</b>点击「应用到所选」只会存在当前浏览器里；若想真正持久化到 <code>D:/625/京东</code>，请复制下方的 PowerShell 命令，在本地运行一次即可自动创建标记文件。
+      </div>
+      <div class="cap-cmd" id="capBatchCmd"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn sm" id="capBatchCopyCmd">📋 复制命令</button>
+      <button class="btn sm" id="capBatchCancel">取消</button>
+      <button class="btn primary sm" id="capBatchApply">应用到所选</button>
     </div>
   </div>
 </div>
