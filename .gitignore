@@ -9,6 +9,13 @@ _serve_*.log
 # 超大素材明细：线上走 .gz（前端自动解压），原始 JSON 留在本地
 period-materials.json
 
+# 同步脚本的备份产物 / 按周期明文分片（线上只托管 .gz）
+*.syncbak
+period-materials-*.json
+_bak_period_*/
+_trash/
+__pycache__/
+
 # 即梦浏览器自动化：Cookie 与下载产物（含账号态，勿提交）
 jimeng-cookie.json
 jimeng-output/

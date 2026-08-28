@@ -7,8 +7,16 @@
   - period-meta.json       (轻量体, 不含 materials)
 逻辑忠实移植自 index.html 的 rowChannel / decode / _metrics / accumulate / aggregateViews。
 """
-import csv, glob, os, json, re, shutil, gzip
+import csv, glob, os, json, re, shutil, gzip, sys
 from datetime import datetime
+
+# --force：忽略已有 period-meta/period-materials/period-data，从源 CSV 全量重建所有周期
+FORCE = ('--force' in sys.argv) or ('-f' in sys.argv)
+# --only=标签：只重建指定周期（可逗号分隔），常与 --force 搭配
+ONLY = None
+for _a in sys.argv[1:]:
+    if _a.startswith('--only='):
+        ONLY = [x.strip() for x in _a[len('--only='):].split(',') if x.strip()]
 
 REPO = r"C:/Users/EDY/chuangliang_data"
 SRC  = r"F:\Workbuddy.renwu\WorkBuddy_数据"
@@ -160,6 +168,33 @@ def build_week(week_files, period):
     return mrows, views
 
 
+def _dim_rollup(pdata, key, keyfn):
+    """把多个周期的同名维度表重新累加成一张总表（用于 --force --only= 部分重建）"""
+    acc = []
+    for v in pdata:
+        acc = merge_dim(acc, v.get(key, []) or [], keyfn)
+    return acc
+
+
+def _rollup_from_periods(pdata):
+    """由若干周期的分期聚合，重算出整体聚合结构"""
+    tot = {'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0, 'n': 0}
+    for v in pdata:
+        o = v.get('overall', {})
+        for k in tot:
+            tot[k] += o.get(k, 0)
+    return {
+        'periodData': list(pdata),
+        'overall': metrics(tot),
+        'projects':   _dim_rollup(pdata, 'projects',   lambda d: d['proj']),
+        'categories': _dim_rollup(pdata, 'categories', lambda d: d['proj'] + '|' + d['cat']),
+        'placements': _dim_rollup(pdata, 'placements', lambda d: d['proj'] + '|' + d['chan']),
+        'optimizers': _dim_rollup(pdata, 'optimizers', lambda d: d['proj'] + '|' + d['opt']),
+        'editors':    _dim_rollup(pdata, 'editors',    lambda d: d['proj'] + '|' + d['edit']),
+        'tags':       _dim_rollup(pdata, 'tags',       lambda d: d['proj'] + '|' + d['tag']),
+    }
+
+
 def merge_dim(existing, new_list, keyfn):
     d = {}
     for e in existing:
@@ -233,10 +268,15 @@ def empty_pd():
             'materials': {'cols': MCOLS, 'rows': []}, 'suggestions': [], 'insights': [], 'periodData': []}
 
 def main():
+    print('=== sync_weekly mode:', 'FORCE-REBUILD' if FORCE else 'INCREMENTAL', '===')
     # 1) 现有 meta，确定已有哪些周期
     meta_path = os.path.join(REPO, 'period-meta.json')
-    meta = json.load(open(meta_path, encoding='utf-8')) if os.path.exists(meta_path) else empty_meta()
-    existing_periods = list(meta.get('meta', {}).get('periods', []))
+    if FORCE:
+        meta = empty_meta()          # 全量重建：丢弃旧聚合，后面按源 CSV 重算
+        existing_periods = []
+    else:
+        meta = json.load(open(meta_path, encoding='utf-8')) if os.path.exists(meta_path) else empty_meta()
+        existing_periods = list(meta.get('meta', {}).get('periods', []))
     print('existing periods:', existing_periods)
 
     # 2) 扫描源文件夹，找新周
@@ -248,9 +288,13 @@ def main():
             continue
         label = f"{m.group(1)} ~ {m.group(2)}"
         weeks.setdefault(label, []).append(f)
-    new_weeks = [w for w in weeks if w not in existing_periods]
-    print('found week labels:', list(weeks.keys()))
-    print('NEW weeks to sync:', new_weeks)
+    src_weeks = sorted(weeks.keys())
+    if FORCE:
+        new_weeks = [w for w in src_weeks if (not ONLY or w in ONLY)]
+    else:
+        new_weeks = [w for w in src_weeks if w not in existing_periods]
+    print('found week labels:', src_weeks)
+    print('weeks to build:', new_weeks)
     # 即使没有新周期，也重新写出输出文件（确保 .gz 等衍生文件存在）
 
     # 3) 备份（只有文件存在才备份）
@@ -271,8 +315,30 @@ def main():
     # 5) 合并素材行
     pm_path = os.path.join(REPO, 'period-materials.json')
     pd_path = os.path.join(REPO, 'period-data.json')
-    pm = json.load(open(pm_path, encoding='utf-8')) if os.path.exists(pm_path) else empty_pm()
-    pd = json.load(open(pd_path, encoding='utf-8')) if os.path.exists(pd_path) else empty_pd()
+    if FORCE:
+        pm = empty_pm()
+        pd = empty_pd()
+        if ONLY:
+            # 部分重建：保留未选中周期的旧素材行 + 由旧分期聚合重算的整体聚合
+            if os.path.exists(pm_path):
+                _old_pm = json.load(open(pm_path, encoding='utf-8'))
+                _pi = _old_pm['cols'].index('period')
+                pm['rows'] = [r for r in _old_pm.get('rows', []) if r[_pi] not in ONLY]
+                pd['materials']['rows'] = [list(r) for r in pm['rows']]
+            if os.path.exists(pd_path):
+                _old_pd = json.load(open(pd_path, encoding='utf-8'))
+                _keep = [v for v in _old_pd.get('periodData', []) if v.get('period') not in ONLY]
+                pd.update(_rollup_from_periods(_keep))
+                pd['meta'] = _old_pd.get('meta', {})
+            if os.path.exists(meta_path):
+                _old_mt = json.load(open(meta_path, encoding='utf-8'))
+                _keepm = [v for v in _old_mt.get('periodData', []) if v.get('period') not in ONLY]
+                meta.update(_rollup_from_periods(_keepm))
+                _mp = meta.setdefault('meta', {})
+                _mp['periods'] = [p for p in (_old_mt.get('meta', {}).get('periods') or []) if p not in ONLY]
+    else:
+        pm = json.load(open(pm_path, encoding='utf-8')) if os.path.exists(pm_path) else empty_pm()
+        pd = json.load(open(pd_path, encoding='utf-8')) if os.path.exists(pd_path) else empty_pd()
     # 确保列定义与最新 MCOLS 一致
     pm['cols'] = MCOLS
     pd['materials']['cols'] = MCOLS
@@ -295,7 +361,7 @@ def main():
         obj['tags'] = merge_dim(obj.get('tags', []), [p for v in new_periodData for p in v['tags']], lambda d: d['proj'] + '|' + d['tag'])
         # meta.periods / projects / generated（前端多处读取 DATA.meta.projects / period / generated）
         mp = obj.setdefault('meta', {})
-        mp['periods'] = (mp.get('periods', []) or []) + new_weeks
+        mp['periods'] = sorted(set([str(x) for x in ((mp.get('periods', []) or []) + new_weeks)]))
         mp['projects'] = [p['proj'] for p in obj.get('projects', [])]
         mp['generated'] = datetime.now().strftime('%Y-%m-%d %H:%M')
         # 默认 period 显示最近一个周期；前端切换后会覆盖
@@ -353,11 +419,41 @@ def main():
     for r in pm['rows']:
         p = r[ci_period]
         by_period.setdefault(p, []).append(r)
+
+    # 只写 .gz，不落明文（避免仓库堆积，也避免删除操作）
+    def write_gz_only(gz_path, obj):
+        txt = json.dumps(obj, ensure_ascii=False)
+        with gzip.open(gz_path, 'wt', encoding='utf-8', compresslevel=9) as f:
+            f.write(txt)
+        return len(txt.encode('utf-8'))
+
+    # 清理旧的按周期分片（FORCE 时把已废弃周期的文件挪进 _trash，不做删除）
+    if FORCE:
+        keep_slugs = {re.sub(r'[^0-9]', '', w) for w in ONLY} if ONLY else set()
+        trash = os.path.join(REPO, '_trash', datetime.now().strftime('%Y%m%d_%H%M%S'))
+        moved = []
+        for f in glob.glob(os.path.join(REPO, 'period-materials-*.json')) + \
+                 glob.glob(os.path.join(REPO, 'period-materials-*.json.gz')):
+            sm = re.search(r'period-materials-(\d+)\.json', os.path.basename(f))
+            if not sm:
+                continue
+            if ONLY and sm.group(1) in keep_slugs:
+                continue
+            try:
+                os.makedirs(trash, exist_ok=True)
+                shutil.move(f, os.path.join(trash, os.path.basename(f)))
+                moved.append(os.path.basename(f))
+            except Exception as e:
+                print('  (跳过旧分片', os.path.basename(f), ':', e, ')')
+        if moved:
+            print(f'  旧分片已移至 _trash: {len(moved)} 个')
+
     for p, rows in sorted(by_period.items()):
         slug = re.sub(r'[^0-9]', '', p)
-        ppath = os.path.join(REPO, f'period-materials-{slug}.json')
-        write_json(ppath, {'cols': pm['cols'], 'rows': rows})
-        print(f'  period-materials-{slug}.json.gz: {len(rows)} rows, {round(os.path.getsize(ppath+".gz")/1024/1024,2)} MB')
+        gzp = os.path.join(REPO, f'period-materials-{slug}.json.gz')
+        write_gz_only(gzp, {'cols': pm['cols'], 'rows': rows})
+        gz_mb = round(os.path.getsize(gzp) / 1024 / 1024, 2)
+        print(f'  period-materials-{slug}.json.gz: {len(rows)} rows, {gz_mb} MB')
 
     # period-meta 保持轻量普通 JSON
     json.dump(meta, open(os.path.join(REPO, 'period-meta.json'), 'w', encoding='utf-8'), ensure_ascii=False)
