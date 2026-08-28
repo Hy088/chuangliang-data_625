@@ -5,11 +5,11 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260829g";
-  var MAT_URL  = "./me-materials.csv?v=20260829g";
+  var HIST_URL = "./me-history.csv?v=20260829h";
+  var MAT_URL  = "./me-materials.csv?v=20260829h";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
-  var UPLOAD_URL = "./me-uploads.csv?v=20260829g";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260829h";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -1136,7 +1136,7 @@
     var aiUp = c.up.ai || 0;
     var ratioUp = totalUp ? (aiUp / totalUp * 100).toFixed(1) : "0.0";
     var summary = "<div class='me-cmp-summary'>" +
-      "<div class='me-cmp-sum-title'>总素材量汇总</div>" +
+      "<div class='me-cmp-sum-title'><span>总素材量汇总</span><span class='me-cmp-sum-tag'>核心</span></div>" +
       "<div class='me-cmp-sum-body'>" +
         "<div class='me-cmp-sum-item'><div class='me-cmp-sum-lab'>素材量</div><div class='me-cmp-sum-val'>" + esc(fmtNum(totalUp)) + "</div></div>" +
         "<div class='me-cmp-sum-item'><div class='me-cmp-sum-lab'>AI素材</div><div class='me-cmp-sum-val' style='color:#7a5cff'>" + esc(fmtNum(aiUp)) + "</div></div>" +
@@ -1434,17 +1434,18 @@
       ".me-cmp-bartag{width:42px;font-size:11px;color:#5a6678;text-align:right}" +
       ".me-cmp-barnum{width:72px;font-size:12.5px;color:#1f2a3a;font-weight:700;text-align:right;white-space:nowrap}" +
       ".me-cmp-note{padding:12px;background:#f6f8fb;border-radius:10px;color:#5a6678;font-size:12px;line-height:1.7}" +
-      ".me-cmp-summary{background:#f6f8fb;border:1px solid #e6ebf2;border-radius:12px;padding:14px 16px;margin-bottom:18px}" +
-      ".me-cmp-sum-title{font-size:13px;font-weight:700;color:#1f2a3a;margin-bottom:10px}" +
-      ".me-cmp-sum-body{display:flex;gap:20px;align-items:center;flex-wrap:wrap}" +
-      ".me-cmp-sum-item{display:flex;flex-direction:column;gap:2px}" +
-      ".me-cmp-sum-item.wide{flex:1;min-width:200px}" +
-      ".me-cmp-sum-lab{font-size:12px;color:#5a6678}" +
-      ".me-cmp-sum-val{font-size:18px;font-weight:800;color:#1f2a3a}" +
-      ".me-cmp-sum-barwrap{display:flex;align-items:center;gap:10px}" +
-      ".me-cmp-sum-bar{flex:1;height:10px;background:#eef2f7;border-radius:5px;overflow:hidden;min-width:100px}" +
-      ".me-cmp-sum-fill{height:100%;background:linear-gradient(90deg,#7a5cff,#a78bfa);border-radius:5px}" +
-      ".me-cmp-sum-pct{font-size:14px;font-weight:700;color:#7a5cff;white-space:nowrap}" +
+      ".me-cmp-summary{background:linear-gradient(135deg,#f5f3ff 0%,#eef4ff 50%,#f0f9ff 100%);border:1px solid #d4c8ff;border-radius:14px;padding:18px 20px;margin-bottom:20px;box-shadow:0 4px 16px rgba(122,92,255,.12)}" +
+      ".me-cmp-sum-title{font-size:15px;font-weight:800;color:#4c3fb8;margin-bottom:12px;display:flex;align-items:center;gap:6px}" +
+      ".me-cmp-sum-body{display:flex;gap:28px;align-items:center;flex-wrap:wrap}" +
+      ".me-cmp-sum-item{display:flex;flex-direction:column;gap:4px}" +
+      ".me-cmp-sum-item.wide{flex:1;min-width:240px}" +
+      ".me-cmp-sum-lab{font-size:12.5px;color:#6b6b8a;font-weight:600}" +
+      ".me-cmp-sum-val{font-size:26px;font-weight:900;color:#1f2a3a;letter-spacing:-.5px}" +
+      ".me-cmp-sum-barwrap{display:flex;align-items:center;gap:12px}" +
+      ".me-cmp-sum-bar{flex:1;height:14px;background:#e4e8f0;border-radius:7px;overflow:hidden;min-width:120px;box-shadow:inset 0 1px 2px rgba(0,0,0,.06)}" +
+      ".me-cmp-sum-fill{height:100%;background:linear-gradient(90deg,#7a5cff,#b794f6);border-radius:7px;box-shadow:0 1px 4px rgba(122,92,255,.3)}" +
+      ".me-cmp-sum-pct{font-size:18px;font-weight:900;color:#7a5cff;white-space:nowrap}" +
+      ".me-cmp-sum-tag{font-size:11px;color:#fff;background:linear-gradient(90deg,#7a5cff,#a78bfa);padding:3px 10px;border-radius:10px;font-weight:700}" +
       ".me-up-chart{display:flex;align-items:flex-end;gap:10px;margin-bottom:4px}" +
       ".me-up-bar{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}" +
       ".me-up-bar .bararea{height:150px;width:100%;display:flex;align-items:flex-end;justify-content:center}" +
