@@ -5,11 +5,11 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260829e";
-  var MAT_URL  = "./me-materials.csv?v=20260829e";
+  var HIST_URL = "./me-history.csv?v=20260829f";
+  var MAT_URL  = "./me-materials.csv?v=20260829f";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
-  var UPLOAD_URL = "./me-uploads.csv?v=20260829e";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260829f";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -1131,6 +1131,18 @@
         "<div class='me-cmp-card-sub'>" + esc(disp(d, d.nv)) + " → " + esc(disp(d, d.av)) + "</div>" +
         "</div>";
     });
+    // 总素材量汇总条（位于转化数上方）
+    var totalUp = c.up.all || 0;
+    var aiUp = c.up.ai || 0;
+    var ratioUp = totalUp ? (aiUp / totalUp * 100).toFixed(1) : "0.0";
+    var summary = "<div class='me-cmp-summary'>" +
+      "<div class='me-cmp-sum-title'>总素材量汇总</div>" +
+      "<div class='me-cmp-sum-body'>" +
+        "<div class='me-cmp-sum-item'><div class='me-cmp-sum-lab'>素材量</div><div class='me-cmp-sum-val'>" + esc(fmtNum(totalUp)) + "</div></div>" +
+        "<div class='me-cmp-sum-item'><div class='me-cmp-sum-lab'>AI素材</div><div class='me-cmp-sum-val' style='color:#7a5cff'>" + esc(fmtNum(aiUp)) + "</div></div>" +
+        "<div class='me-cmp-sum-item wide'><div class='me-cmp-sum-lab'>AIGC占比</div><div class='me-cmp-sum-barwrap'><div class='me-cmp-sum-bar'><div class='me-cmp-sum-fill' style='width:" + ratioUp + "%'></div></div><div class='me-cmp-sum-pct'>" + ratioUp + "%</div></div></div>" +
+      "</div>" +
+    "</div>";
     // 分区块条形图
     var sections = ["素材规模", "流量表现", "转化效率"];
     var secHtml = "";
@@ -1156,6 +1168,7 @@
         "<span class='me-cmp-legend-item'><span class='me-cmp-arrow up'></span>AIGC更优</span>" +
         "<span class='me-cmp-legend-item'><span class='me-cmp-arrow down'></span>常规更优</span>" +
       "</div>" +
+      summary +
       secHtml +
       "<div class='me-cmp-note'>对比口径：素材量按<strong>上传时间</strong>（me-uploads.csv）；消耗/展示/点击/转化按<strong>日报日期</strong>（me-materials.csv）。AIGC = 素材标签命中 9 个 AIGC 标签之一：平台一组AIGC、平台一组AIGC-sd、平台一组AIGC-kl、平台一组AIGC-wx、平台一组AIGC-c空镜、京东本部-模型-seedance2.0、京东本部-工具-万相、京东本部-工具-可灵、京东本部-工作流-comfyui。绿色=AIGC 更优，红色=常规更优（CPA 越低越好）。</div>" +
       "</div>";
@@ -1420,6 +1433,17 @@
       ".me-cmp-bartag{width:42px;font-size:11px;color:#5a6678;text-align:right}" +
       ".me-cmp-barnum{width:72px;font-size:12.5px;color:#1f2a3a;font-weight:700;text-align:right;white-space:nowrap}" +
       ".me-cmp-note{padding:12px;background:#f6f8fb;border-radius:10px;color:#5a6678;font-size:12px;line-height:1.7}" +
+      ".me-cmp-summary{background:#f6f8fb;border:1px solid #e6ebf2;border-radius:12px;padding:14px 16px;margin-bottom:18px}" +
+      ".me-cmp-sum-title{font-size:13px;font-weight:700;color:#1f2a3a;margin-bottom:10px}" +
+      ".me-cmp-sum-body{display:flex;gap:20px;align-items:center;flex-wrap:wrap}" +
+      ".me-cmp-sum-item{display:flex;flex-direction:column;gap:2px}" +
+      ".me-cmp-sum-item.wide{flex:1;min-width:200px}" +
+      ".me-cmp-sum-lab{font-size:12px;color:#5a6678}" +
+      ".me-cmp-sum-val{font-size:18px;font-weight:800;color:#1f2a3a}" +
+      ".me-cmp-sum-barwrap{display:flex;align-items:center;gap:10px}" +
+      ".me-cmp-sum-bar{flex:1;height:10px;background:#eef2f7;border-radius:5px;overflow:hidden;min-width:100px}" +
+      ".me-cmp-sum-fill{height:100%;background:linear-gradient(90deg,#7a5cff,#a78bfa);border-radius:5px}" +
+      ".me-cmp-sum-pct{font-size:14px;font-weight:700;color:#7a5cff;white-space:nowrap}" +
       ".me-up-chart{display:flex;align-items:flex-end;gap:10px;margin-bottom:4px}" +
       ".me-up-bar{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}" +
       ".me-up-bar .bararea{height:150px;width:100%;display:flex;align-items:flex-end;justify-content:center}" +
