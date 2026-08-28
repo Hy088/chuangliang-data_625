@@ -1872,7 +1872,7 @@ const state = {
 // ---------- 标签筛选（多选 + 任一/所有） ----------
 function getMatTags(row, iTags){
   if(iTags==null) iTags = DATA.materials ? DATA.materials.cols.indexOf('tags') : -1;
-  return String(iTags>=0 ? (row[iTags]||'') : '').split(/[,，]/).map(t=>t.trim()).filter(Boolean);
+  return String(iTags>=0 ? (row[iTags]||'') : '').split(/[,，|]/).map(t=>t.trim()).filter(Boolean);
 }
 function matPassesTagFilter(row, iTags){
   const tf = state.tagFilter;
@@ -4282,7 +4282,7 @@ function accumulate(acc, rec, period){
   add(acc.plc, proj+'|'+chan, cost,imp,clk,cv);
   add(acc.opt, proj+'|'+opt, cost,imp,clk,cv);
   add(acc.edt, proj+'|'+edit, cost,imp,clk,cv);
-  (tags||'').split(/[,，]/).forEach(tg=>{ tg=tg.trim(); if(tg){ m.tags.add(tg); add(acc.tagg, proj+'|'+tg, cost,imp,clk,cv); } });
+  (tags||'').split(/[,，|]/).forEach(tg=>{ tg=tg.trim(); if(tg){ m.tags.add(tg); add(acc.tagg, proj+'|'+tg, cost,imp,clk,cv); } });
   if(!acc.tot[proj]) acc.tot[proj]={cost:0,imp:0,clk:0,cv:0,n:0,per:{}};
   const t=acc.tot[proj]; t.cost+=cost;t.imp+=imp;t.clk+=clk;t.cv+=cv;t.n++;
   if(!t.per[per]) t.per[per]={cost:0,imp:0,clk:0,cv:0,n:0};
@@ -5374,7 +5374,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260828e"></script>
+<script src="personal-enhance.js?v=20260828h"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 

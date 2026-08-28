@@ -5,11 +5,11 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260828b";
-  var MAT_URL  = "./me-materials.csv?v=20260828b";
+  var HIST_URL = "./me-history.csv?v=20260828h";
+  var MAT_URL  = "./me-materials.csv?v=20260828h";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
-  var UPLOAD_URL = "./me-uploads.csv?v=20260828a";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260828h";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -119,7 +119,21 @@
     });
   }
   function parseCSV(text) {
-    var rows = [], i = 0, field = "", row = [], inQ = false;
+    // 快路径：无引号字段（me-materials/me-uploads 均为逗号分隔、标签列已用 | 分隔），按行 + 按逗号拆分
+    // 避免逐字符拼接对大文件（10MB+）造成 O(n²) 卡顿（曾导致个人数据加载 29 秒）
+    if (text.indexOf('"') === -1) {
+      var lines = text.split("\n");
+      var rows = [];
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (line.length === 0) continue;
+        if (line.charCodeAt(line.length - 1) === 13) line = line.slice(0, -1); // 去 \r（CRLF）
+        rows.push(line.split(","));
+      }
+      return rows;
+    }
+    // 慢路径：存在引号字段时用逐字符解析（兜底，数据量小不影响）
+    var rows2 = [], i = 0, field = "", row = [], inQ = false;
     while (i < text.length) {
       var c = text[i];
       if (inQ) {
@@ -128,14 +142,14 @@
       } else {
         if (c === '"') inQ = true;
         else if (c === ",") { row.push(field); field = ""; }
-        else if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
+        else if (c === "\n") { row.push(field); rows2.push(row); row = []; field = ""; }
         else if (c === "\r") { /* skip */ }
         else field += c;
       }
       i++;
     }
-    if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
-    return rows;
+    if (field.length > 0 || row.length > 0) { row.push(field); rows2.push(row); }
+    return rows2;
   }
   function csvToObjects(text) {
     var rows = parseCSV(text.replace(/﻿/g, ""));
@@ -144,8 +158,14 @@
     var out = [];
     for (var r = 1; r < rows.length; r++) {
       if (!rows[r].length || (rows[r].length === 1 && rows[r][0].trim() === "")) continue;
+      var row = rows[r];
+      if (row.length > head.length) {
+        // 防御：某行字段多于表头（如素材标签列内漏网的逗号），把从标签列起的多余列合并回标签列（| 分隔），保证列对齐
+        var keep = head.length - 1;
+        row = row.slice(0, keep).concat([row.slice(keep).join("|")]);
+      }
       var o = {};
-      for (var c = 0; c < head.length; c++) o[head[c]] = (rows[r][c] || "").trim();
+      for (var c = 0; c < head.length; c++) o[head[c]] = (row[c] || "").trim();
       out.push(o);
     }
     return out;
@@ -178,10 +198,10 @@
   //           仅当某行确实无【素材标签】数据（如源未覆盖的素材）时回退素材名片段，避免漏计。
   var AIGC_TAGS = ["平台一组AIGC","平台一组AIGC-sd","京东本部-模型-seedance2.0","平台一组AIGC-wx","京东本部-工具-万相","平台一组AIGC-k","京东本部-工具-可灵","平台一组AIGC-c空镜","京东本部-工作流-comfyui"];
   var AI_TAG_KEYWORDS = ["aigc","seedance","万相","可灵","空镜","comfyui"];
-  // tag: 素材标签列原值（逗号分隔多标签）；name: 素材名（仅当无素材标签时兜底）
+  // tag: 素材标签列原值（| 或逗号分隔多标签，2026-08-28 起数据源统一为 | 分隔以加速 CSV 解析）；name: 素材名（仅当无素材标签时兜底）
   function isAiMaterial(tag, name) {
     if (tag && String(tag).trim()) {
-      var toks = String(tag).split(/[,，]/).map(function (x) { return x.trim(); });
+      var toks = String(tag).split(/[,，|]/).map(function (x) { return x.trim(); });
       for (var i = 0; i < toks.length; i++) {
         if (AIGC_TAGS.indexOf(toks[i]) >= 0) return true;   // 精确命中 9 标签任一 → AIGC
       }
