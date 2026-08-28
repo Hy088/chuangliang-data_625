@@ -4622,6 +4622,8 @@ function updateCapSelUI(){
 
 async function renderCapacity(force){
   bindCapacity();
+  bindCapEdit();
+  bindCapBatchEdit();
   const box = document.getElementById('capList');
   box.innerHTML = '<div class="cap-empty">正在读取产能数据…</div>';
   let data = null;
@@ -4952,6 +4954,7 @@ function saveCapEdit(){
   setTimeout(()=>alert('已保存到看板。若希望同步到 D:/625/京东 的标记文件，请复制弹窗里的 PowerShell 命令在本地运行一次。'), 50);
 }
 function bindCapEdit(){
+  if(window._capEditBound) return; window._capEditBound = true;
   const mask = document.getElementById('capEditMask');
   document.getElementById('capEditClose').addEventListener('click', closeCapEdit);
   document.getElementById('capEditCancel').addEventListener('click', closeCapEdit);
@@ -5077,6 +5080,7 @@ function saveCapBatchEdit(){
   setTimeout(()=>alert('已批量标注 '+keys.length+' 条（仅存浏览器）。如需写盘请复制命令到本地 PowerShell 运行。'), 50);
 }
 function bindCapBatchEdit(){
+  if(window._capBatchBound) return; window._capBatchBound = true;
   const m = document.getElementById('capBatchMask');
   document.getElementById('capBatchClose').addEventListener('click', closeCapBatch);
   document.getElementById('capBatchCancel').addEventListener('click', closeCapBatch);
