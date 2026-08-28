@@ -5,11 +5,11 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260829d";
-  var MAT_URL  = "./me-materials.csv?v=20260829d";
+  var HIST_URL = "./me-history.csv?v=20260829e";
+  var MAT_URL  = "./me-materials.csv?v=20260829e";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
-  var UPLOAD_URL = "./me-uploads.csv?v=20260829d";
+  var UPLOAD_URL = "./me-uploads.csv?v=20260829e";
 
   // 排行可排序指标
   var RANK_METRICS = [
@@ -1081,34 +1081,84 @@
     };
     return { up: upN, ai: fin(ai), norm: fin(norm) };
   }
-  // 渲染「常规 vs AIGC」对比表；lowerBetter=1 时，AIGC 数值更低算更好（如 CPA）
+  // 渲染「常规 vs AIGC」对比看板；lowerBetter=1 时，AIGC 数值更低算更好（如 CPA）
   function upCompareHtml() {
     var c = upAiCompare();
     var defs = [
-      { k: "素材量（上传口径）", nv: c.up.norm, av: c.up.ai, dec: 0, lower: 0 },
-      { k: "在投素材数（日报去重）", nv: c.norm.n, av: c.ai.n, dec: 0, lower: 0 },
-      { k: "消耗（元）", nv: c.norm.cost, av: c.ai.cost, dec: 0, lower: 0 },
-      { k: "展示数", nv: c.norm.imp, av: c.ai.imp, dec: 0, lower: 0 },
-      { k: "点击数", nv: c.norm.clk, av: c.ai.clk, dec: 0, lower: 0 },
-      { k: "转化数", nv: c.norm.cv, av: c.ai.cv, dec: 0, lower: 0 },
-      { k: "CTR（%）", nv: c.norm.ctr, av: c.ai.ctr, dec: 2, lower: 0 },
-      { k: "CVR（%）", nv: c.norm.cvr, av: c.ai.cvr, dec: 2, lower: 0 },
-      { k: "CPA（元）", nv: c.norm.cpa, av: c.ai.cpa, dec: 2, lower: 1 }
+      { k: "素材量（上传口径）", nv: c.up.norm, av: c.up.ai, dec: 0, lower: 0, sec: "素材规模" },
+      { k: "在投素材数（日报去重）", nv: c.norm.n, av: c.ai.n, dec: 0, lower: 0, sec: "素材规模" },
+      { k: "消耗（元）", nv: c.norm.cost, av: c.ai.cost, dec: 0, lower: 0, sec: "流量表现" },
+      { k: "展示数", nv: c.norm.imp, av: c.ai.imp, dec: 0, lower: 0, sec: "流量表现" },
+      { k: "点击数", nv: c.norm.clk, av: c.ai.clk, dec: 0, lower: 0, sec: "流量表现" },
+      { k: "转化数", nv: c.norm.cv, av: c.ai.cv, dec: 0, lower: 0, sec: "转化效率", core: 1 },
+      { k: "CTR（%）", nv: c.norm.ctr, av: c.ai.ctr, dec: 2, lower: 0, sec: "转化效率", core: 1 },
+      { k: "CVR（%）", nv: c.norm.cvr, av: c.ai.cvr, dec: 2, lower: 0, sec: "转化效率", core: 1 },
+      { k: "CPA（元）", nv: c.norm.cpa, av: c.ai.cpa, dec: 2, lower: 1, sec: "转化效率", core: 1 }
     ];
-    var fmt = function (v, dec) { return dec === 0 ? fmtNum(v) : (Number(v) || 0).toFixed(dec); };
-    var trs = defs.map(function (d) {
-      var delta = "—", cls = "";
+    // 统一格式化：大数用「万」，比率/金额保留精度
+    function disp(d, v) {
+      if (d.k.indexOf("CTR") >= 0 || d.k.indexOf("CVR") >= 0) return (Number(v) || 0).toFixed(d.dec) + "%";
+      if (d.k.indexOf("CPA") >= 0) return "¥" + (Number(v) || 0).toFixed(d.dec);
+      var n = Number(v) || 0;
+      if (Math.abs(n) >= 10000) return (n / 10000).toFixed(1) + "万";
+      return fmtNum(v);
+    }
+    // 计算每条指标的差异、优劣、条形比例
+    defs.forEach(function (d) {
+      d.pct = 0; d.deltaStr = "—"; d.deltaCls = ""; d.better = null;
       if (d.nv) {
-        var p = (d.av - d.nv) / Math.abs(d.nv) * 100;
-        delta = (p >= 0 ? "+" : "") + p.toFixed(1) + "%";
-        var better = d.lower ? (p < 0) : (p > 0);
-        if (Math.abs(p) >= 0.05) cls = better ? " style='color:#1f8a70;font-weight:700'" : " style='color:#c0392b;font-weight:700'";
+        d.pct = (d.av - d.nv) / Math.abs(d.nv) * 100;
+        d.deltaStr = (d.pct >= 0 ? "+" : "") + d.pct.toFixed(1) + "%";
+        d.better = d.lower ? (d.pct < 0) : (d.pct > 0);
+        if (Math.abs(d.pct) >= 0.05) d.deltaCls = d.better ? "up" : "down";
       }
-      return "<tr><td class='l'>" + esc(d.k) + "</td><td>" + fmt(d.nv, d.dec) + "</td><td>" + fmt(d.av, d.dec) + "</td><td" + cls + ">" + delta + "</td></tr>";
-    }).join("");
-    return "<div class='me-up-tbl-hd'>⚖️ 常规素材 vs AIGC 素材（同一日期区间）</div>" +
-      "<table class='me-rank-tbl me-up-tbl'><thead><tr><th class='l'>指标</th><th>常规</th><th>AIGC</th><th>AIGC 相对常规</th></tr></thead><tbody>" + trs + "</tbody></table>" +
-      "<div class='me-up-note' style='margin-top:6px'>对比口径：素材量按<strong>上传时间</strong>（me-uploads.csv）；消耗/展示/点击/转化按<strong>日报日期</strong>（me-materials.csv）。AIGC = 素材标签命中 9 个 AIGC 标签之一：平台一组AIGC、平台一组AIGC-sd、平台一组AIGC-kl、平台一组AIGC-wx、平台一组AIGC-c空镜、京东本部-模型-seedance2.0、京东本部-工具-万相、京东本部-工具-可灵、京东本部-工作流-comfyui。绿色=AIGC 更优，红色=常规更优（CPA 越低越好）。</div>";
+      d.max = Math.max(Math.abs(d.nv), Math.abs(d.av));
+      d.nvPct = d.max ? Math.abs(d.nv) / d.max * 100 : 0;
+      d.avPct = d.max ? Math.abs(d.av) / d.max * 100 : 0;
+    });
+    // 顶部三张核心卡片：转化数、CPA、CVR
+    var coreOrder = ["转化数", "CPA（元）", "CVR（%）"];
+    var coreCards = "";
+    coreOrder.forEach(function (name) {
+      var d = null;
+      for (var i = 0; i < defs.length; i++) if (defs[i].k.indexOf(name) >= 0) { d = defs[i]; break; }
+      if (!d) return;
+      var badge = Math.abs(d.pct) > 50 ? "严重偏离" : (Math.abs(d.pct) > 20 ? "差异明显" : "基本持平");
+      var badgeCls = Math.abs(d.pct) > 20 ? "high" : "low";
+      coreCards += "<div class='me-cmp-card'>" +
+        "<div class='me-cmp-card-top'><span class='me-cmp-card-name'>" + esc(d.k) + "</span><span class='me-cmp-card-badge " + badgeCls + "'>" + esc(badge) + "</span></div>" +
+        "<div class='me-cmp-card-pct " + d.deltaCls + "'>" + esc(d.deltaStr) + "</div>" +
+        "<div class='me-cmp-card-sub'>" + esc(disp(d, d.nv)) + " → " + esc(disp(d, d.av)) + "</div>" +
+        "</div>";
+    });
+    // 分区块条形图
+    var sections = ["素材规模", "流量表现", "转化效率"];
+    var secHtml = "";
+    sections.forEach(function (sec) {
+      var rowsHtml = "";
+      defs.forEach(function (d) {
+        if (d.sec !== sec) return;
+        rowsHtml += "<div class='me-cmp-row'>" +
+          "<div class='me-cmp-row-title'><span class='me-cmp-metric'>" + esc(d.k) + "</span><span class='me-cmp-delta " + d.deltaCls + "'>" + esc(d.deltaStr) + "</span></div>" +
+          "<div class='me-cmp-barline norm'><div class='me-cmp-bartrack'><div class='me-cmp-fill norm' style='width:" + d.nvPct.toFixed(1) + "%'></div></div><span class='me-cmp-bartag'>常规</span><span class='me-cmp-barnum'>" + esc(disp(d, d.nv)) + "</span></div>" +
+          "<div class='me-cmp-barline ai'><div class='me-cmp-bartrack'><div class='me-cmp-fill ai' style='width:" + d.avPct.toFixed(1) + "%'></div></div><span class='me-cmp-bartag'>AIGC</span><span class='me-cmp-barnum'>" + esc(disp(d, d.av)) + "</span></div>" +
+          "</div>";
+      });
+      var coreTag = sec === "转化效率" ? "<span class='me-cmp-sec-tag'>核心指标</span>" : "";
+      secHtml += "<div class='me-cmp-sec'><div class='me-cmp-sec-title'>" + esc(sec) + coreTag + "</div>" + rowsHtml + "</div>";
+    });
+    return "<div class='me-cmp'>" +
+      "<div class='me-cmp-hd'><div class='me-cmp-title'>常规素材 vs AIGC素材 · 效果对比看板</div><div class='me-cmp-sub'>同一日期区间内，常规素材与 AIGC 素材的核心指标对比</div></div>" +
+      "<div class='me-cmp-cards'>" + coreCards + "</div>" +
+      "<div class='me-cmp-legend'>" +
+        "<span class='me-cmp-legend-item'><span class='me-cmp-dot norm'></span>常规素材</span>" +
+        "<span class='me-cmp-legend-item'><span class='me-cmp-dot ai'></span>AIGC素材</span>" +
+        "<span class='me-cmp-legend-item'><span class='me-cmp-arrow up'></span>AIGC更优</span>" +
+        "<span class='me-cmp-legend-item'><span class='me-cmp-arrow down'></span>常规更优</span>" +
+      "</div>" +
+      secHtml +
+      "<div class='me-cmp-note'>对比口径：素材量按<strong>上传时间</strong>（me-uploads.csv）；消耗/展示/点击/转化按<strong>日报日期</strong>（me-materials.csv）。AIGC = 素材标签命中 9 个 AIGC 标签之一：平台一组AIGC、平台一组AIGC-sd、平台一组AIGC-kl、平台一组AIGC-wx、平台一组AIGC-c空镜、京东本部-模型-seedance2.0、京东本部-工具-万相、京东本部-工具-可灵、京东本部-工作流-comfyui。绿色=AIGC 更优，红色=常规更优（CPA 越低越好）。</div>" +
+      "</div>";
   }
   function upRenderView() {
     var body = el("meUploadBody"); if (!body) return;
@@ -1328,6 +1378,48 @@
       ".me-up-tbl td.bar,.me-up-tbl th.bar-h{width:38%;min-width:140px}" +
       ".me-up-tbl tbody tr.me-up-sum{background:#f6f8fb;font-weight:600}" +
       ".me-up-note{padding:10px 2px 0;color:#8a94a6;font-size:12px;line-height:1.6}" +
+      ".me-cmp{background:#fff;border:1px solid #e6ebf2;border-radius:16px;padding:20px;margin:14px 0;box-shadow:0 2px 12px rgba(0,0,0,.04)}" +
+      ".me-cmp-hd{margin-bottom:16px}" +
+      ".me-cmp-title{font-size:18px;font-weight:800;color:#1f2a3a;margin-bottom:4px}" +
+      ".me-cmp-sub{font-size:12.5px;color:#8a94a6}" +
+      ".me-cmp-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}" +
+      "@media (max-width:900px){.me-cmp-cards{grid-template-columns:1fr}}" +
+      ".me-cmp-card{border:1px solid #e6ebf2;border-radius:14px;padding:16px;background:linear-gradient(135deg,#fbfcff,#f6f8fb)}" +
+      ".me-cmp-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}" +
+      ".me-cmp-card-name{font-size:13px;color:#5a6678;font-weight:600}" +
+      ".me-cmp-card-badge{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}" +
+      ".me-cmp-card-badge.high{background:#ffe4e6;color:#d32f2f}" +
+      ".me-cmp-card-badge.low{background:#e8f5e9;color:#388e3c}" +
+      ".me-cmp-card-pct{font-size:32px;font-weight:800;line-height:1;margin-bottom:6px;color:#1f2a3a}" +
+      ".me-cmp-card-pct.up{color:#1f8a70}" +
+      ".me-cmp-card-pct.down{color:#d32f2f}" +
+      ".me-cmp-card-sub{font-size:12px;color:#8a94a6}" +
+      ".me-cmp-legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px;font-size:12px;color:#5a6678}" +
+      ".me-cmp-legend-item{display:inline-flex;align-items:center;gap:6px}" +
+      ".me-cmp-dot{width:10px;height:10px;border-radius:3px}" +
+      ".me-cmp-dot.norm{background:#93c5fd}" +
+      ".me-cmp-dot.ai{background:#c4b5fd}" +
+      ".me-cmp-arrow{width:0;height:0;border-style:solid}" +
+      ".me-cmp-arrow.up{border-width:0 5px 8px 5px;border-color:transparent transparent #1f8a70 transparent}" +
+      ".me-cmp-arrow.down{border-width:8px 5px 0 5px;border-color:#d32f2f transparent transparent transparent}" +
+      ".me-cmp-sec{margin-bottom:18px}" +
+      ".me-cmp-sec-title{font-size:14px;font-weight:700;color:#1f2a3a;margin-bottom:12px;display:flex;align-items:center;gap:8px}" +
+      ".me-cmp-sec-tag{font-size:11px;color:#d32f2f;background:#ffebee;padding:2px 8px;border-radius:10px;font-weight:600}" +
+      ".me-cmp-row{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f0f3f7}" +
+      ".me-cmp-row:last-child{margin-bottom:0;padding-bottom:0;border-bottom:0}" +
+      ".me-cmp-row-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}" +
+      ".me-cmp-metric{font-size:13px;color:#334;font-weight:600}" +
+      ".me-cmp-delta{font-size:13px;font-weight:700}" +
+      ".me-cmp-delta.up{color:#1f8a70}" +
+      ".me-cmp-delta.down{color:#d32f2f}" +
+      ".me-cmp-barline{display:flex;align-items:center;gap:10px;margin-bottom:6px}" +
+      ".me-cmp-bartrack{flex:1;height:14px;background:#eef2f7;border-radius:7px;overflow:hidden;min-width:80px}" +
+      ".me-cmp-fill{height:100%;border-radius:7px;transition:width .6s ease}" +
+      ".me-cmp-fill.norm{background:linear-gradient(90deg,#93c5fd,#60a5fa)}" +
+      ".me-cmp-fill.ai{background:linear-gradient(90deg,#c4b5fd,#a78bfa)}" +
+      ".me-cmp-bartag{width:42px;font-size:11px;color:#5a6678;text-align:right}" +
+      ".me-cmp-barnum{width:72px;font-size:12.5px;color:#1f2a3a;font-weight:700;text-align:right;white-space:nowrap}" +
+      ".me-cmp-note{padding:12px;background:#f6f8fb;border-radius:10px;color:#5a6678;font-size:12px;line-height:1.7}" +
       ".me-up-chart{display:flex;align-items:flex-end;gap:10px;margin-bottom:4px}" +
       ".me-up-bar{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0}" +
       ".me-up-bar .bararea{height:150px;width:100%;display:flex;align-items:flex-end;justify-content:center}" +
