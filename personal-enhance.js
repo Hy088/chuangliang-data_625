@@ -1124,6 +1124,8 @@
 
   /* ---------- 数据加载 ---------- */
   function loadData(cb, force) {
+    var loading = el("meLoading");
+    if (loading) loading.style.display = "block";
     var q = force ? ("&_=" + Date.now()) : "";  // 三个 URL 均带 ?v=，force 时用 & 追加防缓存
     var opt = force ? { cache: "no-store" } : undefined;
     Promise.all([
@@ -1151,8 +1153,10 @@
       renderPersonal();
       renderMonth();
       renderKpi();
+      if (loading) loading.style.display = "none";
       if (cb) cb(null);
     }).catch(function (e) {
+      if (loading) loading.style.display = "none";
       var box = el("meRankBody");
       if (box) box.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#c33">数据加载失败：' + esc(e.message || e) + "</div>";
       if (cb) cb(e);
@@ -1266,6 +1270,13 @@
       "<button id='meRefresh' type='button' style='padding:6px 12px;border:1px solid #4a7bff;background:#fff;color:#4a7bff;border-radius:8px;font-size:13px;cursor:pointer'>🔄 实时刷新</button>" +
       "<span style='color:#8a94a6;font-size:12px'>默认显示今日实时数据；手动选日期后刷新会尊重所选日</span>";
     if (h2 && h2.parentNode) h2.parentNode.insertBefore(bar, h2.nextSibling);
+
+    // 数据加载提示（me-materials.csv 11MB 较大，避免用户以为空白）
+    var loading = document.createElement("div");
+    loading.id = "meLoading";
+    loading.style.cssText = "display:none;margin:8px 0 14px;padding:10px 14px;background:#fff7e6;border:1px solid #ffd591;border-radius:8px;color:#ad6800;font-size:13px;";
+    loading.innerHTML = "⏳ 正在加载素材明细（约 1-3MB，视网络约 5-20 秒），请稍候…";
+    if (h2 && h2.parentNode) h2.parentNode.insertBefore(loading, bar.nextSibling);
 
     var cards = el("meCards");
 
