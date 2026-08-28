@@ -5,8 +5,8 @@
 (function () {
   "use strict";
   // 同源相对路径，适配 GitHub Pages / CloudStudio / 本地文件
-  var HIST_URL = "./me-history.csv?v=20260809e";
-  var MAT_URL  = "./me-materials.csv?v=20260809e";
+  var HIST_URL = "./me-history.csv?v=20260828b";
+  var MAT_URL  = "./me-materials.csv?v=20260828b";
   // 「上传时间」口径素材量：me-uploads.csv 含创量后台真实上传时间戳
   // 数据来自创量【内容】页「高级筛选(上传时间)→导出→导出素材信息」逐月导出的原始 xlsx 合并
   var UPLOAD_URL = "./me-uploads.csv?v=20260828a";
@@ -494,9 +494,13 @@
     return start.toISOString().slice(0, 10) + " ~ " + end.toISOString().slice(0, 10);
   }
   function aggTimeRows(mode) {
+    // 统一口径：与 renderMonth / getMonthActual 保持一致，从 me-materials.csv 聚合
+    // 素材数按 unique 素材ID 去重（me-history.csv 的「素材数」列是当日有消耗的素材数，
+    // 不能跨日累加，否则月度数值会虚高数倍）。
     var groups = {};
-    histData.forEach(function (h) {
-      var d = h["日期"];
+    matData.forEach(function (m) {
+      var d = (m["日期"] || "").slice(0, 10);
+      if (!d || d.length !== 10) return;
       var key, label, sortKey;
       if (mode === "month") {
         key = d.slice(0, 7);
@@ -511,15 +515,24 @@
         label = d;
         sortKey = d;
       }
-      if (!groups[key]) groups[key] = { key: key, label: label, sortKey: sortKey, cost: 0, mat: 0, conv: 0, ctrSum: 0, days: 0, maxCost: 0 };
+      if (!groups[key]) groups[key] = { key: key, label: label, sortKey: sortKey, cost: 0, mat: 0, conv: 0, show: 0, click: 0, matIds: {}, days: {}, maxCost: 0 };
       var g = groups[key];
-      g.cost += num(h["消耗"]);
-      g.mat += num(h["素材数"]);
-      g.conv += num(h["转化数"]);
-      g.ctrSum += num(h["CTR"]);
-      g.days += 1;
+      g.cost += num(m["消耗"]);
+      g.conv += num(m["转化数"]);
+      g.show += num(m["展示数"]);
+      g.click += num(m["点击数"]);
+      var sid = m["素材ID"] || "";
+      if (sid) g.matIds[sid] = 1;
+      if (d) g.days[d] = 1;
     });
-    return Object.keys(groups).map(function (k) { return groups[k]; });
+    return Object.keys(groups).map(function (k) {
+      var g = groups[k];
+      g.mat = Object.keys(g.matIds).length;
+      g.ctr = g.show > 0 ? g.click / g.show * 100 : 0;
+      g.days = Object.keys(g.days).length;
+      delete g.matIds; delete g.show; delete g.click;
+      return g;
+    });
   }
   function renderTimeTable() {
     var box = el("meTimeTable");
@@ -536,8 +549,8 @@
       if (daySortKey === "label" || daySortKey === "日期" || daySortKey === "月份" || daySortKey === "周次") {
         return a.sortKey < b.sortKey ? -daySortDir : (a.sortKey > b.sortKey ? daySortDir : 0);
       }
-      var ak = (daySortKey === "cost") ? a.cost : (daySortKey === "mat") ? a.mat : (daySortKey === "conv") ? a.conv : (daySortKey === "ctr") ? (a.ctrSum / a.days) : (daySortKey === "天数") ? a.days : a.cost;
-      var bk = (daySortKey === "cost") ? b.cost : (daySortKey === "mat") ? b.mat : (daySortKey === "conv") ? b.conv : (daySortKey === "ctr") ? (b.ctrSum / b.days) : (daySortKey === "天数") ? b.days : b.cost;
+      var ak = (daySortKey === "cost") ? a.cost : (daySortKey === "mat") ? a.mat : (daySortKey === "conv") ? a.conv : (daySortKey === "ctr") ? a.ctr : (daySortKey === "天数") ? a.days : a.cost;
+      var bk = (daySortKey === "cost") ? b.cost : (daySortKey === "mat") ? b.mat : (daySortKey === "conv") ? b.conv : (daySortKey === "ctr") ? b.ctr : (daySortKey === "天数") ? b.days : b.cost;
       return (ak - bk) * daySortDir;
     });
     if (!rows.length) { box.innerHTML = '<div class="empty" style="padding:18px;text-align:center;color:#999">暂无数据</div>'; return; }
@@ -561,7 +574,7 @@
             "<span style='flex:1;max-width:120px;height:6px;background:#eef2f7;border-radius:3px;overflow:hidden'><i style='display:block;height:100%;width:" + w + "%;background:#4a7bff'></i></span>" +
             "</div></td>";
         }
-        if (c.k === "ctr") return "<td>" + (r.ctrSum / r.days).toFixed(2) + "%</td>";
+        if (c.k === "ctr") return "<td>" + r.ctr.toFixed(2) + "%</td>";
         if (c.k === "天数") return "<td>" + r.days + "</td>";
         return "<td>" + fmtNum(r[c.k]) + "</td>";
       }).join("");
