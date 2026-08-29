@@ -1522,17 +1522,6 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <a class="mj" data-go="g-me-kpi"><i style="background:#e0533d"></i>KPI 绩效</a>
   </div>
 
-  <div class="card me-src-card" id="meSrcCard">
-    <h2>数据源 <span class="tag">实时更新 · 自动拉取</span></h2>
-    <div class="filters">
-      <button class="btn sm" id="meCfgBtn">⚙ 数据源设置</button>
-      <button class="btn sm primary" id="meRefresh">↻ 立即刷新</button>
-      <span class="me-status" id="meStatus">● 未连接</span>
-      <span class="me-countdown" id="meCountdown"></span>
-    </div>
-    <div class="note" id="meHint">当前为<strong>示例数据</strong>演示实时刷新。点击「⚙ 数据源设置」可接入你的外部链接（CSV/JSON，需允许跨域），或切换为「粘贴数据」模式；配置后看板会按间隔自动拉取并刷新下方指标。</div>
-  </div>
-
   <!-- ① 今日实时 -->
   <div class="dgrp dg-v" id="g-me-rt">
     <div class="dgrp-hd">
@@ -1542,6 +1531,17 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       <span class="dgrp-fold" data-fold>收起</span>
     </div>
     <div class="dgrp-bd">
+      <div class="card me-src-card" id="meSrcCard">
+        <h2>数据源 <span class="tag">实时更新 · 自动拉取</span></h2>
+        <div class="filters">
+          <button class="btn sm" id="meCfgBtn">⚙ 数据源设置</button>
+          <button class="btn sm primary" id="meRefresh">↻ 立即刷新</button>
+          <span class="me-status" id="meStatus">● 未连接</span>
+          <span class="me-countdown" id="meCountdown"></span>
+        </div>
+        <div class="note" id="meHint">当前为<strong>示例数据</strong>演示实时刷新。点击「⚙ 数据源设置」可接入你的外部链接（CSV/JSON，需允许跨域），或切换为「粘贴数据」模式；配置后看板会按间隔自动拉取并刷新下方指标。</div>
+      </div>
+
       <div class="card" id="meSummaryCard">
         <h2>达成率汇总 <span class="tag">目标完成度总览</span></h2>
         <div class="kpis" id="meSummary"></div>
@@ -4482,7 +4482,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260829r';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260829t';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -6096,7 +6096,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260829r"></script>
+<script src="personal-enhance.js?v=20260829t"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 
