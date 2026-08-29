@@ -1,5 +1,19 @@
 [
   {
+    "ver": "v20260829p",
+    "date": "2026-08-29",
+    "type": "fix",
+    "summary": "日汇总模式下 #ov-period-filter 与品类方向建议误报「未导入数据」",
+    "details": [
+      "用户反馈：切到日汇总后页面仍显示「未导入数据」",
+      "根因：renderOverview 和 renderProject 的空判断都只看 DATA.materials.rows.length —— 日汇总模式 materials 为空（按设计，源数据是按周聚合的）但 overall/projects/categories 有数据，仍被误判为空",
+      "修复：两处空判断改为 hasData = materials.rows.length > 0 || overall.cost > 0",
+      "ov-period-filter 标签按模式动态显示：日期 / 周期 / 月份",
+      "v20260829o 已加上全维度 dailyData，本修复补上前端空判断的最后一处",
+      "bump 缓存版本到 20260829p"
+    ]
+  },
+  {
     "ver": "v20260829o",
     "date": "2026-08-29",
     "type": "fix",

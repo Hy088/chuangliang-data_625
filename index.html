@@ -2544,8 +2544,10 @@ function renderOvPeriods(){
 
 // ========== 总览 ==========
 function renderOverview(){
-  const empty = !(DATA && DATA.materials && DATA.materials.rows && DATA.materials.rows.length);
-  if(empty){
+  // 空判断：日/周/月汇总模式虽 materials 可能为空，但 overall/projects/categories 有数据时不应判空
+  const hasData = !!(DATA && ((DATA.materials && DATA.materials.rows && DATA.materials.rows.length) ||
+                               (DATA.overall && (DATA.overall.cost || DATA.overall.n || DATA.overall.clk))));
+  if(!hasData){
     $('#hdrsub').textContent = '当前项目看板无导入数据 · 请点击右上角「⤓ 导入新周期」上传素材报表';
     $('#ov-insights').innerHTML = '<div class="insight"><b>提示：</b>项目看板需要导入素材周期报表才会显示数据；「个人数据」标签由系统每小时自动更新，可单独查看。</div>';
     return;
@@ -2636,15 +2638,20 @@ function renderProject(){
   renderOvPeriods();
   renderPeriodMatrix();
   renderTagFilter();
-  const empty = !(DATA && DATA.materials && DATA.materials.rows && DATA.materials.rows.length);
-  if(empty){
+  // 空判断：按天/周/月的"日汇总"模式虽 materials 为空但 overall 有数据，不应判为空
+  const hasData = !!(DATA && ((DATA.materials && DATA.materials.rows && DATA.materials.rows.length) ||
+                               (DATA.overall && (DATA.overall.cost || DATA.overall.n || DATA.overall.clk))));
+  if(!hasData){
     $('#ov-period-filter').textContent = '未导入数据';
     $('#pjMatTable').querySelector('thead').innerHTML = '';
     $('#pjMatTable').querySelector('tbody').innerHTML = '<tr><td class="empty" colspan="8">请导入素材报表</td></tr>';
     $('#ov-insights').innerHTML = '<div class="insight"><b>提示：</b>项目看板的数据来自「导入新周期」功能。个人数据请在顶部导航切换到「个人数据」标签查看。</div>';
     return;
   }
-  $('#ov-period-filter').textContent = `周期 ${DATA.meta.period}`;
+  // 按模式给 ov-period-filter 文本（"日期"/"周期"/"月份"）
+  const _pjLabel = (CUR_DAY && PERIOD_MODE==='day') ? '日期'
+                 : (CUR_MONTH && PERIOD_MODE==='month') ? '月份' : '周期';
+  $('#ov-period-filter').textContent = `${_pjLabel} ${DATA.meta.period}`;
   renderPjMaterials();
 }
 function renderPjMaterials(){
@@ -4427,7 +4434,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260829o';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260829p';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -6041,7 +6048,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260829o"></script>
+<script src="personal-enhance.js?v=20260829p"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 
