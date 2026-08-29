@@ -2035,6 +2035,11 @@ function rebuildMonthView(ym){
   renderAll();
 }
 function rebuildDayView(date){
+  // 保护：日汇总的按天聚合还没加载时，先懒加载再重建
+  if(!(DATA_FULL && DATA_FULL.dailyData && DATA_FULL.dailyData.length)){
+    loadDailyAgg().then(()=>{ if(CUR_DAY===date && PERIOD_MODE==='day') rebuildDayView(date); }).catch(()=>{});
+    return;
+  }
   CUR_DAY = date || null;
   CUR_PERIOD = null;
   if(!CUR_DAY){
@@ -2070,6 +2075,19 @@ function rebuildDayView(date){
   // 异步按需加载当天素材明细（素材排行/爆款标准/AIGC/标签筛选用），避免阻塞首屏
   if(CUR_DAY && !(DAILY_MATS && DAILY_MATS[CUR_DAY])){
     setTimeout(()=>loadDailyMaterials(CUR_DAY), 60);
+  }
+}
+async function loadDailyAgg(retry=0){
+  // 懒加载「日汇总」的按天聚合（dailyData 59 天全维度 ~3MB gz）。首屏不加载，切日汇总才拉
+  if(DATA_FULL && DATA_FULL.dailyData && DATA_FULL.dailyData.length) return;
+  try{
+    const m=await fetchJSONRetry('daily-aggregates.json', {cache:'no-cache'});
+    if(DATA_FULL) DATA_FULL.dailyData=(m && m.dailyData) || [];
+    console.log('[daily] 按天聚合已载入', (DATA_FULL.dailyData||[]).length, '天');
+    if(PERIOD_MODE==='day'){ refreshPicker(); if(!CUR_DAY){ const ds=getDaysByMonth(CUR_MONTH); if(ds.length) rebuildDayView(ds[ds.length-1]); } }
+  }catch(e){
+    console.warn('[daily] 按天聚合加载失败', e.message);
+    if(retry<3) setTimeout(()=>loadDailyAgg(retry+1), 4000);
   }
 }
 async function loadDailyMaterials(date, retry=0){
@@ -2199,6 +2217,13 @@ function renderWeekList(){
 }
 function renderDayList(){
   const wrap=$('#ppdWeeksList'), title=$('#ppdWeeksTitle'); if(!wrap) return;
+  // 按天聚合还没加载 → 显示加载中并触发懒加载（数据到位后会自动重绘）
+  if(!(DATA_FULL && DATA_FULL.dailyData && DATA_FULL.dailyData.length)){
+    wrap.innerHTML='<div class="ppd-week-empty">日汇总数据加载中…</div>';
+    if(title) title.textContent='日汇总';
+    loadDailyAgg();
+    return;
+  }
   const months=getMonthsWithData();
   let ym=CUR_MONTH;
   if(!ym && months.length) ym=months[months.length-1];
@@ -2279,6 +2304,7 @@ function initPeriodSel(){
     btn.onclick=()=>{
       if(btn.disabled) return;
       PERIOD_MODE=btn.dataset.mode;
+      if(PERIOD_MODE==='day') loadDailyAgg();   // 日汇总按天聚合按需懒加载
       applySelection();
     };
   });
@@ -4456,7 +4482,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260829q';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260829r';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -6070,7 +6096,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260829q"></script>
+<script src="personal-enhance.js?v=20260829r"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 

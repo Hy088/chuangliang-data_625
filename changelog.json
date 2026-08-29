@@ -1,5 +1,21 @@
 [
   {
+    "ver": "v20260829r",
+    "date": "2026-08-29",
+    "type": "perf",
+    "summary": "大幅瘦身首屏数据：period-meta.json 20MB→3.7MB，日汇总聚合改按需懒加载",
+    "details": [
+      "用户反馈：切日汇总后仍显示旧数据 —— 根因是 period-meta.json 含 59 天全维度聚合达 20MB，GitHub Pages 下载极慢，页面长时间停留在旧/空数据状态",
+      "拆分：dailyData（59 天维度）从 period-meta.json 移出，独立成 daily-aggregates.json.gz（2.9MB）",
+      "period-meta.json 降至 3.7MB，首屏加载大幅加快；period-data.json 同步移除 dailyData",
+      "前端：loadDailyAgg() 按需懒加载 daily-aggregates.json.gz（切日汇总 tab 时触发；renderDayList 显示「日汇总数据加载中…」占位；rebuildDayView 未就绪时先拉再重建，含失败重试）",
+      "素材明细仍按天懒加载（daily-materials-YYYYMMDD.json.gz），三级加载链：meta → 日聚合 → 当日素材",
+      "离线包同步清单加入 daily-aggregates.json.gz",
+      "验证（本地服务）：首屏 4.2s；切日汇总 28 天按钮即出；选 8/21 素材排行/标签筛选/AIGC 全部有数据；网络请求链 period-meta → daily-aggregates → daily-materials-20260821 全部 200",
+      "bump 缓存版本到 20260829r"
+    ]
+  },
+  {
     "ver": "v20260829q",
     "date": "2026-08-29",
     "type": "feat",

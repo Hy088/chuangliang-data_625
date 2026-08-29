@@ -694,6 +694,8 @@ def main():
 
     # period-data 不含 materials（素材走独立 period-materials.json.gz）
     pd['materials'] = {'cols': pm['cols'], 'rows': []}
+    pd.pop('dailyData', None)   # dailyData 拆到 daily-aggregates.json.gz（见下方 period-meta 写回处）
+    pd.setdefault('meta', {})['hasDailyAgg'] = True
     write_json(os.path.join(REPO, 'period-data.json'), pd)
 
     # period-materials 完整版生成 .gz 用于线上；原始 json 留在本地但可 gitignore 忽略
@@ -741,7 +743,18 @@ def main():
         gz_mb = round(os.path.getsize(gzp) / 1024 / 1024, 2)
         print(f'  period-materials-{slug}.json.gz: {len(rows)} rows, {gz_mb} MB')
 
-    # period-meta 保持轻量普通 JSON
+    # period-meta 保持轻量普通 JSON；dailyData（59 天全维度，~16MB）拆到独立
+    # daily-aggregates.json.gz，前端仅在切到「日汇总」模式时按需懒加载，避免拖慢首屏
+    _daily_meta = meta.pop('dailyData', []) or []
+    _daily_pd = pd.pop('dailyData', []) or []
+    meta.setdefault('meta', {})['hasDailyAgg'] = True
+    pd.setdefault('meta', {})['hasDailyAgg'] = True
+    daily_agg_txt = json.dumps({'generated': datetime.now().strftime('%Y-%m-%d %H:%M'),
+                                'dailyData': _daily_meta}, ensure_ascii=False)
+    with gzip.open(os.path.join(REPO, 'daily-aggregates.json.gz'), 'wt', encoding='utf-8', compresslevel=9) as f:
+        f.write(daily_agg_txt)
+    print('daily-aggregates.json.gz size:', round(os.path.getsize(os.path.join(REPO, 'daily-aggregates.json.gz'))/1024/1024, 2), 'MB')
+
     json.dump(meta, open(os.path.join(REPO, 'period-meta.json'), 'w', encoding='utf-8'), ensure_ascii=False)
     print('DONE. new periods:', new_weeks)
     print('period-data.json size:', round(os.path.getsize(os.path.join(REPO, 'period-data.json'))/1024/1024, 2), 'MB')

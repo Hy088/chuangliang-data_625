@@ -221,7 +221,7 @@ def bump_all_versions():
 OFFLINE_WEB = ["index.html", "personal-enhance.js", "vparse-deep.js", "seedance-gen.js",
                "viral-kb.js", "chart.umd.js", "cases.json", "changelog.json", "capacity.json"]
 # 离线的周期数据：meta/data 全量 + 每周期 .gz 分片（前端按需加载）
-OFFLINE_PERIOD = ["period-meta.json", "period-data.json", "period-data.json.gz"]
+OFFLINE_PERIOD = ["period-meta.json", "period-data.json", "period-data.json.gz", "daily-aggregates.json.gz"]
 SYNC_PERIOD_MAT = True   # 同步 period-materials-*.json.gz 分片
 
 
