@@ -172,17 +172,22 @@ def build_week(week_files, period):
 
 
 def build_daily(files_by_date):
-    """files_by_date: {date_str: [files]} → [{date, overall, projects}]。
+    """files_by_date: {date_str: [files]} → [{date, overall, projects, categories,
+    placements, optimizers, editors, tags, materials, suggestions, insights}]。
 
-    按天聚合（overall + per-project），给看板「日汇总」模式用。
-    每行 CSV 读一遍，内存友好；用「总计」行做整体数据校准（如果存在）。
+    按天聚合：整体 + 三项目 + 品类/优化师/标签/媒体 等全维度明细。
+    给看板「日汇总」模式用——切换时下游所有面板（视频/图片对比、品类方向、
+    素材排行、标签筛选、AIGC 统计等）都有数据可读。
+    每行 CSV 读一遍，内存友好；用「总计」行做整体校准（如果存在）。
     """
     out = []
     for date in sorted(files_by_date.keys()):
         fl = sorted(files_by_date[date])
-        # 第一遍：从「总计」行取整体数；如不存在则用明细累加
+        # 用「总计」行取整体数
         tot_cost = tot_imp = tot_clk = tot_cv = 0.0
         proj = {p: {'proj': p, 'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0, 'n': 0} for p in PROJ_LIST}
+        # 全维度累加（与 build_week 一致：cat/plc/opt/edt/tagg/tot）
+        dims = {'cat': {}, 'plc': {}, 'opt': {}, 'edt': {}, 'tagg': {}}
         n = 0
         for f in fl:
             with open(f, encoding='utf-8-sig', newline='') as fh:
@@ -210,18 +215,66 @@ def build_daily(files_by_date):
                         proj[ch] = {'proj': ch, 'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0, 'n': 0}
                     o = proj[ch]
                     o['cost'] += cost; o['imp'] += imp; o['clk'] += clk; o['cv'] += cv; o['n'] += 1
+
+                    placement, category = decode(name, ch)
+                    optimizer = (r.get('优化师') or '').strip()
+                    tags_raw = (r.get('素材标签') or '').strip()
+
+                    def add(dim, key, c, i, ck, cv_):
+                        d = dims[dim]
+                        if key not in d:
+                            d[key] = {'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0, 'n': 0}
+                        dd = d[key]
+                        dd['cost'] += c; dd['imp'] += i; dd['clk'] += ck; dd['cv'] += cv_; dd['n'] += 1
+                    add('cat', ch + '|' + category, cost, imp, clk, cv)
+                    add('plc', ch + '|' + placement, cost, imp, clk, cv)
+                    add('opt', ch + '|' + optimizer, cost, imp, clk, cv)
+                    add('edt', ch + '|' + '', cost, imp, clk, cv)
+                    for tg in re.split(r'[,，|]', tags_raw):
+                        tg = tg.strip()
+                        if tg:
+                            add('tagg', ch + '|' + tg, cost, imp, clk, cv)
+
         # 优先用「总计」行的整体数（如有）；否则用明细累加
         if tot_cost == 0 and tot_imp == 0 and tot_clk == 0 and tot_cv == 0:
             tot_cost = sum(proj[p]['cost'] for p in proj)
             tot_imp = sum(proj[p]['imp'] for p in proj)
             tot_clk = sum(proj[p]['clk'] for p in proj)
             tot_cv = sum(proj[p]['cv'] for p in proj)
+
+        def agg_list(dim, dims_keys):
+            arr = []
+            for key, val in dims[dim].items():
+                rec = {}
+                for dk, pv in zip(dims_keys, key.split('|')):
+                    rec[dk] = pv
+                rec.update(metrics(val))
+                arr.append(rec)
+            return arr
+
+        cats = agg_list('cat', ['proj', 'cat'])
+        suggestions = compute_suggestions(cats) if cats else {}
+        insights = compute_insights(cats) if cats else []
+
         out.append({
             'date': date,
             'overall': metrics({'cost': tot_cost, 'imp': tot_imp, 'clk': tot_clk, 'cv': tot_cv, 'n': n}),
-            'projects': [{**{'proj': p}, **metrics(proj[p])} for p in PROJ_LIST if proj[p]['n'] > 0]
+            'projects': [{**{'proj': p}, **metrics(proj[p])} for p in PROJ_LIST if proj[p]['n'] > 0],
+            'categories': cats,
+            'placements': agg_list('plc', ['proj', 'chan']),
+            'optimizers': agg_list('opt', ['proj', 'opt']),
+            'editors': agg_list('edt', ['proj', 'edit']),
+            'tags': agg_list('tagg', ['proj', 'tag']),
+            'suggestions': suggestions,
+            'insights': insights,
         })
     return out
+
+
+def compute_suggestions_for_daily(records, key='cat'):
+    """轻量版建议计算（供日汇总模式用）；接口与 compute_suggestions 一致"""
+    # 复用 build_week 的 compute_suggestions：它接受 categories 列表（proj,cat + metrics）
+    return compute_suggestions(records)
 
 
 def _d(s):

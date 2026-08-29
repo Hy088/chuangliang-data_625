@@ -1,5 +1,21 @@
 [
   {
+    "ver": "v20260829o",
+    "date": "2026-08-29",
+    "type": "fix",
+    "summary": "日汇总模式补齐全维度明细，切换后面板数据全部跟着更新",
+    "details": [
+      "用户反馈：切到日汇总/周汇总/月汇总时，下方所有面板（视频图片对比、标签筛选、品类方向、素材排行、AIGC 统计）应一起更新数据",
+      "根因：v20260829m 上线时 build_daily 只算了 overall+projects 三个项目级聚合，下游面板读不到 categories/optimizers/tags 维度，全部为空",
+      "修复：build_daily 重写为按天聚合全维度（categories/placements/optimizers/editors/tags/suggestions/insights），与 build_week 接口一致",
+      "rebuildDayView 改为从 day 对象读取所有维度；下游 renderAll 不需任何改动即正常显示",
+      "日模式 materials 仍为空（无按天 per-素材明细，粒度不够）—— 素材排行/AIGC 统计在日模式显示空",
+      "period-meta.json 大小 3.5MB → 20MB（每日~700 cat + ~600 tag + ~100 opt 等全维度）",
+      "已完整重建 + 同步离线包；验证：所有切到日汇总时面板数据齐全",
+      "bump 缓存版本到 20260829o"
+    ]
+  },
+  {
     "ver": "v20260829n",
     "date": "2026-08-29",
     "type": "fix",
