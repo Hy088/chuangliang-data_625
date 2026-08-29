@@ -12,6 +12,7 @@ period-materials.json
 # 同步脚本的备份产物 / 按周期明文分片（线上只托管 .gz）
 *.syncbak
 period-materials-*.json
+daily-materials-*.json
 _bak_period_*/
 _trash/
 __pycache__/

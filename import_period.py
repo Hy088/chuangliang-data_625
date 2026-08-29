@@ -245,6 +245,9 @@ def sync_offline():
         for f in glob.glob(os.path.join(REPO, "period-materials-*.json.gz")):
             shutil.copy2(f, os.path.join(OFFLINE, os.path.basename(f)))
         log("  离线包已同步: period-materials-*.json.gz 分片")
+        for f in glob.glob(os.path.join(REPO, "daily-materials-*.json.gz")):
+            shutil.copy2(f, os.path.join(OFFLINE, os.path.basename(f)))
+        log("  离线包已同步: daily-materials-*.json.gz 分片")
     # 3.3) 个人数据 CSV（李虹玉自动化产出的）
     for f in glob.glob(os.path.join(REPO, "me-*.csv")):
         shutil.copy2(f, os.path.join(OFFLINE, os.path.basename(f)))

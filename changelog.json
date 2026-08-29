@@ -1,5 +1,21 @@
 [
   {
+    "ver": "v20260829q",
+    "date": "2026-08-29",
+    "type": "feat",
+    "summary": "日汇总模式补齐 per-素材明细：素材排行/爆款标准/AIGC/标签筛选全部有数据",
+    "details": [
+      "用户要求方案2：日汇总也显示素材排行/爆款/AIGC/标签筛选，同时优化渲染与体积",
+      "数据层：build_daily 增加 per-素材明细行（MCOLS 格式，period=当天日期）",
+      "体积优化：每天素材明细拆成独立 daily-materials-YYYYMMDD.json.gz（约1.3-1.6MB，共59个）；period-meta.json 的 dailyData 只保留聚合维度+hasMaterials 标记，不塞明细",
+      "前端渲染优化：切到日汇总选某天后才懒加载当天文件（loadDailyMaterials，按需+失败重试2次），首屏/周月切换不受影响",
+      "素材排行/爆款标准/AIGC/标签筛选复用 DATA.materials.rows（各面板渲染函数无需改动）",
+      "验证：日汇总 8/21 → 素材排行显示 CH-SC 素材 ¥78,580/转化4,270/爆款指数100；标签筛选 395 个标签；当天素材 46,297 行；0 JS 报错",
+      "离线包同步逻辑加入 daily-materials-*.json.gz 分片",
+      "bump 缓存版本到 20260829q"
+    ]
+  },
+  {
     "ver": "v20260829p",
     "date": "2026-08-29",
     "type": "fix",

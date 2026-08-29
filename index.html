@@ -1889,6 +1889,7 @@ let CUR_DAY = null;             // '2026-08-23'（仅日汇总模式使用）
 let CUR_YEAR_LEFT = 2026;        // 左侧面板年份（右侧面板 = 左 + 1）
 let PERIOD_MODE = 'period';      // 'day'=日汇总, 'period'=周汇总, 'month'=月汇总
 let PANEL_OPEN = false;          // 下拉面板是否展开
+let DAILY_MATS = {};             // date -> 素材行数组（日汇总按需懒加载，避免首屏拖慢）
 
 function parsePeriodDate(p){ const s=(p||'').split(' ~ ')[0]; return {start:s, month:s?s.slice(0,7):null}; }
 function getMonthsWithData(){
@@ -2038,12 +2039,12 @@ function rebuildDayView(date){
   CUR_PERIOD = null;
   if(!CUR_DAY){
     DATA = Object.assign({}, DATA_FULL);
-    DATA.materials = {cols: DATA_FULL.materials.cols, rows: []};
+    DATA.materials = {cols: (DATA_FULL.materials||{}).cols, rows: []};
   } else {
     const day=(DATA_FULL.dailyData||[]).find(d=>d.date===CUR_DAY);
     if(!day){
       DATA = Object.assign({}, DATA_FULL);
-      DATA.materials = {cols: DATA_FULL.materials.cols, rows: []};
+      DATA.materials = {cols: (DATA_FULL.materials||{}).cols, rows: []};
     } else {
       DATA = {
         meta: Object.assign({}, DATA_FULL.meta, {period:CUR_DAY+'（日汇总）', periods:[CUR_DAY]}),
@@ -2054,7 +2055,7 @@ function rebuildDayView(date){
         optimizers: day.optimizers || [],
         editors: day.editors || [],
         tags: day.tags || [],
-        materials: {cols: DATA_FULL.materials.cols, rows: []},  // 日模式无按素材明细（粒度不够）
+        materials: {cols: (DATA_FULL.materials||{}).cols, rows: (DAILY_MATS[CUR_DAY]||[])},
         suggestions: day.suggestions || {},
         insights: day.insights || [],
         periodData: DATA_FULL.periodData,
@@ -2066,6 +2067,27 @@ function rebuildDayView(date){
   const pjtag = $('#ov-period-filter'); if(pjtag) pjtag.textContent = CUR_DAY ? ('日期：'+CUR_DAY) : '';
   refreshPicker();
   renderAll();
+  // 异步按需加载当天素材明细（素材排行/爆款标准/AIGC/标签筛选用），避免阻塞首屏
+  if(CUR_DAY && !(DAILY_MATS && DAILY_MATS[CUR_DAY])){
+    setTimeout(()=>loadDailyMaterials(CUR_DAY), 60);
+  }
+}
+async function loadDailyMaterials(date, retry=0){
+  const slug=(date||'').replace(/[^0-9]/g,'');
+  if(!slug) return;
+  try{
+    const m=await fetchJSONRetry(`daily-materials-${slug}.json`, {cache:'no-cache'});
+    DAILY_MATS[date]=(m && m.rows) || [];
+    // 加载完成且仍停留在该日时刷新视图（用户已切走则跳过）
+    if(CUR_DAY===date && PERIOD_MODE==='day' && DATA){
+      DATA.materials={cols:(m && m.cols)||(DATA_FULL.materials||{}).cols, rows:DAILY_MATS[date]};
+      renderAll();
+    }
+    console.log('[daily]', date, '素材明细已载入', DAILY_MATS[date].length, '行');
+  }catch(e){
+    console.warn('[daily] 日素材加载失败', date, e.message);
+    if(retry<2) setTimeout(()=>loadDailyMaterials(date, retry+1), 3000);
+  }
 }
 function applySelection(ym){
   CUR_MONTH = ym || CUR_MONTH;
@@ -4434,7 +4456,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260829p';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260829q';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -6048,7 +6070,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260829p"></script>
+<script src="personal-enhance.js?v=20260829q"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 

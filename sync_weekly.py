@@ -175,19 +175,18 @@ def build_daily(files_by_date):
     """files_by_date: {date_str: [files]} → [{date, overall, projects, categories,
     placements, optimizers, editors, tags, materials, suggestions, insights}]。
 
-    按天聚合：整体 + 三项目 + 品类/优化师/标签/媒体 等全维度明细。
-    给看板「日汇总」模式用——切换时下游所有面板（视频/图片对比、品类方向、
-    素材排行、标签筛选、AIGC 统计等）都有数据可读。
-    每行 CSV 读一遍，内存友好；用「总计」行做整体校准（如果存在）。
+    按天聚合：整体 + 三项目 + 品类/优化师/标签/媒体 全维度 + **per-素材明细**。
+    给看板「日汇总」模式用——切换时所有面板（含素材排行/爆款标准/AIGC/标签筛选）
+    都有数据可读。素材明细行格式与 build_week 一致（MCOLS，period 列=当天日期）。
+    每行 CSV 读一遍；用「总计」行做整体校准。
     """
     out = []
     for date in sorted(files_by_date.keys()):
         fl = sorted(files_by_date[date])
-        # 用「总计」行取整体数
-        tot_cost = tot_imp = tot_clk = tot_cv = 0.0
-        proj = {p: {'proj': p, 'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0, 'n': 0} for p in PROJ_LIST}
-        # 全维度累加（与 build_week 一致：cat/plc/opt/edt/tagg/tot）
+        mat = {}          # proj|id -> dict（per-素材明细，供日模式素材排行/AIGC/标签用）
         dims = {'cat': {}, 'plc': {}, 'opt': {}, 'edt': {}, 'tagg': {}}
+        proj = {p: {'proj': p, 'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0, 'n': 0} for p in PROJ_LIST}
+        tot_cost = tot_imp = tot_clk = tot_cv = 0.0
         n = 0
         for f in fl:
             with open(f, encoding='utf-8-sig', newline='') as fh:
@@ -205,6 +204,8 @@ def build_daily(files_by_date):
                         continue
                     plan = (r.get('创量项目') or '').strip()
                     name = (r.get('素材名') or '').strip()
+                    optimizer = (r.get('优化师') or '').strip()
+                    mtype = (r.get('素材类型') or '').strip()
                     ch = rowChannel(plan, name) or '广义新'
                     cost = fnum(r.get('消耗'))
                     imp = fnum(r.get('展示数'))
@@ -217,14 +218,25 @@ def build_daily(files_by_date):
                     o['cost'] += cost; o['imp'] += imp; o['clk'] += clk; o['cv'] += cv; o['n'] += 1
 
                     placement, category = decode(name, ch)
-                    optimizer = (r.get('优化师') or '').strip()
                     tags_raw = (r.get('素材标签') or '').strip()
 
-                    def add(dim, key, c, i, ck, cv_):
+                    key = ch + '|' + sid
+                    if key not in mat:
+                        mat[key] = {'id': sid, 'name': name, 'opt': optimizer, 'edit': '',
+                                    'proj': ch, 'cat': category, 'chan': placement, 'mtype': mtype,
+                                    'tags': set(), 'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0}
+                    m = mat[key]
+                    m['cost'] += cost; m['imp'] += imp; m['clk'] += clk; m['cv'] += cv
+                    for tg in re.split(r'[,，|]', tags_raw):
+                        tg = tg.strip()
+                        if tg:
+                            m['tags'].add(tg)
+
+                    def add(dim, key2, c, i, ck, cv_):
                         d = dims[dim]
-                        if key not in d:
-                            d[key] = {'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0, 'n': 0}
-                        dd = d[key]
+                        if key2 not in d:
+                            d[key2] = {'cost': 0.0, 'imp': 0.0, 'clk': 0.0, 'cv': 0.0, 'n': 0}
+                        dd = d[key2]
                         dd['cost'] += c; dd['imp'] += i; dd['clk'] += ck; dd['cv'] += cv_; dd['n'] += 1
                     add('cat', ch + '|' + category, cost, imp, clk, cv)
                     add('plc', ch + '|' + placement, cost, imp, clk, cv)
@@ -235,6 +247,14 @@ def build_daily(files_by_date):
                         if tg:
                             add('tagg', ch + '|' + tg, cost, imp, clk, cv)
 
+        # per-素材明细行（MCOLS 顺序，period 列=当天日期）
+        mrows = []
+        for k, m in mat.items():
+            me = metrics(m)
+            mrows.append([m['id'], m['name'], m['opt'], m['edit'], m['proj'], m['cat'], m['chan'],
+                          me['cost'], me['imp'], me['clk'], me['cv'], me['cpa'], me['cvr'], me['ctr'],
+                          m['mtype'], '|'.join(sorted(m['tags'])), date])
+
         # 优先用「总计」行的整体数（如有）；否则用明细累加
         if tot_cost == 0 and tot_imp == 0 and tot_clk == 0 and tot_cv == 0:
             tot_cost = sum(proj[p]['cost'] for p in proj)
@@ -244,9 +264,9 @@ def build_daily(files_by_date):
 
         def agg_list(dim, dims_keys):
             arr = []
-            for key, val in dims[dim].items():
+            for key2, val in dims[dim].items():
                 rec = {}
-                for dk, pv in zip(dims_keys, key.split('|')):
+                for dk, pv in zip(dims_keys, key2.split('|')):
                     rec[dk] = pv
                 rec.update(metrics(val))
                 arr.append(rec)
@@ -267,8 +287,10 @@ def build_daily(files_by_date):
             'tags': agg_list('tagg', ['proj', 'tag']),
             'suggestions': suggestions,
             'insights': insights,
+            'materials': {'cols': MCOLS, 'rows': mrows},
         })
     return out
+
 
 
 def compute_suggestions_for_daily(records, key='cat'):
@@ -565,6 +587,42 @@ def main():
     # 6) 日汇总聚合（按天，用于看板「日汇总」模式）
     new_daily = build_daily(new_daily_files) if new_daily_files else []
     new_dates = {d['date'] for d in new_daily}
+
+    # 6.1) 按天拆分 per-素材明细为独立 .gz（前端按需懒加载，避免 period-meta 膨胀）
+    #       period-meta 的 dailyData 只保留聚合维度 + hasMaterials 标记
+    write_gz_only = None
+    if new_daily:
+        def _wgz(path, obj):
+            txt = json.dumps(obj, ensure_ascii=False)
+            with gzip.open(path, 'wt', encoding='utf-8', compresslevel=9) as f:
+                f.write(txt)
+            return len(txt.encode('utf-8'))
+        write_gz_only = _wgz
+        # 清理旧分片（FORCE 时把已废弃日期的移入 _trash，不做删除）
+        if FORCE:
+            keep_slugs = {re.sub(r'[^0-9]', '', d) for d in new_dates}
+            trash = os.path.join(REPO, '_trash', 'daily_' + datetime.now().strftime('%Y%m%d_%H%M%S'))
+            for f in glob.glob(os.path.join(REPO, 'daily-materials-*.json')) + \
+                     glob.glob(os.path.join(REPO, 'daily-materials-*.json.gz')):
+                sm = re.search(r'daily-materials-(\d+)\.json', os.path.basename(f))
+                if not sm:
+                    continue
+                if sm.group(1) in keep_slugs:
+                    continue
+                try:
+                    os.makedirs(trash, exist_ok=True)
+                    shutil.move(f, os.path.join(trash, os.path.basename(f)))
+                except Exception:
+                    pass
+        for d in new_daily:
+            date = d['date']
+            slug = re.sub(r'[^0-9]', '', date)
+            rows = d.get('materials', {}).get('rows', [])
+            _wgz(os.path.join(REPO, f'daily-materials-{slug}.json.gz'),
+                 {'cols': MCOLS, 'rows': rows})
+            d['hasMaterials'] = True
+            d.pop('materials', None)   # period-meta 不存素材明细（每天 3-5MB gz 独立文件）
+        print(f"  daily-materials 分片已写出 {len(new_daily)} 个")
 
     def merge_daily(obj):
         old = obj.get('dailyData', []) or []
