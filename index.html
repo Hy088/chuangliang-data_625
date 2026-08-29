@@ -1013,7 +1013,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="dgrp dg-c" id="g-proj-pj">
       <div class="dgrp-hd">
         <span class="dgrp-no">4</span>
-        <span class="dgrp-tx"><span class="dgrp-t">项目维度对比</span><span class="dgrp-s">广义新 / 低活 / 标点 三渠道消耗、转化与效率</span></span>
+        <span class="dgrp-tx"><span class="dgrp-t">项目维度对比</span><span class="dgrp-s">广义新 / 低活 / 标点 / PRJ 四渠道消耗、转化与效率</span></span>
         <span class="dgrp-cnt">按项目</span>
       </div>
       <div class="dgrp-bd">
@@ -1078,6 +1078,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <span class="chip" data-proj="广义新">广义新</span>
         <span class="chip" data-proj="低活">低活</span>
         <span class="chip" data-proj="标点">标点</span>
+        <span class="chip" data-proj="PRJ">PRJ</span>
         <span class="chip" id="catdirAll" style="margin-left:6px">全选</span>
         <span class="seg" style="margin-left:10px">
           <span class="seg-btn on" data-sort="cost">按消耗</span>
@@ -1092,7 +1093,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
     <div class="dgrp dg-g" id="g-cat-dist">
       <div class="dgrp-hd">
         <span class="dgrp-no">2</span>
-        <span class="dgrp-tx"><span class="dgrp-t">分布结构</span><span class="dgrp-s">品类 Top10 · 低活活动类型 · 三渠道跑量 SKU</span></span>
+        <span class="dgrp-tx"><span class="dgrp-t">分布结构</span><span class="dgrp-s">品类 Top10 · 低活活动类型 · 四渠道跑量 SKU</span></span>
         <span class="dgrp-cnt">结构层</span>
       </div>
       <div class="dgrp-bd">
@@ -1107,11 +1108,12 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <div class="note" id="lowActNote"></div>
       </div>
       <div class="card" id="skuCard">
-        <h2>三渠道跑量 SKU 统计 <span class="tag">消耗≥¥1万</span>
+        <h2>四渠道跑量 SKU 统计 <span class="tag">消耗≥¥1万</span>
           <span class="seg" id="skuSeg" style="margin-left:10px">
             <span class="seg-btn on" data-ch="低活">低活</span>
             <span class="seg-btn" data-ch="标点">标点</span>
             <span class="seg-btn" data-ch="广义新">广义新</span>
+            <span class="seg-btn" data-ch="PRJ">PRJ</span>
             <span class="seg-btn" data-ch="all">全部</span>
           </span>
         </h2>
@@ -1171,6 +1173,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
         <span class="chip" data-proj="广义新">广义新</span>
         <span class="chip" data-proj="低活">低活</span>
         <span class="chip" data-proj="标点">标点</span>
+        <span class="chip" data-proj="PRJ">PRJ</span>
         <span class="chip" id="rankAll" style="margin-left:6px">全选</span>
         <input type="text" id="rankSearch" placeholder="搜索素材名 / ID / 优化师 / 剪辑 / 品类">
         <button class="btn sm" id="presetCost">消耗Top200</button>
@@ -1526,7 +1529,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
   <div class="dgrp dg-v" id="g-me-rt">
     <div class="dgrp-hd">
       <span class="dgrp-no">1</span>
-      <span class="dgrp-tx"><span class="dgrp-t">今日实时</span><span class="dgrp-s">当日核心指标 · 目标达成 · 三渠道消耗构成（较昨日同时段）</span></span>
+      <span class="dgrp-tx"><span class="dgrp-t">今日实时</span><span class="dgrp-s">当日核心指标 · 目标达成 · 四渠道消耗构成（较昨日同时段）</span></span>
       <span class="dgrp-cnt">当日</span>
       <span class="dgrp-fold" data-fold>收起</span>
     </div>
@@ -1558,7 +1561,7 @@ footer{padding:28px;text-align:center;color:var(--muted);font-size:12px}
       </div>
 
       <div class="card" id="meChannelCard">
-        <h2>消耗渠道构成 <span class="tag">广义新 / 低活 / 标点 · 较昨日同时段</span></h2>
+        <h2>消耗渠道构成 <span class="tag">广义新 / 低活 / 标点 / PRJ · 较昨日同时段</span></h2>
         <div class="kpis" id="meChannelBars"></div>
         <div id="meChannelDiff" class="note"></div>
       </div>
@@ -2310,9 +2313,9 @@ function initPeriodSel(){
   });
   refreshPicker();
 }
-const PROJ_COLOR = {'广义新':'#7c5cff','低活':'#3b82f6','标点':'#06b6d4'};
-const PROJ_LIST = ['广义新','低活','标点'];
-const PROJ_DOT = {'广义新':'#7c5cff','低活':'#3b82f6','标点':'#06b6d4'};
+const PROJ_COLOR = {'广义新':'#7c5cff','低活':'#3b82f6','标点':'#06b6d4','PRJ':'#f59e0b'};
+const PROJ_LIST = ['广义新','低活','标点','PRJ'];
+const PROJ_DOT = {'广义新':'#7c5cff','低活':'#3b82f6','标点':'#06b6d4','PRJ':'#f59e0b'};
 const STATUS_COLOR = {'放量':'green','维持':'blue','迭代':'yellow','淘汰':'red','样本不足':'gray'};
 const DIR_COLOR = {'放量':'#1faa59','维持':'#2f6bff','迭代':'#e3a008','淘汰':'#e0533d','样本不足':'#9aa6b2'};
 const STATUS_LIST = ['放量','维持','迭代','淘汰'];
@@ -2352,18 +2355,18 @@ function cmpCell(cur, prev, goodWhenUp, fmt){
 
 // ---------- 全局状态 ----------
 const state = {
-  projects: new Set(['广义新','低活','标点']),
+  projects: new Set(['广义新','低活','标点','PRJ']),
   pjProj: '低活', pjSort: 'cost',
   dim: 'cat',
   dimTagFilter: '',
   tagFilter: {tags:new Set(), mode:'any'},
-  rankProj: new Set(['广义新','低活','标点']),
+  rankProj: new Set(['广义新','低活','标点','PRJ']),
   rankSort: {key:'cost', dir:-1},
   rankType: 'all',
   rankPage: 0, rankPageSize: 50, rankRows: [],
   decFilter: 'all',
   compare: false,
-  catdirProj: new Set(['广义新','低活','标点']),
+  catdirProj: new Set(['广义新','低活','标点','PRJ']),
   catdirSort: 'cost', catdirSortDir: -1,
   skuCh: '低活',
 };
@@ -2600,7 +2603,7 @@ function renderOverview(){
     $('#ov-insights').innerHTML = '<div class="insight"><b>提示：</b>项目看板需要导入素材周期报表才会显示数据；「个人数据」标签由系统每小时自动更新，可单独查看。</div>';
     return;
   }
-  $('#hdrsub').textContent = `周期 ${DATA.meta.period} · 项目：广义新 / 低活 / 标点 · 共 ${fmtInt(DATA.materials.rows.length)} 条素材 · 生成于 ${DATA.meta.generated}`;
+  $('#hdrsub').textContent = `周期 ${DATA.meta.period} · 项目：广义新 / 低活 / 标点 / PRJ · 共 ${fmtInt(DATA.materials.rows.length)} 条素材 · 生成于 ${DATA.meta.generated}`;
 
   // 洞察
   let html='';
@@ -3032,9 +3035,12 @@ async function fetchMeText(file, force){
   return await fetch(file+q, opt).then(r=>{ if(!r.ok) throw new Error(file+' HTTP '+r.status); return r.text(); });
 }
 function classifyMeMat(name){
+  // PRJ（采销项目）最高优先级：命名统一为 CH-PRJ-采销项目-...，
+  // 实测 810 条与「低活/广义新/信息流」零交叉，前置不会误吞其他渠道。
+  if(name.toUpperCase().includes('PRJ')) return 'PRJ';
   if(name.startsWith('信息流')) return '标点';        // 标点：素材名以「信息流」开头
   if(name.includes('低活')) return '低活';            // 低活：素材名含「低活」
-  return '广义新';                                    // 其余（含广义新、采销等）归广义新
+  return '广义新';                                    // 其余（含广义新等）归广义新
 }
 async function renderMeChannels(force){
   try{
@@ -3049,9 +3055,9 @@ async function renderMeChannels(force){
     const locked=window.LOCKED_ME_DATE||null;
     const latest=locked?locked:(byDate[today]?today:(dates[dates.length-1]||''));
     const dayRows=byDate[latest]||[];
-    const sum={广义新:0,低活:0,标点:0};
-    dayRows.forEach(r=>{ const c=fnum(r[iCost]); sum[classifyMeMat((r[iName]||'').trim())]+=c; });
-    const total=sum.广义新+sum.低活+sum.标点;
+    const sum={广义新:0,低活:0,标点:0,PRJ:0};
+    dayRows.forEach(r=>{ const c=fnum(r[iCost]); const pj=classifyMeMat((r[iName]||'').trim()); if(sum[pj]===undefined) sum[pj]=0; sum[pj]+=c; });
+    const total=sum.广义新+sum.低活+sum.标点+sum.PRJ;
 
     // ---- 2. 较昨日同时段（me-history.csv 中【昨天】那一行的完整值 → 每个 KPI 卡片）----
     const HIST_MAP={
@@ -3098,7 +3104,7 @@ async function renderMeChannels(force){
     const box=$('#meChannelBars');
     if(box){
       const pct=v=> total>0?Math.round(v/total*100):0;
-      const items=[['广义新',sum.广义新,'var(--green)'],['低活',sum.低活,'var(--yellow)'],['标点',sum.标点,'var(--brand)']];
+      const items=[['广义新',sum.广义新,'var(--green)'],['低活',sum.低活,'var(--yellow)'],['标点',sum.标点,'var(--brand)'],['PRJ',sum.PRJ,'#f59e0b']].filter(it=>it[1]>0);
       box.innerHTML=items.map(([nm,val,col])=>{ const p=pct(val);
         return `<div class="kpi"><div class="l">${nm}</div>`+
           `<div class="v">¥${fmtInt(Math.round(val))}</div>`+
@@ -3262,7 +3268,7 @@ function bindAll(){
       $$('#rank .chip[data-proj]').forEach(x=>x.classList.toggle('on',state.rankProj.has(x.dataset.proj)));
       buildRankRows(); };
   });
-  $('#rankAll').onclick=()=>{ state.rankProj=new Set(['广义新','低活','标点']); $$('#rank .chip[data-proj]').forEach(x=>x.classList.add('on')); buildRankRows(); };
+  $('#rankAll').onclick=()=>{ state.rankProj=new Set(PROJ_LIST); $$('#rank .chip[data-proj]').forEach(x=>x.classList.add('on')); buildRankRows(); };
   $('#rankSearch').addEventListener('input', debounce(buildRankRows,200));
   $('#presetCost').onclick=()=>{ state.rankHitOnly=false; $('#presetHit').classList.remove('on'); state.rankSort={key:'cost',dir:-1}; buildRankRows(); };
   $('#presetCpa').onclick=()=>{ state.rankHitOnly=false; $('#presetHit').classList.remove('on'); state.rankSort={key:'cpa',dir:1}; buildRankRows(); };
@@ -3282,7 +3288,7 @@ function bindAll(){
       $$('#catdir .chip[data-proj]').forEach(x=>x.classList.toggle('on',state.catdirProj.has(x.dataset.proj)));
       renderCatDir(); };
   });
-  $('#catdirAll').onclick=()=>{ state.catdirProj=new Set(['广义新','低活','标点']); $$('#catdir .chip[data-proj]').forEach(x=>x.classList.add('on')); renderCatDir(); };
+  $('#catdirAll').onclick=()=>{ state.catdirProj=new Set(PROJ_LIST); $$('#catdir .chip[data-proj]').forEach(x=>x.classList.add('on')); renderCatDir(); };
   $$('#catdir .seg-btn[data-sort]').forEach(b=>b.onclick=()=>{ $$('#catdir .seg-btn[data-sort]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); state.catdirSort=b.dataset.sort; state.catdirSortDir=-1; renderCatDir(); });
   $('#catdirTable').querySelector('thead').addEventListener('click',e=>{ if(e.target.dataset.k){ const k=e.target.dataset.k; state.catdirSortDir = (state.catdirSort===k)?(0-(state.catdirSortDir||-1)):-1; state.catdirSort=k; renderCatDir(); }});
   // 爆款标准：配置面板
@@ -3481,7 +3487,7 @@ function renderLowAct(){
   if(actNote) actNote.textContent = `低活共 ${actList.length} 种活动类型，按消耗 Top10 展示；主力为「${topAct[0]?topAct[0].k:'—'}」(${fmtMoney(topAct[0]?topAct[0].cost:0)})。`;
 }
 function renderSkuStats(){
-  const CH=['低活','标点','广义新'];
+  const CH=PROJ_LIST.slice();            // 含 PRJ，避免硬编码三渠道把 PRJ 数据过滤掉
   const sel=CH.filter(p=>state.catdirProj.has(p));
   const card=$('#skuCard'), kpi=$('#skuKpis'), box=$('#skuBox'), note=$('#skuNote');
   if(sel.length===0){
@@ -3523,7 +3529,7 @@ function renderSkuStats(){
       scales:{y:{position:'left',title:{display:true,text:'消耗(¥)'},ticks:{callback:v=>'¥'+(v/1e6).toFixed(1)+'M'}},
               y2:{position:'right',title:{display:true,text:'转化数'},grid:{drawOnChartArea:false}}}}});
   if(note) note.textContent = (ch==='all'
-      ? `全部渠道合计：跑量 SKU ${fmtInt(hot.length)} 个，覆盖三渠道消耗 ${fmtPct(allTot>0?hotCost/allTot*100:0)}。`
+      ? `全部渠道合计：跑量 SKU ${fmtInt(hot.length)} 个，覆盖四渠道消耗 ${fmtPct(allTot>0?hotCost/allTot*100:0)}。`
       : `「${ch}」渠道：SKU 取自素材命名最长数字段（8~16位商品ID）；跑量 SKU = 单 SKU 累计消耗 ≥ ¥10,000。`)
       + ' 可切换渠道查看 Top10。';
 }
@@ -4482,7 +4488,7 @@ async function loadRuntimeState(){
   }catch(e){ console.warn('[state] restore failure', e); }
 }
 // 本地无数据时，从独立的数据文件 period-data.json 载入（不内嵌大数据到 HTML，避免页面打不开）
-const SEED_VER = '20260829t';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
+const SEED_VER = '20260830b';   // 与前端版本同步，用于绕开 GitHub Pages 部署瞬间的空/截断缓存
 
 // 带重试的 JSON 拉取：先走 .gz（15-20% 体积，GitHub Pages 不会自动解压，由前端 DecompressionStream 解压）；
 // 若浏览器不支持或 .gz 不存在，回退普通 JSON；最后用时间戳强制回源兜底。
@@ -6096,7 +6102,7 @@ bindCapacity();
   </div>
 </div>
 
-<script src="personal-enhance.js?v=20260829t"></script>
+<script src="personal-enhance.js?v=20260830b"></script>
 
 <script src="vparse-deep.js?v=20260819c"></script>
 

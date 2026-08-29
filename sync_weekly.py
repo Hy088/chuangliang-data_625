@@ -23,7 +23,7 @@ for _a in sys.argv[1:]:
 
 REPO = r"C:/Users/EDY/chuangliang_data"
 SRC  = r"F:\Workbuddy.renwu\WorkBuddy_数据"
-PROJ_LIST = ['广义新', '低活', '标点']
+PROJ_LIST = ['广义新', '低活', '标点', 'PRJ']
 CH_BROAD  = ['有PIN专项', 'SG专项', 'HL专项', '下载激活专项', '广义新']
 MCOLS = ['id','name','opt','edit','proj','cat','chan','cost','imp','clk','cv','cpa','cvr','ctr','mtype','tags','period']
 
@@ -43,6 +43,10 @@ def isAppBiaod(plan):
 def rowChannel(plan, name):
     plan = (plan or '').strip()
     name = (name or '').strip()
+    # PRJ（采销项目）最高优先级：命名统一为 CH-PRJ-采销项目-...，
+    # 实测 810 条与「低活/广义新/信息流」零交叉，故可安全前置，不会误吞其他渠道。
+    if 'PRJ' in name.upper():
+        return 'PRJ'
     if isAppBiaod(plan) and name.startswith('信息流'):
         return '标点'
     if ('低活' in plan) or ('低活' in name):
@@ -53,7 +57,9 @@ def rowChannel(plan, name):
 
 def decode(name, proj):
     parts = [p.strip() for p in (name or '').split('-')]
-    if proj in ('广义新', '低活'):
+    # PRJ 与低活/广义新同构（p[4]=投放渠道、p[5]=品类），须走同一分支；
+    # 若落进 else（标点分支）会把品类错解析成「采销项目」、渠道错成「信息流」。
+    if proj in ('广义新', '低活', 'PRJ'):
         placement = parts[4] if len(parts) > 4 else '其他'
         if re.search(r'PIN|pin|Pin', name or '') and len(parts) > 6:
             category = parts[6]

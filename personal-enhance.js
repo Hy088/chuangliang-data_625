@@ -944,16 +944,22 @@
   /* ---------- 渲染：消耗渠道构成（今日 / 当月范围联动） ---------- */
   function classifyChannel(name) {
     name = (name || "").trim();
+    // PRJ（采销项目）最高优先级：命名统一为 CH-PRJ-采销项目-...，与低活/广义新/信息流零交叉
+    if (name.toUpperCase().indexOf("PRJ") >= 0) return "PRJ";
     if (name.indexOf("信息流") === 0) return "标点";
     if (name.indexOf("低活") >= 0) return "低活";
     return "广义新";
   }
   function renderChannelRows(rows, label, mode) {
-    var sum = { "广义新": 0, "低活": 0, "标点": 0 };
-    rows.forEach(function (m) { sum[classifyChannel(m["素材名"])] += num(m["消耗"]); });
-    var total = sum["广义新"] + sum["低活"] + sum["标点"];
+    var sum = { "广义新": 0, "低活": 0, "标点": 0, "PRJ": 0 };
+    rows.forEach(function (m) {
+      var pj = classifyChannel(m["素材名"]);
+      if (sum[pj] === undefined) sum[pj] = 0;
+      sum[pj] += num(m["消耗"]);
+    });
+    var total = sum["广义新"] + sum["低活"] + sum["标点"] + sum["PRJ"];
     var box = el("meChannelBars"), diff = el("meChannelDiff");
-    var items = [["广义新", sum["广义新"], "var(--green)"], ["低活", sum["低活"], "var(--yellow)"], ["标点", sum["标点"], "var(--brand)"]];
+    var items = [["广义新", sum["广义新"], "var(--green)"], ["低活", sum["低活"], "var(--yellow)"], ["标点", sum["标点"], "var(--brand)"], ["PRJ", sum["PRJ"], "#f59e0b"]].filter(function (it) { return it[1] > 0; });
     if (box) {
       box.innerHTML = items.map(function (it) {
         var nm = it[0], val = it[1], col = it[2];
