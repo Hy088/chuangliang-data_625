@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 视频自动生成工具</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --border:#2a2f3a;
+    --text:#e6e9ef; --muted:#9aa4b2; --accent:#5b8cff; --accent2:#3a6bff;
+    --ok:#36d399; --err:#f87272; --warn:#fbbd23;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,"Segoe UI",Roboto,"Microsoft YaHei",sans-serif}
+  header{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+  header h1{font-size:17px;margin:0;font-weight:600}
+  header .dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}
+  .wrap{max-width:980px;margin:0 auto;padding:20px 22px 60px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+  .card h2{font-size:14px;margin:0 0 12px;color:var(--muted);font-weight:600;letter-spacing:.3px;text-transform:uppercase}
+  label{display:block;font-size:12px;color:var(--muted);margin:10px 0 5px}
+  input,textarea,select{width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 11px;font-size:13px;outline:none}
+  input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+  textarea{resize:vertical;min-height:70px;font-family:inherit}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+  .row{display:flex;gap:10px;align-items:center}
+  button{background:var(--accent2);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
+  button:hover{background:var(--accent)}
+  button.ghost{background:transparent;border:1px solid var(--border);color:var(--muted);font-weight:500}
+  button.danger{background:transparent;border:1px solid rgba(248,114,114,.4);color:var(--err)}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .big{width:100%;padding:13px;font-size:15px}
+  .hint{font-size:12px;color:var(--muted);margin-top:6px}
+  .status{margin-top:12px;font-size:13px;padding:10px 12px;border-radius:8px;display:none}
+  .status.show{display:block}
+  .status.err{background:rgba(248,114,114,.12);color:var(--err);border:1px solid rgba(248,114,114,.3)}
+  .status.warn{background:rgba(251,189,35,.12);color:var(--warn);border:1px solid rgba(251,189,35,.3)}
+  .status.ok{background:rgba(54,211,153,.12);color:var(--ok);border:1px solid rgba(54,211,153,.3)}
+  .res-item{border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:8px;background:var(--panel2);font-size:13px}
+  .res-item .v{color:var(--accent);font-weight:600}
+  .res-item .p{color:var(--muted);font-size:12px;word-break:break-all;margin-top:3px}
+  .res-item.err .v{color:var(--err)}
+  .file{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-top:8px;background:var(--panel2);font-size:13px}
+  .file .s{color:var(--muted);font-size:12px}
+  .collapse{cursor:pointer;user-select:none;display:flex;align-items:center;gap:8px}
+  .collapse .arr{transition:.2s;color:var(--muted)}
+  .collapse.open .arr{transform:rotate(90deg)}
+  .hidden{display:none}
+  .pill{display:inline-block;background:var(--panel2);border:1px solid var(--border);border-radius:20px;padding:2px 10px;font-size:12px;color:var(--muted)}
+  .pill.active{background:rgba(91,140,255,.15);color:var(--accent);border-color:rgba(91,140,255,.4)}
+  .brief-box{background:var(--panel2);border:1px dashed var(--border);border-radius:8px;padding:10px;margin-top:12px;font-size:13px;color:var(--muted)}
+  .brief-box strong{color:var(--text)}
+  .tabs{display:flex;gap:8px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:10px}
+  .tab{padding:8px 16px;border-radius:8px;cursor:pointer;background:var(--panel2);border:1px solid var(--border);font-size:13px;color:var(--muted)}
+  .tab.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+  .acc-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin-top:8px;background:var(--panel2)}
+  .acc-row.active{border-color:var(--accent);background:rgba(91,140,255,.08)}
+  .acc-row .info{font-size:13px}
+  .acc-row .note{font-size:11px;color:var(--muted);margin-top:2px}
+  .acc-actions{display:flex;gap:6px}
+  .acc-actions button{padding:5px 10px;font-size:12px}
+  .small{font-size:12px}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:flex-start;justify-content:center;z-index:1000;padding:40px 16px;overflow:auto}
+  .modal-overlay.show{display:flex}
+  .modal{background:var(--panel);border:1px solid var(--border);border-radius:14px;max-width:900px;width:100%;max-height:88vh;display:flex;flex-direction:column}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)}
+  .modal-head h3{margin:0;font-size:15px}
+  .modal-body{padding:18px 24px;overflow:auto;font-size:13px;line-height:1.7}
+  .modal-body h1{font-size:19px;margin:6px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  .modal-body h2{font-size:16px;color:var(--accent);margin:22px 0 10px}
+  .modal-body h3{font-size:14px;color:var(--muted);margin:16px 0 8px}
+  .modal-body p{margin:8px 0;color:var(--text)}
+  .modal-body ul,.modal-body ol{margin:8px 0;padding-left:22px}
+  .modal-body li{margin:3px 0}
+  .modal-body code{background:var(--panel2);border:1px solid var(--border);border-radius:5px;padding:1px 5px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--accent)}
+  .modal-body pre.md-code{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:12px;overflow:auto;font-size:12px;line-height:1.5;white-space:pre-wrap}
+  .modal-body blockquote.md-quote{border-left:3px solid var(--accent);margin:10px 0;padding:6px 14px;color:var(--muted);background:var(--panel2);border-radius:0 8px 8px 0}
+  .modal-body table.md-table{border-collapse:collapse;width:100%;margin:12px 0;font-size:12px}
+  .modal-body table.md-table th,.modal-body table.md-table td{border:1px solid var(--border);padding:7px 10px;text-align:left;vertical-align:top}
+  .modal-body table.md-table th{background:var(--panel2);color:var(--text);font-weight:600}
+  .modal-body table.md-table tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+
+/* ===== 离线预览横幅 ===== */
+.preview-banner{background:linear-gradient(90deg,#3a2f0a,#241d06);border:1px solid #6b5518;
+  border-radius:10px;padding:12px 16px;margin:14px 0 16px;font-size:13px;line-height:1.75;color:#f0d999}
+.preview-banner b{color:#ffd76a}
+.preview-banner .tag{display:inline-block;background:#6b5518;color:#ffe9a8;border-radius:4px;
+  padding:1px 7px;font-size:11px;margin-right:8px;vertical-align:1px}
+.preview-banner code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px;color:#ffe9a8}
+
+</style>
+</head>
+<body>
+<header><span class="dot"></span><h1>AI 视频自动生成工具</h1><span class="pill" id="statPill">未连接</span><button class="ghost" id="changelogBtn" style="margin-left:auto">📋 更新日志</button></header>
+<div class="wrap">
+<div class="preview-banner">
+  <span class="tag">离线预览版</span><b>这是静态预览页，用于展示工具界面与功能</b><br>
+  页面数据为<b>示例/演示数据</b>（真实的账号、密钥、已生成视频都不会随本页公开）。<br>
+  点「生成类」按钮会提示<b>需本机服务</b>；但<b>「🪄 提示词模板」可正常试用</b>：
+  选模板 → 填字段 → 点「✨ 生成提示词」，就能真实看到产出的提示词文案。<br>
+  真正出片需在你自己电脑运行 <code>launch_tool.bat</code>（或 <code>python server.py</code>）后访问 <code>http://127.0.0.1:8899/</code>。
+</div>
+
+
+  <!-- 模式切换 -->
+  <div class="tabs">
+    <div class="tab active" data-mode="internal" onclick="switchMode('internal')">🤖 内部生成器</div>
+    <div class="tab" data-mode="jichuang" onclick="switchMode('jichuang')">🌊 即创自动化</div>
+  </div>
+
+  <!-- ========== 内部生成器模式 ========== -->
+  <div id="modeInternal">
+    <div class="card">
+      <div class="collapse open" id="cfgHead"><span class="arr">▶</span><h2 style="margin:0">① 配置（首次使用填写，之后自动保存）</h2></div>
+      <div id="cfgBody">
+        <div class="grid">
+          <div><label>千问 API Key (DashScope)</label><input id="qwenKey" placeholder="PLACEHOLDER_QWEN_DASHSCOPE_KEY"></div>
+          <div><label>千问模型</label><input id="qwenModel" placeholder="qwen-plus"></div>
+        </div>
+        <label>千问接口地址</label><input id="qwenEndpoint" placeholder="https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions">
+        <div class="grid">
+          <div><label>内部生成器 API 地址</label><input id="genUrl" placeholder="https://你的生成器/api/generate"></div>
+          <div><label>生成器鉴权方式</label>
+            <select id="genAuthType"><option value="bearer">Bearer Token</option><option value="apikey">X-API-Key</option><option value="none">无</option></select>
+          </div>
+        </div>
+        <div class="grid">
+          <div><label>生成器 Token</label><input id="genToken" placeholder="PLACEHOLDER_GENERATOR_TOKEN"></div>
+          <div><label>请求格式</label>
+            <select id="genReqFmt"><option value="json">JSON</option><option value="text">纯文本</option></select>
+          </div>
+        </div>
+        <div class="grid">
+          <div><label>提示词字段名</label><input id="genPromptField" placeholder="prompt"></div>
+          <div><label>返回类型</label>
+            <select id="genRespType"><option value="binary">直接返回视频文件</option><option value="json_url">JSON 内含视频 URL</option></select>
+          </div>
+        </div>
+        <label>JSON 中视频 URL 的字段名（仅返回类型为 JSON 时）</label><input id="genRespUrlField" placeholder="url">
+        <label>视频保存绝对路径</label><input id="outDir" placeholder="C:/videos">
+        <div class="grid">
+          <div><label>每次生成条数</label><input id="numVideos" type="number" min="1" value="3"></div>
+          <div><label>风格</label><input id="style" placeholder="信息流广告短视频"></div>
+        </div>
+        <label>变体（逗号分隔，对应每次生成的几条）</label><input id="variants" placeholder="钩子前置版,卖点对比版,紧迫感CTA版">
+        <div class="row" style="margin-top:14px">
+          <button id="saveBtn" class="ghost">保存配置</button>
+          <span class="hint">配置存到 video_gen_config.json，下次打开自动载入。分类框架也在该文件里改。</span>
+        </div>
+        <div class="status" id="cfgStatus"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>② 生成</h2>
+      <label>选择分类框架</label>
+      <select id="categorySelect"><option value="">加载中...</option></select>
+      <div id="categoryFields" style="margin-top:8px"></div>
+      <div class="brief-box"><strong>将要发送给千问的简短描述：</strong><div id="briefPreview">(请先填写字段)</div></div>
+      <div style="margin-top:12px">
+        <label>📎 产品图片（图生视频，可选，可多张）</label>
+        <input type="file" id="imgInput" multiple accept="image/*">
+        <div id="imgPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px"></div>
+      </div>
+      <div style="margin-top:12px"><button class="big" id="genBtn">🎬 生成视频</button></div>
+      <div class="status" id="genStatus"></div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">③ 本次结果与文件</h2>
+        <button class="ghost" id="refreshBtn" style="padding:6px 12px;font-size:12px">刷新文件列表</button>
+      </div>
+      <div id="results"><p class="hint">还没有生成记录。</p></div>
+      <div id="files" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <!-- ========== 即创模式 ========== -->
+  <div id="modeJichuang" class="hidden">
+    <div class="card">
+      <div class="row" style="justify-content:space-between;align-items:flex-start">
+        <h2 style="margin:0">🌊 即创账号管理</h2>
+        <span class="hint" style="max-width:360px;text-align:right">每个账号有独立的浏览器登录态，积分用完点「切换」换一个号继续跑。</span>
+      </div>
+      <div id="accountsList"><p class="hint">加载中...</p></div>
+      <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px">
+        <div class="grid">
+          <div><label>账号名称</label><input id="accName" placeholder="如：主号 / 小号1"></div>
+          <div><label>邮箱</label><input id="accEmail" placeholder="巨量引擎邮箱"></div>
+        </div>
+        <label>密码</label><input id="accPassword" type="password" placeholder="密码（可选，不填则弹窗手动登录）">
+        <label>备注</label><input id="accNote" placeholder="积分/用途备注">
+        <button class="ghost" id="addAccBtn" style="margin-top:10px">➕ 添加账号</button>
+      </div>
+      <div class="status" id="accStatus"></div>
+    </div>
+
+    <div class="card">
+      <h2>🎬 即创生成</h2>
+      <div class="grid">
+        <div><label>生成类型</label>
+          <select id="jcMode"><option value="text">文生视频</option><option value="image">图生视频</option></select>
+        </div>
+        <div><label>使用账号</label><select id="jcAccountSelect"></select></div>
+      </div>
+      <div style="border:1px dashed var(--border);border-radius:10px;padding:12px;margin-bottom:6px;background:rgba(91,140,255,.04)">
+        <label>🪄 提示词模板（填几个词，快速生成完整提示词，不消耗任何积分）</label>
+        <select id="tplSelect"><option value="">加载中...</option></select>
+        <div class="hint" id="tplDesc"></div>
+        <div id="tplFields" class="grid" style="margin-top:6px"></div>
+        <div class="row" style="margin-top:12px">
+          <button class="ghost" id="tplGenBtn">✨ 生成提示词</button>
+          <label style="margin:0;display:flex;align-items:center;gap:6px;font-size:12px"><input type="checkbox" id="tplPolish" style="width:auto"> 千问润色（用你自己的DashScope Key，可选）</label>
+          <label style="margin:0;display:flex;align-items:center;gap:6px;font-size:12px"><input type="checkbox" id="tplAutoGen" style="width:auto" checked> 生成后自动跳转即创生成 ▶</label>
+        </div>
+      </div>
+      <label>提示词 / 描述</label><textarea id="jcPrompt" placeholder="例如：给上班族推荐代餐奶昔，主打方便饱腹，场景是早餐替代"></textarea>
+      <div style="margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="ghost" id="jcVaryBtn">🔁 按此文案裂变 N 条</button>
+        <span class="hint" style="margin:0">基于上面这条文案，自动裂变出「批量生成数量」条不同变体并直接出片（N 取自上方数量框，默认 3）</span>
+      </div>
+      <div id="jcVaryFallbackHint" class="hidden" style="margin-top:6px;padding:8px 10px;background:#fff4e6;border:1px solid #f5b97a;border-radius:6px;color:#7a4a08;font-size:12px;line-height:1.6">
+        ⚠️ <b>本地降级模式</b>（千问未配 / 调用失败）：仅做轻度改写（前置钩子句、加镜头描述、改时序等），不再拼接任何"【钩子·xx】（说明）"标签；变体之间的差异化较弱，建议在 <code>video_gen_config.json</code> 配 <code>qwen.api_key</code> 后获得更丰富的裂变。
+      </div>
+      <div id="jcImageBox" class="hidden">
+        <label>📎 上传产品图（可多张）</label>
+        <input type="file" id="jcImgInput" multiple accept="image/*">
+        <div id="jcImgPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px"></div>
+      </div>
+      <div class="grid">
+        <div><label>画面比例（可选）</label><input id="jcAspect" placeholder="如 16:9 / 9:16 / 1:1"></div>
+        <div><label>时长（可选，秒）</label><input id="jcDuration" placeholder="如 5 / 10"></div>
+      </div>
+      <div style="margin-top:8px"><label>📦 批量生成数量（留空或 1=单条；2-10=按当前模板字段一次性扩 N 条不同变体文案，并自动串行出 N 条视频，默认 3）</label>
+        <input id="jcBatchCount" type="number" min="1" max="10" value="3" placeholder="默认 3" style="max-width:120px;display:inline-block;width:auto"></div>
+      <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
+        <button class="big" id="jcGenBtn">🚀 批量生成 3 条变体视频</button>
+        <button class="big" id="jcCancelBtn" style="background:#e0533d;display:none">⛔ 取消生成</button>
+      </div>
+      <div class="status" id="jcStatus"></div>
+      <div id="jcJobBox" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">📁 已生成视频</h2>
+        <button class="ghost" id="jcRefreshFiles" style="padding:6px 12px;font-size:12px">刷新</button>
+      </div>
+      <div id="jcFiles"><p class="hint">暂无文件。</p></div>
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+/* ===== 离线预览模式：拦截 API，返回固化演示数据 ===== */
+window.__OFFLINE_PREVIEW__ = true;
+var MOCK_CONFIG  = {"meta": {"name": "AI 视频自动生成工具", "description": "本地 Web 工具:选择分类框架 → 填写字段 → 千问(qwen-plus)扩写提示词 → 调内部生成器出片 → 存本地。", "trigger_phrase": "生成视频", "note": "把所有含 PLACEHOLDER 的字段替换成你的真实值后即可运行。categories 里可增删分类框架,新分类只需 id/name/fields/brief_template。"}, "qwen": {"api_key": "***已隐藏***", "model": "qwen-plus", "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions", "temperature": 0.8}, "template": {"num_videos": 3, "style": "信息流广告短视频(口播+实拍混剪风格)", "variants": ["钩子前置版", "卖点对比版", "紧迫感CTA版"], "system_prompt": "你是一名资深短视频脚本/分镜专家,擅长把按分类框架(产品/价格/活动/风景/剧情)填写的简短描述,扩展成可直接用于 AI 视频生成模型的完整提示词。提示词需包含:画面主体、场景、运镜、语气、字幕/口播重点、时长建议。", "user_prompt_template": "请把下面这句简短输入扩写成 {num_videos} 条不同的 AI 视频生成提示词(分别对应变体:{variants}),风格:{style}。只输出一个 JSON 数组,每个元素形如 {\"variant\":\"变体名\",\"prompt\":\"完整提示词\"}。\n\n用户输入:{user_input}"}, "categories": [{"id": "product", "name": "🛒 产品种草", "fields": [{"key": "***已隐藏***", "label": "产品名称", "placeholder": "如:代餐奶昔"}, {"key": "***已隐藏***", "label": "核心卖点", "placeholder": "如:方便、饱腹、低卡"}, {"key": "***已隐藏***", "label": "目标人群", "placeholder": "如:减肥人群、上班族"}, {"key": "***已隐藏***", "label": "使用场景", "placeholder": "如:早餐替代、运动后"}], "brief_template": "给{target}推荐{product}，主打{selling_point}，场景是{scene}。"}, {"id": "price", "name": "💰 价格促销", "fields": [{"key": "***已隐藏***", "label": "产品", "placeholder": "如:连衣裙"}, {"key": "***已隐藏***", "label": "原价", "placeholder": "如:299"}, {"key": "***已隐藏***", "label": "现价/折扣", "placeholder": "如:99或3折"}, {"key": "***已隐藏***", "label": "活动平台", "placeholder": "如:抖音商城"}, {"key": "***已隐藏***", "label": "活动名称", "placeholder": "如:818大促"}], "brief_template": "{platform}{activity}，{product}原价{original}，现在只要{current}，限时优惠。"}, {"id": "activity", "name": "🎉 活动平台", "fields": [{"key": "***已隐藏***", "label": "平台名", "placeholder": "如:淘宝、京东"}, {"key": "***已隐藏***", "label": "活动名", "placeholder": "如:百亿补贴"}, {"key": "***已隐藏***", "label": "福利/钩子", "placeholder": "如:满200减50"}, {"key": "***已隐藏***", "label": "引导动作", "placeholder": "如:点下方链接领券"}], "brief_template": "{platform}{activity}，{benefit}，{cta}。"}, {"id": "scenery", "name": "🏞️ 风景/氛围", "fields": [{"key": "***已隐藏***", "label": "场景/地点", "placeholder": "如:海边日落"}, {"key": "***已隐藏***", "label": "时间", "placeholder": "如:傍晚"}, {"key": "***已隐藏***", "label": "天气/季节", "placeholder": "如:秋天、微雨"}, {"key": "***已隐藏***", "label": "情绪/氛围", "placeholder": "如:治愈、孤独感"}, {"key": "***已隐藏***", "label": "镜头风格", "placeholder": "如:电影感、航拍"}], "brief_template": "拍摄{location}的{time}，{weather}，整体氛围{mood}，镜头风格{style}。"}, {"id": "story", "name": "🎬 剧情/人设", "fields": [{"key": "***已隐藏***", "label": "人设", "placeholder": "如:30岁职场妈妈"}, {"key": "***已隐藏***", "label": "冲突/钩子", "placeholder": "如:加班到深夜回家看到这一幕"}, {"key": "***已隐藏***", "label": "剧情走向", "placeholder": "如:反转感人"}, {"key": "***已隐藏***", "label": "CTA", "placeholder": "如:评论区告诉我你的故事"}], "brief_template": "以{character}为主角，{hook}，剧情{plot}，结尾引导{cta}。"}, {"id": "free", "name": "📝 自由输入", "fields": [{"key": "***已隐藏***", "label": "自由描述", "placeholder": "你想生成什么直接写"}], "brief_template": "{raw}"}], "generator_api": {"url": "https://PLACEHOLDER-YOUR-INTERNAL-GENERATOR.example.com/api/generate", "method": "POST", "auth_type": "bearer", "auth_token": "***已隐藏***", "request_format": "json", "prompt_field": "prompt", "extra_fields": {}, "response_type": "binary", "response_url_field": "url", "response_content_type_hint": "video/mp4", "image_config": {"enabled": true, "mode": "base64_json", "field": "image", "multiple": true, "list_field": "images", "encoding": "dataurl"}}, "jichuang": {"enabled": true, "base_url": "https://aic.oceanengine.com", "email": "PLACEHOLDER_JICHUANG_EMAIL", "password": "***已隐藏***", "browser_data_dir": ".browser_data", "headless": false, "output_dir": "<工具目录>/generated_videos", "default_aspect": "9:16", "default_duration": 5, "timeout_ms": 30000, "generate_timeout_ms": 900000, "selectors": {}}, "output": {"dir": "<工具目录>/generated_videos", "filename_template": "{ts}_{idx:02d}.mp4"}};
+var MOCK_TPL     = {"templates": [{"id": "story", "name": "🎭 剧情带货（冲突反转）", "desc": "有人物、有剧情冲突的情景剧素材，前3秒钩子最强", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：蜜雪冰城冰鲜柠檬水"}, {"key": "audience", "label": "目标人群", "placeholder": "如：上班族 / 学生党 / 宝妈"}, {"key": "conflict", "label": "剧情冲突 / 场景", "placeholder": "如：同事天天点20块奶茶，我掏出4块平替"}, {"key": "selling", "label": "核心卖点（1-3个）", "placeholder": "如：便宜一半、真柠檬片、冰爽解腻"}]}, {"id": "product", "name": "📦 商品展示（特写/开箱）", "desc": "纯产品展示，突出质感与卖点，适合图生视频", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：沙地蜜薯 / 洗衣液"}, {"key": "selling", "label": "核心卖点", "placeholder": "如：现挖现发、软糯流蜜"}, {"key": "scene", "label": "使用场景", "placeholder": "如：厨房料理台 / 户外野餐"}, {"key": "style", "label": "画面风格", "placeholder": "如：高级电商质感 / 清新自然"}]}, {"id": "price", "name": "💰 价格/活动（低价冲量）", "desc": "低价+紧迫感促销，快节奏大字幕", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：无名抽纸"}, {"key": "price", "label": "价格钩子", "placeholder": "如：1分钱包邮 / 到手9.9"}, {"key": "platform", "label": "活动平台/形式", "placeholder": "如：京东百亿补贴 / 限时秒杀"}, {"key": "audience", "label": "目标人群", "placeholder": "如：囤货党 / 精打细算的宝妈"}]}, {"id": "food", "name": "🍜 美食/饮品（食欲特写）", "desc": "微距+慢动作食欲镜头，饮品赛道主力", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：百事可乐 / 蜜雪新品奶茶"}, {"key": "taste", "label": "口感/卖点", "placeholder": "如：气泡炸裂、冰爽解腻、真茶底"}, {"key": "scene", "label": "食用场景", "placeholder": "如：夏天街头 / 加班深夜 / 火锅配餐"}]}, {"id": "scenery", "name": "🏞 风景/氛围（治愈背景）", "desc": "纯画面氛围素材，适合背景/情感类开头", "fields": [{"key": "scene", "label": "场景", "placeholder": "如：清晨的梯田云海 / 海边日落"}, {"key": "start", "label": "镜头起点", "placeholder": "如：远景全景"}, {"key": "end", "label": "镜头终点", "placeholder": "如：推近到局部特写"}, {"key": "mood", "label": "氛围情绪", "placeholder": "如：治愈放松 / 辽阔震撼"}]}, {"id": "image_motion", "name": "🖼 图生视频·产品动效", "desc": "上传产品图时用：保持产品外观一致，只加镜头动效", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：沙地蜜薯"}, {"key": "motion", "label": "想要的镜头动作", "placeholder": "如：缓慢环绕一周 / 从左向右平移推近"}]}, {"id": "ugc", "name": "📱 UGC真实感（素人随手拍）", "desc": "模拟普通人手机实拍，原生感最强，最不容易被判广告", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：某便利店柠檬茶"}, {"key": "hook", "label": "开头一句话", "placeholder": "如：路过便利店千万别买这个"}, {"key": "reaction", "label": "真实反应", "placeholder": "如：喝完瞪大眼睛又喝了一大口"}]}, {"id": "review", "name": "🧪 测评种草（对比测评）", "desc": "A/B对比、横评推荐，说服力强适合高客单价", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：某吹风机"}, {"key": "compare", "label": "对比对象", "placeholder": "如：普通吹风机 / 大牌平替"}, {"key": "point", "label": "测评维度", "placeholder": "如：风力、伤发程度、干发速度"}]}, {"id": "unbox", "name": "📦 开箱速递（第一视角）", "desc": "第一人称开箱，沉浸式拆包装展示质感", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：某限量款球鞋"}, {"key": "package", "label": "包装亮点", "placeholder": "如：磁吸翻盖礼盒、烫金logo"}, {"key": "detail", "label": "开箱后重点展示", "placeholder": "如：鞋身细节、配件全家福"}]}, {"id": "hot_meme", "name": "🔥 热梗玩梗（网感钩子）", "desc": "热门梗/反差梗开头，完播率高，适合年轻人群", "fields": [{"key": "meme", "label": "热梗/反差点", "placeholder": "如：老板以为我在摸鱼其实在下单"}, {"key": "product", "label": "产品名", "placeholder": "如：某零食大礼包"}, {"key": "punchline", "label": "反转点", "placeholder": "如：结果全办公室都来薅"}]}, {"id": "oral", "name": "🎙 真人口播（讲解种草）", "desc": "单人出镜口播，信任感强，适合功效/知识类", "fields": [{"key": "person", "label": "出镜人设", "placeholder": "如：穿白大褂的配方师 / 邻家姐妹"}, {"key": "topic", "label": "口播主题钩子", "placeholder": "如：熬夜党一定要看完这条"}, {"key": "product", "label": "产品名", "placeholder": "如：某褪黑素软糖"}, {"key": "point", "label": "核心讲解点", "placeholder": "如：成分、怎么吃、多久有效"}]}, {"id": "before_after", "name": "⚡ 前后对比（变化冲击）", "desc": "Before/After 强反差，适合功效、清洁、改造类", "fields": [{"key": "subject", "label": "对比对象", "placeholder": "如：泛黄小白鞋 / 毛糙头发"}, {"key": "before", "label": "Before 状态", "placeholder": "如：发黄发旧全是污渍"}, {"key": "after", "label": "After 状态", "placeholder": "如：白到发光焕然一新"}, {"key": "product", "label": "产品名", "placeholder": "如：某爆炸盐"}]}, {"id": "pet", "name": "🐱 宠物萌趣（萌宠带货）", "desc": "宠物吸睛开场，适合宠物用品/泛人群产品", "fields": [{"key": "pet", "label": "宠物/萌物", "placeholder": "如：橘猫 / 柯基"}, {"key": "action", "label": "萌点动作", "placeholder": "如：追着逗猫棒疯跑、闻到零食瞬间回头"}, {"key": "product", "label": "产品名", "placeholder": "如：某冻干零食"}]}], "negatives": [{"id": "neg_general", "name": "🚫 通用质量避坑", "desc": "模糊、卡顿、变形等基础质量问题", "text": "画面模糊、分辨率低、卡顿掉帧、物体变形、结构错误、画面撕裂、闪烁跳动"}, {"id": "neg_human", "name": "🧍 人物畸变避坑", "desc": "AI 生成人物常见的手/脸/肢体问题", "text": "手指畸形、多指少指、面部扭曲、五官不对称、肢体数量错误、表情僵硬不自然、皮肤质感塑料感"}, {"id": "neg_product", "name": "🏷 产品一致性避坑", "desc": "产品外观/包装被 AI 改动（电商素材最关键）", "text": "产品包装变形、logo错乱、文字改变、颜色漂移、产品形状与实物不符、包装上出现乱码"}, {"id": "neg_text", "name": "🔤 文字乱码避坑", "desc": "画面内文字/字幕乱码错字", "text": "文字乱码、错别字、字幕闪烁、字幕与语音不同步、文字重叠排版错乱"}, {"id": "neg_scene", "name": "🧹 画面杂物避坑", "desc": "水印、无关人物、杂乱背景", "text": "水印、第三方logo贴片、无关路人抢镜、背景杂乱、画面边缘多余物体、广告角标"}, {"id": "neg_motion", "name": "🎥 运镜翻车避坑", "desc": "镜头抖动、运镜撕裂", "text": "镜头剧烈抖动、快速甩镜撕裂、画面拖影、运动轨迹不自然、突然跳切"}]};
+var MOCK_ACCOUNTS= {"accounts": [{"id": "demo1", "name": "主账号（示例数据）", "email": "mai****@example.com", "password": "", "note": "演示数据 · 真实账号只存在你本机，未随本页公开", "active": true}, {"id": "demo2", "name": "备用号（示例数据）", "email": "bei****@example.com", "password": "", "note": "积分用完可切换", "active": false}]};
+var MOCK_FILES   = {"files": [{"name": "产品展示_钩子前置版.mp4", "size": 5242880}, {"name": "产品展示_卖点对比版.mp4", "size": 4980736}, {"name": "剧情带货_紧迫感CTA版.mp4", "size": 6291456}, {"name": "图生视频_产品动效.mp4", "size": 5767168}]};
+var MOCK_CHG     = "# 更新日志 CHANGELOG — Route C 即创/即梦批量生成工具\n\n> **用途**：记录每次改动 + 把「生成流程的每一步」映射到具体代码位置，方便后续哪一步出问题，直接定位到文件/行号/方法去修改更正。\n> **工具目录**：`<工具目录>/`\n> **一键启动**：双击 `launch_tool.bat`（或 `python server.py`）\n> **入口**：主工具 `http://127.0.0.1:8899/` ／ 解析台 `http://127.0.0.1:8900/`\n\n---\n\n## 一、版本历史（新 → 旧）\n\n### v1.1.15 · 2026-08-27 12:20 — **修复「即创没有自动生成」根因：服务器从未把账号凭据传给登录**\n\n> **用户现象**：点「🔁 按此文案裂变 N 条」后，即创页面偶尔/经常\"没生成\"，后台任务卡死或长时间无产出。\n\n**真正的根因（与 Playwright 无关）**：\n- 前端下拉框默认选中 `default` 账号，但 `jichuang_accounts.json` 里 `default` 的 email/password 为空；真正有凭据的是 `6w`/`45bee909`。\n- 服务器 `_exec_batch`/`_exec_generate`/`_exec_login` 调 `auto.ensure_login()` 时**从不传 `account_info`**；`ensure_login` 在没收到凭据时只去读全局 config（永远为空）→ 判定\"需要手动登录\" → 调 `wait_for_manual_login(600)` **在唯一的 worker 线程里阻塞等待最多 10 分钟手动登录**。\n- 结果：worker 被占住，后续所有请求排队，用户视角就是\"没生成\"（除非恰好有未过期的 session cookie）。\n\n**修复**：\n1. `server.py` 新增 `_resolve_login_account(account_id)`：优先用指定账号；若指定账号无凭据，**自动回退到有凭据的账号**（优先 active，否则第一个有凭据的）。返回 `(resolved_id, acc_info)`。\n2. 三个执行函数都改为 `auto.ensure_login(acc_info)` 把凭据喂进去 → 自动登录真正生效，不再卡手动登录。\n3. `jichuang_accounts.json`：把有凭据的 `45bee909` 设为 `active:true`、`default` 设为 `active:false`，前端下拉框默认就选能用的账号。\n4. 手动登录等待超时 `600s → 300s`，避免静默长时间卡死；并在状态里提示\"已自动改用账号 X 登录\"。\n\n**同轮追查（v1.1.15 续）— 出片超时**：端到端实测发现登录/提交修复后，即创免费/限速账号渲染**超过 5 分钟**，被 `generate_timeout_ms=300000` 截断（变体 1 报\"等待视频生成超时\"）。提交与渲染均正常，只差\"等出片\"的窗口太短。已把 `video_gen_config.json` 的 `generate_timeout_ms` 由 300000 调到 **900000（15 分钟/条）**，给慢渲染足够时间；该值是按任务实时读取，新任务立刻生效、无需重启。\n\n**验证（真实端到端）**：\n- `/api/jichuang/login` 用 `default` 触发 → 8 秒返回 `done / 已登录`（之前会卡 300s 等手动登录）。\n- 走真实 vary→batch_generate 全链路：登录自动成功 → 两条变体均 `submitted:true` 且拿到即创 `card_id`（785155051778 / 785045785858）→ 进入 `collecting` 逐条等出片（变体 1/2 完成后自动进入 2/2）。\n- `py_compile` OK，错误日志在 12:00 后无新报错，8899/8900 正常。\n\n### v1.1.14 · 2026-08-27 12:00 — Playwright worker 启动加重试机制（修「'PlaywrightContextManager' object has no attribute '_playwright'」反复失败）\n- **用户反馈**：「老是失败，麻烦你把问题一次性排查清楚，不要老是浪费我的实际时间」——批量任务再次报「Playwright 启动失败: 'PlaywrightContextManager' object has no attribute '_playwright'」，这是 v1.1.6 修过的同一个错误又复发。\n- **真正的根因**（v1.1.6 没修彻底）：Playwright 内部 `sync_api/_context_manager.py` 第 79 行 `playwright = self._playwright` —— driver 子进程启动后 `callback_wrapper` 没回调成功（pipe 通信失败/子进程崩）。这是**暂时性问题**（端口残留/子进程未退/pipe 通信偶发失败），但 v1.1.6 的 `_ensure_pw_worker` 启动失败一次就**永久标记** `_pw_worker_error`，后续所有任务都失败且不重试。\n- **修复**（server.py）：\n  - `_ensure_pw_worker(max_retries=3)` 加内部重试循环：启动失败时 sleep 2s 后重试最多 3 次，每次清零 `_pw_worker_error`+重启 thread，只有 3 次都失败才把错误暴露给上层抛错。\n  - `_pw_worker_main` 内部也加重试循环（sleep 3s 让 driver 子进程彻底退出），失败到最后一轮才设 `_pw_worker_error` 并 return，之前都先 `__exit__` 清理 `_pw_cm` 避免资源残留。\n- **验证**：py_compile OK；实跑 `/api/jichuang/login` 任务 → `\"done\": \"手动登录成功\"`（cookie 未失效秒登录），worker 启动正常无报错；服务已重启。\n- **用户操作建议**：今后若再遇到这个提示刷新页面重试即可（服务已自动重试 3 次，不必重启服务）。\n\n### v1.1.13 · 2026-08-27 11:35 — 修复批量时即创把所有任务都标为「已取消排队」\n- **用户反馈**：批量提交两条任务后，在即创页面上两条都显示「排队已取消 / 已取消排队」（截图，两条 ID 11:10:24 / 11:10:39 间隔 15s）。\n- **根因（双重）**：\n  1. **页面反复刷新**：阶段A 流水线每次 `submit_text_video` 都 `page.goto(ref_page)` 重载页面，前一条任务的客户端排队状态丢失，即创服务端判定\"用户已离开\"自动标取消。\n  2. **弹窗关键词匹配过窄 + 时序问题**：原 `_handle_queue_dialog` 只有 6 个 accept 关键词 + reject 拦截范围过大（全页生效）；弹窗处理只有 9 秒窗口，碰上延迟弹窗就漏掉，即创默认走\"取消\"分支。\n- **修复（jichuang_auto.py）**：\n  - `_handle_queue_dialog` 全面增强：\n    - accept 关键词从 6 个 → 18 个（新增「继续等待/确认等待/继续生成/确认生成/立即生成/再次生成/是/好」等更通用的文案）；\n    - reject 关键词限制只在\"弹窗容器内\"生效，避免误伤页面其他含\"取消\"字样的元素；\n    - 先在 `.dialog/.modal/[role=dialog]/[class*=dialog]` 等容器内查找，容器里没匹配再放宽到全页；\n    - **新保险**：若检测到弹窗已出现（含「排队/确认/积分不足」字眼）但既没找到 accept 又看到 reject 按钮 → 抛 `_CancelRequested` 让上层中止本次提交，避免留下「已取消排队」死任务。\n  - `_click_generate` 弹窗处理窗口从 6 轮 9s → **18 轮 36s**，给即创充足时间。\n  - `submit_text_video` 新增 `goto_ref` 参数：阶段A 第二条起设 `goto_ref=False`，**不刷新页面**继续提交，避免打断前一条任务；扫描新卡片等待次数从 6 → 10。\n- **修复（server.py）阶段A 流水线**：\n  - 第一条 `goto_ref=True`（正常进入 ref page + 弹窗等待）；\n  - 后续 `goto_ref=False`，提交期间不刷新页面；\n  - 单条因弹窗被取消时立即跳出循环（避免批量连环取消）；\n  - 两条提交之间留 2s 缓冲。\n- **验证**：py_compile OK；服务 8899/8900 重启后 HTTP 200。实跑需登录即创账号才能验证弹窗处理。\n\n### v1.1.12 · 2026-08-27 10:52 — 裂变提示词做「视觉维度级差异化」：换背景/换角度/换色调，不再是微调\n- **需求**：用户反馈\"裂变出来的提示词要多样化些，不要大同小异这样没什么用处，我要的是我提供了一条提示词，他根据我的提示词结构更换新的背景也好，拍摄角度也好，风景描述色调之类的差异\"。即上一版的本地降级改写只在原文基础上加\"钩子开场句/镜头修饰/CTA\"，核心画面内容还是同一条，各变体观感几乎一样。\n- **修复（server.py，需重启服务）**：把 `_local_vary_text` 从\"加前缀/后缀微调\"改为**视觉维度词典驱动的内容级差异化**：\n  - 新增三套维度池：`_SCENERY_BACKGROUNDS`（16 个风景背景：湖泊雪山/麦田风车/城市夜景/雪后松林/海岸/梯田/古镇/大漠/花海/冰川/竹林/雨林/盐湖/峡谷/枫林/海上日出）、`_COMMERCIAL_BACKGROUNDS`（10 个带货使用场景：厨房台面/办公桌/野餐垫/健身房/梳妆台/咖啡馆/直播间/车内/阳台/超市货架）、`_SHOT_ANGLES`（10 个角度：航拍俯视/低角度仰拍/第一人称手持/微距/延时/滑轨/鱼眼/摇臂/环绕/过肩）、`_COLOR_TONES`（12 个色调：冷蓝/暖金/银白/青绿/粉橘/胶片/高对比/柔光/霓虹紫蓝/水墨/晨雾/赛博）。\n  - 逻辑：保留原 prompt 的【主体/动作节奏/情绪基调】结构不动，为每个变体（i>=1）从三池各取一个**错位索引**组合（`bg=(i-1)%len`、`angle=(i*2)%len`、`tone=(i*3)%len`），追加一句\"视觉维度替换：背景场景改为「X」；拍摄角度改为「Y」；光线色调改为「Z」。保持原画面的主体、动作节奏与情绪基调不变，只替换上述视觉维度。\"——即梦可直接理解并据此出不同画面，无标签污染（已验证 meta=False）。\n  - 背景池按是否带货自动切换（用 `_pick_cta_pool` 判定）：带货类用贴近产品的使用场景，避免把产品换成不相关风景带偏。\n  - 相邻变体三个维度全部不同（错位索引保证），差异最大化。\n  - 同时**强化千问路径**：`_vary_prompt` 与 `_batch_expand_prompts` 的 system prompt 第 2 条要求从 背景场景/拍摄角度/光线色调/季节时间段/运镜风格 五维度轮换、每条至少换 2-3 个、相邻画面观感明显不同，标题改要求为\"核心视觉差异点（如'航拍+冷蓝'）\"——配 qwen.api_key 后裂变质量更高。\n- **验证**：py_compile OK；单测风景类（同款用户种子）count=5 → 变体2/3/4/5 背景分别为 湖泊雪山/麦田风车/城市夜景/雪后松林、角度 手持/延时/鱼眼/环绕、色调 青绿/高对比/水墨/冷蓝，相邻全不同，meta=False；带货类用厨房/办公桌/野餐垫/健身房背景合理；HTTP 实跑 `POST /api/prompt/vary` count=4 → 4 条维度全部差异化、全干净；服务已重启（PID 待确认，8899 返回 200）。\n- **注**：本地降级是\"维度替换指令\"式（结构保留+换景），若想要更彻底的语义级改写（连主体/构图都重排），配 `video_gen_config.json` 的 `qwen.api_key` 后由千问接管。\n\n### v1.1.11 · 2026-08-27 10:40 — 修复降级路径污染：去掉「【钩子·xx】（说明）」元数据前缀，改用干净的本地改写器\n- **需求**：用户截图反馈「为什么我每次生成的文案前面都带有【钩子·好奇悬念】（把反转/悬念前置，开头3秒抛出矛盾或反常识问题）这串文字」「不要老是莫名其妙给我生成一些不是提示词的东西」——截图显示参考内容区里所有变体文案都带这个钩子元数据前缀。\n- **根因**：`_batch_expand_prompts` 与 `_vary_prompt` 的**降级路径**（千问未配 / 千问失败兜底分支）使用了 `f\"{hook_name}（{hook_desc}）\\n\\n{seed}\"` 拼接，把原本只打算给千问做\"参考钩子类型\"的元数据标签直接当成了用户提示词前缀推给即梦。配置文件 `video_gen_config.json` 里 `qwen.api_key` 还是 `PLACEHOLDER_QWEN_DASHSCOPE_KEY`，所以**每次**都走降级、**每次**都被污染。降级分支有 4 处同款污染：①`_batch_expand_prompts` 千问补齐、②`_batch_expand_prompts` 纯本地降级、③`_vary_prompt` 千问补齐、④`_vary_prompt` 纯本地降级。\n- **修复（server.py + index.html，需重启服务）**：\n  - **server.py**：\n    - 把元数据型 `BATCH_VARIANT_HOOKS = [(label, desc), ...]` 改成\"钩子类型名列表\"，不再以标签形式拼到结果里（仅在本地改写时按需索引）。\n    - 新增 `_strip_meta_prefix(text)`：兜底剥离历史/外部来源可能残留的「【钩子·xx】（说明）\\n\\n」前缀（递归剥 3 层，防多重嵌套）。在 `_vary_prompt` 与 `_batch_expand_prompts` 的千问响应解析路径、降级结果路径都过一道。\n    - 新增 `_local_vary_text(seed, count)`：本地降级改写器，按 5 种手法循环产出 N 条**干净**变体，不带任何标签元数据——\n      | i | 手法 | 形态 |\n      |---|---|---|\n      | 0 | 原文 | seed 原样不动 |\n      | 1 | 前置钩子型开场句 | \"9:16竖屏广告短视频，{开场风格}：\" + seed |\n      | 2 | 加镜头修饰 + CTA | seed + 镜头描述 + 结尾 CTA |\n      | 3 | 时序/视角调整 | seed + \"镜头时序：先以人物反应切入...\" + 镜头 + CTA |\n      | 4 | 字幕驱动改写 | seed + \"全程配口语化旁白...\" + CTA |\n    - 新增 `_pick_cta_pool(seed)`：根据种子是否含带货关键词（产品/购买/下单/链接/抢购/优惠/价/拍下/入手/商城/店铺/直播间/点击/立即）自动选择 CTA 池——带货型 vs 风景意境型（避免给纯风景文案贴\"立即抢购\"标签）。\n    - `_HOOK_OPENERS` / `_CAMERA_MODIFIERS` / `_CTA_TAILS_COMMERCIAL` / `_CTA_TAILS_SCENERY` 四个池子配套；CTA 池再按 index 轮替，避免相邻变体 CTA 雷同。\n    - `_vary_prompt` 与 `_batch_expand_prompts` 的 4 处降级分支全部改为 `_local_vary_text`。\n    - note 文案统一改为「本地改写 N 条（千问未配/失败，仅做轻度改写；建议在 video_gen_config.json 配 qwen.api_key 获得更丰富的变体）」——明确告诉用户降级模式+改进路径。\n  - **index.html**：\n    - 「🔁 按此文案裂变 N 条」按钮下方新增降级提示条 `#jcVaryFallbackHint`（橙底，仅当 `/api/prompt/vary` 返回的 note 含「本地改写 / 千问未配」时显示），让用户清楚知道当前不是千问在裂变。\n- **验证**：\n  - `py_compile server.py` 通过；\n  - 实跑 4 种文案类型（风景/带货/剧情/口播）走 `_local_vary_text` 各 5 条 = 20 条全干净，无任何【钩子·xx】（说明）前缀；\n  - 风景类文案 CTA 自动切到意境型（\"画面定格在最具张力的瞬间，留白，字幕淡出\"），不会突兀地贴\"立即抢购\"；\n  - HTTP 实跑 `POST /api/prompt/vary`（用户截图同款种子文案，count=4）→ 4 条全部 meta=False，note 正确提示降级；\n  - 旧服务 PID 41448 已停、新服务 PID 15392 已起，8899/8900 端口正常。\n\n### v1.1.10 · 2026-08-27 10:05 — 新增「🔁 按此文案裂变 N 条」：以已填文案为种子裂变出片\n- **需求**：用户反馈「填完提示词之后没有办法自动裂变新的提示词」——原有裂变完全依赖模板字段（template_id+tplFields），根本不读主输入框 `jcPrompt` 写的那条完整文案，且「✨生成提示词」还会用模板结果覆盖掉它。用户要的是「按这条文案生成新的文案再出片」。\n- **改动（server.py + index.html，需重启服务）**：\n  - **后端**：新增 `_vary_prompt(cfg, prompt, count, polish)`——以一条完整文案为种子裂变 N 条（千问一次性改写优先，失败 fallback 本地 `BATCH_VARIANT_HOOKS` 钩子前缀拼接，永远能出 N 条）；新增路由 `POST /api/prompt/vary`（`{prompt,count,polish}` → `{prompts,note}`）；`batch_generate` 增加可选 `prompts` 字段，`_exec_batch` 检测到非空 `prompts` 时直接出片、不再走 `_batch_expand_prompts` 重扩（即「按文案裂变」模式）。\n  - **前端**：`jcPrompt` 下方新增按钮「🔁 按此文案裂变 N 条」（N 取自上方数量框，默认 3）；点击读 `jcPrompt`+`jcBatchCount` → 调 `/api/prompt/vary` → 第一条回填主输入框 + 全部进 `renderBatchPreview` → 直接带 prompts 调 `batch_generate` 自动出片；任务结束恢复 `jcVaryBtn` 禁用态。\n- **两种路径现已并存**：① 填模板字段 → ✨生成提示词 → 自动出片（按字段裂变）；② 写一条文案 → 🔁按此文案裂变 N 条 → 自动出片（按文案裂变）。\n- **验证(实跑服务)**: `POST /api/prompt/vary`（种子=`给上班族推荐代餐奶昔...` count=3）→ 返回 3 条带不同钩子前缀的变体（note=`本地钩子词裂变 3 条`，千问未配 key 走 fallback）；带这 3 条 prompts 调 `batch_generate` → 走 submitting 阶段提交变体 1/3→2/3→3/3（直接用前端变体，未重扩），`jichuang_server_errors.log` 无报错；py_compile OK；服务已重启（PID 41448 8899/8900 正常）。\n\n### v1.1.9 · 2026-08-27 09:45 — 「批量生成数量」默认值改成 3（开箱即批量裂变）\n- **需求**：用户截图反馈「为什么只能裂变一条」——输入框默认值是 1，且清空后被强制 clamp 回 1，导致首次上手只能出 1 条。\n- **改动（index.html，仅前端，刷新页面即生效）**：\n  - `jcBatchCount` `value=\"1\"` → `value=\"3\"`，加 `placeholder=\"默认 3\"`；\n  - 按钮初始文案 `🚀 在即创生成 1 条` → `🚀 批量生成 3 条变体视频`；\n  - label 描述补「留空或 1=单条，默认 3」，让 1 / N 两种语义一目了然。\n- **验证**：刷新页面即可看到输入框默认 3、按钮文案为「🚀 批量生成 3 条变体视频」；不输入直接点 = 一次裂变 3 条不同文案 + 自动排 3 条视频。\n\n### v1.1.8 · 2026-08-27 00:10 — 新增「⛔ 取消生成」按钮（批量任务可中途停止）\n- **需求**：用户原话「帮我添加一个取消的按钮」——批量生成跑到一半（尤其是逐条等出片阶段很耗时）时要能随时中止。\n- **改动（server.py + jichuang_auto.py + index.html，需重启服务）**：\n  - **后端取消信号**：新增 `POST /api/jichuang/batch_generate/cancel`（body 带 `job_id`）→ 置 `jobs[job_id][\"cancel\"]=True`，worker 在下一个检查点优雅停止。\n  - **`_exec_batch`（server.py）检查点**：在 ①任务开始 ②生成变体文案后 ③登录后 ④阶段A 提交循环顶部 ⑤阶段B 收集循环顶部 均检查 `cancel()`，一旦为真即中断对应循环并置状态 `cancelled`。\n  - **等待出片可中断（`jichuang_auto.py`）**：`_wait_for_video_result` 新增 `cancel_check` 参数，等待循环每个轮询间隔（5s）检查一次；触发则抛 `_CancelRequested` → `collect_video` 捕获后返回 `{\"ok\":False,\"cancelled\":True}` → `_exec_batch` 收到后立即收尾。这样**即使正在死等某条视频渲染（最长 5 分钟超时），点取消也最多 5 秒内响应**，而非干等整条渲染完。\n  - **前端（index.html）**：①「🚀 生成」按钮旁新增红色 `⛔ 取消生成` 按钮（默认隐藏，批量任务启动后才显示）；②点取消弹 `confirm` 二次确认 → `POST /api/jichuang/batch_generate/cancel`；③`startBatchPolling` 新增 `cancelled` 终态处理（显示「已取消：✅ x 成功 / ❌ y 失败 / 共 N 条」），完成后自动隐藏取消按钮并恢复生成按钮。\n  - **语义说明**：取消 = 立即停止（停止提交后续变体 + 停止等待/下载后续变体）。已提交但还没下载的视频会留在即创后台继续渲染（本工具不再下载）；已下载的仍保留。\n- **验证（实跑服务）**：\n  - 路径1（检查点取消）：提交批量后立刻取消 → `status` 在登录后检查点干净变为 `cancelled`，无报错。\n  - 路径2（等待中取消）：等任务进入 `collecting`（正在逐条等出片）后取消 → **约 9 秒内**从 blocking 状态变为 `cancelled`（`已取消：0/2 条变体视频`），证明 in-wait `cancel_check` 生效而非傻等渲染。\n  - `jichuang_server_errors.log` 全程无记录；`server.py`/`jichuang_auto.py` `py_compile` 通过。\n- **注意**：取消按钮仅在「批量模式（数量>1）」出现；单条生成（`/api/jichuang/generate`）暂未接入取消（其逻辑为单次阻塞调用、无天然检查点）。\n\n### v1.1.7 · 2026-08-26 23:59 — 批量「先全部提交、再批量等出片」流水线 + 修复旧卡片串台\n- **需求**：生成一条的时候直接把下一条提示词放进去点生成、不需等（用户原话）。即：批量 N 条不要一条等渲染完才上下一条，而是**一次性全部提交到即创后台排队并行渲染**，提交完再统一等出片下载。\n- **改动（server.py + jichuang_auto.py，需重启服务）**：\n  - `jichuang_auto.py` 新增 `submit_text_video(prompt,...)`：**只提交**（进参考页→填 prompt→点生成→立刻记录该条任务卡片 ID），**不等待渲染**，点完立即返回。\n  - `jichuang_auto.py` 新增 `collect_video(prompt, card_id, exclude_ids, timeout)`：**等某条出片+下载**。定位目标卡片优先级：① prompt 文本匹配 ② 指定 card_id ③ 排除集合外「最新新卡片」兜底。\n  - `_wait_for_video_result(timeout, target_card_id)` 新增 `target_card_id` 参数：精确等待指定卡片的 `.sub-task-item` 就绪，不再只靠 baseline/最新卡片模糊匹配。\n  - `_exec_batch`（server.py）改为两阶段流水线：\n    - **阶段A 提交**：循环 N 次只调 `submit_text_video`，每条提交后立即排下一条，不做任何等待 → 即创后台并行渲染 N 条，整体耗时≈单条时长。\n    - **阶段B 收集**：全部提交完后，逐条 `collect_video` 等待+下载。\n  - **修复卡片 ID 串台 bug**：`_scan_task_cards` 用正则 `/(\\d{9,})/` 取 className 里第一个长数字当卡片 ID，旧卡片的 ID 偶发没被基线过滤掉，导致第一条提交「认领」了上一次残留的旧卡片（实测曾把旧卡片 `784476395778` 关联到第一条 prompt，会下载到错误旧视频）。\n    - 修复：收集阶段开始前先记录「提交前页面已有的旧卡片 ID 集合 `old_ids`」，收集每条时把 `old_ids ∪ 已下载卡片` 作为 `exclude_ids` 传入 `collect_video` 一并排除；并优先按 prompt 文本匹配，从根本上杜绝下载旧视频。\n- **验证（实跑服务，有已登录 session）**：\n  - 批量 3 条：阶段A 约 33s 内连续提交完 3 条（提交完立即排下一条，无等待）；阶段B 进入「等待/下载 变体 1/3」。\n  - 收集日志确认等的是**本次新提交**的卡片（如 `784740949506`），不再是旧残留卡片 `784476395778`；`jichuang_server_errors.log` 无记录、`_playwright` 错误未复现。\n  - `server.py` / `jichuang_auto.py` `py_compile` 通过。\n- **注意**：单条生成（`/api/jichuang/generate`）仍保持「提交+等待」原行为（用户需求只针对批量）；`done` 字段在阶段A 也会累计到 N/N（表示已提交数），UI 以 `stage` 区分 submitting/collecting。\n\n### v1.1.6 · 2026-08-26 23:42 — 修复「批量化失效 / `_playwright` 属性错误」\n- **症状**：批量生成（N 条变体）卡在 `stage=generating` 并爆 `PlaywrightContextManager has no attribute '_playwright'`；0 成功 0 失败；单条生成有时也偶发。\n- **根因**：每个任务在自己独立的 daemon 线程里反复 `sync_playwright()` 创建/销毁 Playwright driver；服务长期运行、任务交织时 driver/连接状态被污染，下一次 `__enter__()` 启动 driver 失败，异常被 Playwright 内部掩盖成 `_playwright` 属性缺失（真实原因其实是 driver 没起来）。\n- **修复（server.py + jichuang_auto.py，需重启服务）**：\n  - 改为**单例 Playwright Worker 线程 + 任务队列**：整个进程只 `sync_playwright()` **一次**，所有登录/单条/批量任务在该线程内**串行**执行；任务之间只重建浏览器上下文(`BrowserContext`)，**绝不反复创建/销毁 driver**。\n  - 新增全局 `_pw_queue` / `_pw_worker_thread` / `_pw_cm` / `_pw_instance` / `_pw_worker_ready` / `_pw_worker_error`；新增 `_ensure_pw_worker()`（懒启动+自愈）、`_pw_worker_main()`（单例消费队列）、`_exec_login/_exec_generate/_exec_batch`（运行在 worker 线程）。\n  - `JichuangAuto.launch(headless, pw=None)` 支持注入外部**共享 pw**：`pw` 非空时复用，不再自己创建/释放 driver；`close()` 在共享模式(`_owns_pw=False`)下**只关 context、保留共享 pw** 供后续任务复用。\n  - 删除原 `PW_LOCK`/`PW_OWNER` 每任务加锁 + 各自 daemon 线程的老机制（不再需要）。\n  - 新增 `_log_job_error()`：任何任务异常写入 `jichuang_server_errors.log`（含完整 traceback），后续报错不再被掩盖。\n  - 顺带补齐 `chromium_headless_shell-1234`（之前缺失，导致 `headless=True` 路径报「Executable doesn't exist」），工具在 headless 模式也健壮。\n- **验证**：\n  - 本地回归 `test_pw_shared.py`：单 `sync_playwright()` + 连跑 5 轮 `JichuangAuto.launch(pw=共享)+close`（模拟批量 5 条）→ **5/5 成功，无 `_playwright` 错误**。\n  - 实跑服务触发 `/api/jichuang/batch_generate`：状态正常走过 `running`→`generating`→`waiting_login`（弹出浏览器等手动登录），**不再卡 `_playwright`**；`jichuang_server_errors.log` 无记录。\n  - `server.py` / `jichuang_auto.py` `py_compile` 通过。\n- **使用注意**：批量任务现在与其它任务共用一个浏览器实例，串行排队（前端会显示「任务已加入队列,等待浏览器空闲」）；首次需手动登录一次，后续复用 session。\n\n### v1.1.5 · 2026-08-26 21:42 — 一次性按文案生成 N 条变体 + 串行出 N 条视频（批量变体出片）\n- **需求**：填一次模板字段（产品名/目标人群/剧情冲突/核心卖点）→ 工具一次性按这套文案生成 N 条不同角度的变体提示词 → 每条变体自动生成一条视频；中间不需要任何人工干预。\n- **后端改动**（`server.py`，需重启服务）：\n  - 新增常量 `BATCH_VARIANT_HOOKS`（7 个钩子模板：价格冲击/用户证言/好奇悬念/紧迫感/场景代入/对比反差/身份代入）作 fallback。\n  - 新增函数 `_batch_expand_prompts(cfg, template_id, fields, count, polish)`：\n    - 优先调千问一次性扩 N 条不同角度变体（按 `[变体1]` `[变体2]` ... 切片解析）；\n    - 千问未配 Key/失败 → 本地钩子词循环（永远能跑出 N 条）；\n    - 千问生成数量不够时自动用本地钩子补齐。\n  - 新增 worker `_run_batch_generate_job(job_id, payload)`：先扩 N 条 prompts → acquire PW_LOCK → launch + login（与单条共用同一浏览器实例，节省重复登录）→ 循环 `auto.generate_text_video(prompt, ...)` N 次 → 收集每条结果到 `jobs[job_id].videos[]` → release lock。\n  - 新增路由 `POST /api/prompt/batch_expand`（扩 N 条文案）、`POST /api/jichuang/batch_generate`（批量任务）、`GET /api/jichuang/batch_generate/status`（轮询）。\n- **前端改动**（`index.html`，server 实时读文件无需重启）：\n  - 在「画面比例/时长」下方新增 **`📦 批量生成数量`** 输入框（1-10，默认 1）。\n  - 新增 `jcBatchCount.oninput`：实时切换按钮文字「🚀 在即创生成 1 条」/「🚀 批量生成 N 条变体视频」，并隐藏/显示\"生成后自动跳转即创生成 ▶\"复选框（批量模式按钮本身已是全自动）。\n  - `tplGenBtn`：count=1 走原 `/api/prompt/expand`；count>1 走 `/api/prompt/batch_expand`，第一条填入主输入框、剩余 N 条在下方\"变体文案预览\"折叠区展示。\n  - `jcGenBtn`：count=1 走原 `/api/jichuang/generate`；count>1 走 `/api/jichuang/batch_generate`，调 `startBatchPolling(r.job_id, count)`。\n  - 新增 `renderBatchPreview(prompts, note)`：渲染 N 条变体折叠预览；`startBatchPolling(jobId, total)`：每 5 秒刷新进度（变体 2/3 出片中…），完成后展示每条结果（✅ 视频路径 / ❌ 错误原因）+ 文案预览。\n- **验证**：\n  - `server.py py_compile` 通过。\n  - Python urllib 实测 `/api/prompt/batch_expand`：传 `story` 模板+4 字段，count=3 → 200 OK + 3 条变体（钩子前缀分别为价格冲击/用户证言/好奇悬念）+ note `\"本地钩子词生成 3 条（千问未配/失败）\"`。\n  - count 边界：0→1、5→5、上限 10。\n  - 服务已重启（PID 5164，8899/8900 正常 LISTENING），curl 首页含 jcBatchCount(5) + startBatchPolling(2) + \"批量生成\"(3)。\n- **使用**：选「🎭 剧情带货（冲突反转）」→ 填产品名/目标人群/剧情冲突/核心卖点 → 在「批量生成数量」输入 `3` → 点「🚀 批量生成 3 条变体视频」→ 工具自动扩 3 条不同钩子文案（价格冲击/用户证言/好奇悬念等）→ 串行出 3 条视频，全程无需人工。\n\n### v1.1.4 · 2026-08-26 21:32 — 自动生成提示词 → 自动跳转即创生成视频（一键全链路）\n- **需求**：把\"生成提示词\"和\"即创生成\"两步合并成自动链路，点一次就走完全程（自动登录→填词→点生成→自动点「等待排队」→出片→下载），不用再手动点第二次。\n- **改动**：`index.html`（纯前端，无需重启服务，server 实时读静态文件）\n  - 即创 Tab 新增复选框 **`生成后自动跳转即创生成 ▶`**（`#tplAutoGen`，**默认勾选**）。\n  - `tplGenBtn`（行 560 生成提示词按钮）成功后：若 `tplAutoGen` 勾选 → 先填 `jcPrompt`，再 `setTimeout 300ms` 自动触发 `$('jcGenBtn').click()`，复用现有即创生成完整逻辑；若未勾选 → 保持原\"只填框\"行为（仍可手动点「🚀 在即创生成」）。\n- **效果**：选模板 → 填词 → 点「✨ 生成提示词」= 一气呵成出片；想只看提示词不改则取消该复选框即可。\n- **验证**：service PID 35876 仍在运行，curl 首页已含 `tplAutoGen`（2 处）与「生成后自动跳转即创生成」文案，无需重启。\n\n### v1.1.0 · 2026-08-26 18:18 — 自动处理即创「等待排队」弹窗（本次改动）\n- **问题**：点「立即生成」后，即创会弹出一个小窗口（是否等待排队），之前程序没处理 → 卡住、需人工点「等待排队」。\n- **改动**：`jichuang_auto.py`\n  - 新增方法 `_handle_queue_dialog()`（行 537）：自动识别并点击「等待排队」按钮（覆盖 `button` / `[role=button]` / `.dialog-btn` 三种形态）。\n  - 在 `_click_generate()`（行 563，点生成后立即处理一次）与 `_wait_for_video_result()`（行 688，等待循环每轮持续监听）两处调用。\n  - 该逻辑被**文生视频**(行 579) 与 **图/参考生视频**(行 606) 两条路径共用 → 全模式生效。\n- **验证**：`py_compile` 通过；已 kill 旧进程(PID 4048)、重启服务(PID 32892)，8899/8900 正常监听、HTTP 200。\n- **后续若失效**：见下方「四、高频易错点 · 1」。\n\n### v1.1.3 · 2026-08-26 20:18 — Chromium 二进制缺失(`Executable doesn't exist at ...\\chromium-1234\\chrome-win64\\chrome.exe`)\n- **问题**：点「即创生成」后报 `BrowserType.launch_persistent_context: Executable doesn't exist at C:\\Users\\EDY\\AppData\\Local\\ms-playwright\\chromium-1234\\chrome-win64\\chrome.exe`；Playwright 还会查 `chromium_headless_shell-1234\\chrome-headless-shell-win64\\chrome-headless-shell.exe`。\n- **根因**：Playwright 1.62 python 包已装,但 chromium-1234 / chromium_headless_shell-1234 两个浏览器二进制**从未下载**。`playwright install chromium` 命令静默失败(`exit 1` 无输出)——直连 `cdn.playwright.dev` 走 azure → 重定向到 `storage.googleapis.com/chrome-for-testing-public/...` 时,下载到 7% 就被强断;driver 内部 downloader 不重试、最终彻底失败。\n- **修复**:\n  1. 走国内镜像(`registry.npmmirror.com/-/binary/playwright/builds/cft/151.0.7922.34/win64/`)分别手动下载:\n     - `chrome-win64.zip` (192 MB) → 解压到 `chromium-1234\\chrome-win64\\`(包含 `chrome.exe` 4MB / `chrome.dll` 298MB)。\n     - `chrome-headless-shell-win64.zip` (115 MB) → 解压到 `chromium_headless_shell-1234\\chrome-headless-shell-win64\\`。\n  2. 端到端冒烟测试通过:`JichuangAuto.launch(headless=True)` 成功打开浏览器,`page.title()` 返回正常。\n  3. 新增自助脚本 `<工具目录>/install_chromium_cn.bat`(行 0):双击即可走国内镜像重装 chromium / chrome-headless-shell,内置 `PLAYWRIGHT_DOWNLOAD_HOST=https://registry.npmmirror.com/-/binary/playwright` + 手动 fallback + 冒烟测试;以后 Playwright 升版改 `VER=1234` 与 `CFT=151.0.7922.34` 两个常量即可。\n- **验证**: \n  - `chromium-1234\\chrome-win64\\chrome.exe` 已存在(7月14日 chrome 151.0.7922.34)。\n  - `chromium_headless_shell-1234\\chrome-headless-shell-win64\\chrome-headless-shell.exe` 已存在。\n  - 服务无需重启 (server 进程 PID 35876 仍在运行,8899/8900 正常监听);下次 `/api/jichuang/generate` 调用会直接用上新浏览器。\n\n### v1.1.2 · 2026-08-26 19:48 — 修复 `PlaywrightContextManager has no attribute '_playwright'`\n- **问题**：点「即创生成」后报 `'PlaywrightContextManager' object has no attribute '_playwright'`，任务直接以\"生成失败\"结束。\n- **根因（二处叠加，缺一不可）**：\n  1. Playwright 1.61+ `PlaywrightContextManager.__enter__()` 必须通过 dispatcher fiber 异步设置 `self._playwright`。原 `sync_playwright().start()` 没问题，但 `close()` 调 `self.pw.stop()` 在某些状态下走回 `PlaywrightContextManager.__exit__`，**已被释放**的对象再被使用 → 访问 `_playwright` 报错。\n  2. `server.py` 用 `ThreadingHTTPServer` + 多线程并发跑 `_run_generate_job` / `_run_login_job`。两个任务同时启动各自 `JichuangAuto` 并 `sync_playwright().start()` → driver 子进程 / 端口竞争触发状态错乱。\n- **改动**：\n  - `jichuang_auto.py`：\n    - **改用官方推荐 `with sync_playwright() as pw:` 模式**（`launch()`）：保留 `self._pw_cm`（context manager handle）+ `self.pw`（真正进入 `__enter__` 的 `SyncPlaywright`）；`close()` 调 `self._pw_cm.__exit__(None, None, None)` 优雅释放，不再用 `self.pw.stop()`。\n    - 防御性：launch() 前若旧实例还在，先 `_close_internal()` 关闭；新增 `self._pw_lock`（threading.Lock）串行化同一实例 launch/close。\n    - 加 `import threading`。\n  - `server.py`：\n    - 新增**全局 Playwright 锁 `PW_LOCK` + 当前持有者 `PW_OWNER`**：jichuang 任务严格串行（一次只允许一个生成/登录任务跑），避免多线程并发 driver 冲突。\n    - `_run_login_job` / `_run_generate_job`：进入即 `PW_LOCK.acquire()`，队列中任务显示「等待其他任务释放浏览器 ...」；`finally` 异常安全释放（即使 `auto` 未创建）。\n- **验证**：语法 `py_compile` 通过；离线测试（同一实例 3 线程并发 launch/close）**errors: none**；`auto.pw` 类型为 `Playwright`（已 `__enter__`），`auto._pw_cm` 一定有 `_playwright` 属性。已重启服务（新 PID 35876），8899/8900 正常监听，index 与 `/api/changelog` 均 200。\n\n### v1.1.1 · 2026-08-26 18:57 — 修复「卡在点击立即生成」(弹窗未被自动点掉)\n- **问题**：点「立即生成」后卡住，批量生成中断。\n- **根因（两处）**：\n  1. 若弹窗是浏览器**原生 confirm**（如\"是否等待排队？\"），Playwright 默认会**自动 dismiss**（等同点取消）→ 生成中断；原代码未注册 `dialog` 处理器。\n  2. 若是 DOM 模态，原处理只匹配按钮文字**精确等于\"等待排队\"**，且只在点击后查一次，文案差异或延迟弹出就漏掉。\n- **改动**（`jichuang_auto.py`）：\n  - `launch()` 注册 `self.page.on(\"dialog\", self._on_dialog)`：原生弹窗一律 `dialog.accept()` 自动确认并截图。\n  - 重写 `_handle_queue_dialog()`：用页面内 `evaluate` 模糊匹配关键词 `[\"等待排队\",\"排队\",\"确认\",\"确定\",\"继续\",\"允许\",\"前往\"]`（排除\"取消/关闭\"等），先找真实按钮、再用 span/div 兜底点击；截图记录被点的按钮文案。\n  - `_click_generate()` 点击生成后**连续监听 6 轮**（每轮 1~1.5s）自动点掉弹窗，应对延迟 / 多重确认弹窗。\n  - 等待循环 `_wait_for_video_result()` 仍每轮持续监听（行 688）。\n- **验证**：`py_compile` 通过；已重启服务（PID 16876）。\n- **仍卡住时排查**：看 `jichuang_screenshots/dialog_clicked.png` 与 `native_dialog_accepted.png`；若弹窗按钮文案不在上述关键词，加词到 `accept_keywords` 即可。\n\n### v1.0.0 · 2026-08-17 — 初始搭建\n- 搭建即创/即梦批量生成工程：`server.py`(Web 服务) + `jichuang_auto.py`(Playwright 自动化) + `video_gen_pipeline.py`(提示词扩写流水线) + `index.html`/`vparse_gen.html`(前端) + `video_gen_config.json`(配置)。\n- 支持多账号隔离、文生视频、图生/参考生视频、视频解析台。\n\n---\n\n## 二、生成流程步骤 → 代码位置 对照表\n\n> 报错时按「步骤」顺藤摸瓜，定位到方法名/行号改即可。\n\n| # | 步骤 | 核心方法 / 文件:行 | 说明 / 易错点 |\n|---|------|-------------------|--------------|\n| 1 | Web 服务启动 | `server.py:677` `ThreadingHTTPServer((HOST, PORT), Handler)` | PORT=8899(主)、PORT2=8900(解析台)，见 `server.py:34-35` |\n| 2 | 前端页面 | `index.html`(主) / `vparse_gen.html`(解析台) | UI 改版改这里；调接口见 `server.py` 路由表 |\n| 3 | 接收生成请求 | `server.py:562` `POST /api/jichuang/generate` → `server.py:610` `_run_generate_job` | 入参：mode(text/image)、input、images、aspect_ratio、duration、account_id |\n| 4 | 启动浏览器 | `jichuang_auto.py:94` `launch()` | 持久化 session 在 `.browser_data/<account_id>`；headless 见 config |\n| 5 | 登录即创 | `jichuang_auto.py:277` `ensure_login()` / `:320` `_auto_login()` | 登录页/授权页选择器见 `DEFAULT_SELECTORS` |\n| 6 | 进入生成页 | `jichuang_auto.py:462` `_goto_reference_page()` | 页面 URL 选择器 `ref_page_url` |\n| 7 | 填提示词 | `jichuang_auto.py:472` `_fill_prompt_editor()` | 输入框选择器 `main_prompt` |\n| 8 | 上传参考图 | `jichuang_auto.py:483` `_upload_reference_images()` | 图生模式才走；上传区选择器 `upload_dropzone` |\n| 9 | **点击生成 + 排队弹窗** | `jichuang_auto.py:556` `_click_generate()` → `:537` `_handle_queue_dialog()` | **本次新增**：自动点「等待排队」；生成按钮 `generate_btn` |\n| 10 | 等待出片 | `jichuang_auto.py:666` `_wait_for_video_result()` | 轮询任务卡片；timeout 见 config `generate_timeout_ms` |\n| 11 | 下载视频 | `jichuang_auto.py:762` `_download_video()` | 视频/下载按钮选择器 `result_video` / `result_download` |\n| — | 提示词扩写(流水线) | `video_gen_pipeline.py` + `server.py:488` `/api/prompt/expand` | 调千问(qwen-plus)扩写；失败降级为原样提示词 |\n\n---\n\n## 三、接口路由速查（server.py）\n\n**主服务 :8899**\n- `GET /api/config` · `POST /api/config`（读/写配置）\n- `POST /api/generate`（旧流水线：调内部 generator_api）\n- `POST /api/prompt/expand`（模板扩写 + 千问润色）\n- `GET /api/jichuang/accounts` · `POST /api/jichuang/accounts`（列/增改账号）\n- `POST /api/jichuang/switch` · `/delete` · `/login`（切换/删/登录）\n- `POST /api/jichuang/generate`（**核心**：即创生成，后台线程）\n- `GET /api/jichuang/generate/status?job_id=` · `/login/status`（轮询进度）\n\n**解析台 :8900**\n- `VparseHandler`（`server.py:666`）处理解析台页面与请求。\n\n---\n\n## 四、高频易错点 / 修改指引\n\n1. **「等待排队」弹窗没被自动点掉**\n   → 即创改了按钮文案。改 `jichuang_auto.py:539` `_handle_queue_dialog().candidates` 里的选择器（加 `button:has-text('新文案')`）。\n\n2. **某一步报 \"找不到元素 / timeout\"**\n   → 即创 UI 改版。**统一改** `jichuang_auto.py:26` `DEFAULT_SELECTORS`（或在 `video_gen_config.json` 的 `jichuang.selectors` 里覆盖，无需动源码）。最常动的键：`generate_btn`、`main_prompt`、`result_video`、`result_download`、`ref_add_btn`。\n\n3. **生成一直卡在「排队/生成中」超时**\n   → 调大 `video_gen_config.json:119` `jichuang.generate_timeout_ms`（默认 300000=5 分钟）。同时确认第 9 步弹窗已被自动点掉（见 1）。\n\n4. **启动后登录失败 / 弹出手动登录窗口**\n   → 账号 session 过期。前端点「登录」重新授权；或删 `.browser_data/<account_id>` 后重登。相关代码 `jichuang_auto.py:277` `ensure_login`。\n\n5. **千问润色不可用 / 提示词没扩写**\n   → 检查 `video_gen_config.json:8` `qwen.api_key` 是否为有效 key；失败会自动降级为用户输入原样，不影响出片。\n\n6. **改完代码不生效**\n   → Python 会缓存模块，**必须重启服务**：\n   ```bash\n   # 找到占用 8899/8900 的 PID 并杀掉，再重启\n   netstat -ano | grep -E \":8899|:8900\"\n   taskkill /F /PID <PID>\n   python server.py\n   ```\n\n7. **`Executable doesn't exist at ...\\chromium-1234\\chrome-win64\\chrome.exe`（Playwright 浏览器二进制缺失）**\n   → 国内网络直连 `cdn.playwright.dev` 经常下载到 7% 被强断,driver 静默失败。**双击 `install_chromium_cn.bat`** 走 npmmirror 镜像秒装(自带国内 CDN + 端到端冒烟测试)。若 Playwright 升版,改脚本里 `VER=1234` 与 `CFT=151.0.7922.34` 两个常量即可。\n\n---\n\n## 五、配置字段速查（video_gen_config.json）\n\n| 字段 | 位置 | 作用 |\n|------|------|------|\n| `jichuang.base_url` | 行 110 | 即创站点地址 |\n| `jichuang.email` / `password` | 111-112 | 自动登录凭据 |\n| `jichuang.headless` | 114 | true=无头运行（部署用）；本地一般 false |\n| `jichuang.output_dir` / `output.dir` | 115 / 123 | 视频落盘目录 |\n| `jichuang.default_aspect` / `default_duration` | 116-117 | 默认比例/时长 |\n| `jichuang.timeout_ms` | 118 | 单步操作超时 |\n| `jichuang.generate_timeout_ms` | 119 | **出片总超时**（卡住先看这里） |\n| `jichuang.selectors` | 120 | 覆盖 SELECTORS 的入口（不改源码） |\n| `qwen.api_key` / `model` | 9 / 10 | 千问扩写 key |\n| `template.*` | 14-20 | 扩写条数/风格/变体/系统提示词 |\n| `categories[]` | 21-87 | 前端分类框架（增删分类改这里） |\n| `generator_api.*` | 88-107 | 旧流水线内部生成器地址（当前主走即创路径） |\n\n> 提醒：配置文件含账号/API key 等敏感信息，勿提交到公开仓库；泄露后及时去对应控制台轮换。\n";
+var MOCK_TPL_FULL= [{"id": "story", "name": "🎭 剧情带货（冲突反转）", "desc": "有人物、有剧情冲突的情景剧素材，前3秒钩子最强", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：蜜雪冰城冰鲜柠檬水"}, {"key": "audience", "label": "目标人群", "placeholder": "如：上班族 / 学生党 / 宝妈"}, {"key": "conflict", "label": "剧情冲突 / 场景", "placeholder": "如：同事天天点20块奶茶，我掏出4块平替"}, {"key": "selling", "label": "核心卖点（1-3个）", "placeholder": "如：便宜一半、真柠檬片、冰爽解腻"}], "prompt_template": "竖屏剧情类广告短视频，时长约8-10秒，真实生活感。开场前1秒钩子：{conflict}，主角（{audience}）表情夸张的抓拍反应，手持跟拍镜头，画面带生活噪点感。中段：主角拿出{product}使用/饮用的特写，突出卖点：{selling}。结尾：主角满足的表情+产品定格，画面下方大字幕CTA「点击下方链接立即抢购」。风格：抖音原生感、自然光、节奏紧凑，字幕大字号居中显示在画面下方1/3处，全程配口语化旁白。"}, {"id": "product", "name": "📦 商品展示（特写/开箱）", "desc": "纯产品展示，突出质感与卖点，适合图生视频", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：沙地蜜薯 / 洗衣液"}, {"key": "selling", "label": "核心卖点", "placeholder": "如：现挖现发、软糯流蜜"}, {"key": "scene", "label": "使用场景", "placeholder": "如：厨房料理台 / 户外野餐"}, {"key": "style", "label": "画面风格", "placeholder": "如：高级电商质感 / 清新自然"}], "prompt_template": "竖屏产品展示广告视频，时长约8秒。主体：{product}。开场0.5秒：产品悬浮旋转特写，打光高级有质感；中段：{scene}场景下的使用画面，突出卖点：{selling}；镜头：特写与中景交替，缓慢推近产品，最后定格产品+卖点字幕贴纸。风格：{style}，画面明亮通透，电商大片质感，底部字幕突出核心卖点。"}, {"id": "price", "name": "💰 价格/活动（低价冲量）", "desc": "低价+紧迫感促销，快节奏大字幕", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：无名抽纸"}, {"key": "price", "label": "价格钩子", "placeholder": "如：1分钱包邮 / 到手9.9"}, {"key": "platform", "label": "活动平台/形式", "placeholder": "如：京东百亿补贴 / 限时秒杀"}, {"key": "audience", "label": "目标人群", "placeholder": "如：囤货党 / 精打细算的宝妈"}], "prompt_template": "竖屏促销广告视频，时长约8秒。开场大字幕钩子：{product}只要{price}！画面：快节奏剪辑，产品多角度特写，价格数字弹出动效；中段：{audience}抢购/囤货的画面，配{platform}活动信息展示；结尾：倒计时紧迫感+大字幕CTA「手慢无，立即点击抢购」。风格：高饱和度色彩、剪辑节奏快、促销氛围拉满，字幕超大且醒目。"}, {"id": "food", "name": "🍜 美食/饮品（食欲特写）", "desc": "微距+慢动作食欲镜头，饮品赛道主力", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：百事可乐 / 蜜雪新品奶茶"}, {"key": "taste", "label": "口感/卖点", "placeholder": "如：气泡炸裂、冰爽解腻、真茶底"}, {"key": "scene", "label": "食用场景", "placeholder": "如：夏天街头 / 加班深夜 / 火锅配餐"}], "prompt_template": "竖屏美食广告视频，时长约8-10秒。主体：{product}。开场特写钩子：产品开盖/倒出/气泡炸裂/掰开的瞬间，微距+慢动作；中段：{scene}场景下的食用画面，突出{taste}，人物真实试吃/试喝的满足反应；镜头：微距特写与慢动作交替，食欲感打光，汤汁/气泡/水珠细节清晰；结尾：产品定格+CTA字幕「点击下方链接马上抢」。风格：美食纪录片质感、色彩浓郁。"}, {"id": "scenery", "name": "🏞 风景/氛围（治愈背景）", "desc": "纯画面氛围素材，适合背景/情感类开头", "fields": [{"key": "scene", "label": "场景", "placeholder": "如：清晨的梯田云海 / 海边日落"}, {"key": "start", "label": "镜头起点", "placeholder": "如：远景全景"}, {"key": "end", "label": "镜头终点", "placeholder": "如：推近到局部特写"}, {"key": "mood", "label": "氛围情绪", "placeholder": "如：治愈放松 / 辽阔震撼"}], "prompt_template": "竖屏氛围视频，时长约8秒。主体：{scene}。镜头从{start}缓慢运动推进到{end}，{mood}的氛围，光线随时间自然变化，画面通透。节奏舒缓，无人物、无字幕干扰，电影感调色，适合作为情感类广告开头或背景素材。"}, {"id": "image_motion", "name": "🖼 图生视频·产品动效", "desc": "上传产品图时用：保持产品外观一致，只加镜头动效", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：沙地蜜薯"}, {"key": "motion", "label": "想要的镜头动作", "placeholder": "如：缓慢环绕一周 / 从左向右平移推近"}], "prompt_template": "基于上传的{product}产品图生成视频：严格保持产品外观、包装、logo与图片完全一致，不改变形状颜色。镜头动作：{motion}；光影柔和流动，突出产品材质质感，背景轻微虚化营造纵深感。时长约5秒，画面稳定无变形，产品边缘清晰锐利，适合电商展示用途。"}, {"id": "ugc", "name": "📱 UGC真实感（素人随手拍）", "desc": "模拟普通人手机实拍，原生感最强，最不容易被判广告", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：某便利店柠檬茶"}, {"key": "hook", "label": "开头一句话", "placeholder": "如：路过便利店千万别买这个"}, {"key": "reaction", "label": "真实反应", "placeholder": "如：喝完瞪大眼睛又喝了一大口"}], "prompt_template": "竖屏UGC风格短视频，时长约8秒，模拟普通用户手持手机随手拍摄，画面有轻微晃动、自然室内光或街边光。开头：人物对镜头说「{hook}」，语速快、表情自然。中段：手持拍摄{product}的特写与使用过程，画面略怼脸，{reaction}。整体：无专业打光、无运镜设计、原生噪点，抖音随手拍质感，像朋友发你的视频。"}, {"id": "review", "name": "🧪 测评种草（对比测评）", "desc": "A/B对比、横评推荐，说服力强适合高客单价", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：某吹风机"}, {"key": "compare", "label": "对比对象", "placeholder": "如：普通吹风机 / 大牌平替"}, {"key": "point", "label": "测评维度", "placeholder": "如：风力、伤发程度、干发速度"}], "prompt_template": "竖屏测评类视频，时长约10秒。开场：桌面摆开{product}和{compare}，双产品并排特写，字幕「真实对比测评」。中段：分屏或交替展示{point}的实测对比画面，用数据字幕和箭头标注差异。结尾：{product}完胜画面定格，字幕CTA「点击下方链接看同款」。风格：明亮测评桌面布光、实拍质感、字幕信息密度高但排版整洁。"}, {"id": "unbox", "name": "📦 开箱速递（第一视角）", "desc": "第一人称开箱，沉浸式拆包装展示质感", "fields": [{"key": "product", "label": "产品名", "placeholder": "如：某限量款球鞋"}, {"key": "package", "label": "包装亮点", "placeholder": "如：磁吸翻盖礼盒、烫金logo"}, {"key": "detail", "label": "开箱后重点展示", "placeholder": "如：鞋身细节、配件全家福"}], "prompt_template": "竖屏第一人称开箱视频，时长约8-10秒，全程主观视角（模拟双手出镜）。开场：快递盒入画，手撕开包装，节奏干脆；中段：{package}特写慢动作展示，然后取出{product}，镜头推近{detail}；光影：侧面自然光突出包装材质的层次感。结尾：产品摆放整齐的全家福定格，字幕CTA「点下方链接抢同款」。风格：ASMR开箱质感、画面干净。"}, {"id": "hot_meme", "name": "🔥 热梗玩梗（网感钩子）", "desc": "热门梗/反差梗开头，完播率高，适合年轻人群", "fields": [{"key": "meme", "label": "热梗/反差点", "placeholder": "如：老板以为我在摸鱼其实在下单"}, {"key": "product", "label": "产品名", "placeholder": "如：某零食大礼包"}, {"key": "punchline", "label": "反转点", "placeholder": "如：结果全办公室都来薅"}], "prompt_template": "竖屏玩梗短剧视频，时长约8秒，节奏快、梗密集。开场前1秒：{meme}的画面化演绎，表情包式夸张表演，卡点音效。中段：快速切镜展示{product}，配合字幕吐槽；结尾反转：{punchline}，全员疯抢画面收尾+CTA字幕「链接放下面了」。风格：高对比网感调色、快速变焦、梗图字幕贴纸，抖音原生热梗风。"}, {"id": "oral", "name": "🎙 真人口播（讲解种草）", "desc": "单人出镜口播，信任感强，适合功效/知识类", "fields": [{"key": "person", "label": "出镜人设", "placeholder": "如：穿白大褂的配方师 / 邻家姐妹"}, {"key": "topic", "label": "口播主题钩子", "placeholder": "如：熬夜党一定要看完这条"}, {"key": "product", "label": "产品名", "placeholder": "如：某褪黑素软糖"}, {"key": "point", "label": "核心讲解点", "placeholder": "如：成分、怎么吃、多久有效"}], "prompt_template": "竖屏真人口播视频，时长约10秒。画面：{person}半身出镜，面对镜头讲话，背景简洁（货架/纯色墙/工作台），眼神自然有亲和力。开场：直接抛出钩子「{topic}」，配合手势强调。中段：拿起{product}展示，讲透{point}，镜头在人脸和产品特写间切换；结尾：指向画面下方，字幕CTA「点击下方链接立即入手」。风格：自然柔光、口语化、字幕跟随语音逐句显示。"}, {"id": "before_after", "name": "⚡ 前后对比（变化冲击）", "desc": "Before/After 强反差，适合功效、清洁、改造类", "fields": [{"key": "subject", "label": "对比对象", "placeholder": "如：泛黄小白鞋 / 毛糙头发"}, {"key": "before", "label": "Before 状态", "placeholder": "如：发黄发旧全是污渍"}, {"key": "after", "label": "After 状态", "placeholder": "如：白到发光焕然一新"}, {"key": "product", "label": "产品名", "placeholder": "如：某爆炸盐"}], "prompt_template": "竖屏前后对比视频，时长约8秒。开场：{subject}的Before状态特写「{before}」，画面偏灰暗，配「还能救吗？」字幕。中段：使用{product}的过程快剪（喷洒/涂抹/操作），节奏加速；结尾：切After「{after}」画面明亮通透，左右分屏对比定格，字幕CTA「同款点击下方链接」。风格：Before冷色调、After暖色调，反差感拉满。"}, {"id": "pet", "name": "🐱 宠物萌趣（萌宠带货）", "desc": "宠物吸睛开场，适合宠物用品/泛人群产品", "fields": [{"key": "pet", "label": "宠物/萌物", "placeholder": "如：橘猫 / 柯基"}, {"key": "action", "label": "萌点动作", "placeholder": "如：追着逗猫棒疯跑、闻到零食瞬间回头"}, {"key": "product", "label": "产品名", "placeholder": "如：某冻干零食"}], "prompt_template": "竖屏萌宠视频，时长约8秒。开场：{pet}的{action}，低角度跟拍，动作萌感十足，配可爱音效。中段：{product}入画，{pet}被吸引凑近的反应特写，鼻子抽动/眼睛瞪圆等细节镜头；结尾：{pet}抱着产品满足的样子定格，字幕CTA「同款在下方链接」。风格：暖色调、浅景深、对焦点始终在宠物表情上。"}];
+
+var PREVIEW_TIP = '🔒 离线预览版：该操作需在你本机运行服务（launch_tool.bat / python server.py）后访问 http://127.0.0.1:8899/ 才能执行';
+
+/* 本地拼装提示词（复刻服务端 build_prompt_from_template，纯本地、无需 AI） */
+function __buildPrompt(tid, fields){
+  var tpl = null;
+  for(var i=0;i<MOCK_TPL_FULL.length;i++){
+    if(MOCK_TPL_FULL[i].id === tid){ tpl = MOCK_TPL_FULL[i]; break; }
+  }
+  if(!tpl) return null;
+  var prompt = tpl.prompt_template, missing = [];
+  (tpl.fields||[]).forEach(function(f){
+    var v = ((fields||{})[f.key]||'').trim();
+    if(!v){ missing.push(f.label); v = '【'+f.label+'】'; }
+    prompt = prompt.split('{'+f.key+'}').join(v);
+  });
+  return {prompt: prompt, missing: missing};
+}
+
+function __mkResp(payload){
+  return {
+    ok:true, status:200, statusText:'OK',
+    json:function(){ return Promise.resolve(typeof payload==='string' ? {text:payload} : payload); },
+    text:function(){ return Promise.resolve(typeof payload==='string' ? payload : JSON.stringify(payload)); }
+  };
+}
+window.fetch = function(path, opt){
+  var u = String(path||'');
+  var data = {};
+  try{ if(opt && opt.body) data = JSON.parse(opt.body); }catch(e){}
+  try{
+    if(u.indexOf('/api/changelog')===0)        return Promise.resolve(__mkResp(MOCK_CHG));
+    if(u.indexOf('/api/config')===0)           return Promise.resolve(__mkResp(MOCK_CONFIG));
+    if(u.indexOf('/api/prompt/templates')===0) return Promise.resolve(__mkResp(MOCK_TPL));
+    if(u.indexOf('/api/jichuang/accounts')===0)return Promise.resolve(__mkResp(MOCK_ACCOUNTS));
+    if(u.indexOf('/api/files')===0)            return Promise.resolve(__mkResp(MOCK_FILES));
+    /* 提示词扩写：本地拼装，预览版可真实试用 */
+    if(u.indexOf('/api/prompt/expand')===0){
+      var r = __buildPrompt(data.template_id, data.fields);
+      if(!r) return Promise.resolve(__mkResp({ok:false, error:'模板不存在'}));
+      return Promise.resolve(__mkResp({ok:true, prompt:r.prompt, missing:r.missing,
+        note:'离线预览版 · 本地模板拼装（未调用千问润色）'}));
+    }
+    if(u.indexOf('/api/prompt/batch_expand')===0){
+      var cnt = Math.max(1, Math.min(parseInt(data.count)||3, 10));
+      var base = __buildPrompt(data.template_id, data.fields);
+      if(!base) return Promise.resolve(__mkResp({ok:false, error:'模板不存在'}));
+      var vs = (MOCK_CONFIG.template && MOCK_CONFIG.template.variants) || ['钩子前置版','卖点对比版','紧迫感CTA版'];
+      var ps = [];
+      for(var i=0;i<cnt;i++){ ps.push('【'+vs[i%vs.length]+'】\n'+base.prompt); }
+      return Promise.resolve(__mkResp({ok:true, prompts:ps, count:ps.length,
+        note:'离线预览版 · 本地拼装 '+ps.length+' 条变体（未调用千问）'}));
+    }
+    /* 其余写操作均需本机服务 */
+    return Promise.resolve(__mkResp({ok:false,
+      error:'🔒 离线预览版：该操作需在你本机运行服务（launch_tool.bat / python server.py）后访问 http://127.0.0.1:8899/ 才能执行'}));
+  }catch(e){ return Promise.resolve(__mkResp({ok:false, error:String(e)})); }
+};
+window.addEventListener('load', function(){
+  var p = document.getElementById('statPill');
+  if(p){ p.textContent='● 离线预览'; p.style.color='#fbbd23'; }
+  /* 关掉「生成后自动出片」，避免预览版连锁报错 */
+  var ag = document.getElementById('tplAutoGen');
+  if(ag){ ag.checked = false; }
+  /* 覆盖需要本机服务的写操作按钮，给出清晰提示 */
+  [['genBtn','genStatus'],['jcGenBtn','jcStatus'],['jcVaryBtn','jcStatus'],
+   ['addAccBtn','accStatus'],['saveBtn','cfgStatus']].forEach(function(pr){
+    var btn = document.getElementById(pr[0]), st = document.getElementById(pr[1]);
+    if(btn) btn.onclick = function(){
+      if(st){ st.textContent = PREVIEW_TIP; st.className = 'status show err'; }
+    };
+  });
+});
+</script>
+
+<script>
+const $ = id => document.getElementById(id);
+let globalCfg = {};
+let categories = [];
+let currentCat = null;
+let selectedImages = [];
+let jcSelectedImages = [];
+let accounts = [];
+let jcJobTimer = null;
+let currentMode = 'internal';
+
+async function api(path, method='GET', body){
+  const opt = {method, headers:{'Content-Type':'application/json'}};
+  if(body) opt.body = JSON.stringify(body);
+  const r = await fetch(path, opt);
+  return r.json();
+}
+function show(el, msg, cls){ el.textContent = msg; el.className = 'status show ' + cls; }
+function hide(el){ el.className = 'status'; }
+
+// ========== 模式切换 ==========
+function switchMode(mode){
+  currentMode = mode;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.mode===mode));
+  $('modeInternal').classList.toggle('hidden', mode!=='internal');
+  $('modeJichuang').classList.toggle('hidden', mode!=='jichuang');
+  if(mode==='jichuang') loadAccounts();
+  if(mode==='internal') refreshFiles();
+}
+
+// ========== 初始化加载 ==========
+async function load(){
+  try{
+    globalCfg = await api('/api/config');
+    categories = globalCfg.categories || [];
+    if(!categories.length){
+      categories = [{id:'free',name:'📝 自由输入',fields:[{key:'raw',label:'自由描述',placeholder:'你想生成什么直接写'}],brief_template:'{raw}'}];
+    }
+    populateConfig();
+    populateCategories();
+    $('statPill').textContent = '已连接';
+    $('statPill').style.color = 'var(--ok)';
+    refreshFiles();
+  }catch(e){
+    $('statPill').textContent = '连接失败';
+    $('statPill').style.color = 'var(--err)';
+  }
+}
+
+function populateConfig(){
+  const c = globalCfg;
+  $('qwenKey').value = c.qwen?.api_key || '';
+  $('qwenModel').value = c.qwen?.model || 'qwen-plus';
+  $('qwenEndpoint').value = c.qwen?.endpoint || '';
+  $('genUrl').value = c.generator_api?.url || '';
+  $('genAuthType').value = c.generator_api?.auth_type || 'bearer';
+  $('genToken').value = c.generator_api?.auth_token || '';
+  $('genReqFmt').value = c.generator_api?.request_format || 'json';
+  $('genPromptField').value = c.generator_api?.prompt_field || 'prompt';
+  $('genRespType').value = c.generator_api?.response_type || 'binary';
+  $('genRespUrlField').value = c.generator_api?.response_url_field || 'url';
+  $('outDir').value = c.output?.dir || '';
+  $('numVideos').value = c.template?.num_videos || 3;
+  $('style').value = c.template?.style || '';
+  $('variants').value = (c.template?.variants || []).join(',');
+}
+
+function populateCategories(){
+  const sel = $('categorySelect');
+  sel.innerHTML = '';
+  categories.forEach((cat,idx)=>{
+    const o = document.createElement('option');
+    o.value = idx;
+    o.textContent = cat.name;
+    sel.appendChild(o);
+  });
+  sel.onchange = () => renderCategoryForm(sel.value);
+  renderCategoryForm(0);
+}
+
+function renderCategoryForm(idx){
+  currentCat = categories[idx];
+  const box = $('categoryFields');
+  box.innerHTML = '';
+  currentCat.fields.forEach(f => {
+    const div = document.createElement('div');
+    div.innerHTML = `<label>${f.label}</label><input class="cat-field" data-key="${f.key}" placeholder="${f.placeholder || ''}">`;
+    box.appendChild(div);
+  });
+  box.querySelectorAll('.cat-field').forEach(el => el.addEventListener('input', updateBrief));
+  updateBrief();
+}
+
+function updateBrief(){
+  if(!currentCat) return;
+  let tpl = currentCat.brief_template;
+  const fields = $('categoryFields').querySelectorAll('.cat-field');
+  fields.forEach(el => {
+    const k = el.dataset.key;
+    const v = el.value.trim() || `【${k}】`;
+    tpl = tpl.split('{' + k + '}').join(v);
+  });
+  if(selectedImages.length) tpl += ` （已附 ${selectedImages.length} 张产品图）`;
+  $('briefPreview').textContent = tpl;
+}
+
+function handleImages(fileList, targetArr, previewId){
+  Array.from(fileList).forEach(f => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      targetArr.push({filename:f.name, mime:f.type||'image/png', b64:e.target.result});
+      renderImgPreview(targetArr, previewId);
+      updateBrief();
+    };
+    reader.readAsDataURL(f);
+  });
+}
+function renderImgPreview(arr, previewId){
+  const box = $(previewId);
+  box.innerHTML = '';
+  arr.forEach((im,idx)=>{
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'position:relative;width:72px;height:72px;border:1px solid var(--border);border-radius:8px;overflow:hidden';
+    wrap.innerHTML = `<img src="${im.b64}" style="width:100%;height:100%;object-fit:cover"><div data-i="${idx}" style="position:absolute;top:2px;right:2px;background:var(--err);color:#fff;border-radius:50%;width:18px;height:18px;line-height:18px;text-align:center;cursor:pointer;font-size:12px">×</div>`;
+    wrap.querySelector('div').onclick = () => { arr.splice(idx,1); renderImgPreview(arr, previewId); updateBrief(); };
+    box.appendChild(wrap);
+  });
+}
+
+function buildBrief(){
+  if(!currentCat) return '';
+  let tpl = currentCat.brief_template;
+  const fields = $('categoryFields').querySelectorAll('.cat-field');
+  fields.forEach(el => {
+    const k = el.dataset.key;
+    const v = el.value.trim();
+    if(!v){ show($('genStatus'), `请填写「${currentCat.fields.find(x=>x.key===k)?.label || k}」`, 'warn'); throw new Error('empty field'); }
+    tpl = tpl.split('{' + k + '}').join(v);
+  });
+  return tpl;
+}
+
+// ========== 内部生成器事件 ==========
+$('saveBtn').onclick = async () => {
+  const variants = $('variants').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const c = globalCfg;
+  const cfg = {
+    qwen:{ api_key:$('qwenKey').value.trim(), model:$('qwenModel').value.trim()||'qwen-plus',
+           endpoint:$('qwenEndpoint').value.trim(), temperature:0.8 },
+    generator_api:{ url:$('genUrl').value.trim(), method:'POST', auth_type:$('genAuthType').value,
+           auth_token:$('genToken').value.trim(), request_format:$('genReqFmt').value,
+           prompt_field:$('genPromptField').value.trim()||'prompt', extra_fields:{},
+           response_type:$('genRespType').value, response_url_field:$('genRespUrlField').value.trim()||'url',
+           response_content_type_hint:'video/mp4' },
+    output:{ dir:$('outDir').value.trim(), filename_template:'{ts}_{idx:02d}.mp4' },
+    template:{ num_videos:parseInt($('numVideos').value)||1, style:$('style').value.trim(),
+           variants:variants, system_prompt:c.template?.system_prompt||'', user_prompt_template:c.template?.user_prompt_template||'' }
+  };
+  if(c.categories) cfg.categories = c.categories;
+  if(c.jichuang) cfg.jichuang = c.jichuang;
+  const r = await api('/api/config','POST',cfg);
+  if(r.ok){ globalCfg = cfg; show($('cfgStatus'),'✅ 配置已保存', 'ok'); }
+  else { show($('cfgStatus'),'保存失败', 'err'); }
+};
+
+$('genBtn').onclick = async () => {
+  hide($('genStatus'));
+  let brief = '';
+  try{ brief = buildBrief(); }catch(e){ return; }
+  $('genBtn').disabled = true;
+  show($('genStatus'),'⏳ 生成中…（千问扩写 + 调用生成器，请稍候）', 'warn');
+  try{
+    const r = await api('/api/generate','POST',{input:brief, images:selectedImages});
+    if(r.error){
+      let msg = '❌ ' + r.error;
+      if(r.problems) msg += '\n· ' + r.problems.join('\n· ');
+      show($('genStatus'), msg, 'err');
+    }else{
+      show($('genStatus'), `✅ 完成：成功 ${r.ok}/${r.total}`, 'ok');
+      renderResults(r.results||[]);
+      refreshFiles();
+    }
+  }catch(e){ show($('genStatus'),'请求失败：'+e.message, 'err'); }
+  $('genBtn').disabled = false;
+};
+
+function renderResults(list){
+  const box = $('results');
+  if(!list.length){ box.innerHTML = '<p class="hint">无结果</p>'; return; }
+  box.innerHTML = list.map(r=>{
+    if(r.ok) return `<div class="res-item"><div class="v">${r.variant||'视频'}</div><div class="p">${r.file}</div></div>`;
+    return `<div class="res-item err"><div class="v">${r.variant||'视频'} 失败</div><div class="p">${r.error||''}</div></div>`;
+  }).join('');
+}
+
+async function refreshFiles(){
+  const r = await api('/api/files');
+  const box = $('files');
+  const fs = r.files||[];
+  if(!fs.length){ box.innerHTML = '<p class="hint">保存目录暂无视频文件。</p>'; return; }
+  box.innerHTML = fs.map(f=>`<div class="file"><span>${f.name}</span><span class="s">${ (f.size/1024/1024).toFixed(2) } MB</span></div>`).join('');
+}
+
+$('refreshBtn').onclick = refreshFiles;
+$('cfgHead').onclick = () => { $('cfgHead').classList.toggle('open'); $('cfgBody').classList.toggle('hidden'); };
+$('imgInput').onchange = e => { handleImages(e.target.files, selectedImages, 'imgPreview'); e.target.value=''; };
+
+// ========== 即创账号管理 ==========
+async function loadAccounts(){
+  try{
+    const r = await api('/api/jichuang/accounts');
+    accounts = r.accounts || [];
+    renderAccounts();
+    populateJcAccountSelect();
+  }catch(e){ show($('accStatus'),'加载账号失败：'+e.message,'err'); }
+}
+
+function renderAccounts(){
+  const box = $('accountsList');
+  if(!accounts.length){ box.innerHTML = '<p class="hint">还没有账号，请添加一个。</p>'; return; }
+  box.innerHTML = accounts.map(a=>`
+    <div class="acc-row ${a.active?'active':''}">
+      <div class="info">
+        <div><strong>${a.name || a.email || a.id}</strong> ${a.active?'<span class="pill active small">当前使用</span>':''}</div>
+        <div class="note">${a.email || '未填邮箱'} ${a.note?' · '+a.note:''}</div>
+      </div>
+      <div class="acc-actions">
+        ${!a.active?`<button class="ghost" onclick="switchAccount('${a.id}')">切换</button>`:''}
+        <button class="ghost" onclick="loginAccount('${a.id}')">登录/刷新</button>
+        <button class="danger" onclick="deleteAccount('${a.id}')">删除</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function populateJcAccountSelect(){
+  const sel = $('jcAccountSelect');
+  sel.innerHTML = '';
+  accounts.forEach(a=>{
+    const o = document.createElement('option');
+    o.value = a.id;
+    o.textContent = (a.name || a.email || a.id) + (a.active?' [当前]':'');
+    if(a.active) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
+async function switchAccount(id){
+  hide($('accStatus'));
+  const r = await api('/api/jichuang/switch','POST',{id});
+  if(r.ok){ accounts = r.accounts; renderAccounts(); populateJcAccountSelect(); show($('accStatus'),'✅ 已切换账号','ok'); }
+  else show($('accStatus'),'切换失败','err');
+}
+
+async function loginAccount(id){
+  hide($('accStatus'));
+  const r = await api('/api/jichuang/login','POST',{id});
+  if(r.ok){
+    show($('accStatus'),'🌐 已弹出浏览器窗口，请在窗口中完成登录（10分钟有效）','warn');
+    startLoginPolling(r.job_id);
+  } else show($('accStatus'),'弹出登录失败','err');
+}
+
+async function deleteAccount(id){
+  if(!confirm('确定删除该账号及其登录数据？')) return;
+  hide($('accStatus'));
+  const r = await api('/api/jichuang/delete','POST',{id});
+  if(r.ok){ accounts = r.accounts; renderAccounts(); populateJcAccountSelect(); show($('accStatus'),'已删除','ok'); }
+  else show($('accStatus'),'删除失败','err');
+}
+
+function startLoginPolling(jobId){
+  const poll = async ()=>{
+    const r = await api('/api/jichuang/login/status?job_id='+jobId);
+    if(r.status === 'done'){ show($('accStatus'),'✅ '+r.message,'ok'); return; }
+    if(r.status === 'failed'){ show($('accStatus'),'❌ '+r.message,'err'); return; }
+    if(r.status === 'waiting_login'){ show($('accStatus'),'⏳ '+r.message,'warn'); }
+    setTimeout(poll, 3000);
+  };
+  poll();
+}
+
+$('addAccBtn').onclick = async () => {
+  const name = $('accName').value.trim();
+  const email = $('accEmail').value.trim();
+  const pw = $('accPassword').value;
+  const note = $('accNote').value.trim();
+  if(!name && !email){ show($('accStatus'),'请填写账号名称或邮箱','warn'); return; }
+  hide($('accStatus'));
+  const r = await api('/api/jichuang/accounts','POST',{name, email, password:pw, note});
+  if(r.ok){
+    accounts = r.accounts;
+    renderAccounts();
+    populateJcAccountSelect();
+    $('accName').value=''; $('accEmail').value=''; $('accPassword').value=''; $('accNote').value='';
+    show($('accStatus'),'✅ 账号已添加，建议立即点「登录/刷新」完成首次登录','ok');
+  } else show($('accStatus'),'添加失败','err');
+};
+
+// ========== 提示词模板 ==========
+let promptTemplates = [];
+let currentTpl = null;
+
+async function loadTemplates(){
+  try{
+    const r = await api('/api/prompt/templates');
+    promptTemplates = r.templates || [];
+    const sel = $('tplSelect');
+    sel.innerHTML = '';
+    promptTemplates.forEach((t,idx)=>{
+      const o = document.createElement('option');
+      o.value = idx; o.textContent = t.name;
+      sel.appendChild(o);
+    });
+    sel.onchange = () => renderTplForm(sel.value);
+    renderTplForm(0);
+  }catch(e){
+    $('tplSelect').innerHTML = '<option value="">模板加载失败</option>';
+  }
+}
+
+function renderTplForm(idx){
+  currentTpl = promptTemplates[idx];
+  if(!currentTpl) return;
+  $('tplDesc').textContent = currentTpl.desc || '';
+  const box = $('tplFields');
+  box.innerHTML = '';
+  currentTpl.fields.forEach(f=>{
+    const div = document.createElement('div');
+    div.innerHTML = `<label style="margin:4px 0 2px">${f.label}</label><input class="tpl-field" data-key="${f.key}" placeholder="${f.placeholder || ''}">`;
+    box.appendChild(div);
+  });
+}
+
+$('tplGenBtn').onclick = async () => {
+  if(!currentTpl) return;
+  const fields = {};
+  $('tplFields').querySelectorAll('.tpl-field').forEach(el=>{ fields[el.dataset.key] = el.value.trim(); });
+  const empty = Object.values(fields).filter(v=>!v).length;
+  if(empty === Object.keys(fields).length){ show($('jcStatus'),'模板字段全空，请至少填一个','warn'); return; }
+  const count = Math.max(1, Math.min(parseInt($('jcBatchCount').value)||1, 10));
+  $('tplGenBtn').disabled = true;
+  $('tplGenBtn').textContent = '⏳ 生成中...';
+  try{
+    if(count > 1){
+      // 批量扩 N 条变体文案
+      const r = await api('/api/prompt/batch_expand','POST',{
+        template_id: currentTpl.id, fields, count,
+        polish: $('tplPolish').checked,
+        mode: $('jcMode').value
+      });
+      if(r.ok){
+        $('jcPrompt').value = r.prompts[0]; // 第一条填入主输入框（方便查看/微调）
+        renderBatchPreview(r.prompts, r.note);
+        if($('tplAutoGen').checked){
+          show($('jcStatus'), `✅ 已生成 ${r.count} 条变体文案（${r.note}），正在自动批量出片 ▶`, 'ok');
+          setTimeout(()=>{ if(!$('jcGenBtn').disabled) $('jcGenBtn').click(); }, 300);
+        } else {
+          show($('jcStatus'), `✅ 已生成 ${r.count} 条变体文案（${r.note}），第一条已填入主输入框，下方预览全部`, 'ok');
+        }
+      } else show($('jcStatus'), '生成失败：'+(r.error||''), 'err');
+    } else {
+      // 单条（保持原逻辑）
+      const r = await api('/api/prompt/expand','POST',{
+        template_id: currentTpl.id, fields,
+        polish: $('tplPolish').checked,
+        mode: $('jcMode').value
+      });
+      if(r.ok){
+        $('jcPrompt').value = r.prompt;
+        renderBatchPreview([], ''); // 清空预览
+        let msg = '✅ 提示词已生成并填入下方输入框' + (r.note ? '（'+r.note+'）' : '');
+        if(r.missing && r.missing.length) msg = '⚠️ 已生成，但以下字段留空用了占位符：' + r.missing.join('、');
+        if($('tplAutoGen').checked){
+          show($('jcStatus'), msg + '，正在自动跳转即创生成 ▶', (r.missing && r.missing.length) ? 'warn' : 'ok');
+          setTimeout(()=>{ if(!$('jcGenBtn').disabled) $('jcGenBtn').click(); }, 300);
+        } else {
+          show($('jcStatus'), msg, (r.missing && r.missing.length) ? 'warn' : 'ok');
+        }
+      } else show($('jcStatus'), '生成失败：'+(r.error||''), 'err');
+    }
+  }catch(e){ show($('jcStatus'),'请求失败：'+e.message,'err'); }
+  $('tplGenBtn').disabled = false;
+  $('tplGenBtn').textContent = '✨ 生成提示词';
+};
+
+// ========== URL 参数（供看板深链） ==========
+function applyUrlParams(){
+  const q = new URLSearchParams(location.search);
+  const mode = q.get('mode');
+  const prompt = q.get('prompt');
+  if(mode === 'jichuang' || prompt) switchMode('jichuang');
+  if(prompt){
+    const fill = () => { $('jcPrompt').value = prompt; };
+    if($('jcPrompt')) fill(); else setTimeout(fill, 300);
+  }
+}
+
+// ========== 即创生成 ==========
+$('jcMode').onchange = () => {
+  const isImg = $('jcMode').value === 'image';
+  $('jcImageBox').classList.toggle('hidden', !isImg);
+  // 图生模式自动切到「图生视频·产品动效」模板
+  const imgTplIdx = promptTemplates.findIndex(t=>t.id==='image_motion');
+  if(isImg && imgTplIdx >= 0 && currentTpl && currentTpl.id !== 'image_motion'){
+    $('tplSelect').value = imgTplIdx; renderTplForm(imgTplIdx);
+  }else if(!isImg && currentTpl && currentTpl.id === 'image_motion'){
+    $('tplSelect').value = 0; renderTplForm(0);
+  }
+};
+$('jcImgInput').onchange = e => { handleImages(e.target.files, jcSelectedImages, 'jcImgPreview'); e.target.value=''; };
+
+// 批量数量变更时：动态调整按钮文字 + 隐藏/显示"自动跳转"复选框
+$('jcBatchCount').oninput = () => {
+  const n = Math.max(1, Math.min(parseInt($('jcBatchCount').value)||1, 10));
+  $('jcGenBtn').textContent = n > 1 ? `🚀 批量生成 ${n} 条变体视频` : '🚀 在即创生成 1 条';
+  // 批量模式隐藏"自动跳转"复选框（批量按钮本身已是全自动）
+  if($('tplAutoGen') && $('tplAutoGen').parentElement){
+    $('tplAutoGen').parentElement.style.display = n > 1 ? 'none' : '';
+  }
+};
+
+// 当前正在运行的批量任务 ID（供「取消」按钮使用）
+let currentBatchJobId = null;
+
+$('jcCancelBtn').onclick = async () => {
+  if(!currentBatchJobId) return;
+  if(!confirm('确定取消当前批量生成任务？已经提交、但还没下载的视频会继续在即创后台渲染（本工具不再下载）。')) return;
+  const r = await api('/api/jichuang/batch_generate/cancel','POST',{ job_id: currentBatchJobId });
+  show($('jcStatus'), r.message || '已发送取消请求...', 'warn');
+  $('jcCancelBtn').disabled = true;
+};
+
+$('jcGenBtn').onclick = async () => {
+  hide($('jcStatus'));
+  const mode = $('jcMode').value;
+  const accountId = $('jcAccountSelect').value;
+  const count = Math.max(1, Math.min(parseInt($('jcBatchCount').value)||1, 10));
+  const fields = {};
+  $('tplFields').querySelectorAll('.tpl-field').forEach(el=>{ fields[el.dataset.key] = el.value.trim(); });
+  if(!accountId){ show($('jcStatus'),'请先添加并登录一个即创账号','warn'); return; }
+
+  if(count > 1){
+    // 批量模式：后端一次性扩 N 条变体 + 串行出片
+    if(mode==='image' && !jcSelectedImages.length){ show($('jcStatus'),'图生视频需要至少一张产品图','warn'); return; }
+    $('jcGenBtn').disabled = true;
+    show($('jcStatus'),`⏳ 已启动批量任务：扩 ${count} 条变体 + 串行出 ${count} 条视频（共用同一浏览器，节省登录）...`,'warn');
+    const r = await api('/api/jichuang/batch_generate','POST',{
+      mode, template_id: currentTpl ? currentTpl.id : 'free',
+      fields, count, polish: $('tplPolish').checked,
+      images: jcSelectedImages,
+      aspect_ratio:$('jcAspect').value.trim(),
+      duration:$('jcDuration').value.trim(),
+      account_id:accountId
+    });
+    if(r.ok){ startBatchPolling(r.job_id, count); }
+    else { show($('jcStatus'),'启动批量生成失败','err'); $('jcGenBtn').disabled = false; }
+  } else {
+    // 单条模式（保持原逻辑）
+    const prompt = $('jcPrompt').value.trim();
+    if(!prompt){ show($('jcStatus'),'请填写提示词','warn'); return; }
+    if(mode==='image' && !jcSelectedImages.length){ show($('jcStatus'),'图生视频需要至少一张产品图','warn'); return; }
+    $('jcGenBtn').disabled = true;
+    show($('jcStatus'),'⏳ 已启动即创生成任务，后台自动登录并出片...','warn');
+    const r = await api('/api/jichuang/generate','POST',{
+      mode, input:prompt, images:jcSelectedImages,
+      aspect_ratio:$('jcAspect').value.trim(),
+      duration:$('jcDuration').value.trim(),
+      account_id:accountId
+    });
+    if(r.ok){ startGeneratePolling(r.job_id); }
+    else { show($('jcStatus'),'启动生成失败','err'); $('jcGenBtn').disabled = false; }
+  }
+};
+
+// 「按此文案裂变 N 条」：以 jcPrompt 里的完整文案为种子，裂变出 N 条变体并直接出片
+$('jcVaryBtn').onclick = async () => {
+  hide($('jcStatus'));
+  const mode = $('jcMode').value;
+  const accountId = $('jcAccountSelect').value;
+  const count = Math.max(1, Math.min(parseInt($('jcBatchCount').value)||3, 10));
+  const seed = $('jcPrompt').value.trim();
+  if(!accountId){ show($('jcStatus'),'请先添加并登录一个即创账号','warn'); return; }
+  if(!seed){ show($('jcStatus'),'请先在上方「提示词/描述」里写一条文案，再点裂变','warn'); $('jcPrompt').focus(); return; }
+  if(mode==='image' && !jcSelectedImages.length){ show($('jcStatus'),'图生视频需要至少一张产品图','warn'); return; }
+
+  $('jcVaryBtn').disabled = true;
+  $('jcGenBtn').disabled = true;
+  show($('jcStatus'), `⏳ 正在以你的文案为种子裂变 ${count} 条变体...`, 'warn');
+  try {
+    const v = await api('/api/prompt/vary','POST',{ prompt: seed, count, polish: $('tplPolish').checked });
+    if(!v.ok){
+      show($('jcStatus'), '裂变失败：'+(v.error||''), 'err');
+      $('jcVaryBtn').disabled = false; $('jcGenBtn').disabled = false;
+      return;
+    }
+    // 降级模式提示：note 含「本地改写」/「千问未配」就展示
+    const fallbackHint = $('jcVaryFallbackHint');
+    const isFallback = (v.note||'').includes('本地改写') || (v.note||'').includes('千问未配');
+    if(isFallback) show(fallbackHint); else hide(fallbackHint);
+    // 把裂变结果回显：第一条填主输入框，全部进预览
+    $('jcPrompt').value = v.prompts[0];
+    renderBatchPreview(v.prompts, v.note);
+    show($('jcStatus'), `✅ 已裂变 ${v.prompts.length} 条变体（${v.note}），正在自动批量出片 ▶`, 'ok');
+    // 直接把这些变体交给批量出片（不再走模板字段重扩）
+    const r = await api('/api/jichuang/batch_generate','POST',{
+      mode, prompts: v.prompts, count: v.prompts.length,
+      polish: false,
+      images: jcSelectedImages,
+      aspect_ratio: $('jcAspect').value.trim(),
+      duration: $('jcDuration').value.trim(),
+      account_id: accountId
+    });
+    if(r.ok){ startBatchPolling(r.job_id, v.prompts.length); }
+    else {
+      show($('jcStatus'),'启动批量出片失败','err');
+      $('jcVaryBtn').disabled = false; $('jcGenBtn').disabled = false;
+    }
+  } catch(e){
+    show($('jcStatus'),'请求失败：'+e.message,'err');
+    $('jcVaryBtn').disabled = false; $('jcGenBtn').disabled = false;
+  }
+};
+
+function startGeneratePolling(jobId){
+  const box = $('jcJobBox');
+  box.innerHTML = '<p class="hint">任务运行中，每 5 秒刷新...</p>';
+  const poll = async ()=>{
+    const r = await api('/api/jichuang/generate/status?job_id='+jobId);
+    if(r.status === 'done'){
+      box.innerHTML = `<div class="res-item"><div class="v">生成成功</div><div class="p">${r.video_path || r.video_url || ''}</p></div>`;
+      show($('jcStatus'),'✅ 即创视频已生成并下载','ok');
+      $('jcGenBtn').disabled = false;
+      refreshJcFiles();
+      return;
+    }
+    if(r.status === 'failed'){
+      box.innerHTML = `<div class="res-item err"><div class="v">生成失败</div><div class="p">${r.message || r.error || ''}</div></div>`;
+      show($('jcStatus'),'❌ 生成失败','err');
+      $('jcGenBtn').disabled = false;
+      return;
+    }
+    box.innerHTML = `<p class="hint">${r.message || '运行中...'}</p>`;
+    setTimeout(poll, 5000);
+  };
+  poll();
+}
+
+async function refreshJcFiles(){
+  const r = await api('/api/files');
+  const box = $('jcFiles');
+  const fs = r.files||[];
+  if(!fs.length){ box.innerHTML = '<p class="hint">暂无文件。</p>'; return; }
+  box.innerHTML = fs.map(f=>`<div class="file"><span>${f.name}</span><span class="s">${ (f.size/1024/1024).toFixed(2) } MB</span></div>`).join('');
+}
+
+// ========== 批量变体：N 条文案预览 + 批量进度轮询 ==========
+function renderBatchPreview(prompts, note){
+  // 渲染到 jcJobBox 上方（独立区域）；若没有 prompts 就清空
+  let box = $('batchPreview');
+  if(!box){
+    box = document.createElement('div');
+    box.id = 'batchPreview';
+    box.style.cssText = 'margin-top:10px;padding:10px;background:rgba(91,140,255,.06);border:1px dashed var(--border);border-radius:8px';
+    $('jcJobBox').parentElement.insertBefore(box, $('jcJobBox'));
+  }
+  if(!prompts || !prompts.length){
+    box.innerHTML = '';
+    return;
+  }
+  const items = prompts.map((p, i) => {
+    const safe = (p||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<details style="margin:6px 0"><summary style="cursor:pointer;color:var(--accent);font-size:13px">变体 ${i+1}（${safe.length} 字）</summary><div style="white-space:pre-wrap;font-size:12px;color:#bbb;margin-top:6px;line-height:1.55">${safe}</div></details>`;
+  }).join('');
+  box.innerHTML = `<div style="font-size:12px;color:#aaa;margin-bottom:6px">📝 变体文案预览（${prompts.length} 条）${note?'<span style="color:#7af;margin-left:6px">'+note+'</span>':''}</div>${items}`;
+}
+
+function startBatchPolling(jobId, total){
+  currentBatchJobId = jobId;
+  if($('jcCancelBtn')){ $('jcCancelBtn').style.display = ''; $('jcCancelBtn').disabled = false; }
+  const box = $('jcJobBox');
+  const previewBox = $('batchPreview');
+  box.innerHTML = `<p class="hint">批量任务运行中，每 5 秒刷新...（目标 ${total} 条）</p>`;
+  const poll = async ()=>{
+    const r = await api('/api/jichuang/batch_generate/status?job_id='+jobId);
+    const done = r.done || 0;
+    const videos = r.videos || [];
+    const prompts = r.prompts || [];
+    if(r.status === 'done' || r.status === 'failed' || r.status === 'cancelled'){
+      // 渲染每条结果
+      const html = videos.map(v => {
+        const idx = v.index;
+        const ok = v.ok;
+        const prompt = prompts[idx-1] || v.prompt || '';
+        const safeP = prompt.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        if(ok){
+          return `<div class="res-item"><div class="v">✅ 变体 ${idx}/${total} — ${v.video_path||v.video_url||'已下载'}</div><details style="margin-top:4px"><summary style="cursor:pointer;font-size:12px;color:#888">查看文案</summary><div style="white-space:pre-wrap;font-size:12px;color:#aaa;margin-top:4px">${safeP.slice(0,200)}${safeP.length>200?'...':''}</div></details></div>`;
+        } else {
+          return `<div class="res-item err"><div class="v">❌ 变体 ${idx}/${total} — ${v.error||'生成失败'}</div><details style="margin-top:4px"><summary style="cursor:pointer;font-size:12px;color:#888">查看文案</summary><div style="white-space:pre-wrap;font-size:12px;color:#aaa;margin-top:4px">${safeP.slice(0,200)}${safeP.length>200?'...':''}</div></details></div>`;
+        }
+      }).join('');
+      const cancelled = r.status === 'cancelled';
+      box.innerHTML = `<div style="margin-bottom:8px;font-size:13px;color:${r.ok?'#7a7':'#f77'}">${r.message||'完成'}</div>${html || '<p class="hint">无结果</p>'}`;
+      const failCount = videos.filter(v=>!v.ok).length;
+      const okCount = videos.filter(v=>v.ok).length;
+      show($('jcStatus'), (cancelled ? '已取消：' : '批量完成：') + `✅ ${okCount} 成功 / ❌ ${failCount} 失败 / 共 ${total} 条`, okCount>0?'ok':'err');
+      $('jcGenBtn').disabled = false;
+      if($('jcVaryBtn')){ $('jcVaryBtn').disabled = false; }
+      if($('jcCancelBtn')){ $('jcCancelBtn').style.display = 'none'; $('jcCancelBtn').disabled = false; }
+      if(okCount > 0) refreshJcFiles();
+      return;
+    }
+    // 运行中：显示进度
+    box.innerHTML = `<p class="hint">⏳ ${r.message||'运行中...'}（${done}/${total}）</p>`;
+    setTimeout(poll, 5000);
+  };
+  poll();
+}
+$('jcRefreshFiles').onclick = refreshJcFiles;
+
+// 暴露给 HTML onclick 使用的函数
+window.switchAccount = switchAccount;
+window.loginAccount = loginAccount;
+window.deleteAccount = deleteAccount;
+
+// ========== 更新日志（内置弹窗，读取 /api/changelog 渲染 更新日志.md）==========
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function splitRow(row){ return row.replace(/^\s*\|/,'').replace(/\|\s*$/,'').split('|').map(s=>s.trim()); }
+function mdToHtml(md){
+  const lines = String(md).replace(/\r\n/g,'\n').split('\n');
+  let html='', i=0;
+  const inline = s => s
+    .replace(/`([^`]+)`/g, (m,p)=>`<code>${escapeHtml(p)}</code>`)
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/__([^_]+)__/g, '<strong>$1</strong>');
+  while(i<lines.length){
+    const line = lines[i];
+    if(line.trim()===''){ i++; continue; }
+    if(line.trim().startsWith('```')){
+      let code=''; i++;
+      while(i<lines.length && !lines[i].trim().startsWith('```')){ code+=lines[i]+'\n'; i++; }
+      i++;
+      html += `<pre class="md-code">${escapeHtml(code)}</pre>`; continue;
+    }
+    const h = line.match(/^(#{1,4})\s+(.*)$/);
+    if(h){ const lvl=h[1].length; html += `<h${lvl}>${inline(h[2])}</h${lvl}>`; i++; continue; }
+    if(line.trim().startsWith('>')){
+      const q=[];
+      while(i<lines.length && lines[i].trim().startsWith('>')){ q.push(lines[i].trim().replace(/^>\s?/,'')); i++; }
+      html += `<blockquote class="md-quote">${inline(q.join('<br>'))}</blockquote>`; continue;
+    }
+    if(line.includes('|') && i+1<lines.length && /^\s*\|?[\s:|-]+\|?\s*$/.test(lines[i+1]) && lines[i+1].includes('-')){
+      const headers = splitRow(line); i+=2;
+      const rows=[];
+      while(i<lines.length && lines[i].includes('|') && lines[i].trim()!==''){ rows.push(splitRow(lines[i])); i++; }
+      let t='<table class="md-table"><thead><tr>'+headers.map(c=>`<th>${inline(c)}</th>`).join('')+'</tr></thead><tbody>';
+      t += rows.map(r=>`<tr>${r.map(c=>`<td>${inline(c)}</td>`).join('')}</tr>`).join('');
+      t+='</tbody></table>'; html += t; continue;
+    }
+    if(/^\s*[-*]\s+/.test(line)){
+      const items=[];
+      while(i<lines.length && /^\s*[-*]\s+/.test(lines[i])){ items.push(lines[i].replace(/^\s*[-*]\s+/,'')); i++; }
+      html += '<ul>'+items.map(it=>`<li>${inline(it)}</li>`).join('')+'</ul>'; continue;
+    }
+    if(/^\s*\d+\.\s+/.test(line)){
+      const items=[];
+      while(i<lines.length && /^\s*\d+\.\s+/.test(lines[i])){ items.push(lines[i].replace(/^\s*\d+\.\s+/,'')); i++; }
+      html += '<ol>'+items.map(it=>`<li>${inline(it)}</li>`).join('')+'</ol>'; continue;
+    }
+    const para=[];
+    while(i<lines.length && lines[i].trim()!=='' && !/^(#{1,4})\s/.test(lines[i]) && !lines[i].trim().startsWith('```') && !lines[i].trim().startsWith('>') && !lines[i].includes('|') && !/^\s*[-*]\s+/.test(lines[i]) && !/^\s*\d+\.\s+/.test(lines[i])){
+      para.push(lines[i]); i++;
+    }
+    html += `<p>${inline(para.join('<br>'))}</p>`;
+  }
+  return html;
+}
+async function openChangelog(){
+  const box = $('changelogBody');
+  box.innerHTML = '<p class="hint">加载中...</p>';
+  $('changelogModal').classList.add('show');
+  try{
+    const r = await fetch('/api/changelog');
+    const md = await r.text();
+    box.innerHTML = mdToHtml(md);
+  }catch(e){
+    box.innerHTML = '<p class="status err show">加载失败：'+escapeHtml(e.message)+'</p>';
+  }
+}
+function closeChangelog(){ $('changelogModal').classList.remove('show'); }
+window.openChangelog = openChangelog;
+window.closeChangelog = closeChangelog;
+$('changelogBtn').onclick = openChangelog;
+
+load();
+loadTemplates();
+applyUrlParams();
+</script>
+<div class="modal-overlay" id="changelogModal" onclick="if(event.target===this)closeChangelog()">
+  <div class="modal">
+    <div class="modal-head"><h3>📋 更新日志</h3><button class="ghost" onclick="closeChangelog()">关闭 ✕</button></div>
+    <div class="modal-body" id="changelogBody"></div>
+  </div>
+</div>
+</body>
+</html>
